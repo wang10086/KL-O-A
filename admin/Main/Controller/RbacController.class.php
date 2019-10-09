@@ -1714,10 +1714,11 @@ class RbacController extends BaseController {
         //$sumMonthData                   = $mod->get_chart_personnel($sumMonth);
 
         $thisMonthData                  = $mod->get_sum_hr_cost($thisMonths);
-        $this->thisMonthPostSalary      = $thisMonthData['postSalary'];
+        $this->thisMonthPostSalary      = $thisMonthData['postSalary']; //岗位薪酬
+        $this->thisMonthBonus           = $thisMonthData['bonus']; //奖金
+        $this->thisMonthSubsidy         = $thisMonthData['subsidy']; //补助
 
 
-        //P($this->thisMonthPostSalary);
         $this->year 	                = $year;
         $this->month 	                = $month;
         $this->prveyear	                = $year-1;

@@ -43,16 +43,18 @@
                                 <th class="sorting" width="80" data="o.op_id">ID</th>
                                 <th class="sorting" data="o.status">部门名称</th>
                                 <th class="sorting" data="o.project">部门字母</th>
-                                <th class="taskOptions" width="100">编辑</th>
+                                <if condition="rolemenu(array('Salary/del_department'))">
+                                <th class="taskOptions" width="100">删除</th>
+                                </if>
                             </tr>
                             <foreach name="lists" item="row">
                                 <tr>
                                     <td>{$row.id}</td>
                                     <td>{$row.department}</td>
                                     <td>{$row.letter}</td>
-                                    <if condition="rolemenu(array('Salary/edit_department'))">
+                                    <if condition="rolemenu(array('Salary/del_department'))">
                                         <td class="taskOptions">
-                                            <button onClick="javascript:ConfirmDel('{:U('Salary/edit_department',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                            <button onClick="javascript:ConfirmDel('{:U('Salary/del_department',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         </td>
                                     </if>
                                 </tr>

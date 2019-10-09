@@ -4476,7 +4476,7 @@ function salary_info($status,$cont){
 	}
 }
 
-function query_posts($where){//查询岗位
+function query_posts($where=''){//查询岗位
     if(count($where)==0){
         return M('posts')->select();
     }else{

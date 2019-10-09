@@ -62,7 +62,7 @@
                                         <th class="taskOptions">机关部门</th>
                                     </tr>
                                     <tr>
-                                        <td class="taskOptions" rowspan="10">{$month}月</td>
+                                        <td class="taskOptions" rowspan="17">{$month}月</td>
                                         <td class="taskOptions" rowspan="5">岗位薪酬</td>
                                         <td class="taskOptions">合计</td>
                                         <td class="taskOptions">{$thisMonthPostSalary['公司']['sum']}</td>
@@ -127,6 +127,129 @@
                                         <td class="taskOptions">{$thisMonthPostSalary['市场部']['performance_salary']}</td>
                                         <td class="taskOptions">{$thisMonthPostSalary['常规业务中心']['performance_salary']}</td>
                                         <td class="taskOptions">{$thisMonthPostSalary['机关部门']['performance_salary']}</td>
+                                    </tr>
+
+                                    <!--奖金-->
+                                    <tr>
+                                        <td class="taskOptions" rowspan="4">奖金</td>
+                                        <td class="taskOptions">合计</td>
+                                        <td class="taskOptions">{$thisMonthBonus['公司']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京区业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京外业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['南京项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['武汉项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['沈阳项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['长春项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['市场部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['常规业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['机关部门']['sum']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">业绩提成</td>
+                                        <td class="taskOptions">{$thisMonthBonus['公司']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京区业务中心']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京外业务中心']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['南京项目部']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['武汉项目部']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['沈阳项目部']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['长春项目部']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['市场部']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['常规业务中心']['royalty']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['机关部门']['royalty']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">奖金包</td>
+                                        <td class="taskOptions">{$thisMonthBonus['公司']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京区业务中心']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京外业务中心']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['南京项目部']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['武汉项目部']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['沈阳项目部']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['长春项目部']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['市场部']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['常规业务中心']['bonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['机关部门']['bonus']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">年终奖</td>
+                                        <td class="taskOptions">{$thisMonthBonus['公司']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京区业务中心']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['京外业务中心']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['南京项目部']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['武汉项目部']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['沈阳项目部']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['长春项目部']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['市场部']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['常规业务中心']['yearEndBonus']}</td>
+                                        <td class="taskOptions">{$thisMonthBonus['机关部门']['yearEndBonus']}</td>
+                                    </tr>
+
+                                    <!--补助-->
+                                    <tr>
+                                        <td class="taskOptions" rowspan="5">补助</td>
+                                        <td class="taskOptions">合计</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['公司']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京区业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京外业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['南京项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['武汉项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['沈阳项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['长春项目部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['市场部']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['常规业务中心']['sum']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['机关部门']['sum']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">带团补助</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['公司']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京区业务中心']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京外业务中心']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['南京项目部']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['武汉项目部']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['沈阳项目部']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['长春项目部']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['市场部']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['常规业务中心']['op_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['机关部门']['op_subsidy']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">电脑补助</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['公司']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京区业务中心']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京外业务中心']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['南京项目部']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['武汉项目部']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['沈阳项目部']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['长春项目部']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['市场部']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['常规业务中心']['computer_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['机关部门']['computer_subsidy']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">外地补助</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['公司']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京区业务中心']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京外业务中心']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['南京项目部']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['武汉项目部']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['沈阳项目部']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['长春项目部']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['市场部']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['常规业务中心']['foreign_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['机关部门']['foreign_subsidy']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">其他收入变动</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['公司']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京区业务中心']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['京外业务中心']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['南京项目部']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['武汉项目部']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['沈阳项目部']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['长春项目部']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['市场部']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['常规业务中心']['other_subsidy']}</td>
+                                        <td class="taskOptions">{$thisMonthSubsidy['机关部门']['other_subsidy']}</td>
                                     </tr>
 
                                 </table>

@@ -84,11 +84,13 @@
             $where['s.status']          = 4;
             $where['s.user_name']       = array('notlike','%1');
             //$field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code';
-            $field                      = 's.*,a.position_id,d.bonusType,p.position_name,p.code';
+            $field                      = 's.*,a.position_id,d.bonusType,p.position_name,p.code,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy';
             $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')
                                             ->join('__ACCOUNT__ as a on a.id=s.account_id','left')
                                             ->join('__ACCOUNT_DETAIL__ as d on d.account_id = s.account_id','left')
                                             ->join('__POSITION__ as p on p.id=a.position_id','left')
+                                            ->join('__SALARY_BONUS__ as b on b.id=s.bonus_id','left')
+                                            ->join('__SALARY_SUBSIDY__ as sub on sub.id = s.subsidy_id','left')
                                             ->where($where)
                                             ->field($field)
                                             ->select();
@@ -211,38 +213,73 @@
             $data                               = array();
             foreach ($department_info as $k => $v){
                 $staff_data                     = $this->get_staff_data($months,$v); //员工人数
-                $post_salary[$k]                = $this->get_post_salary($staff_data['list']); //岗位薪酬
-                $bonus                          = $this->get_bonus($staff_data['list']); //奖金
+                $post_salary[$k]                = $this->get_post_salary($staff_data['list'])['salary']; //岗位薪酬
+                $bonus[$k]                      = $this->get_post_salary($staff_data['list'])['bonus']; //奖金
+                $subsidy[$k]                    = $this->get_post_salary($staff_data['list'])['subsidy']; //补助
             }
 
             $data['postSalary']                 = $post_salary;
+            $data['bonus']                      = $bonus;
+            $data['subsidy']                    = $subsidy;
             return $data;
         }
 
         //获取员工岗位薪酬
         public function get_post_salary($salaryList){
-            $data                               = array();
+            $data                               = array(); //基本薪酬
             $data['sum']                        = 0;
-            $data['basic_salary']               = 0;
-            $data['performance_salary']         = 0;
+            $data['basic_salary']               = 0; //基本工资
+            $data['performance_salary']         = 0; //绩效工资
+            $data['really_basic_salary']        = 0; //实发基本工资
+            $data['really_performance_salary']  = 0; //实发绩效工资
+            $bonus                              = array();
+            $bonus['sum']                       = 0; //合计
+            $bonus['royalty']                   = 0; //业绩提成
+            $bonus['bonus']                     = 0; //奖金包
+            $bonus['yearEndBonus']              = 0; //年终奖
+            $subsidy                            = array(); //补助 = 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
+            $subsidy['sum']                     = 0;
+            $subsidy['op_subsidy']              = 0; //带团补助
+            $subsidy['computer_subsidy']        = 0; //电脑补助
+            $subsidy['foreign_subsidy']         = 0; //外地补助
+            $subsidy['other_subsidy']           = 0; //其他收入变动
             foreach ($salaryList as $k=>$v){
                 $data['basic_salary']           += $v['basic_salary'];
                 $data['performance_salary']     += $v['performance_salary'];
                 $data['really_basic_salary']    += $v['basic_salary']; //实发基本工资
                 $data['really_performance_salary']+= ($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']); //实发绩效工资 = 标准绩效工资  - 考勤扣款 + 绩效增减
                 $data['sum']                    += ($v['basic_salary']+($v['performance_salary'] - $v['withdrawing'] + $v['Achievements_withdrawing']));
+                $bonus['royalty']               += $v['total']; //业绩提成
+                $bonus['bonus']                 += $v['foreign_bonus']; //奖金包
+                $bonus['yearEndBonus']          += $v['annual_bonus']; //年终奖
+                $bonus['sum']                   += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus'];
+                $subsidy['op_subsidy']          += $v['Subsidy']; //带团补助
+                $subsidy['computer_subsidy']    += $v['computer_subsidy']; //电脑补助
+                $subsidy['foreign_subsidy']     += $v['foreign_subsidies']; //外地补助
+                $subsidy['other_subsidy']       += $v['Other']; //其他收入变动
+                $subsidy['sum']                 += $v['Subsidy'] + $v['computer_subsidy'] + $v['foreign_subsidies'] + $v['Other'];
             }
-            return $data;
+            $arr                                = array();
+            $arr['salary']                      = $data;
+            $arr['bonus']                       = $bonus;
+            $arr['subsidy']                     = $subsidy;
+            return $arr;
         }
 
-        //获取奖金
-        public function get_bonus($salaryList){
+        //获取补助 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
+        /*public function get_subsidy($salaryList){
             $data                               = array();
             $data['sum']                        = 0;
-            $data['royalty']                    = 0; //业绩提成
-            $data['bonus']                      = 0; //奖金包
-            $data['yearEndBonus']               = 0; //年终奖
-        }
+            $data['op_subsidy']                 = 0; //带团补助
+            $data['computer_subsidy']           = 0; //电脑补助
+            $data['foreign_subsidy']            = 0; //外地补助
+            $data['other_subsidy']              = 0; //其他收入变动
+            foreach ($salaryList as $k=>$v){
+                $other                          = M('salary_income')->where(array('income_token'=>$v['income_token']))->field('sum(income_money) as sum_salary_income')->find();
+                if ($other['sum_salary_income'] ==663.25){ P($other,false); p($v); }
+            }
+
+        }*/
 
     }
 
