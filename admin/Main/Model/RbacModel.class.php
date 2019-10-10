@@ -218,6 +218,7 @@
                 $subsidy[$k]                    = $this->get_post_salary($staff_data['list'])['subsidy']; //补助
                 $insurance[$k]                  = $this->get_post_salary($staff_data['list'])['insurance']; //公司五险一金
                 $sum[$k]                        = $this->get_post_salary($staff_data['list'])['sum']; //合计
+                $uids[$k]                       = $this->get_post_salary($staff_data['list'])['uids'];
             }
 
             $data['postSalary']                 = $post_salary;
@@ -225,6 +226,7 @@
             $data['subsidy']                    = $subsidy;
             $data['insurance']                  = $insurance;
             $data['sum']                        = $sum;
+            $data['uids']                       = $uids;
             return $data;
         }
 
@@ -236,6 +238,7 @@
             $data['performance_salary']         = 0; //绩效工资
             $data['really_basic_salary']        = 0; //实发基本工资
             $data['really_performance_salary']  = 0; //实发绩效工资
+            $uids                               = array(); //人员信息
             $bonus                              = array();
             $bonus['sum']                       = 0; //合计
             $bonus['royalty']                   = 0; //业绩提成
@@ -258,6 +261,7 @@
                 $data['really_basic_salary']    += ($v['basic_salary'] - $v['withdrawing']); //实发基本工资 = 标准基本工资 - 考勤扣款
                 $data['really_performance_salary']+= ($v['performance_salary'] + $v['Achievements_withdrawing']); //实发绩效工资 = 标准绩效工资 + 绩效增减
                 $data['sum']                    += ($v['basic_salary'] - $v['withdrawing']) +($v['performance_salary'] + $v['Achievements_withdrawing']);
+                $uids[]                         = $v['account_id'];
                 //奖金
                 $bonus['royalty']               += $v['total']; //业绩提成
                 $bonus['bonus']                 += $v['foreign_bonus']; //奖金包
@@ -275,12 +279,15 @@
                 $insurance['oneFund']           += ($insuranceList['company_accumulation_fund_ratio'] * $insuranceList['company_accumulation_fund_base']);
                 $insurance['sum']               += ($insuranceList['company_birth_ratio'] * $insuranceList['company_birth_base']) + ($insuranceList['company_injury_ratio'] * $insuranceList['company_injury_base']) + ($insuranceList['company_pension_ratio'] * $insuranceList['company_pension_base']) + ($insuranceList['company_medical_care_ratio'] * $insuranceList['company_medical_care_base']) + ($insuranceList['company_unemployment_ratio'] * $insuranceList['company_unemployment_base']) + ($insuranceList['company_accumulation_fund_ratio'] * $insuranceList['company_accumulation_fund_base']);
             }
+
             $arr                                = array();
             $arr['salary']                      = $data;
             $arr['bonus']                       = $bonus;
             $arr['subsidy']                     = $subsidy;
             $arr['insurance']                   = $insurance;
             $arr['sum']                         = $data['sum'] + $bonus['sum'] + $subsidy['sum'] + $insurance['sum'];
+            $arr['uids']                        = implode(',',array_unique(array_filter($uids)));
+
             return $arr;
         }
 

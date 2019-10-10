@@ -1718,7 +1718,7 @@ class RbacController extends BaseController {
         $this->thisMonthBonus           = $thisMonthData['bonus']; //奖金
         $this->thisMonthSubsidy         = $thisMonthData['subsidy']; //补助
         $this->thisMonthInsurance       = $thisMonthData['insurance']; //公司五险一金
-
+        $this->uids                     = $thisMonthData['uids']; //人员信息
 
         $this->year 	                = $year;
         $this->month 	                = $month;
@@ -1729,5 +1729,27 @@ class RbacController extends BaseController {
         $this->display();
     }
 
+    //详情页
+    public function public_cost_detail(){
+        $this->title('人力成本统计');
+        $this->pagetitle                = '数据统计';
+        $pin                            = I('pin',0);
+        $year		                    = I('year',date('Y'));
+        $month		                    = I('month',date('m'));
+        $thisMonths                     = get_sum_months($year,$month,1); //当月月份
+        $sumMonths                      = get_sum_months($year,$month,2); //从年初累计月份
+        $uids                           = I('uids') ? explode(',',I('uids')) : '';
+
+        $months                         = $pin==1 ? $sumMonths : $thisMonths;
+        $mod                            = D('Rbac');
+
+
+        $this->year 	                = $year;
+        $this->month 	                = $month;
+        $this->prveyear	                = $year-1;
+        $this->nextyear	                = $year+1;
+        $this->pin                      = $pin;
+        $this->display('HR_cost_detail');
+    }
 
 }
