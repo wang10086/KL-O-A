@@ -10,13 +10,13 @@
          * @param $months 月份 array
          * @return array
          */
-        public function get_chart_personnel($months){
+        public function get_chart_personnel($months,$userType=1){
             $department_arr             = C('department1'); //部门
             $department_info            = $this->get_department_info($department_arr);
 
             $data                       = array();
             foreach ($department_info as $k => $v){
-                $staff_data             = $this->get_staff_data($months,$v); //员工人数
+                $staff_data             = $this->get_staff_data($months,$v,$userType); //员工人数
                 $really_months          = array_unique(array_column($staff_data['list'],'datetime'));
                 $position_data          = $this->get_position_data($staff_data['list'],$really_months); //岗位人数信息
 
@@ -76,14 +76,19 @@
             return $data;
         }
 
-        //员工人数
-        public function get_staff_data($months,$departments=0){
+        /**
+         *
+         * @param $months
+         * @param int $departments
+         * @param int $userType 1=>求员工人数 , 排除名字中带1的, 0=>求费用信息,不排除名字中带1的数据
+         * @return array
+         */
+        public function get_staff_data($months,$departments=0,$userType=0){
             $where                      = array();
             if ($departments != 0){ $where['a.departmentid'] = array('in',$departments); }
             $where['s.datetime']        = array('in',$months);
             $where['s.status']          = 4;
-            $where['s.user_name']       = array('notlike','%1');
-            //$field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code';
+            if ($userType==1) $where['s.user_name'] = array('notlike','%1');
             $field                      = 's.*,a.position_id,d.bonusType,p.position_name,p.code,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy';
             $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')
                                             ->join('__ACCOUNT__ as a on a.id=s.account_id','left')
@@ -291,6 +296,46 @@
             return $arr;
         }
 
+        /**
+         * 获取人员的薪资统计信息
+         * @param string $uids
+         * @param string $months
+         */
+        public function get_account_cost($uids='',$months=''){
+            $where                              = array();
+            $where['s.datetime']                = array('in',$months);
+            $where['s.account_id']              = array('in',$uids);
+            //$field                              = array();
+            $field                              = 's.account_id,s.user_name';
+            $lists                              = M()->table('__SALARY_WAGES_MONTH__ as s')->where($where)->field($field)->select();
+            //P($lists);
+
+        }
+
+        /**
+         * $where                      = array();
+        if ($departments != 0){ $where['a.departmentid'] = array('in',$departments); }
+        $where['s.datetime']        = array('in',$months);
+        $where['s.status']          = 4;
+        $where['s.user_name']       = array('notlike','%1');
+        //$field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code';
+        $field                      = 's.*,a.position_id,d.bonusType,p.position_name,p.code,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy';
+        $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')
+        ->join('__ACCOUNT__ as a on a.id=s.account_id','left')
+        ->join('__ACCOUNT_DETAIL__ as d on d.account_id = s.account_id','left')
+        ->join('__POSITION__ as p on p.id=a.position_id','left')
+        ->join('__SALARY_BONUS__ as b on b.id=s.bonus_id','left')
+        ->join('__SALARY_SUBSIDY__ as sub on sub.id = s.subsidy_id','left')
+        ->where($where)
+        ->field($field)
+        ->select();
+        $month_num                  = count(array_unique(array_column($lists,'datetime')));
+        $data                       = array();
+        $data['avg_num']            = $month_num ? round(count($lists)/$month_num,2) : 0;
+        $data['uids']               = implode(',',array_column($lists,'account_id'));
+        $data['list']               = $lists;
+        return $data;
+         */
 
     }
 

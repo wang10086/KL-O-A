@@ -1658,8 +1658,9 @@ class RbacController extends BaseController {
         $sumMonth                       = get_sum_months($year,$month,2); //从年初累计月份
 
         $mod                            = D('Rbac');
-        $thisMonthData                  = $mod->get_chart_personnel($thisMonths);
-        $sumMonthData                   = $mod->get_chart_personnel($sumMonth);
+        $userType                       = 1;
+        $thisMonthData                  = $mod->get_chart_personnel($thisMonths,$userType);
+        $sumMonthData                   = $mod->get_chart_personnel($sumMonth,$userType);
 
         $this->year 	                = $year;
         $this->month 	                = $month;
@@ -1742,7 +1743,7 @@ class RbacController extends BaseController {
 
         $months                         = $pin==1 ? $sumMonths : $thisMonths;
         $mod                            = D('Rbac');
-
+        $data                           = $mod->get_account_cost($uids,$months);
 
         $this->year 	                = $year;
         $this->month 	                = $month;
