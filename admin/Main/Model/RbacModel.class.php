@@ -305,37 +305,18 @@
             $where                              = array();
             $where['s.datetime']                = array('in',$months);
             $where['s.account_id']              = array('in',$uids);
-            //$field                              = array();
-            $field                              = 's.account_id,s.user_name';
-            $lists                              = M()->table('__SALARY_WAGES_MONTH__ as s')->where($where)->field($field)->select();
-            //P($lists);
+
+            $field                              = 's.*,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy,i.company_birth_ratio,i.company_birth_base,i.company_injury_ratio,i.company_injury_base,i.company_pension_ratio,i.company_pension_base,i.company_medical_care_ratio,i.company_medical_care_base,i.company_unemployment_ratio,i.company_unemployment_base,i.company_accumulation_fund_ratio,i.company_accumulation_fund_base';
+            $lists                              = M()->table('__SALARY_WAGES_MONTH__ as s')
+                                                ->join('__SALARY_BONUS__ as b on b.id=s.bonus_id','left')
+                                                ->join('__SALARY_SUBSIDY__ as sub on sub.id = s.subsidy_id','left')
+                                                ->join('__SALARY_INSURANCE__ as i on i.id = s.insurance_id','left')
+                                                ->where($where)
+                                                ->field($field)
+                                                ->select();
+
 
         }
-
-        /**
-         * $where                      = array();
-        if ($departments != 0){ $where['a.departmentid'] = array('in',$departments); }
-        $where['s.datetime']        = array('in',$months);
-        $where['s.status']          = 4;
-        $where['s.user_name']       = array('notlike','%1');
-        //$field                      = 's.id,s.account_id,s.user_name,s.department,s.datetime,s.post_name,s.total,a.position_id,d.bonusType,p.position_name,p.code';
-        $field                      = 's.*,a.position_id,d.bonusType,p.position_name,p.code,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy';
-        $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')
-        ->join('__ACCOUNT__ as a on a.id=s.account_id','left')
-        ->join('__ACCOUNT_DETAIL__ as d on d.account_id = s.account_id','left')
-        ->join('__POSITION__ as p on p.id=a.position_id','left')
-        ->join('__SALARY_BONUS__ as b on b.id=s.bonus_id','left')
-        ->join('__SALARY_SUBSIDY__ as sub on sub.id = s.subsidy_id','left')
-        ->where($where)
-        ->field($field)
-        ->select();
-        $month_num                  = count(array_unique(array_column($lists,'datetime')));
-        $data                       = array();
-        $data['avg_num']            = $month_num ? round(count($lists)/$month_num,2) : 0;
-        $data['uids']               = implode(',',array_column($lists,'account_id'));
-        $data['list']               = $lists;
-        return $data;
-         */
 
     }
 
