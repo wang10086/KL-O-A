@@ -89,7 +89,7 @@
             </div>
 
             <div class="form-group col-md-12" id="addti_btn">
-                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:public_save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
             </div>
         </div>
 
