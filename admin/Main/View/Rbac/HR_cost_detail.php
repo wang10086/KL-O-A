@@ -38,10 +38,10 @@
                                             <th class="taskOptions">月均人力成本</th>
                                         <?php } ?>
                                     </tr>
-                                    <tr class="black">
-                                        <td class="taskOptions" colspan="2"><?php echo $pin==1 ? '01月 - '.$month.'月' : $month.'月' ?>总合计</td>
-                                        <td class="taskOptions" colspan="<?php echo $pin==1 ? 6 : 4; ?>">{$sum}</td>
-                                    </tr>
+                                    <!--<tr class="black">
+                                        <td class="taskOptions" colspan="2"><?php /*echo $pin==1 ? '01月 - '.$month.'月' : $month.'月' */?>总合计</td>
+                                        <td class="taskOptions" colspan="<?php /*echo $pin==1 ? 6 : 4; */?>">{$sum}</td>
+                                    </tr>-->
                                     <foreach name="lists" item="v">
                                         <tr>
                                             <td class="taskOptions">{$v['user_name']}</td>
