@@ -302,20 +302,56 @@
          * @param string $months
          */
         public function get_account_cost($uids='',$months=''){
-            $where                              = array();
-            $where['s.datetime']                = array('in',$months);
-            $where['s.account_id']              = array('in',$uids);
+            $where                                      = array();
+            $where['s.datetime']                        = array('in',$months);
+            $where['s.account_id']                      = array('in',$uids);
 
-            $field                              = 's.*,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy,i.company_birth_ratio,i.company_birth_base,i.company_injury_ratio,i.company_injury_base,i.company_pension_ratio,i.company_pension_base,i.company_medical_care_ratio,i.company_medical_care_base,i.company_unemployment_ratio,i.company_unemployment_base,i.company_accumulation_fund_ratio,i.company_accumulation_fund_base';
-            $lists                              = M()->table('__SALARY_WAGES_MONTH__ as s')
-                                                ->join('__SALARY_BONUS__ as b on b.id=s.bonus_id','left')
-                                                ->join('__SALARY_SUBSIDY__ as sub on sub.id = s.subsidy_id','left')
-                                                ->join('__SALARY_INSURANCE__ as i on i.id = s.insurance_id','left')
-                                                ->where($where)
-                                                ->field($field)
-                                                ->select();
+            $field                                      = 's.*,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy,i.company_birth_ratio,i.company_birth_base,i.company_injury_ratio,i.company_injury_base,i.company_pension_ratio,i.company_pension_base,i.company_medical_care_ratio,i.company_medical_care_base,i.company_unemployment_ratio,i.company_unemployment_base,i.company_accumulation_fund_ratio,i.company_accumulation_fund_base';
+            $lists                                      = M()->table('__SALARY_WAGES_MONTH__ as s')
+                                                        ->join('__SALARY_BONUS__ as b on b.id=s.bonus_id','left')
+                                                        ->join('__SALARY_SUBSIDY__ as sub on sub.id = s.subsidy_id','left')
+                                                        ->join('__SALARY_INSURANCE__ as i on i.id = s.insurance_id','left')
+                                                        ->where($where)
+                                                        ->field($field)
+                                                        ->select();
 
-
+            $data                                       = array();
+            foreach ($uids as $value){
+                $num                                    = 0; //发工资次数
+                $sum_salary                             = 0;
+                $sum_bonus                              = 0;
+                $sum_subsidy                            = 0;
+                $sum_insurance                          = 0;
+                $company_sum                            = 0;
+                $company_sum_salary                     = 0;
+                $company_sum_bonus                      = 0;
+                $company_sum_subsidy                    = 0;
+                $company_sum_insurance                  = 0;
+                foreach ($lists as $v){
+                    if ($v['account_id']==$value){
+                        $num++;
+                        $sum_salary                     += ($v['basic_salary'] - $v['withdrawing']) +($v['performance_salary'] + $v['Achievements_withdrawing']); //实发基本工资 = 实发基本工资-考勤 + 绩效工资 + 绩效增减
+                        $sum_bonus                      += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus']; //奖金 = 业绩提成 + 奖金包 + 年终奖
+                        $sum_subsidy                    += $v['Subsidy'] + $v['computer_subsidy'] + $v['foreign_subsidies'] + $v['Other']; //补助 = 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
+                        $sum_insurance                  += ($v['company_birth_ratio'] * $v['company_birth_base']) + ($v['company_injury_ratio'] * $v['company_injury_base']) + ($v['company_pension_ratio'] * $v['company_pension_base']) + ($v['company_medical_care_ratio'] * $v['company_medical_care_base']) + ($v['company_unemployment_ratio'] * $v['company_unemployment_base']) + ($v['company_accumulation_fund_ratio'] * $v['company_accumulation_fund_base']); //公司五险一金
+                        $data[$value]['account_id']     = $v['account_id'];
+                        $data[$value]['user_name']      = $v['user_name'];
+                        $data[$value]['num']            = $num;
+                        $data[$value]['sum_salary']     = $sum_salary;
+                        $data[$value]['sum_bonus']      = $sum_bonus;
+                        $data[$value]['sum_subsidy']    = $sum_subsidy;
+                        $data[$value]['sum_insurance']  = $sum_insurance;
+                        $data[$value]['sum']            = $sum_salary + $sum_bonus + $sum_subsidy + $sum_insurance;
+                    }
+                    $company_sum_salary                 += ($v['basic_salary'] - $v['withdrawing']) +($v['performance_salary'] + $v['Achievements_withdrawing']); //实发基本工资 = 实发基本工资-考勤 + 绩效工资 + 绩效增减
+                    $company_sum_bonus                  += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus']; //奖金 = 业绩提成 + 奖金包 + 年终奖
+                    $company_sum_subsidy                += $v['Subsidy'] + $v['computer_subsidy'] + $v['foreign_subsidies'] + $v['Other']; //补助 = 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
+                    $company_sum_insurance              += ($v['company_birth_ratio'] * $v['company_birth_base']) + ($v['company_injury_ratio'] * $v['company_injury_base']) + ($v['company_pension_ratio'] * $v['company_pension_base']) + ($v['company_medical_care_ratio'] * $v['company_medical_care_base']) + ($v['company_unemployment_ratio'] * $v['company_unemployment_base']) + ($v['company_accumulation_fund_ratio'] * $v['company_accumulation_fund_base']); //公司五险一金
+                }
+            }
+            $company_sum                                += $company_sum_salary + $company_sum_bonus + $company_sum_subsidy + $company_sum_insurance;
+            $data['sum']                                = $company_sum;
+            return $data;
         }
 
     }

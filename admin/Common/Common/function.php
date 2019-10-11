@@ -4945,7 +4945,7 @@ function getScienceRes(){
      * @param $count    每页显示条数
      * @return mixed
      */
-    function arr_page($arr,$p,$count){
+    function arr_page($arr,$p=1,$count=20){
         if (empty($p)){
             $p = 1;
         }

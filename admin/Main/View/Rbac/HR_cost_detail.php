@@ -21,6 +21,7 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$year}年{$month}月{$_action_}</h3>
+                                    <h3 class="box-title pull-right mr20"><span class="green">{$department}</span></h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
@@ -33,14 +34,20 @@
                                         <th class="taskOptions">补助</th>
                                         <th class="taskOptions">五险一金</th>
                                     </tr>
-                                    <tr>
-                                        <td class="taskOptions">{$thisMonthSum['']}</td>
-                                        <td class="taskOptions">{$thisMonthSum['']}</td>
-                                        <td class="taskOptions">{$thisMonthSum['']}</td>
-                                        <td class="taskOptions">{$thisMonthSum['']}</td>
-                                        <td class="taskOptions">{$thisMonthSum['']}</td>
-                                        <td class="taskOptions">{$thisMonthSum['']}</td>
+                                    <tr class="black">
+                                        <td class="taskOptions">总合计</td>
+                                        <td class="taskOptions" colspan="5">{$sum}</td>
                                     </tr>
+                                    <foreach name="lists" item="v">
+                                        <tr>
+                                            <td class="taskOptions">{$v['user_name']}</td>
+                                            <td class="taskOptions">{$v['sum']}</td>
+                                            <td class="taskOptions">{$v['sum_salary']}</td>
+                                            <td class="taskOptions">{$v['sum_bonus']}</td>
+                                            <td class="taskOptions">{$v['sum_subsidy']}</td>
+                                            <td class="taskOptions">{$v['sum_insurance']}</td>
+                                        </tr>
+                                    </foreach>
 
                                 </table>
                                 </div><!-- /.box-body -->

@@ -55,16 +55,16 @@
                                     <tr role="row" class="orders" >
                                         <th class="taskOptions">类别</th>
                                         <th class="taskOptions">细项</th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['公司']))}">公司</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['京区业务中心']))}">京区业务中心</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['京外业务中心']))}">京外业务中心</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['南京项目部']))}">南京项目部</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['武汉项目部']))}">武汉项目部</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['沈阳项目部']))}">沈阳项目部</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['长春项目部']))}">长春项目部</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['市场部']))}">市场部</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['常规业务中心']))}">常规业务中心</a></th>
-                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['机关部门']))}">机关部门</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['公司'],'dep'=>'公司'))}">公司</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['京区业务中心'],'dep'=>'京区业务中心'))}">京区业务中心</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['京外业务中心'],'dep'=>'京外业务中心'))}">京外业务中心</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['南京项目部'],'dep'=>'南京项目部'))}">南京项目部</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['武汉项目部'],'dep'=>'武汉项目部'))}">武汉项目部</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['沈阳项目部'],'dep'=>'沈阳项目部'))}">沈阳项目部</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['长春项目部'],'dep'=>'长春项目部'))}">长春项目部</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['市场部'],'dep'=>'市场部'))}">市场部</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['常规业务中心'],'dep'=>'常规业务中心'))}">常规业务中心</a></th>
+                                        <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['机关部门'],'dep'=>'机关部门'))}">机关部门</a></th>
                                     </tr>
                                     <tr>
                                         <td class="taskOptions" colspan="2"><?php echo $pin==1 ? "01月 - $month月合计" : "$month月合计"; ?>{$month}月合计</td>
