@@ -66,7 +66,7 @@
                                         <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['常规业务中心'],'dep'=>'常规业务中心'))}">常规业务中心</a></th>
                                         <th class="taskOptions"><a href="{:U('Rbac/public_cost_detail',array('year'=>$year,month=>$month,pin=>$pin,'uids'=>$uids['机关部门'],'dep'=>'机关部门'))}">机关部门</a></th>
                                     </tr>
-                                    <tr>
+                                    <tr class="black">
                                         <td class="taskOptions" colspan="2"><?php echo $pin==1 ? "01月 - $month月合计" : "$month月合计"; ?>{$month}月合计</td>
                                         <td class="taskOptions">{$thisMonthSum['公司']}</td>
                                         <td class="taskOptions">{$thisMonthSum['京区业务中心']}</td>

@@ -32,11 +32,15 @@
                                         <th class="taskOptions">岗位薪酬</th>
                                         <th class="taskOptions">奖金</th>
                                         <th class="taskOptions">补助</th>
-                                        <th class="taskOptions">五险一金</th>
+                                        <th class="taskOptions">公司五险一金</th>
+                                        <?php if ($pin==1){ ?>
+                                            <th class="taskOptions">累计月数</th>
+                                            <th class="taskOptions">月均人力成本</th>
+                                        <?php } ?>
                                     </tr>
                                     <tr class="black">
-                                        <td class="taskOptions">总合计</td>
-                                        <td class="taskOptions" colspan="5">{$sum}</td>
+                                        <td class="taskOptions" colspan="2"><?php echo $pin==1 ? '01月 - '.$month.'月' : $month.'月' ?>总合计</td>
+                                        <td class="taskOptions" colspan="<?php echo $pin==1 ? 6 : 4; ?>">{$sum}</td>
                                     </tr>
                                     <foreach name="lists" item="v">
                                         <tr>
@@ -46,6 +50,10 @@
                                             <td class="taskOptions">{$v['sum_bonus']}</td>
                                             <td class="taskOptions">{$v['sum_subsidy']}</td>
                                             <td class="taskOptions">{$v['sum_insurance']}</td>
+                                            <?php if ($pin==1){ ?>
+                                            <td class="taskOptions">{$v['num']}</td>
+                                            <td class="taskOptions">{$v['avg']}</td>
+                                            <?php } ?>
                                         </tr>
                                     </foreach>
 

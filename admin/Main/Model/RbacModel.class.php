@@ -342,6 +342,8 @@
                         $data[$value]['sum_subsidy']    = $sum_subsidy;
                         $data[$value]['sum_insurance']  = $sum_insurance;
                         $data[$value]['sum']            = $sum_salary + $sum_bonus + $sum_subsidy + $sum_insurance;
+                        $data[$value]['avg']            = round($data[$value]['sum']/$data[$value]['num'],2);
+
                     }
                     $company_sum_salary                 += ($v['basic_salary'] - $v['withdrawing']) +($v['performance_salary'] + $v['Achievements_withdrawing']); //实发基本工资 = 实发基本工资-考勤 + 绩效工资 + 绩效增减
                     $company_sum_bonus                  += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus']; //奖金 = 业绩提成 + 奖金包 + 年终奖
@@ -355,5 +357,7 @@
         }
 
     }
+
+
 
 
