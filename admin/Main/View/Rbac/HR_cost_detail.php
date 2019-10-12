@@ -20,7 +20,7 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$year}年{$month}月{$_action_}</h3>
+                                    <h3 class="box-title">{$year}年<?php echo $pin==1 ? '01月-'.$month : $month; ?>月{$_action_}</h3>
                                     <h3 class="box-title pull-right mr20"><span class="green">{$department}</span></h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -44,7 +44,7 @@
                                     </tr>-->
                                     <foreach name="lists" item="v">
                                         <tr>
-                                            <td class="taskOptions">{$v['user_name']}</td>
+                                            <td class="taskOptions"><a href="<?php echo $pin==1 ? U('Salary/salaryindex',array('id'=>$v['account_id'],'months'=>$months)) : U('Salary/salarydetails',array('id'=>$v['salary_id'])); ?>">{$v['user_name']}</a></td>
                                             <td class="taskOptions">{$v['sum']}</td>
                                             <td class="taskOptions">{$v['sum_salary']}</td>
                                             <td class="taskOptions">{$v['sum_bonus']}</td>

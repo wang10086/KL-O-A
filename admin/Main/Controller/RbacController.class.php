@@ -1749,6 +1749,7 @@ class RbacController extends BaseController {
         unset($data['sum']);
         $newData                        = multi_array_sort($data,sum); //二维数组排序
 
+        $this->months                   = $sumMonths;
         $this->lists                    = $newData;
         $this->sum                      = $sum;
         $this->department               = $dep;

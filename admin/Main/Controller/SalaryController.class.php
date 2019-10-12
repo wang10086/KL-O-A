@@ -799,6 +799,7 @@ class SalaryController extends BaseController {
         $department                             = I('department')?trim(I('department')):'';
         $month                                  = I('month')?trim(I('month')):'';
         $userid                                 = session('userid');
+        $months                                  = I('months');
 
         $where                                  = array();
         $where['status']                        = 4;
@@ -806,6 +807,7 @@ class SalaryController extends BaseController {
         if ($id) $where['account_id']           = $id;
         if ($department) $where['department']   = $department;
         if ($month) $where['datetime']          = $month;
+        if ($months)$where['datetime']          = array('in',$months); //数据统计页面
 
         if (in_array($userid,array(1,11,12,32,38,55,77,185))){
 

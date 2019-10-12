@@ -334,6 +334,7 @@
                         $sum_bonus                      += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus']; //奖金 = 业绩提成 + 奖金包 + 年终奖
                         $sum_subsidy                    += $v['Subsidy'] + $v['computer_subsidy'] + $v['foreign_subsidies'] + $v['Other']; //补助 = 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
                         $sum_insurance                  += ($v['company_birth_ratio'] * $v['company_birth_base']) + ($v['company_injury_ratio'] * $v['company_injury_base']) + ($v['company_pension_ratio'] * $v['company_pension_base']) + ($v['company_medical_care_ratio'] * $v['company_medical_care_base']) + ($v['company_unemployment_ratio'] * $v['company_unemployment_base']) + ($v['company_accumulation_fund_ratio'] * $v['company_accumulation_fund_base']); //公司五险一金
+                        $data[$value]['salary_id']      = $v['id'];
                         $data[$value]['account_id']     = $v['account_id'];
                         $data[$value]['user_name']      = $v['user_name'];
                         $data[$value]['num']            = $num;
