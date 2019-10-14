@@ -2413,18 +2413,15 @@ class FinanceController extends BaseController {
             if ($bx_user)   $where['b.bx_user']     = array('like','%'.$bx_user.'%');
             if ($pin==1)    $where['b.bxd_type']    = 1;
             if ($pin==2)    $where['b.bxd_type']    = array('in',array(2,3));
-
         }else{
-            $where['b.bx_user_id']                  = array('in',$auth);
-            $where['a.ys_audit_userid']             = array('eq',cookie('userid'));
-            $where['_logic'] = 'or';
-            $map['_complex'] = $where;
-            if ($group_id)  $map['b.group_ids']     = array('like','%'.$group_id.'%');
-            if ($bxd_id)    $map['b.bxd_id']        = array('like','%'.$bxd_id.'%');
-            if ($bx_user)   $map['b.bx_user']       = array('like','%'.$bx_user.'%');
-            if ($pin==1)    $map['b.bxd_type']      = 1;
-            if ($pin==2)    $map['b.bxd_type']      = array('in',array(2,3));
+            $where[]                                = " b.bx_user_id IN (".implode(',',$auth).") OR a.ys_audit_userid =".cookie('userid');
+            if ($group_id)  $where['b.group_ids']   = array('like','%'.$group_id.'%');
+            if ($bxd_id)    $where['b.bxd_id']      = array('like','%'.$bxd_id.'%');
+            if ($bx_user)   $where['b.bx_user']     = array('like','%'.$bx_user.'%');
+            if ($pin==1)    $where['b.bxd_type']    = 1;
+            if ($pin==2)    $where['b.bxd_type']    = array('in',array(2,3));
         }
+
         //分页
         $pagecount		= M()->table('__BAOXIAO__ as b')->field('b.*')->join('__BAOXIAO_AUDIT__ as a on a.bx_id=b.id','left')->where($where)->order($this->orders('b.id'))->count();
         $page			= new Page($pagecount, P::PAGE_SIZE);
