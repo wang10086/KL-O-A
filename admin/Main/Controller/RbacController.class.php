@@ -1744,14 +1744,11 @@ class RbacController extends BaseController {
 
         $months                         = $pin==1 ? $sumMonths : $thisMonths;
         $mod                            = D('Rbac');
-        $data                           = $mod->get_account_cost($uids,$months);
-        $sum                            = $data['sum'];
-        unset($data['sum']);
+        $data                           = $mod->get_account_cost($year,$pin,$uids,$months);
         $newData                        = multi_array_sort($data,sum); //二维数组排序
 
         $this->months                   = $sumMonths;
         $this->lists                    = $newData;
-        $this->sum                      = $sum;
         $this->department               = $dep;
         $this->year 	                = $year;
         $this->month 	                = $month;

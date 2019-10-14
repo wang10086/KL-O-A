@@ -298,10 +298,12 @@
 
         /**
          * 获取人员的薪资统计信息
+         * @param string $year
          * @param string $uids
          * @param string $months
          */
-        public function get_account_cost($uids='',$months=''){
+        public function get_account_cost($year,$pin=0,$uids='',$months=''){
+            $yearTime                                   = getYearTime($year); //年度周期
             $where                                      = array();
             $where['s.datetime']                        = array('in',$months);
             $where['s.account_id']                      = array('in',$uids);
@@ -322,11 +324,11 @@
                 $sum_bonus                              = 0;
                 $sum_subsidy                            = 0;
                 $sum_insurance                          = 0;
-                $company_sum                            = 0;
-                $company_sum_salary                     = 0;
-                $company_sum_bonus                      = 0;
-                $company_sum_subsidy                    = 0;
-                $company_sum_insurance                  = 0;
+                //$company_sum                            = 0;
+                //$company_sum_salary                     = 0;
+                //$company_sum_bonus                      = 0;
+                //$company_sum_subsidy                    = 0;
+                //$company_sum_insurance                  = 0;
                 foreach ($lists as $v){
                     if ($v['account_id']==$value){
                         $num++;
@@ -346,14 +348,21 @@
                         $data[$value]['avg']            = round($data[$value]['sum']/$data[$value]['num'],2);
 
                     }
-                    $company_sum_salary                 += ($v['basic_salary'] - $v['withdrawing']) +($v['performance_salary'] + $v['Achievements_withdrawing']); //实发基本工资 = 实发基本工资-考勤 + 绩效工资 + 绩效增减
-                    $company_sum_bonus                  += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus']; //奖金 = 业绩提成 + 奖金包 + 年终奖
-                    $company_sum_subsidy                += $v['Subsidy'] + $v['computer_subsidy'] + $v['foreign_subsidies'] + $v['Other']; //补助 = 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
-                    $company_sum_insurance              += ($v['company_birth_ratio'] * $v['company_birth_base']) + ($v['company_injury_ratio'] * $v['company_injury_base']) + ($v['company_pension_ratio'] * $v['company_pension_base']) + ($v['company_medical_care_ratio'] * $v['company_medical_care_base']) + ($v['company_unemployment_ratio'] * $v['company_unemployment_base']) + ($v['company_accumulation_fund_ratio'] * $v['company_accumulation_fund_base']); //公司五险一金
+                    //$company_sum_salary                 += ($v['basic_salary'] - $v['withdrawing']) +($v['performance_salary'] + $v['Achievements_withdrawing']); //实发基本工资 = 实发基本工资-考勤 + 绩效工资 + 绩效增减
+                    //$company_sum_bonus                  += $v['total'] + $v['foreign_bonus'] + $v['annual_bonus']; //奖金 = 业绩提成 + 奖金包 + 年终奖
+                    //$company_sum_subsidy                += $v['Subsidy'] + $v['computer_subsidy'] + $v['foreign_subsidies'] + $v['Other']; //补助 = 带团补助 + 电脑补助 + 外地补助 + 其他收入变动
+                    //$company_sum_insurance              += ($v['company_birth_ratio'] * $v['company_birth_base']) + ($v['company_injury_ratio'] * $v['company_injury_base']) + ($v['company_pension_ratio'] * $v['company_pension_base']) + ($v['company_medical_care_ratio'] * $v['company_medical_care_base']) + ($v['company_unemployment_ratio'] * $v['company_unemployment_base']) + ($v['company_accumulation_fund_ratio'] * $v['company_accumulation_fund_base']); //公司五险一金
+                }
+
+                //求结算毛利数据
+                if ($pin ==1){
+                    $settlement                         = personal_income($value,0,$yearTime);
+                    $data[$value]['profit']             = $settlement['zml'];
+                    $data[$value]['salary_avg']         = (int)$data[$value]['profit'] ? (round($data[$value]['sum']/$data[$value]['profit'],4)*100).'%' : '<font color="#999999">暂无毛利数据</font>';
                 }
             }
-            $company_sum                                += $company_sum_salary + $company_sum_bonus + $company_sum_subsidy + $company_sum_insurance;
-            $data['sum']                                = $company_sum;
+            //$company_sum                                += $company_sum_salary + $company_sum_bonus + $company_sum_subsidy + $company_sum_insurance;
+            //$data['sum']                                = $company_sum;
             return $data;
         }
 

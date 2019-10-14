@@ -799,7 +799,7 @@ class SalaryController extends BaseController {
         $department                             = I('department')?trim(I('department')):'';
         $month                                  = I('month')?trim(I('month')):'';
         $userid                                 = session('userid');
-        $months                                  = I('months');
+        $months                                 = I('months');
 
         $where                                  = array();
         $where['status']                        = 4;

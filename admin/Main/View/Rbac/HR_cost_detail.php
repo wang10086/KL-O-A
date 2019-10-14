@@ -36,12 +36,10 @@
                                         <?php if ($pin==1){ ?>
                                             <th class="taskOptions">累计月数</th>
                                             <th class="taskOptions">月均人力成本</th>
+                                            <th class="taskOptions">累计结算毛利</th>
+                                            <th class="taskOptions">工资比例(合计/结算毛利)</th>
                                         <?php } ?>
                                     </tr>
-                                    <!--<tr class="black">
-                                        <td class="taskOptions" colspan="2"><?php /*echo $pin==1 ? '01月 - '.$month.'月' : $month.'月' */?>总合计</td>
-                                        <td class="taskOptions" colspan="<?php /*echo $pin==1 ? 6 : 4; */?>">{$sum}</td>
-                                    </tr>-->
                                     <foreach name="lists" item="v">
                                         <tr>
                                             <td class="taskOptions"><a href="<?php echo $pin==1 ? U('Salary/salaryindex',array('id'=>$v['account_id'],'months'=>$months)) : U('Salary/salarydetails',array('id'=>$v['salary_id'])); ?>">{$v['user_name']}</a></td>
@@ -53,6 +51,8 @@
                                             <?php if ($pin==1){ ?>
                                             <td class="taskOptions">{$v['num']}</td>
                                             <td class="taskOptions">{$v['avg']}</td>
+                                            <td class="taskOptions">{$v['profit']}</td>
+                                            <td class="taskOptions">{$v['salary_avg']}</td>
                                             <?php } ?>
                                         </tr>
                                     </foreach>
