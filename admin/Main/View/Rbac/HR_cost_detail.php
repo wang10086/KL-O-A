@@ -37,7 +37,7 @@
                                             <th class="taskOptions">累计月数</th>
                                             <th class="taskOptions">月均人力成本</th>
                                             <th class="taskOptions">累计结算毛利</th>
-                                            <th class="taskOptions">工资比例(合计/结算毛利)</th>
+                                            <th class="taskOptions">合计/结算毛利</th>
                                         <?php } ?>
                                     </tr>
                                     <foreach name="lists" item="v">
