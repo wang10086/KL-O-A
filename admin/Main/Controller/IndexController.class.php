@@ -24,9 +24,9 @@ class IndexController extends BaseController {
         $this->salary_datetime();//触发人力资源信息条数提醒
        	$this->file_remind_number();//触发文件审核处理信息条数提醒
 		$this->sum_plans    = M('op')->where("`departure` >= '$startday' and `departure`<= '$endday' and `status`= 1")->count();
-        $this->sum_partner  = M('customer_partner')->count();
+        $this->sum_partner  = M('customer_partner')->where(array('del_stu'=>array('neq','-1')))->count();
         $cycle_data         = get_cycle(date('Y').date('m'));
-        $this->new_partner  = M('customer_partner')->where(array('create_time'=>array('between',"$cycle_data[begintime],$cycle_data[endtime]")))->count();
+        $this->new_partner  = M('customer_partner')->where(array('del_stu'=>array('neq','-1'),'create_time'=>array('between',"$cycle_data[begintime],$cycle_data[endtime]")))->count();
 
 		//获取公告
 		$lists              = $this->get_notice_list();

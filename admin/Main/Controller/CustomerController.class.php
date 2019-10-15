@@ -682,8 +682,10 @@ class CustomerController extends BaseController {
     public function public_partner_map(){
         $this->title('城市合伙人');
         $city_data                  = M('citys')->field('id,name,pid')->select();
-        //$customer_data              = M('customer_partner')->where(array('audit_stu'=>2))->select();
-        $customer_data              = M('customer_partner')->select();
+        $where                      = array();
+        //$where['audit_stu']         = 2;
+        $where['del_stu']           = array('neq','-1');
+        $customer_data              = M('customer_partner')->where($where)->select();
         $data                       = array();
         foreach ($city_data as $k=>$v){
             $province_num           = 0;
