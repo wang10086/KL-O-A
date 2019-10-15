@@ -42,8 +42,8 @@
                                     </foreach>
                                     <tr class="black">
                                         <td colspan="2">合计: {$data.sum}</td>
-                                        <td>协助销售金额:  <?php echo $data['otherSum'].' * 40% = '.$data['other']; ?></td>
-                                        <td colspan="2">自己立项金额: {$data.self}</td>
+                                        <td>协助销售毛利:  <?php echo $data['otherSum'].' * 40% = '.$data['other']; ?></td>
+                                        <td colspan="2">本人销售毛利: {$data.self}</td>
                                     </tr>
                                 </table>
                                 </div><!-- /.box-body -->
