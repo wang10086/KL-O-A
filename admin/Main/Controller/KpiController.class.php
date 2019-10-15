@@ -2116,8 +2116,26 @@ class KpiController extends BaseController {
         $this->data             = $data;
         $this->year             = $year;
         $this->month            = substr($month,4,2);
+        $this->st               = $start_time;
+        $this->et               = $end_time;
         $this->title            = '实施专家业绩贡献度';
         $this->display('expert_achivement');
+    }
+
+    //业绩贡献度项目详情
+    public function public_expert_detail(){
+        $this->title('实施专家业绩贡献度');
+        $year                   = I('year');
+        $month                  = I('month');
+        $start_time             = trim(I('st'));
+        $end_time               = trim(I('et'));
+        $user_id                = I('uid');
+
+        $data                   = get_gross_profit($user_id,$start_time,$end_time);
+        $this->data             = $data;
+        $this->lists            = $data['lists'];
+        $this->username         = username($user_id);
+        $this->display('expert_detail');
     }
 
     //员工流失率

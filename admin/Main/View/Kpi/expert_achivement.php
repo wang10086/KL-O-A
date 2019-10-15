@@ -43,7 +43,7 @@
                                     <td>{$v.uasrname}</td>
                                     <td>{$v.salary}</td>
                                     <td>{$v.t_salary}</td>
-                                    <td>{$v.profit}</td>
+                                    <td><a href="{:U('Kpi/public_expert_detail',array('year'=>$year,'month'=>$month,'st'=>$st,'et'=>$et,'uid'=>$v['userid']))}">{$v.profit}</a></td>
                                     <td>{$v.complete}</td>
                                 </tr>
                             </foreach>

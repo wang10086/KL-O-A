@@ -877,19 +877,29 @@ function get_wages_info($userid){
 //研发专家业绩贡献度
 function get_gross_profit($userid,$beginTime,$endTime){
     //个人立项毛利部分(结算)
+    $all_op_lists           = array();
+    $selfSumGrossProfit     = 0;
+    $otherSumGrossProfit    = 0;
     $where                  = array();
     $where['o.create_user'] = $userid;
     $where['l.req_type']    = 801;
     $where['l.audit_time']  = array('between',array($beginTime,$endTime));
     $where['s.audit_status']= 1;
     $field                  = array();
-    $field[]                = 'sum(s.maoli) as selfSumGrossProfit';
-    $settlement_self        = M()->table('__OP__ as o')
+    $field[]                = 'o.group_id,o.op_id,o.project,o.expert,o.sale_user,s.maoli';
+    //$field[]                = 'sum(s.maoli) as selfSumGrossProfit';
+    $settlement_self_lists  = M()->table('__OP__ as o')
         ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
         ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
         ->where($where)
         ->field($field)
-        ->find();
+        ->select();
+    if ($settlement_self_lists){
+        foreach ($settlement_self_lists as $k=>$v){
+            $selfSumGrossProfit += $v['maoli'];
+            $all_op_lists[] = $v;
+        }
+    }
 
     //协助销售毛利*0.4
     $where                  = array();
@@ -900,7 +910,7 @@ function get_gross_profit($userid,$beginTime,$endTime){
     $where['l.audit_time']  = array('between',array($beginTime,$endTime));
     $where['s.audit_status']= 1;
     $field                  = array();
-    $field[]                = 'o.group_id,o.op_id,o.project,o.expert,s.maoli';
+    $field[]                = 'o.group_id,o.op_id,o.project,o.expert,o.sale_user,s.maoli';
     //$field[]                = 'sum(s.maoli) as otherSumGrossProfit';
     $settlement_other_lists = M()->table('__OP__ as o')
         ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
@@ -908,22 +918,23 @@ function get_gross_profit($userid,$beginTime,$endTime){
         ->where($where)
         ->field($field)
         ->select();
-    $otherSumGrossProfit        = 0;
     if ($settlement_other_lists){
         foreach ($settlement_other_lists as $v){
             $experts            = explode(',',$v['expert']);
             if (in_array($userid,$experts)){
                 $otherSumGrossProfit += $v['maoli'];
+                $all_op_lists[] = $v;
             }
         }
     }
 
 
     $data                       = array();
-    $data['self']               = $settlement_self['selfSumGrossProfit'];
+    $data['self']               = $selfSumGrossProfit;
     $data['otherSum']           = $otherSumGrossProfit;
     $data['other']              = $data['otherSum']*0.4;
     $data['sum']                = $data['self'] + $data['other'];
+    $data['lists']              = $all_op_lists;
     return $data;
 }
 
@@ -955,7 +966,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $base_wages[$v]         = get_wages_info($v);
         $userdata[$v]['userid'] = $v;
         $userdata[$v]['uasrname']   = M('account')->where(array('id'=>$v))->getField('nickname');
-        $userdata[$v]['profit']     = $lists[$v]['sale'] + $lists[$v]['other']; //业绩贡献
+        $userdata[$v]['profit']     = $lists[$v]['self'] + $lists[$v]['other']; //业绩贡献
         $userdata[$v]['salary']     = $base_wages[$v]['standard_salary'];
         $userdata[$v]['t_salary']   = $base_wages[$v]['otherWages']; //1.5倍薪资
         $userdata[$v]['complete']   = (round($userdata[$v]['profit']/$userdata[$v]['t_salary'],2)*100).'%';
