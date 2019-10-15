@@ -444,7 +444,7 @@ class CustomerController extends BaseController {
     }
 
     //城市合伙人
-    public function public_partner(){
+    public function partner(){
         $partner_db                 = M('customer_partner'); //合伙人
         $deposit_db                 = M('customer_deposit'); //保证金
         $citys_db                   = M('citys');

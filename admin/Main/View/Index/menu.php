@@ -299,9 +299,9 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <!--<if condition="rolemenu(array('Customer/partner'))">-->
-                                    <li class="{:on('Customer/public_partner')}"><a href="{:U('Customer/public_partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
-                                <!--</if>-->
+                                <if condition="rolemenu(array('Customer/partner'))">
+                                    <li class="{:on('Customer/partner')}"><a href="{:U('Customer/partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
+                                </if>
 
                             	<if condition="rolemenu(array('Customer/o2o'))">
                                 	<li class="{:on('Customer/o2o')} {:on('Customer/o2o_apply')}"><a href="{:U('Customer/o2o')}"><i class="fa fa-angle-right"></i> 支撑服务校</a></li>
