@@ -854,19 +854,19 @@ class KpiController extends BaseController {
 			}
 			if($info['ld_user_name']){
 				$user = getuserinfo($info['ld_user_name']);
-				$info['ld_user_id']  = $user['userid'];
+				$info['ld_user_id']  = $user['userid'] ? $user['userid'] : 0;
 			}else{
 				$info['ld_user_id']  = 0;
 			}
 			if($info['fd_user_name']){
 				$user = getuserinfo($info['fd_user_name']);
-				$info['fd_user_id']  = $user['userid'];
+				$info['fd_user_id']  = $user['userid'] ? $user['userid'] : 0;
 			}else{
 				$info['fd_user_id']  = 0;
 			}
 			if($info['ac_user_name']){
 				$user = getuserinfo($info['ac_user_name']);
-				$info['ac_user_id']  = $user['userid'];
+				$info['ac_user_id']  = $user['userid'] ? $user['userid'] : 0;
 			}else{
 				$info['ac_user_id']  = 0;
 			}
