@@ -444,7 +444,7 @@ class CustomerController extends BaseController {
     }
 
     //城市合伙人
-    public function partner(){
+    public function public_partner(){
         $partner_db                 = M('customer_partner'); //合伙人
         $deposit_db                 = M('customer_deposit'); //保证金
         $citys_db                   = M('citys');
@@ -469,7 +469,7 @@ class CustomerController extends BaseController {
         $this->lists                = $lists;
         $this->citys                = $citys_db->getField('id,name',true);
         $this->title('城市合伙人');
-        $this->display();
+        $this->display('partner');
     }
     
     //新增/编辑合伙人信息

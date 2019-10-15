@@ -299,23 +299,9 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <if condition="rolemenu(array('Customer/partner'))">
-                                    <li class="{:on('Customer/partner')}"><a href="{:U('Customer/partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
-                                </if>
-
-                                <!--<li class="treeview {:on('Customer/partner')} {:on('Customer/partner_edit')}">
-                                    <if condition="rolemenu(array('Customer/partner','Customer/partner_edit'))">
-                                        <a href=""><i class="fa  fa-handshake-o"></i> 城市合伙人</a>
-                                    </if>
-                                    <ul class="treeview-menu">
-                                        <if condition="rolemenu(array('Customer/partner','Customer/partner_edit'))">
-                                            <li class="{:on('Customer/partner')} {:on('Customer/partner_edit')}"><a href="{:U('Customer/partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
-                                        </if>
-                                        <if condition="rolemenu(array('Customer/partner_map'))">
-                                            <li class="{:on('Customer/partner_map')} {:on('Customer/partner_map')} "><a href="{:U('Customer/partner_map')}"><i class="fa fa-angle-right"></i> 合伙人分布</a></li>
-                                        </if>
-                                    </ul>
-                                </li>-->
+                                <!--<if condition="rolemenu(array('Customer/partner'))">-->
+                                    <li class="{:on('Customer/public_partner')}"><a href="{:U('Customer/public_partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
+                                <!--</if>-->
 
                             	<if condition="rolemenu(array('Customer/o2o'))">
                                 	<li class="{:on('Customer/o2o')} {:on('Customer/o2o_apply')}"><a href="{:U('Customer/o2o')}"><i class="fa fa-angle-right"></i> 支撑服务校</a></li>

@@ -1984,7 +1984,7 @@ function get_yw_department(){
                 $year_shishi_lists[$k]['op_average'] = '0%';
             }
         }
-        $year_score_average                    = $year_score_num?(round($year_op_average_sum/$year_score_num,4)*100).'%':'100%'; //已调查顾客满意度
+        $year_score_average                    = $year_score_num ? (round($year_op_average_sum/$year_score_num,4)*100).'%' : '100%'; //已调查顾客满意度
         $year_shishi_num                       = count($year_shishi_lists); //所有实施团的数量(包括未调查的数量)
         $year_average                          = round($year_op_average_sum/$year_shishi_num,4); //全部平均值
         $year_average                          = ($year_average*100).'%';  //总平均分,包括未调查的
@@ -2035,9 +2035,9 @@ function get_yw_department(){
                 $month_shishi_lists[$k]['op_average'] = '0%';
             }
         }
-        $month_score_average                    = $month_score_num?(round($month_op_average_sum/$month_score_num,4)*100).'%':'100%'; //已调查顾客满意度
+        $month_score_average                    = $month_score_num ? (round($month_op_average_sum/$month_score_num,4)*100).'%' :'100%'; //已调查顾客满意度
         $month_shishi_num                       = count($month_shishi_lists); //所有实施团的数量(包括未调查的数量)
-        $month_average                          = round($month_op_average_sum/$month_shishi_num,4); //全部平均值
+        $month_average                          = $month_shishi_num ? round($month_op_average_sum/$month_shishi_num,4) : '100%'; //全部平均值
         $month_average                          = ($month_average*100).'%';  //总平均分,包括未调查的
 
         $data['month_op_num']                   = count($month_shishi_lists);
@@ -2063,7 +2063,7 @@ function get_yw_department(){
                     if ($v['driver']    != 0) $zongfen +=5; //司机服务
                     $defen += $v['stay'] + $v['food'] + $v['travel'] + $v['bus'] + $v['driver'];
                 }
-                $score                  = round($defen/$zongfen,2);
+                $score                  = $zongfen ? round($defen/$zongfen,2) : 1;
                 break;
             case 'yf': //研发
                 foreach ($lists as $k=>$v){
@@ -2073,7 +2073,7 @@ function get_yw_department(){
                     if ($v['material']  != 0) $zongfen +=5; //材料及设备
                     $defen += $v['depth'] + $v['major'] + $v['interest'] + $v['material'];
                 }
-                $score                  = round($defen/$zongfen,2);
+                $score                  = $zongfen ? round($defen/$zongfen,2) : 1;
                 break;
             case 'zy': //资源
                 foreach ($lists as $k=>$v){
@@ -2082,7 +2082,7 @@ function get_yw_department(){
                     if ($v['cas_addr']  != 0) $zongfen +=5; //中科院单位场地服务
                     $defen += $v['cas_time'] + $v['cas_complete'] + $v['cas_addr'];
                 }
-                $score                  = round($defen/$zongfen,2);
+                $score                  = $zongfen ? round($defen/$zongfen,2) : 1;
                 break;
         }
         return $score;
