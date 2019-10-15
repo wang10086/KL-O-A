@@ -848,7 +848,7 @@ class KpiController extends BaseController {
 			//获取相关人员信息
 			if($info['rp_user_name']){
 				$user = getuserinfo($info['rp_user_name']);
-				$info['rp_user_id']  = $user['userid'];
+				$info['rp_user_id']  = $user['userid'] ? $user['userid'] : 0;
 			}else{
 				$info['rp_user_id']  = 0;
 			}
@@ -899,7 +899,6 @@ class KpiController extends BaseController {
                 $status                         = 0;
                 $explain                        = '新建品质检查';
 			}
-
 
 			//保存相关人员信息
 			if(M('qaqc_user')->where(array('qaqc_id'=>$qaqcid))->find()){
