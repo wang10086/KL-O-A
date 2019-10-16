@@ -126,7 +126,7 @@ class ManageController extends ChartController {
                 if ($k == 'dj_heji') $v['depname']  = '地接合计';
                 $sum[$v['depname']]['monthzsr']     += $v['monthzsr'];
                 $sum[$v['depname']]['monthzml']     += $v['monthzml'];
-                $sum[$v['depname']]['monthmll']     = round($sum[$v['depname']]['monthzml']/$sum[$v['depname']]['monthzsr'],4)*100;
+                $sum[$v['depname']]['monthmll']     = $sum[$v['depname']]['monthzsr'] ? round($sum[$v['depname']]['monthzml']/$sum[$v['depname']]['monthzsr'],4)*100 : '0%';
             }
         }
         return $sum;

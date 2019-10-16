@@ -506,11 +506,11 @@ function get_sum_department_operate($department,$year,$month,$type){
     $data['ygrs']               = array_sum(array_column($info,'ygrs'));        //员工人数
     $data['yysr']               = array_sum(array_column($info,'yysr'));        //营业收入
     $data['yyml']               = array_sum(array_column($info,'yyml'));        //营业毛利
-    $data['yymll']              = round($data['yyml']/$data['yysr'],4)*100;     //营业毛利率(%)
+    $data['yymll']              = $data['yysr'] ? round($data['yyml']/$data['yysr'],4)*100 : 0;     //营业毛利率(%)
     $data['rlzycb']             = array_sum(array_column($info,'rlzycb'));      //人力资源成本
     $data['qtfy']               = array_sum(array_column($info,'qtfy'));        //其他费用
     $data['lrze']               = array_sum(array_column($info,'lrze'));        //利润总额
-    $data['rsfyl']              = round($data['rlzycb']/$data['yysr'],4)*100;   //人事费用率(%)  人力资源成本/营业收入
+    $data['rsfyl']              = $data['yysr'] ? round($data['rlzycb']/$data['yysr'],4)*100 : 0;   //人事费用率(%)  人力资源成本/营业收入
     return $data;
 }
 
@@ -1690,9 +1690,10 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
                 $shishi_lists[$k]['op_average'] = '0%';
             }
         }
-        $score_average                  = (round($op_average_sum/$score_num,4)*100).'%'; //已调查顾客满意度
+
+        $score_average                  = $score_num ? (round($op_average_sum/$score_num,4)*100).'%' : '0%'; //已调查顾客满意度
         $shishi_num                     = count($shishi_lists); //所有实施团的数量(包括未调查的数量)
-        $average                        = round($op_average_sum/$shishi_num,4); //全部平均值
+        $average                        = $shishi_num ? round($op_average_sum/$shishi_num,4) : 0; //全部平均值
         $average                        = ($average*100).'%';  //总平均分,包括未调查的
         $data                           = array();
         $data['userid']                 = $account_ids[0];
