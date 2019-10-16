@@ -3819,7 +3819,8 @@ function get_yw_department(){
         $sum_num                            = 0;
         $ok_num                             = 0;
         foreach ($lists as $k=>$v){ //教务人员在业务人员确认需求后5个工作日内，但须在活动实施前2天完成所有确认需求的专家/辅导员
-            $time                           = $v['in_begin_day'] - 1*24*3600; //活动实施前1天
+            //$time                           = $v['in_begin_day'] - 1*24*3600; //活动实施前1天
+            $time                           = $v['in_begin_day']; //活动实施前
             if ($v['first_dispatch_time'] <= $time){
                 $v['stau']                  = "<span class='green'>正常</span>";
                 $this_month_ok_lists[]      = $v;
