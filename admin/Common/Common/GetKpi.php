@@ -3979,8 +3979,8 @@ function get_yw_department(){
         $data                                   = array();
         $data['sum_num']                        = $sum_num;
         $data['score_num']                      = $score_num;
-        $data['score_average']                  = (round($defen/$score_zongfen,4)*100).'%';
-        $data['sum_average']                    = (round($defen/$sum_zongfen,4)*100).'%';
+        $data['score_average']                  = $score_zongfen ? (round($defen/$score_zongfen,4)*100).'%' : '0%';
+        $data['sum_average']                    = $sum_zongfen ? (round($defen/$sum_zongfen,4)*100).'%' : '0%';
         $data['lists']                          = $lists;
         return $data;
     }
@@ -4299,6 +4299,33 @@ function get_yw_department(){
                 }
                 break;
         }
+        return $data;
+    }
+
+/**
+ * 获取某一项目类型的累计毛利
+ * @param $opType //项目类型
+ * @param $startTime
+ * @param $endTime
+ */
+    function get_gross_profit_op($opKind,$startTime,$endTime){
+        $where                  = array();
+        $where['o.kind']        = $opKind;
+        $where['l.req_type']    = 801;
+        $where['l.audit_time']  = array('between',array($startTime,$endTime));
+        $where['s.audit_status']= 1;
+        $field                  = array();
+        $field[]                = 'o.group_id,o.op_id,o.project,o.sale_user,s.maoli';
+        $lists                  = M()->table('__OP__ as o')
+            ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
+            ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
+            ->where($where)
+            ->field($field)
+            ->select();
+        $sum_profit             = $lists ? array_sum(array_column($lists,'maoli')) : 0;
+        $data                   = array();
+        $data['sum_profit']     = $sum_profit; //合计毛利
+        $data['lists']          = $lists;
         return $data;
     }
 

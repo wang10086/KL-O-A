@@ -2502,6 +2502,29 @@ class KpiController extends BaseController {
         $this->display('sales_ratio');
     }
 
+    //季度累计毛利额(产品经理)详情页
+    public function public_kpi_profit(){
+        $this->title('季度累计毛利额-产品经理');
+        $year                               = I('year',date('Y'));
+        $kind                               = I('kind',0);
+        $startTime                          = I('st');
+        $endTime                            = I('et');
+        $target                             = I('tg',0);
+        $data                               = get_gross_profit_op($kind,$startTime,$endTime);
+        $lists                              = $data['lists'];
+        $profit                             = $data['sum_profit']; //累计完成毛利
+        $complete                           = $target ? (round($profit/$target,4)*100).'%' : '100%';
+
+        $this->lists                        = $lists;
+        $this->target                       = $target;
+        $this->profit                       = $profit;
+        $this->complete                     = $complete;
+        $this->year                         = $year;
+        $this->kind                         = $kind;
+        $this->kinds                        = M('project_kind')->getField('id,name',true);
+        $this->display('kpi_profit');
+    }
+
 
     public function aaa(){
         set_after_salary_kpi(201906);
