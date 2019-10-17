@@ -92,7 +92,7 @@
 
                         <div class="form-group col-md-12"></div>
                         <label class="lit-title" style="width: 98%;margin: 0 1%">评价内容</label>
-                        <textarea name="info[content]" class="form-control no-border" id="jd_content"  rows="2" placeholder="请输入对教务评价内容"></textarea>
+                        <textarea name="info[content]" class="form-control no-border" id="jd_content"  rows="2" placeholder="暂无对教务评价内容"></textarea>
                         <div class="form-group col-md-12"></div>
 
                     </div>
@@ -197,7 +197,7 @@
 
                             <div class="form-group col-md-12"></div>
                             <label class="lit-title" style="width: 98%;margin: 0 1%">评价内容</label>
-                            <textarea name="info[content]" class="form-control no-border" id="jw_content"  rows="2" placeholder="请输入对教务评价内容"></textarea>
+                            <textarea name="info[content]" class="form-control no-border" id="jw_content"  rows="2" placeholder="暂无对教务评价内容"></textarea>
                             <div class="form-group col-md-12"></div>
                         </div>
                     </div>
@@ -207,114 +207,93 @@
     </div>
 <?php } ?>
 
-<!--<script type="text/javascript">
+<!--对实验室建设产品经理评价-->
+<?php if ($op['kind']==67){ ?>
+    <div class="box box-warning" style="margin-top:15px;">
+        <div class="box-header">
+            <h3 class="box-title">对实验室建设产品经理评价</h3>
+            <h3 class="box-title pull-right" style="font-weight: normal; color: #000; margin-right: 20px;">
+                <span class="green">评分状态：<?php if ($cp_score){ echo '<span class="green">已评分</span>'; }else{ echo "<span class='red'>未评分</span>"; } ?></span>
+                <span style="color: #000; margin-left: 20px;"> 产品经理：{$chanpin.user_name}</span>
+            </h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_cp_afterOpScore">
+                <div class="content">
+                    <input type="hidden" name="dosubmint" value="1">
+                    <input type="hidden" name="savetype" value="23">
+                    <input type="hidden" name="opid" value="{$op.op_id}">
+                    <input type="hidden" name="info[type]" value="3">
+                    <input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->
+                    <div class="content" style="display:block;">
+                        <input type="hidden" id="cp_AA_num" name="info[AA]" value="" />
+                        <input type="hidden" id="cp_BB_num" name="info[BB]" value="" />
+                        <input type="hidden" id="cp_CC_num" name="info[CC]" value="" />
+                        <input type="hidden" id="cp_DD_num" name="info[DD]" value="" />
+                        <input type="hidden" name="info[account_id]" value="{$chanpin.user_id}" />
+                        <input type="hidden" name="info[account_name]" value="{$chanpin.user_name}" />
+                        <div style="width:100%;float:left;">
+                            <div class="form-group col-md-6">
+                                <label>支撑服务及时性：</label>
+                                <input type="hidden" name="data[AA]" value="支撑服务及时性">
+                                <div class="demo score inline-block"><div id="cp_AA"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
 
-    $(function() {
-        $.fn.raty.defaults.path = "__HTML__/score/lib/img";
-        var res = <?php /*echo $pingfen?$pingfen:0; */?>;
-        init_score_5(res);  //初始化星星图标
-        init_radio_checked(res); //初始化单选
-        init_radio();
-    });
+                            <div class="form-group col-md-6">
+                                <label>支撑服务态度：</label>
+                                <input type="hidden" name="data[BB]" value="支撑服务态度">
+                                <div class="demo score inline-block"><div id="cp_BB"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
 
-    //初始化评分显示(5各维度)
-    function init_score_5(res) {
-        if (res){
-            $('#jd_content').html(res.jd_content);
+                            <div class="form-group col-md-6">
+                                <label>产品培训指导：</label>
+                                <input type="hidden" name="data[CC]" value="产品培训指导">
+                                <div class="demo score inline-block"><div id="cp_CC"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
 
-            pingfen('ysjsx',res.ysjsx);
-            pingfen('zhunbei',res.zhunbei);
-            pingfen('peixun',res.peixun);
-            pingfen('genjin',res.genjin);
-            pingfen('yingji',res.yingji);
-        }else{
-            pingfen('ysjsx',5);
-            pingfen('zhunbei',5);
-            pingfen('peixun',5);
-            pingfen('genjin',5);
-            pingfen('yingji',5);
-        }
-    }
+                            <div class="form-group col-md-6">
+                                <label>产品需求符合度：</label>
+                                <input type="hidden" name="data[DD]" value="产品需求符合度">
+                                <div class="demo score inline-block"><div id="cp_DD"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="5">&nbsp;非常高</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="4">&nbsp;较高</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="2">&nbsp;较低</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="1">&nbsp;非常低</span>
+                                </div>
+                            </div>
 
-    //页面初始化下面的内容自动选中
-    function init_radio_checked(res){
-        if (res){
-            $('#save_afterOpScore').find('.star_div').each(function () {
-                $(this).find('input[name="info[ysjsx]"][value="'+res.ysjsx+'"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[zhunbei]"][value="'+res.zhunbei+'"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[peixun]"][value="'+res.peixun+'"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[genjin]"][value="'+res.genjin+'"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[yingji]"][value="'+res.yingji+'"]').parent('div').addClass('checked');
-            })
-        }else{
-            $('#save_afterOpScore').find('.star_div').each(function () {
-                $(this).find('input[name="info[ysjsx]"][value="5"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[zhunbei]"][value="5"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[peixun]"][value="5"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[genjin]"][value="5"]').parent('div').addClass('checked');
-                $(this).find('input[name="info[yingji]"][value="5"]').parent('div').addClass('checked');
-            })
-        }
-    }
+                            <div class="form-group col-md-12"></div>
+                            <label class="lit-title" style="width: 98%;margin: 0 1%">评价内容</label>
+                            <textarea name="info[content]" class="form-control no-border" id="cp_content"  rows="2" placeholder="暂无对产品经理评价内容"></textarea>
+                            <div class="form-group col-md-12"></div>
 
-    function pingfen(id,score) {
-        $('#'+id+'_num').val(score);
-        $('#'+id).raty({
-            score: score ,
-            click: function(score, evt) {
-                //alert('ID: ' + $(this).attr('id') + "\nscore: " + score + "\nevent: " + evt.type)
-                $('#'+id+'_num').val(score); //改变星星
-
-                $('#'+id).parent('.score').next('.star_div').find('input').each(function (index,ele) { //改变下面的radio
-                    var input_val = $(this).val();
-                    if (input_val == score){
-                        $(this).parent('div[class="iradio_minimal"]').addClass('checked');
-                    }else{
-                        $(this).parent('div').removeClass('checked')
-                    }
-                });
-            }
-        });
-    }
-
-    function init_radio(){
-        $('.star_div').find('ins').each(function (index,ele) {
-            $(this).click(function () {
-                var score   = $(this).prev('input').val();
-                var id      = $(this).parents('.star_div').prev('.score').children('div').attr('id');
-                $(this).siblings().attr('checked',false);
-                $(this).siblings().removeClass('checked');
-                pingfen(id,score); //改变星星
-            })
-        })
-    }
-
-    function submitBefore(){
-        var ysjsx_num       = parseInt($('#ysjsx_num').val());
-        var zhunbei_num     = parseInt($('#zhunbei_num').val());
-        var peixun_num      = parseInt($('#peixun_num').val());
-        var genjin_num      = parseInt($('#genjin_num').val());
-        var yingji_num      = parseInt($('#yingji_num').val());
-        var content         = $('#jd_content').val();
-        var arr             = Array(1,2,3);
-        var ysjsx_res       = in_array(ysjsx_num,arr);
-        var zhunbei_res     = in_array(zhunbei_num,arr);
-        var peixun_res      = in_array(peixun_num,arr);
-        var genjin_res      = in_array(genjin_num,arr);
-        var yingji_res      = in_array(yingji_num,arr);
-        if ((ysjsx_res || zhunbei_res || peixun_res || genjin_res || yingji_res) && !content){
-            art_show_msg('单项评分低于3分时,必须填写相关问题及改进意见',3);
-            return false;
-        }
-        public_save('save_afterOpScore','<?php /*echo U('Op/public_save'); */?>');
-    }
-
-    function in_array(search,array){
-        for(var i in array){
-            if(array[i]==search){
-                return true;
-            }
-        }
-        return false;
-    }
-</script>-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php } ?>

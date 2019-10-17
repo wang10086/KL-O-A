@@ -3211,19 +3211,26 @@ class OpController extends BaseController {
         $op_guide_list      = M('op_guide_confirm')->where(array('op_id'=>$opid))->find();
         $jd_score           = get_op_score_data($opid,1);
         $jw_score           = get_op_score_data($opid,2);
+        $cp_score           = get_op_score_data($opid,3);
         $jd_id              = $jd_score['account_id'] ? $jd_score['account_id'] : M('op_auth')->where(array('op_id'=>$opid))->getField('yusuan');
         $jw_id              = $jw_score['account_id'] ? $jw_score['account_id'] : ($op_guide_list['first_dispatch_oa_uid']?$op_guide_list['first_dispatch_oa_uid']:$op_guide_list['heshi_oa_uid']);
+        $cp_id              = $cp_score['account_id'] ? $cp_score['account_id'] : 232; //232=>梅轶宁
         $jd                 = array();
         $jd['user_id']      = $jd_id;
         $jd['user_name']    = username($jd_id);
         $jw                 = array();
         $jw['user_id']      = $jw_id;
         $jw['user_name']    = username($jw_id);
+        $cp                 = array();
+        $cp['user_id']      = $cp_id;
+        $cp['user_name']    = username($cp_id);
 
         $this->jd_score     = $jd_score ? json_encode($jd_score) : '';
         $this->jw_score     = $jw_score ? json_encode($jw_score) : '';
+        $this->cp_score     = $cp_score ? json_encode($cp_score) : '';
         $this->jidiao       = $jd;
         $this->jiaowu       = $jw;
+        $this->chanpin      = $cp;
         $this->op           = $op;
         $this->display();
     }

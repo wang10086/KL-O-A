@@ -212,3 +212,95 @@
 </div>
 <?php } ?>
 
+<!--对实验室建设产品经理评价-->
+<?php if ($op['kind']==67){ ?>
+    <div class="box box-warning" style="margin-top:15px;">
+        <div class="box-header">
+            <h3 class="box-title">对实验室建设产品经理评价</h3>
+            <h3 class="box-title pull-right" style="font-weight: normal; color: #000; margin-right: 20px;">
+                <span class="green">评分状态：<?php if ($cp_score){ echo '<span class="green">已评分</span>'; }else{ echo "<span class='red'>未评分</span>"; } ?></span>
+                <span style="color: #000; margin-left: 20px;"> 产品经理：{$chanpin.user_name}</span>
+            </h3>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+            <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_cp_afterOpScore">
+                <div class="content">
+                    <input type="hidden" name="dosubmint" value="1">
+                    <input type="hidden" name="savetype" value="23">
+                    <input type="hidden" name="opid" value="{$op.op_id}">
+                    <input type="hidden" name="info[type]" value="3">
+                    <input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->
+                    <div class="content" style="display:block;">
+                        <input type="hidden" id="cp_AA_num" name="info[AA]" value="" />
+                        <input type="hidden" id="cp_BB_num" name="info[BB]" value="" />
+                        <input type="hidden" id="cp_CC_num" name="info[CC]" value="" />
+                        <input type="hidden" id="cp_DD_num" name="info[DD]" value="" />
+                        <input type="hidden" name="info[account_id]" value="{$chanpin.user_id}" />
+                        <input type="hidden" name="info[account_name]" value="{$chanpin.user_name}" />
+                        <div style="width:100%;float:left;">
+                            <div class="form-group col-md-6">
+                                <label>支撑服务及时性：</label>
+                                <input type="hidden" name="data[AA]" value="支撑服务及时性">
+                                <div class="demo score inline-block"><div id="cp_AA"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>支撑服务态度：</label>
+                                <input type="hidden" name="data[BB]" value="支撑服务态度">
+                                <div class="demo score inline-block"><div id="cp_BB"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>产品培训指导：</label>
+                                <input type="hidden" name="data[CC]" value="产品培训指导">
+                                <div class="demo score inline-block"><div id="cp_CC"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>产品需求符合度：</label>
+                                <input type="hidden" name="data[DD]" value="产品需求符合度">
+                                <div class="demo score inline-block"><div id="cp_DD"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="5">&nbsp;非常高</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="4">&nbsp;较高</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="2">&nbsp;较低</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="1">&nbsp;非常低</span>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12"></div>
+                            <textarea name="info[content]" class="form-control" id="cp_content"  rows="2" placeholder="请输入对产品经理评价内容"></textarea>
+                            <div class="form-group col-md-12"></div>
+
+                        </div>
+                    </div>
+                    <div align="center" class="form-group col-md-12" style="alert:cennter;margin-top: 20px;">
+                        <a  href="javascript:;" class="btn btn-info" onClick="javascript:submitBefore('save_cp_afterOpScore');" style="width:60px;">保存</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php } ?>
+
