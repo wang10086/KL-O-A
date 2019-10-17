@@ -3944,7 +3944,13 @@ function get_yw_department(){
         return $lists;
     }
 
-    //获取教务满意度统计数据
+/**
+ * 获取教务满意度统计数据
+ * 获取某个时间段内对实验室建设产品经理的内部评价
+ * @param $lists 结算列表
+ * @param int $type 2=>教务, 3=>产品经理
+ * @return array
+ */
     function get_jw_satis_chart($lists,$type=2){
         $sum_num                                = 0;
         $score_num                              = 0;
@@ -3953,27 +3959,28 @@ function get_yw_department(){
         $defen                                  = 0;
         foreach ($lists as $k=>$v){
             $eval                               = M('op_eval')->where(array('op_id'=>$v['op_id'],'type'=>$type))->find();
+            $dimension                          = $eval['dimension'] ? $eval['dimension'] : ($type == 2 ? 5 : 4);
             if ($eval) {
                 $lists[$k]['input_userid']      = $eval['input_userid'];
                 $lists[$k]['input_username']    = $eval['input_username'];
                 $lists[$k]['account_id']        = $eval['account_id'];
                 $lists[$k]['account_name']      = $eval['account_name'];
                 $lists[$k]['eval_create_time']  = $eval['create_time'];
-                $lists[$k]['dimension']         = $eval['dimension'];
+                $lists[$k]['dimension']         = $dimension;
                 $lists[$k]['AA']                = $eval['AA'];
                 $lists[$k]['BB']                = $eval['BB'];
                 $lists[$k]['CC']                = $eval['CC'];
                 $lists[$k]['DD']                = $eval['DD'];
                 $lists[$k]['EE']                = $eval['EE'];
                 $op_defen                       = $eval['AA'] + $eval['BB'] + $eval['CC'] + $eval['DD'] + $eval['EE'];
-                $op_zongfen                     = 5*$eval['dimension']; //考核维度
+                $op_zongfen                     = 5*$dimension; //考核维度
                 $lists[$k]['average']           = (round($op_defen/$op_zongfen,4)*100).'%';
                 $score_num++;
                 $defen                          += $eval['AA'] + $eval['BB'] + $eval['CC'] + $eval['DD'] + $eval['EE'];
-                $score_zongfen                  += 5*$eval['dimension'];
+                $score_zongfen                  += 5*$dimension;
             }
             $sum_num++;
-            $sum_zongfen                        += 5*$eval['dimension'];
+            $sum_zongfen                        += 5*$dimension;
         }
 
         $data                                   = array();
@@ -4308,24 +4315,37 @@ function get_yw_department(){
  * @param $startTime
  * @param $endTime
  */
-    function get_gross_profit_op($opKind,$startTime,$endTime){
-        $where                  = array();
-        $where['o.kind']        = $opKind;
-        $where['l.req_type']    = 801;
-        $where['l.audit_time']  = array('between',array($startTime,$endTime));
-        $where['s.audit_status']= 1;
-        $field                  = array();
-        $field[]                = 'o.group_id,o.op_id,o.project,o.sale_user,s.maoli';
-        $lists                  = M()->table('__OP__ as o')
-            ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
-            ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
-            ->where($where)
-            ->field($field)
-            ->select();
+    function get_gross_profit_op($opKind=0,$startTime,$endTime){
+        $lists                  = get_settlement_op_lists($startTime,$endTime,$opKind);
         $sum_profit             = $lists ? array_sum(array_column($lists,'maoli')) : 0;
         $data                   = array();
         $data['sum_profit']     = $sum_profit; //合计毛利
         $data['lists']          = $lists;
         return $data;
     }
+
+/**
+ * 获取某个时间段内结算的团
+ * @param $startTime
+ * @param $endTime
+ * @param int $kind
+ * @return mixed
+ */
+function get_settlement_op_lists($startTime,$endTime,$kind=0){
+    $where                      = array();
+    if ($kind) $where['o.kind'] = $kind;
+    $where['l.req_type']        = 801;
+    $where['l.audit_time']      = array('between',array($startTime,$endTime));
+    $where['s.audit_status']    = 1;
+    $field                      = array();
+    $field[]                    = 'o.group_id,o.op_id,o.project,o.sale_user,s.maoli';
+    $lists                      = M()->table('__OP__ as o')
+        ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
+        ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
+        ->where($where)
+        ->field($field)
+        ->select();
+    return $lists;
+}
+
 

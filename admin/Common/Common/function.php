@@ -3424,20 +3424,31 @@ function updatekpi($month,$user){
                         $data                   = get_gross_profit_op($opKind,$start_time,$end_time);
                         $profit                 = $data['sum_profit']; //累计完成毛利
                         $target                 = $v['target']; //目标
-                        $complete               = $target ? (round($profit/$target,4)*100).'%' : '100%';
+                        $complete               = $profit;
                         $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'kind'=>$opKind,'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
                     }
 
                     //顾客满意度-产品经理
-                    if ($v['quota_id']==235){}
+                    if ($v['quota_id']==235){
+
+                        $complete = '';
+                        $url = '';
+                    }
 
                     //内部（业务人员）满意度-产品经理
-                    if ($v['quota_id']==236){}
+                    if ($v['quota_id']==236){
+                        $uid                    = $v['user_id'];
+                        $opKind                 = 67; //实验室建设
+                        $lists                  = get_settlement_op_lists($v['start_date'],$v['end_date'],$opKind);
+                        $data                   = get_jw_satis_chart($lists,3);
+                        $complete               = $data['sum_average'];
+                        $url                    = U('Kpi/public_cp_satisfaction_detail',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$uid));
+                    }
 
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234);
+                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
@@ -3719,17 +3730,17 @@ function twentyfive(){
 function get_cycle($yearmonth,$day=26){
     if ($yearmonth){
         $year       = substr($yearmonth,0,4);
-        $month      = substr($yearmonth,4,2);
+        $month      = strlen($yearmonth) > 6 ? substr($yearmonth,-2) : substr($yearmonth,4,2);
         $data       = array();
         if ($month ==01){
             $mon                = 12;
             $data['beginday']   = ($year-1).$mon.$day;
-            $data['endday']     = $yearmonth.$day;
+            $data['endday']     = $year.$month.$day;
             $data['begintime']  = strtotime($data['beginday']);
             $data['endtime']    = strtotime($data['endday']);
         }else{
             $data['beginday']   = ($yearmonth-1).$day;
-            $data['endday']     = $yearmonth.$day;
+            $data['endday']     = $year.$month.$day;
             $data['begintime']  = strtotime($data['beginday']);
             $data['endtime']    = strtotime($data['endday']);
         }

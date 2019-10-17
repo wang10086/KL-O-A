@@ -2525,6 +2525,20 @@ class KpiController extends BaseController {
         $this->display('kpi_profit');
     }
 
+    //内部（业务人员）满意度-产品经理
+    public function public_cp_satisfaction_detail(){
+	    $this->title('内部人员满意度-产品经理');
+        $startTime                          = I('st');
+        $endTime                            = I('et');
+        $uid                                = I('uid',0);
+        $opKind                             = 67; //实验室建设
+        $lists                              = get_settlement_op_lists($startTime,$endTime,$opKind);
+        $data                               = get_jw_satis_chart($lists,3);
+        $this->lists                        = $data['lists'];
+        $this->data                         = $data;
+        $this->display('kpi_cp_satisfaction_detail');
+    }
+
 
     public function aaa(){
         set_after_salary_kpi(201906);

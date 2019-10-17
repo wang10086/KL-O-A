@@ -23,7 +23,10 @@
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green"><if condition="$data['uname']" >教务：{$data['uname']}</if></span> &nbsp;&nbsp;</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-
+                                    <div class="callout callout-danger">
+                                        <h4>提示！</h4>
+                                        <p>1、如果有未评分项目,请及时联系该项目业务人员为您评分,以免影响您的KPI；</p>
+                                    </div>
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr>
                                             <th class="taskOptions">团号</th>
