@@ -2623,6 +2623,7 @@ class OpController extends BaseController {
             M('contract_pay')->where(array('op_id'=>$opid))->delete(); //回款计划
             M('op_huikuan')->where(array('op_id'=>$opid))->delete(); //回款
 
+
 			//删除主项目
 			M('op')->delete($id);
 			$this->success('删除成功！');

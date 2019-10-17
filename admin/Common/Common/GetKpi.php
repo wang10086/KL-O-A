@@ -4348,4 +4348,59 @@ function get_settlement_op_lists($startTime,$endTime,$kind=0){
     return $lists;
 }
 
+function get_cp_satisfied_kpi_data($start_time,$end_time,$kind=0){
+    //当月实施的团
+    $where                          = array();
+    $start_time                     = $start_time;
+    $end_time                       = ($end_time)-1;
+    $where['c.ret_time']            = array('between',array($start_time,$end_time));
+    if ($kind) $where['o.kind']     = $kind;
+    $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
+
+    $score_lists                    = array();
+    $score_num                      = 0; //评分的团个数
+    $customerService_lists          = array();
+    foreach ($shishi_lists as $k=>$v){
+        //获取当月已评分的团
+        $where                      = array();
+        $where['o.op_id']           = $v['op_id'];
+        $lists                      = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.input_time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+        if ($lists){ //已评分
+            $score_num++;
+            $op_average_data                = get_manyidu($lists);
+            $shishi_lists[$k]['score_stu']  = '<span class="green">已评分</span>';
+            $shishi_lists[$k]['score_num']  = count($lists);
+            $shishi_lists[$k]['op_average'] = ($op_average_data*100).'%';
+            $shishi_lists[$k]['customerServiceAverage'] = getCustomerServiceAverage($lists);
+            foreach ($lists as $key=>$value){
+                $customerService_lists[]    = $value;
+                $score_lists[]              = $value;
+            }
+        }else{ //未评分
+            $shishi_lists[$k]['score_stu']  = '<span class="red">未评分</span>';
+            $shishi_lists[$k]['op_average'] = '0%';
+        }
+    }
+    $op_average_sum                 = array_sum(array_filter(explode(',',str_replace('%','',implode(',',array_column($shishi_lists,'op_average'))))));
+    $score_average                  = round($op_average_sum/$score_num,2).'%'; //已调查顾客满意度
+    $shishi_num                     = count($shishi_lists); //所有实施团的数量(包括未调查的数量)
+    $average                        = round($op_average_sum/$shishi_num,2)/100; //全部平均值
+
+    if ($shishi_num==0) { //当月无
+        $complete = '0%';
+    }else{
+        //总平均分,包括未调查的
+        $complete = ($average*100).'%';
+    }
+
+    //客服满意度
+    $data                           = array();
+    $data['shishi_num']             = $shishi_num;
+    $data['score_num']              = $score_num;
+    $data['score_average']          = $score_num?$score_average:'100%'; //已调查团的满意度
+    $data['complete']               = $complete; //所有顾客满意度(包括未调查)
+    $data['shishi_lists']           = $shishi_lists;
+    $data['score_lists']            = $score_lists;
+    return $data;
+}
 

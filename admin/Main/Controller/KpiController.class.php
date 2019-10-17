@@ -2539,6 +2539,18 @@ class KpiController extends BaseController {
         $this->display('kpi_cp_satisfaction_detail');
     }
 
+    //
+    public function public_satisfied(){
+	    $startTime                          = I('st');
+	    $endTime                            = I('et');
+        $opKind                             = 67; //实验室建设
+        $data                               = get_cp_satisfied_kpi_data($startTime,$endTime,$opKind);
+
+        $this->data                         = $data;
+        $this->lists                        = $data['shishi_lists'];
+	    $this->display('satisfied');
+    }
+
 
     public function aaa(){
         set_after_salary_kpi(201906);

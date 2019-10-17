@@ -3430,9 +3430,10 @@ function updatekpi($month,$user){
 
                     //顾客满意度-产品经理
                     if ($v['quota_id']==235){
-
-                        $complete = '';
-                        $url = '';
+                        $opKind                 = 67; //实验室建设
+                        $data                   = get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],$opKind);
+                        $complete               = $data['complete'];
+                        $url                    = U('Kpi/public_satisfied',array('st'=>$v['start_date'],'et'=>$v['end_date']));
                     }
 
                     //内部（业务人员）满意度-产品经理
