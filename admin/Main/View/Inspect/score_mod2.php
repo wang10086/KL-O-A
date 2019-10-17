@@ -64,6 +64,12 @@
                             <th class="sorting" data="s.driver">司机服务</th>
                             <th class="sorting" data="s.guide">辅导员/领队</th>
                             <th class="sorting" data="s.material">材料及设备</th>
+                        <?php }elseif(in_array($kind,$score_kind4)){ ?>
+                            <th class="sorting" data="s.">前期沟通</th>
+                            <th class="sorting" data="s.">方案内容</th>
+                            <th class="sorting" data="s.">材料及设备</th>
+                            <th class="sorting" data="s.">配套服务</th>
+                            <th class="sorting" data="s.">性价比</th>
                         <?php }else{ ?>
                             <th class="sorting" data="s.before_sell">前期沟通</th>
                             <th class="sorting" data="s.stay">住宿</th>
@@ -121,6 +127,12 @@
                                 <td>{$row.driver}</td>
                                 <td>{$row.guide}</td>
                                 <td>{$row.material}</td>
+                            <?php }elseif(in_array($kind,$score_kind4)){ ?>
+                                <td>{$row.before_sell}</td>
+                                <td>{$row.new_media}</td>
+                                <td>{$row.stay}</td>
+                                <td>{$row.food}</td>
+                                <td>{$row.bus}</td>
                             <?php }else{ ?>
                                 <td>{$row.before_sell}</td>
                                 <td>{$row.stay}</td>

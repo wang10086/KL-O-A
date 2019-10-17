@@ -145,6 +145,26 @@
                     <div class="form-group col-md-4">
                         <p>材料及设备：{$average.material}&emsp;分</p>
                     </div>
+                <?php }elseif(in_array($kind,$score_kind4)){ ?>
+                    <div class="form-group col-md-4">
+                        <p>前期沟通：{$average.before_sell}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>方案内容：{$average.new_media}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>材料及设备：{$average.stay}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>配套服务：{$average.food}&emsp;分</p>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p>性价比：{$average.bus}&emsp;分</p>
+                    </div>
                 <?php }else{ ?>
                     <div class="form-group col-md-4">
                         <p>前期沟通：{$average.before_sell}&emsp;分</p>

@@ -52,6 +52,12 @@
                     <div class="form-group box-float-4" style="padding-left:0;">司机：{$score_stu.$row[driver]}</div>
                     <div class="form-group box-float-4" style="padding-left:0;">辅导员/领队：{$score_stu.$row[guide]}</div>
                     <div class="form-group box-float-4" style="padding-left:0;">材料及设备：{$score_stu.$row[material]}</div>
+                <?php }elseif($kind == 4){ ?>
+                    <div class="form-group box-float-4" style="padding-left:0;">前期沟通：{$score_stu.$row[before_sell]}</div>
+                    <div class="form-group box-float-4" style="padding-left:0;">方案内容：{$score_stu.$row[new_media]}</div>
+                    <div class="form-group box-float-4" style="padding-left:0;">材料及设备：{$score_stu.$row[stay]}</div>
+                    <div class="form-group box-float-4" style="padding-left:0;">配套服务：{$score_stu.$row[food]}</div>
+                    <div class="form-group box-float-4" style="padding-left:0;">性价比：{$score_stu.$row[bus]}</div>
                 <?php }else{ ?>
                     <div class="form-group box-float-4" style="padding-left:0;">前期沟通：{$score_stu.$row[before_sell]}</div>
                     <div class="form-group box-float-4" style="padding-left:0;">住宿：{$score_stu.$row[stay]}</div>

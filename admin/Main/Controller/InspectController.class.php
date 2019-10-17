@@ -382,6 +382,7 @@ class InspectController extends BaseController{
         $score_kind1    = array_keys(C('SCORE_KIND1'));
         $score_kind2    = array_keys(C('SCORE_KIND2'));
         $score_kind3    = array_keys(C('SCORE_KIND3'));
+        $score_kind4    = array_keys(C('SCORE_KIND4'));
 
         $this->op       = M('op')->where(array('op_id'=>$op_id))->find();
 
@@ -413,6 +414,7 @@ class InspectController extends BaseController{
         $this->score_kind1      = $score_kind1;
         $this->score_kind2      = $score_kind2;
         $this->score_kind3      = $score_kind3;
+        $this->score_kind4      = $score_kind4;
         $this->average          = $average;
         $this->lists            = $lists;
         $this->op_id            = $op_id;
@@ -515,11 +517,14 @@ class InspectController extends BaseController{
         $score_kind1        = array_keys(C('SCORE_KIND1')); //线路类
         $score_kind2        = array_keys(C('SCORE_KIND2')); //课程类
         $score_kind3        = array_keys(C('SCORE_KIND3')); //亲自旅行 , 冬夏令营
+        $score_kind4        = array_keys(C('SCORE_KIND4')); //亲自旅行 , 冬夏令营
 
         if (in_array($info['kind'],$score_kind2)){
             $kind           = 2;
         }elseif (in_array($info['kind'],$score_kind3)){
             $kind           = 3;
+        }elseif (in_array($info['kind'],$score_kind4)){
+            $kind           = 4;
         }else{
             $kind           = 1;
         }
