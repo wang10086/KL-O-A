@@ -519,7 +519,7 @@ class FinanceController extends BaseController {
 			$record['explain']      = '保存预算';
 			op_record($record);
 
-            if (!in_array(session('userid'),array(1,11))){
+            if (!in_array(cookie('userid'),array(1,11))){
                 $auth_line          = M('op_auth')->where(array('op_id'=>$opid))->find();
                 $auth               = array();
                 $auth['line']       = cookie('userid');
