@@ -20,9 +20,7 @@
                             <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">顾客满意度信息</h3>
-                                    <!--<div class="box-tools pull-right">
-                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,160);"><i class="fa fa-search"></i> 搜索</a>
-                                    </div>-->
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">产品经理：{$username}</span> &nbsp;&nbsp;</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 

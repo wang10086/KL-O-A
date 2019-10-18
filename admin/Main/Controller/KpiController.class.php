@@ -2507,10 +2507,11 @@ class KpiController extends BaseController {
         $this->title('季度累计毛利额-产品经理');
         $year                               = I('year',date('Y'));
         $kind                               = I('kind',0);
+        $uid                                = I('uid',0);
         $startTime                          = I('st');
         $endTime                            = I('et');
         $target                             = I('tg',0);
-        $data                               = get_gross_profit_op($kind,$startTime,$endTime);
+        $data                               = $uid == 202 ? get_gross_profit_op('',$startTime,$endTime,$uid) : get_gross_profit_op($kind,$startTime,$endTime,'');
         $lists                              = $data['lists'];
         $profit                             = $data['sum_profit']; //累计完成毛利
         $complete                           = $target ? (round($profit/$target,4)*100).'%' : '100%';
@@ -2532,8 +2533,9 @@ class KpiController extends BaseController {
         $endTime                            = I('et');
         $uid                                = I('uid',0);
         $opKind                             = 67; //实验室建设
-        $lists                              = get_settlement_op_lists($startTime,$endTime,$opKind);
+        $lists                              = $uid == 202 ? get_settlement_op_lists($startTime,$endTime,'',$uid) : get_settlement_op_lists($startTime,$endTime,$opKind);
         $data                               = get_jw_satis_chart($lists,3);
+        $this->username                     = username($uid);
         $this->lists                        = $data['lists'];
         $this->data                         = $data;
         $this->display('kpi_cp_satisfaction_detail');
@@ -2541,11 +2543,13 @@ class KpiController extends BaseController {
 
     //
     public function public_satisfied(){
+	    $uid                                = I('uid');
 	    $startTime                          = I('st');
 	    $endTime                            = I('et');
         $opKind                             = 67; //实验室建设
-        $data                               = get_cp_satisfied_kpi_data($startTime,$endTime,$opKind);
+        $data                               = $uid == 202 ? get_cp_satisfied_kpi_data($startTime,$endTime,'',$uid) : get_cp_satisfied_kpi_data($startTime,$endTime,$opKind,'');
 
+        $this->username                     = username($uid);
         $this->data                         = $data;
         $this->lists                        = $data['shishi_lists'];
 	    $this->display('satisfied');

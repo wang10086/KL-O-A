@@ -20,7 +20,7 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green"><if condition="$data['uname']" >教务：{$data['uname']}</if></span> &nbsp;&nbsp;</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green">产品经理：{$username}</span> &nbsp;&nbsp;</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="callout callout-danger">

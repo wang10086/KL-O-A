@@ -3421,26 +3421,26 @@ function updatekpi($month,$user){
                         $opKind                 = 67; //实验室建设
                         $start_time             = get_year_settlement_start_time($v['year']);
                         $end_time               = $v['end_date'];
-                        $data                   = get_gross_profit_op($opKind,$start_time,$end_time);
+                        $data                   = $v['user_id'] == 202 ? get_gross_profit_op('',$start_time,$end_time,$v['user_id']) : get_gross_profit_op($opKind,$start_time,$end_time,'');
                         $profit                 = $data['sum_profit']; //累计完成毛利
                         $target                 = $v['target']; //目标
                         $complete               = $profit;
-                        $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'kind'=>$opKind,'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
+                        $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'kind'=>$opKind,'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
                     }
 
                     //顾客满意度-产品经理
                     if ($v['quota_id']==235){
                         $opKind                 = 67; //实验室建设
-                        $data                   = get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],$opKind);
+                        $data                   = $v['user_id'] == 202 ? get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],'',$v['user_id']) : get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],$opKind,'');
                         $complete               = $data['complete'];
-                        $url                    = U('Kpi/public_satisfied',array('st'=>$v['start_date'],'et'=>$v['end_date']));
+                        $url                    = U('Kpi/public_satisfied',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date']));
                     }
 
                     //内部（业务人员）满意度-产品经理
                     if ($v['quota_id']==236){
                         $uid                    = $v['user_id'];
                         $opKind                 = 67; //实验室建设
-                        $lists                  = get_settlement_op_lists($v['start_date'],$v['end_date'],$opKind);
+                        $lists                  = $v['user_id'] == 202 ? get_settlement_op_lists($v['start_date'],$v['end_date'],'',$uid) : get_settlement_op_lists($v['start_date'],$v['end_date'],$opKind);
                         $data                   = get_jw_satis_chart($lists,3);
                         $complete               = $data['sum_average'];
                         $url                    = U('Kpi/public_cp_satisfaction_detail',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$uid));

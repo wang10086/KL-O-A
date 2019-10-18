@@ -4315,8 +4315,8 @@ function get_yw_department(){
  * @param $startTime
  * @param $endTime
  */
-    function get_gross_profit_op($opKind=0,$startTime,$endTime){
-        $lists                  = get_settlement_op_lists($startTime,$endTime,$opKind);
+    function get_gross_profit_op($opKind=0,$startTime,$endTime,$user_id=0){
+        $lists                  = get_settlement_op_lists($startTime,$endTime,$opKind,$user_id);
         $sum_profit             = $lists ? array_sum(array_column($lists,'maoli')) : 0;
         $data                   = array();
         $data['sum_profit']     = $sum_profit; //合计毛利
@@ -4331,9 +4331,10 @@ function get_yw_department(){
  * @param int $kind
  * @return mixed
  */
-function get_settlement_op_lists($startTime,$endTime,$kind=0){
+function get_settlement_op_lists($startTime,$endTime,$kind=0,$user_id=0){
     $where                      = array();
     if ($kind) $where['o.kind'] = $kind;
+    if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
     $where['l.req_type']        = 801;
     $where['l.audit_time']      = array('between',array($startTime,$endTime));
     $where['s.audit_status']    = 1;
@@ -4348,13 +4349,14 @@ function get_settlement_op_lists($startTime,$endTime,$kind=0){
     return $lists;
 }
 
-function get_cp_satisfied_kpi_data($start_time,$end_time,$kind=0){
+function get_cp_satisfied_kpi_data($start_time,$end_time,$kind=0,$user_id=0){
     //当月实施的团
     $where                          = array();
     $start_time                     = $start_time;
     $end_time                       = ($end_time)-1;
     $where['c.ret_time']            = array('between',array($start_time,$end_time));
     if ($kind) $where['o.kind']     = $kind;
+    if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
     $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
 
     $score_lists                    = array();

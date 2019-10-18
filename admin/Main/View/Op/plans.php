@@ -85,15 +85,6 @@
                                         <label>详细地址：</label><input type="text" name="addr" class="form-control"  required />
                                     </div>
 
-                                    <!--<div class="form-group col-md-4">
-                                        <label>业务部门：</label>
-                                        <select  class="form-control" name="info[op_create_user]" >
-                                            <option value="" selected disabled>请选择业务部门</option>
-                                            <foreach name="rolelist" key="k" item="v">
-                                                <option value="{$v}" <?php /*if($k==cookie('roleid')){ echo 'selected';} */?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>-->
 
                                     <div class="form-group col-md-4">
                                         <label>客户单位：</label>
@@ -115,11 +106,17 @@
                                         </datalist>
                                     </div>
 
-                                    <div class="form-group col-md-4">
-                                        <span class="lm_c">协助销售实施专家：</span>
-                                        <foreach name="expert" key="k" item="v">
-                                            <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}"> {$v}</span>
-                                        </foreach>
+                                    <div class="form-group col-md-4" style="padding: 0">
+                                        <div class="col-md-12"  style="padding-right: 0">
+                                            <span class="lm_c">协助销售实施专家：</span>
+                                            <foreach name="expert" key="k" item="v">
+                                                <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}"> {$v}</span>
+                                            </foreach>
+                                        </div>
+                                        <div class="col-md-12"  style="padding-right: 0">
+                                            <span class="lm_c">背景提升产品负责人：</span>
+                                            <span class="lm_c"><input type="checkbox" name="expert[]" value="202"> 于洵</span>
+                                        </div>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -152,9 +149,7 @@
                                     <div class="form-group col-md-12 ml-12" id="wonder_department" style="margin-top: -30px;">
                                         <h2 class="tcs_need_h2">工单接收部门：</h2>
                                         <input type="checkbox" name="exe_user_id[]" value="12"> &nbsp;研发(公司大研发-秦总)&#12288;
-                                        <!--<input type="checkbox" name="exe_user_id[]" value="26"> &nbsp;资源(公司资源-李岩)&#12288;-->
                                         <input type="checkbox" name="exe_user_id[]" value="31"> &nbsp;研发(京区校内-魏春竹) &#12288;
-                                        <!--<input type="checkbox" name="exe_user_id[]" value="174"> &nbsp;资源(京区校内-李亚楠) &#12288;-->
                                         <input type="checkbox" name="exe_user_id[]" value="110"> &nbsp;研发(南京-李艳) &#12288;
                                         <input type="checkbox" name="exe_user_id[]" value="115"> &nbsp;资源(南京-桂小佩) &#12288;
                                     </div>
