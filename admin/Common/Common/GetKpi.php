@@ -4406,3 +4406,46 @@ function get_cp_satisfied_kpi_data($start_time,$end_time,$kind=0,$user_id=0){
     return $data;
 }
 
+//查询超过3个月未转正的人员信息,并且给人力资源发送系统通知
+function HR_notice(){
+    $HR_uids                        = array(77,185); //77=>王茜 185=>王朝辰
+    $where                          = array();
+    $where['id']                    = array('gt',10);
+    $where['formal']                = 0; //试用期
+    $where['status']                = 0; //状态正常
+    $lists                          = M('account')->where($where)->order('id asc')->select();
+    $uids                           = array();
+    $names                          = array();
+    $time                           = 90*24*3600;
+    foreach ($lists as $k=>$v){
+        if (NOW_TIME-$v['entry_time'] > $time){
+            $uids[]                 = $v['id'];
+            $names[]                = $v['nickname'];
+        }
+    }
+
+    if ($uids && in_array(cookie('userid'),$HR_uids)){
+        $beforeOneDay               = NOW_TIME - (24*3600);
+        $where                      = array();
+        $where['title']             = array('like','%员工试用期结束提醒%');
+        $where['send_time']         = array('gt',$beforeOneDay);
+        $send_record                = M('message')->where($where)->find();
+
+        if (!$send_record){
+            $str_names              = implode(',',$names);
+            $str_ids                = implode(',',$uids);
+            foreach ($HR_uids as $v){
+                //发送系统消息
+                $uid                = 0;
+                $title              = '员工试用期结束提醒!';
+                $content            = '现有员工：['.$str_names.'] 即将结束试用期, 请及时调整员工基本信息及KPI考核信息!';
+                $url                = U('Rbac/index',array('ids'=>$str_ids));
+                $user               = '['.$v.']';
+                send_msg($uid,$title,$content,$url,$user,'');
+            }
+        }
+
+    }
+}
+
+

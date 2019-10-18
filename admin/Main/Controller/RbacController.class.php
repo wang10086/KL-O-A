@@ -21,8 +21,8 @@ class RbacController extends BaseController {
 
         $this->title('用户列表');
 
-        $db = D('account');
-       	$where = array();
+        $db                 = D('account');
+       	$where              = array();
 
 		if(rolemenu(array('Rbac/adduser'))){
 			$key            = I('key','');
@@ -30,6 +30,7 @@ class RbacController extends BaseController {
 			$role           = I('role',0);
 			$post           = I('post',0);
             $position_id    = I('position_id',0);
+            $ids            = I('ids') ? explode(',',I('ids')) : '';
             $arr            = $this->public_get_positions($position_id);
             $position_ids   = array_column($arr,'id');
             $position_ids[] = $position_id;
@@ -41,6 +42,7 @@ class RbacController extends BaseController {
 			if($role)           $where['roleid']        = $role;
 			if($post)           $where['postid']        = $post;
             if ($position_id)   $where['position_id']   = array('in',$position_id);
+            if ($ids)           $where['id']            = array('in',$ids);
 		}else{
 			$where['id']    = cookie('userid');
 		}

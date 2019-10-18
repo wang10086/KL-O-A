@@ -27,6 +27,7 @@ class IndexController extends BaseController {
         $this->sum_partner  = M('customer_partner')->where(array('del_stu'=>array('neq','-1')))->count();
         $cycle_data         = get_cycle(date('Y').date('m'));
         $this->new_partner  = M('customer_partner')->where(array('del_stu'=>array('neq','-1'),'create_time'=>array('between',"$cycle_data[begintime],$cycle_data[endtime]")))->count();
+        HR_notice(); //查询超过3个月未转正的人员信息,并且给人力资源发送系统通知
 
 		//获取公告
 		$lists              = $this->get_notice_list();
