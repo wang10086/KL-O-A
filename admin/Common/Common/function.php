@@ -5594,12 +5594,8 @@ function get_half_year_cycle($year,$month){
             $month              = date('m');
             $yearMonth          = get_kpi_yearMonth($year,$month);
             $user_id	        = $v['id'];
-            //cookie('autoInitKpiTime',1,3600);
             //更新数据
             updatekpi($yearMonth,$user_id);
         }
-        $test           = array();
-        $test['time']   = NOW_TIME;
-        M('aatest')->add($test);
     }
 
