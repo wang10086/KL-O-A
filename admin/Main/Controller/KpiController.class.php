@@ -977,7 +977,7 @@ class KpiController extends BaseController {
 	}
 
 
-	// @@@NODE-3###addpdca###审核品质检查###
+	// @@@NODE-3###appqa###审核品质检查###
 	public function appqa(){
 
 		if(isset($_POST['dosubmit'])){
@@ -1020,7 +1020,6 @@ class KpiController extends BaseController {
 				$info['ex_time']          = time();
 			}
 
-
 			//执行保存
 			$addinfo = M('qaqc')->data($info)->where(array('id'=>$editid))->save();
 			$qaqc    = M('qaqc')->find($editid);
@@ -1031,28 +1030,38 @@ class KpiController extends BaseController {
 			if(M('qaqc_user')->where(array('qaqc_id'=>$qaqcid))->find()){
 				M('qaqc_user')->where(array('qaqc_id'=>$qaqcid))->delete();
 			}
+			$type_arr                       = array(0=>'扣分',1=>'奖励');
 			foreach($qadata as $k=>$v){
 				if($v['user_name']){
-					$user = getuserinfo($v['user_name']);
+					$user                   = getuserinfo($v['user_name']);
 					$data = array();
-					$data['qaqc_id']      = $qaqcid;
-					$data['user_id']      = $user['userid'];
-					$data['user_name']    = $v['user_name'];
-					$data['type']  		  = $v['type'];
-					$data['month']  	  = $info['month'];
-					$data['score']  	  = $v['score'];
-					$data['remark']  	  = $v['remark'];
-					$data['status']       = $status;
-					$data['update_time']  = time();
-                    $data['suggest']      = $info['suggest']?$info['suggest']:0;
+					$data['qaqc_id']        = $qaqcid;
+					$data['user_id']        = $user['userid'];
+					$data['user_name']      = $v['user_name'];
+					$data['type']  		    = $v['type'];
+					$data['month']  	    = $info['month'];
+					$data['score']  	    = $v['score'];
+					$data['remark']  	    = $v['remark'];
+					$data['status']         = $status;
+					$data['update_time']    = time();
+                    $data['suggest']        = $info['suggest']?$info['suggest']:0;
 
 					//判断是否存在
-					$where = array();
-					$where['qaqc_id']      = $qaqcid;
-					$where['user_id']      = $v['user_name'];
-					$is = M('qaqc_user')->where($where)->find();
+					$where                  = array();
+					$where['qaqc_id']       = $qaqcid;
+					$where['user_id']       = $v['user_name'];
+					$is                     = M('qaqc_user')->where($where)->find();
 					if(!$is){
-						M('qaqc_user')->add($data);
+                        $res                = M('qaqc_user')->add($data);
+                        if ($res && $info['status']==1 && in_array($info['suggest'],array(2,3))){ //审核通过 && (建议观察 + 建议不合格处理)
+                            //发送系统消息
+                            $uid                = 0;
+                            $title              = '关于对品质检查'.$info['title'].'处理结果提醒!';
+                            $content            = '事件：'.$info['title'].'; 处理结果：KPI'.$type_arr[$v['type']].'：'.$v['score'].'分';
+                            $url                = U('Kpi/qa',array('tit'=>$info['title']));
+                            $user               = '['.$user['userid'].']';
+                            send_msg($uid,$title,$content,$url,$user,'');
+                        }
 					}
 
 					//修正绩效评分
