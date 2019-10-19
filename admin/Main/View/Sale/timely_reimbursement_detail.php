@@ -19,7 +19,9 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
+                                    <div class="box-tools pull-right">
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',450,130);"><i class="fa fa-search"></i> 搜索</a>
+                                    </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
@@ -72,6 +74,23 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
+
+<div id="searchtext">
+    <form action="" method="post" id="searchform">
+        <input type="hidden" name="m" value="Main">
+        <input type="hidden" name="c" value="Sale">
+        <input type="hidden" name="a" value="public_reimbursement_detail">
+        <input type="hidden" name="tit" value="{$tit}">
+        <input type="hidden" name="year" value="{$year}">
+        <input type="hidden" name="month" value="{$month}">
+        <input type="hidden" name="uid" value="{$uid}">
+
+        <div class="form-group col-md-12"></div>
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control" name="group_id" placeholder="团号">
+        </div>
+    </form>
+</div>
 
 <include file="Index:footer2" />
 

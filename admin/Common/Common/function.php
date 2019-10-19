@@ -4335,6 +4335,42 @@ function afterWorkDay($start_timestamp='',$add_workday_num='',$holiday=[]){
 
 }
 
+//求两个时间段内所有的月份
+function getAllMonth($time1,$time2=NOW_TIME){
+    $monarr = array();
+    while( ($time1 = strtotime('+1 month', $time1)) <= $time2){
+        $monarr[] = date('Ym',$time1); // 取得递增月;
+    }
+    $monarr[] = date('Ym',$time2); // 当前月;
+    return $monarr;
+}
+
+/*
+ * 判断用户用手机访问还是PC访问
+ */
+function isMobile(){
+    $useragent=isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+    $useragent_commentsblock=preg_match('|\(.*?\)|',$useragent,$matches)>0?$matches[0]:'';
+    function CheckSubstrs($substrs,$text){
+        foreach($substrs as $substr)
+            if(false!==strpos($text,$substr)){
+                return true;
+            }
+        return false;
+    }
+    $mobile_os_list=array('Google Wireless Transcoder','Windows CE','WindowsCE','Symbian','Android','armv6l','armv5','Mobile','CentOS','mowser','AvantGo','Opera Mobi','J2ME/MIDP','Smartphone','Go.Web','Palm','iPAQ');
+    $mobile_token_list=array('Profile/MIDP','Configuration/CLDC-','160×160','176×220','240×240','240×320','320×240','UP.Browser','UP.Link','SymbianOS','PalmOS','PocketPC','SonyEricsson','Nokia','BlackBerry','Vodafone','BenQ','Novarra-Vision','Iris','NetFront','HTC_','Xda_','SAMSUNG-SGH','Wapaka','DoCoMo','iPhone','iPod');
+
+    $found_mobile=CheckSubstrs($mobile_os_list,$useragent_commentsblock) ||
+        CheckSubstrs($mobile_token_list,$useragent);
+
+    if ($found_mobile){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 //人民币小写转换成大写
 function numTrmb($num){
     $d = array("零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖");
@@ -5566,3 +5602,4 @@ function get_half_year_cycle($year,$month){
         $test['time']   = NOW_TIME;
         M('aatest')->add($test);
     }
+

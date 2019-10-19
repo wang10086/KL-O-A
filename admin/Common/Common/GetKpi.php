@@ -3202,11 +3202,12 @@ function get_yw_department(){
      * @return array,
      * reimbursement
      */
-    function get_reimbursement_data($startTime,$endTime,$title='',$content='',$uid=''){
+    function get_reimbursement_data($startTime,$endTime,$title='',$content='',$uid='',$group_id=''){
         $where                              = array();
         $where['l.dst_status']              = 1; //审核通过
         $where['l.req_type']                = 801;
         if ($uid) $where['l.req_uid']       = $uid;
+        if ($group_id) $where['o.group_id'] = $group_id;
         $field                              = 'l.req_uid,l.req_uname,l.req_time,l.audit_uid,l.audit_uname,l.audit_time,o.group_id,o.project,o.sale_user,s.*';
         $sum_settlement_lists               = M()->table('__AUDIT_LOG__ as l')->join('__OP_SETTLEMENT__ as s on s.id=l.req_id')->join('__OP__ as o on o.op_id=s.op_id')->where($where)->field($field)->order('l.id DESC')->limit(500)->select();
         $reimbursement_list                 = array();

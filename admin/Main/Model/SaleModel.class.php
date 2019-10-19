@@ -434,7 +434,7 @@ class SaleModel extends Model{
     }
 
     //计调及时率详情
-    public function get_timely_type($title,$startTime,$endTime,$uid=0){
+    public function get_timely_type($title,$startTime,$endTime,$uid=0,$group_id=''){
         $timely                         = get_timely(1); //1=>计调操作及时性
         $timely_column                  = array_column($timely,'content','title');
         switch ($title){
@@ -451,7 +451,7 @@ class SaleModel extends Model{
                 $data                   = $info['sum_list'];
                 break;
             case $timely[3]['title']: //报账及时性
-                $info                   = get_reimbursement_data($startTime,$endTime,$title,$timely_column[$title],$uid);
+                $info                   = get_reimbursement_data($startTime,$endTime,$title,$timely_column[$title],$uid,$group_id);
                 $data                   = $info['sum_list'];
                 break;
             /*default: //合计
