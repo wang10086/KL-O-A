@@ -14,7 +14,7 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <if condition="C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10">
+                    <if condition="C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('userid'),array(11,77))">
                         <form action="{:U('File/departmentFile')}" method="post">
                             <div class="col-xs-12 content-neck">
                                 <div class="content-neck-body">
