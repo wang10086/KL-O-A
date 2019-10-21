@@ -875,7 +875,7 @@ class OpController extends BaseController {
 			if($opid && $savetype==10 ){
 			    $returnMsg              = array();
 			    $customer               = $this->get_customerlist();
-			    if (!in_array($info['customer'],$customer)){
+			    if (!in_array($info['customer'],$customer) && !strpos($info['project'],'地接团')){
 			        $returnMsg['num']   = $num;
 			        $returnMsg['msg']   = '客户单位输入错误';
 			        $this->ajaxReturn($returnMsg);
