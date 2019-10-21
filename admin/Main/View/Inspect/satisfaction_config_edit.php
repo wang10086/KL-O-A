@@ -9,8 +9,8 @@
 <style>
     .username_div{ margin-top:20px;}
     .username_box{display: inline-block; width:10rem; float: left;}
-    .aa_close{width: 1rem; background:#ff3300; color:#ffffff; float: left; height: 34px; line-height: 34px; text-align: center;}
-    .aa_close:hover{ color:#ffffff;}
+    .box_close{width: 1rem; background:#ff3300; color:#ffffff; float: left; height: 34px; line-height: 34px; text-align: center;}
+    .box_close:hover{ color:#ffffff;}
     .border-line-label{ border-bottom: solid 1px #A8A8A8;}
 </style>
     
@@ -37,7 +37,7 @@
                             <input type="hidden" name="data[888{$k}][resid]" value="{$v.id}" />
                             <input type="hidden" name="data[888{$k}][score_user_id]" value="{$v.score_user_id}">
                             <input type="text" class="form-control username_box" name="data[888{$k}][score_user_name]" value="{$v.score_user_name}" />
-                            <a class="aa_close" href="javascript:;" onClick="del_timu({$v.score_user_id})">X</a>
+                            <a class="box_close" href="javascript:;" onClick="del_timu({$v.score_user_id})">X</a>
                         </div>
                     </foreach>
                 </div>
@@ -83,7 +83,7 @@
             var html  = '<div class="col-md-3 username_div" id="username_div_'+round+'">'+
                 '<input type="hidden" name="data['+round+'][score_user_id]" value="'+userid+'">'+
                 '<input type="text" class="form-control username_box" name="data['+round+'][score_user_name]" value="'+username+'" />'+
-                '<a class="aa_close" href="javascript:;" onClick="del_timu('+round+')">X</a>'+
+                '<a class="box_close" href="javascript:;" onClick="del_timu('+round+')">X</a>'+
                 '</div>';
             $('#satisfaction_box').append(html);
             init_write_user_div();
