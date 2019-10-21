@@ -3523,6 +3523,7 @@ function get_yw_department(){
         $where                              = array();
         $where['type']                      = $type;
         $where['create_time']               = array('between',array($startTime,$endTime));
+        $where['status']                    = array('neq','-1'); //排除已删除
         $field                              = 'id,title,is_op,group_id,op_id,month,type,status,create_time,handle_time,ex_time';
         $list                               = $db ->where($where)->field($field)->select();
         return $list;
