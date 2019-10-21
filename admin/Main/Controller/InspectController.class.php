@@ -962,7 +962,7 @@ class InspectController extends BaseController{
         $list                       = $mod->get_average_data($info,$unscore_userids);
         $list['monthly']            = $month;
         $list['account_name']       = M('account')->where(array('id'=>$uid))->getField('nickname');
-        $dimension                  = $this->get_user_dimension($uid); //获取考核维度
+        $dimension                  = $this->get_user_dimension($uid,$month); //获取考核维度
         //$contents                   = array_filter(array_column($info,'content'));
         $contents                   = $this->get_contents($info);
         $list['AA']                 = $dimension['AA'];
@@ -992,7 +992,7 @@ class InspectController extends BaseController{
     public function satisfaction_info(){
         $uid                        = trim(I('uid'));
         $month                      = trim(I('month'));
-        $dimension                  = $this->get_user_dimension($uid); //获取考核维度
+        $dimension                  = $this->get_user_dimension($uid,$month); //获取考核维度
         $db                         = M('satisfaction');
         $lists                      = $db->where(array('account_id'=>$uid,'monthly'=>$month,'kind'=>P::SCORE_KIND_ACCOUNT))->select();
         foreach ($lists as $k=>$v){
@@ -1024,13 +1024,18 @@ class InspectController extends BaseController{
         return $average;
     }
 
-    public function get_user_dimension($uid){
-        $db                         = M('score_dimension');
+    public function get_user_dimension($uid,$month=''){
+        /*$db                         = M('score_dimension');
         $list1                      = $db->where(array('account_id'=>array('eq',$uid),trim('FF')=>array('neq','')))->order($this->orders('id'))->find(); //六项
         $list2                      = $db->where(array('account_id'=>array('eq',$uid),trim('EE')=>array('neq','')))->order($this->orders('id'))->find(); //五项
         $list3                      = $db->where(array('account_id'=>array('eq',$uid),trim('DD')=>array('neq','')))->order($this->orders('id'))->find(); //四项
         $list4                      = $db->where(array('account_id'=>array('eq',$uid),trim('CC')=>array('neq','')))->order($this->orders('id'))->find(); //三项
-        $list                       = $list1?$list1:($list2?$list2:($list3?$list3:$list4));
+        $list                       = $list1?$list1:($list2?$list2:($list3?$list3:$list4));*/
+        $where                      = array();
+        $where['s.monthly']         = $month;
+        $where['d.account_id']      = $uid;
+        $field                      = 'd.*';
+        $list                       = M()->table('__SATISFACTION__ as s')->join('__SCORE_DIMENSION__ as d on d.satisfaction_id = s.id')->where($where)->field($field)->find();
         return $list;
     }
 
@@ -1097,7 +1102,16 @@ class InspectController extends BaseController{
             $db                             = M('satisfaction_config');
             $info                           = I('info');
             $data                           = I('data');
-            if (!$info['userid']) $this->error('数据错误');
+
+            if (!$info['userid'] || !$info['month']) $this->error('数据错误');
+            /*$month                          = $info['month'] ? substr($info['month'],-2) : date('m');
+
+            for ($m=1;$m<=12;$m++){
+                if ($m >= $month){
+                    var_d($m);
+                }
+            }*/
+
             $num                            = 0;
             if ($data){
                 $del_ids                    = array();
