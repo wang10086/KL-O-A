@@ -268,7 +268,7 @@ class FileController extends BasepubController {
         $where['file_type']             = 1; //文件
         $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
-        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
+        if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             $department                     = $department ? '['.$department.']' : '['.session('department').']';
             $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
             $where['_string']               = "(department like '%$department%') OR ( posts like '%$posts%')";
@@ -309,7 +309,7 @@ class FileController extends BasepubController {
         $where['file_type']             = 1; //文件
         $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
-        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
+        if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             $department                     = $department ? '['.$department.']' : '['.session('department').']';
             $where['department']            = array('like','%'.$department.'%');
             //$posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
@@ -352,7 +352,7 @@ class FileController extends BasepubController {
         $where['file_type']             = 1; //文件
         $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
-        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
+        if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             //$department                     = $department ? '['.$department.']' : '['.session('department').']';
             //$where['department']            = array('like','%'.$department.'%');
             $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
