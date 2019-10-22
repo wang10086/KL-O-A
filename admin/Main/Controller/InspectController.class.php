@@ -1106,7 +1106,7 @@ class InspectController extends BaseController{
 
             if (!$info['userid'] || !$info['month']) $this->error('数据错误');
             $month                          = $info['month'] ? substr($info['month'],-2) : date('m');
-                if ($data){
+                if ($data && $info['month'] >= date('Ym')){
                     for ($m=1;$m<=12;$m++){
                         $del_ids                        = array();
                         if ($m == $month){
@@ -1156,7 +1156,8 @@ class InspectController extends BaseController{
                         }
                     }
                 }else{
-                    $this->error('数据不能为空');
+                    if (!$data) $this->error('数据不能为空');
+                    if ($info['month'] < date('Ym')) $this->error('请勿更改历史数据');
                 }
             echo '<script>window.top.location.reload();</script>';
         }
