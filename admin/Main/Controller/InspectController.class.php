@@ -1102,49 +1102,63 @@ class InspectController extends BaseController{
             $db                             = M('satisfaction_config');
             $info                           = I('info');
             $data                           = I('data');
+            $year                           = $info['year'];
 
             if (!$info['userid'] || !$info['month']) $this->error('数据错误');
-            /***************************************************************/
-            /*$month                          = $info['month'] ? substr($info['month'],-2) : date('m');
-            for ($m=1;$m<=12;$m++){
-                $list                       = $db->where(array('user_id'=>$info['userid'],'month'=>$month))->find();
-                if ($m >= $month){
-                    var_d($m);
-                }
-            }*/
-
-            $num                            = 0;
-            if ($data){
-                $del_ids                    = array();
-                foreach ($data as $k=>$v){
-                    $conf                   = array();
-                    $conf['user_id']        = $info['userid'];
-                    $conf['user_name']      = trim($info['user_name']);
-                    $conf['year']           = $info['year'];
-                    $conf['month']          = $info['month'];
-                    $conf['score_user_id']  = $v['score_user_id'];
-                    $conf['score_user_name']= $v['score_user_name'];
-                    if ($v['resid']){
-                        $del_ids[]          = $v['resid'];
-                        $res                = $db->where(array('id'=>$v['resid']))->save($conf);
-                        if ($res) $num++;
-                    }else{
-                        $conf['input_time'] = NOW_TIME;
-                        $res                = $db->add($conf);
-                        $del_ids[]          = $res;
-                        if ($res) $num++;
+            $month                          = $info['month'] ? substr($info['month'],-2) : date('m');
+                if ($data){
+                    for ($m=1;$m<=12;$m++){
+                        $del_ids                        = array();
+                        if ($m == $month){
+                            foreach ($data as $k=>$v){
+                                $conf                   = array();
+                                $conf['user_id']        = $info['userid'];
+                                $conf['user_name']      = trim($info['user_name']);
+                                $conf['year']           = $year;
+                                $conf['month']          = $info['month'];
+                                $conf['score_user_id']  = $v['score_user_id'];
+                                $conf['score_user_name']= $v['score_user_name'];
+                                if ($v['resid']){
+                                    $del_ids[]          = $v['resid'];
+                                    $res                = $db->where(array('id'=>$v['resid']))->save($conf);
+                                }else{
+                                    $conf['input_time'] = NOW_TIME;
+                                    $res                = $db->add($conf);
+                                    $del_ids[]          = $res;
+                                }
+                            }
+                            $where                      = array();
+                            $where['year']              = $year;
+                            $where['month']             = $year.$month;
+                            $where['user_id']           = $info['userid'];
+                            $where['id']                = array('not in',$del_ids);
+                            $db->where($where)->delete();
+                        }elseif($m > $month){
+                            $mm                         = strlen($m) ==2 ? $m : str_pad($m,2,'0',STR_PAD_LEFT);
+                            foreach ($data as $k=>$v){
+                                $conf                   = array();
+                                $conf['user_id']        = $info['userid'];
+                                $conf['user_name']      = trim($info['user_name']);
+                                $conf['year']           = $year;
+                                $conf['month']          = $year.$mm;
+                                $conf['score_user_id']  = $v['score_user_id'];
+                                $conf['score_user_name']= $v['score_user_name'];
+                                $conf['input_time']     = NOW_TIME;
+                                $res                    = $db->add($conf);
+                                $del_ids[]              = $res;
+                            }
+                            $where                      = array();
+                            $where['year']              = $year;
+                            $where['month']             = $year.$mm;
+                            $where['user_id']           = $info['userid'];
+                            $where['id']                = array('not in',$del_ids);
+                            $db->where($where)->delete();
+                        }
                     }
+                }else{
+                    $this->error('数据不能为空');
                 }
-                $where                      = array();
-                $where['year']              = $info['year'];
-                $where['month']             = $info['month'];
-                $where['user_id']           = $info['userid'];
-                $where['id']                = array('not in',$del_ids);
-                $db->where($where)->delete();
-                echo '<script>window.top.location.reload();</script>';
-            }else{
-                $this->error('数据不能为空');
-            }
+            echo '<script>window.top.location.reload();</script>';
         }
     }
 
