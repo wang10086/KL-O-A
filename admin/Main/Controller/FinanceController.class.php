@@ -2893,47 +2893,6 @@ class FinanceController extends BaseController {
         $this->displaY('payment_detail');
     }
 
-    /*private function check_list($lists,$start_time,$end_time){
-        $data                               = array();
-        $data['this_month_list']            = ''; //计划当月回款
-        $data['history_list']               = ''; //历史欠款
-        $data['this_month']                 = 0;
-        $data['history']                    = 0;
-        $arr_opids                          = array_column($lists,'op_id');
-        foreach ($lists as $k=>$v){
-            $show_times                     = get_array_repeats($arr_opids,$v['op_id']);
-            $no_sum                         = $v['no'].'/'.$show_times;
-            $v['no_sum']                    = $no_sum;
-            if ($v['status']==2){
-                $v['stu']           = "<span class='green'>已回款</span>";
-            }elseif ($v['status']==1){
-                $v['stu']           = "<span class='yellow'>回款中</span>";
-            }else{
-                if ($v['return_time']<$end_time){
-                    $v['stu']       = "<span class='red'>未回款</span>";
-                    if ($v['return_time'] < $start_time){ //排除当月未回款的团
-                        $data['history_list'][] = $v;
-                        $data['history']        += $v['amount'];
-                        $data['history_return'] += $v['pay_amount'];
-                    }
-                }else{
-                    $v['stu']       = "<font color='#999999'>未考核</font>";
-                }
-            }
-
-            if (($v['return_time'] > $start_time && $v['return_time'] < $end_time && $v['status'] != 2) || ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time)){
-                $data['this_month_list'][]  = $v;
-                $data['this_month']         += $v['amount'];
-                if ($v['pay_time'] > $start_time && $v['pay_time'] < $end_time){
-                    $data['this_month_return']  += $v['pay_amount'];
-                }
-            }
-
-        }
-        $data['money_back_average']         = ($data['history']+$data['this_month'])?(round($data['this_month_return']/($data['history']+$data['this_month']),4)*100).'%':'100%';
-        return $data;
-    }*/
-
 
 //保存修改回款总金额(预算审核通过后)
     public function save_upd_money_back(){
@@ -3102,6 +3061,42 @@ class FinanceController extends BaseController {
         }else{
             $this->error('删除失败');
         }
+    }
+
+    //项目报账
+    public function reimbursement(){
+        $this->title('项目报账');
+        $title                              = I('title','');
+        $opid                               = I('opid','');
+        $group_id                           = I('group_id','');
+        $sale                               = I('ou','');
+        $jd                                 = I('jd','');
+        $where                              = array();
+        if ($title) $where['o.project']     = array('like','%'.$title.'%');
+        if ($opid)  $where['o.op_id']       = $opid;
+        if ($group_id) $where['o.group_id'] = array('like','%'.$group_id.'%');
+        if ($sale)  $where['o.sale_user']   = array('like','%'.$sale.'%');
+        if ($jd)    $where['l.req_uname']   = $jd;
+        $where['l.req_type']                = 801;
+        $where['s.audit_status']            = 1;
+        $field                              = array();
+        $field[]                            = 'o.op_id,o.group_id,o.project,o.sale_user,s.reimbursement_status,s.reimbursement_time,l.req_uid,l.req_uname,l.audit_time';
+
+        //分页
+        $pagecount                          = M()->table('__OP__ as o')->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')->where($where)->field($field)->count();
+        $page			                    = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $lists                              = M()->table('__OP__ as o')
+            ->join('__OP_SETTLEMENT__ as s on s.op_id=o.op_id','left')
+            ->join('__AUDIT_LOG__ as l on l.req_id=s.id','left')
+            ->where($where)
+            ->limit($page->firstRow . ',' . $page->listRows)
+            ->order($this->orders('op_id'))
+            ->field($field)
+            ->select();
+        $this->lists                        = $lists;
+        $this->display();
     }
 
 }

@@ -596,7 +596,6 @@ class SaleController extends BaseController {
 
     //报账及时性
     public function public_reimbursement_detail(){
-        //P($_POST);
         $mod                        = D('Sale');
         $timely                     = get_timely(1);
         $timely                     = array_column($timely,'title');

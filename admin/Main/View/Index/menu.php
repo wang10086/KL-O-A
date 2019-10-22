@@ -572,8 +572,8 @@
                                     </ul>
                                 </li>
 
-                                <li class="treeview {:on('Finance/costacclist')} {:on('Finance/budget')} {:on('Finance/settlementlist')}">
-                                    <if condition="rolemenu(array('Finance/jiekuan'))">
+                                <li class="treeview {:on('Finance/costacclist')} {:on('Finance/budget')} {:on('Finance/settlementlist')} {:on('Finance/reimbursement')}">
+                                    <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist','Finance/reimbursement'))">
                                         <a href=""><i class="fa fa-bullseye"></i> 项目费用</a>
                                     </if>
                                     <ul class="treeview-menu">
@@ -589,11 +589,14 @@
                                             <li><a href="{:U('Finance/settlementlist')}"><i class="fa fa-angle-right"></i> 项目结算</a></li>
                                         </if>
 
+                                        <if condition="rolemenu(array('Finance/reimbursement'))">
+                                            <li><a href="{:U('Finance/reimbursement')}"><i class="fa fa-angle-right"></i> 项目报账</a></li>
+                                        </if>
                                     </ul>
                                 </li>
 
                                 <li class="treeview {:on('Finance/payment')} {:on('Finance/payment_quarter')} {:on('Finance/quarter_arrears_detail')}">
-                                    <if condition="rolemenu(array('Finance/payment'))">
+                                    <if condition="rolemenu(array('Finance/payment','Finance/payment_quarter'))">
                                         <a href=""><i class="fa fa-share"></i> 回款管理</a>
                                     </if>
                                     <ul class="treeview-menu">

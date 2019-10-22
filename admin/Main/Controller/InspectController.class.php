@@ -1104,9 +1104,10 @@ class InspectController extends BaseController{
             $data                           = I('data');
 
             if (!$info['userid'] || !$info['month']) $this->error('数据错误');
+            /***************************************************************/
             /*$month                          = $info['month'] ? substr($info['month'],-2) : date('m');
-
             for ($m=1;$m<=12;$m++){
+                $list                       = $db->where(array('user_id'=>$info['userid'],'month'=>$month))->find();
                 if ($m >= $month){
                     var_d($m);
                 }
