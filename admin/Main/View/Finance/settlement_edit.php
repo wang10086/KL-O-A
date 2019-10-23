@@ -29,7 +29,7 @@
                     </datalist>
                     <input type="text" class="form-control cost" name="costacc[666{$k}][unitcost]" value="{$v.price}">
                     <input type="text" class="form-control amount" name="costacc[666{$k}][amount]" value="{$v.num}">
-                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.really_cost}">
+                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.total}">
                     <select class="form-control costaccType" name="costacc[666{$k}][type]" id="666{$k}_costacc_type" onchange="set_supplier_null(666{$k})">
                         <option value="2" selected>专家辅导员</option>
                     </select>
@@ -42,7 +42,7 @@
                     <input type="text" class="form-control costTitle" name="costacc[666{$k}][title]" value="{$v.title}" onblur="check_title(666{$k},$(this).val())" readonly>
                     <input type="text" class="form-control cost" name="costacc[666{$k}][unitcost]" value="{$v.price}" readonly>
                     <input type="text" class="form-control amount" name="costacc[666{$k}][amount]" value="{$v.num}" readonly>
-                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.really_cost}" readonly>
+                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.total}" readonly>
                     <select class="form-control costaccType" name="costacc[666{$k}][type]" id="666{$k}_costacc_type" onchange="set_supplier_null(666{$k})">
                         <option value="2" selected>专家辅导员</option>
                     </select>
@@ -116,7 +116,6 @@
                 <?php } ?>
             </foreach>
             <?php } else { ?>
-
             <foreach name="costacc" key="k" item="v">
                 <?php
                     if ($v['type'] == 4) { ?>

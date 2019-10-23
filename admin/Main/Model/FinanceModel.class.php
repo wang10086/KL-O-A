@@ -105,7 +105,7 @@ class FinanceModel extends Model{
             $data['title']          = $v['name'];
             $data['unitcost']       = $v['price'];
             $data['amount']         = $v['num'];
-            $data['total']          = $v['really_cost'];
+            $data['total']          = intval($v['total']) ? $v['total'] : $v['really_cost'];
             $data['type']           = 2;
             $data['remark']         = $v['remark'];
             $costacc[]              = $data;
