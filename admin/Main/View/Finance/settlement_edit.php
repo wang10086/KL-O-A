@@ -29,7 +29,7 @@
                     </datalist>
                     <input type="text" class="form-control cost" name="costacc[666{$k}][unitcost]" value="{$v.price}">
                     <input type="text" class="form-control amount" name="costacc[666{$k}][amount]" value="{$v.num}">
-                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.total}">
+                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="<?php echo intval($v['total']) ? $v['total'] : $v['really_cost']; ?>">
                     <select class="form-control costaccType" name="costacc[666{$k}][type]" id="666{$k}_costacc_type" onchange="set_supplier_null(666{$k})">
                         <option value="2" selected>专家辅导员</option>
                     </select>
@@ -42,7 +42,7 @@
                     <input type="text" class="form-control costTitle" name="costacc[666{$k}][title]" value="{$v.title}" onblur="check_title(666{$k},$(this).val())" readonly>
                     <input type="text" class="form-control cost" name="costacc[666{$k}][unitcost]" value="{$v.price}" readonly>
                     <input type="text" class="form-control amount" name="costacc[666{$k}][amount]" value="{$v.num}" readonly>
-                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="{$v.total}" readonly>
+                    <input type="text" class="form-control totalval" name="costacc[666{$k}][total]" value="<?php echo intval($v['total']) ? $v['total'] : $v['really_cost']; ?>" readonly>
                     <select class="form-control costaccType" name="costacc[666{$k}][type]" id="666{$k}_costacc_type" onchange="set_supplier_null(666{$k})">
                         <option value="2" selected>专家辅导员</option>
                     </select>
@@ -117,8 +117,7 @@
             </foreach>
             <?php } else { ?>
             <foreach name="costacc" key="k" item="v">
-                <?php
-                    if ($v['type'] == 4) { ?>
+                <?php if ($v['type'] == 4) { ?>
                 <div class="userlist cost_expense" id="costacc_id_aa_{$k}">
                     <span class="title"></span>
                     <input type="hidden" name="resid[888{$k}][id]" value="0">
