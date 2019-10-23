@@ -3209,7 +3209,7 @@ class OpController extends BaseController {
         $opid               = I('opid');
         $op                 = M('op')->where(array('op_id'=>$opid))->find();
 
-        $op_guide_list      = M('op_guide_confirm')->where(array('op_id'=>$opid))->find();
+        $op_guide_list      = M('op_guide_confirm')->where(array('op_id'=>$opid,'first_dispatch_oa_uid'=>array('neq',0)))->find();
         $jd_score           = get_op_score_data($opid,1);
         $jw_score           = get_op_score_data($opid,2);
         $cp_score           = get_op_score_data($opid,3);
