@@ -229,7 +229,7 @@
         <div class="form-group">&nbsp;</div>
     </div>
 
-    <div class="content" style="padding-bottom:50px;">
+    <div class="content">
         <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
         <input type="hidden" name="info[name]" value="{$op.project}" />
         <input type="hidden" name="settlement" value="{$settlement.id}" />
@@ -282,6 +282,51 @@
             </div>
         </div>
 
+        <?php if ($op['add_group']==1){ ?>
+        <div class="form-group col-md-12" id="add_group_box">
+            <div id="addGroupContent" class="addGroupContent">
+                <div class="userlist form-title" id="">
+                    <div class="unitbox" style="width:80px">员工姓名</div>
+                    <div class="unitbox" style="width:12%">所属部门</div>
+                    <div class="unitbox" style="width:10%">实际人数</div>
+                    <div class="unitbox" style="width:10%">收入</div>
+                    <div class="unitbox" style="width:10%">毛利</div>
+                    <div class="unitbox" style="width:10%">毛利率</div>
+                    <div class="unitbox" style="width:10%">人均毛利</div>
+                    <div class="unitbox" style="width:15%">备注</div>
+                </div>
+                <div id="group_val">1</div>
+                <?php if($groups){ ?>
+                    <foreach name="groups" key="k" item="v">
+                        <script>{++$k}; var n = parseInt($('#group_val').text());n++;$('#group_val').text(n);</script>
+                        <div class="userlist no-border" id="group_con_{$k}">
+                            <span class="title">{$k}</span>
+                            <input type="hidden" name="resid[]" value="{$v['id']}">
+                            <input type="hidden" name="group[{$k}][id]" value="{$v.id}">
+                            <input type="text" class="form-control" style="width:80px" name="group[{$k}][username]" id="name_{$k}" value="{$v.username}" readonly>
+                            <input type="hidden"  class="form-control" name="group[{$k}][userid]" id="uid_{$k}" value="{$v.userid}">
+                            <select class="form-control" style="width:12%" name="group[{$k}][code]">
+                                <foreach name="businessDep" key="key" item="value">
+                                    <option value="{$key}" <?php if ($v['code']==$key){ echo "selected"; } ?>>{$value}</option>
+                                </foreach>
+                            </select>
+                            <input type="text" class="form-control" style="width:10%" name="group[{$k}][num]" value="{$v.num}">
+                            <input type="text" class="form-control" style="width:10%" name="group[{$k}][shouru]" value="{$v.shouru}">
+                            <input type="text" class="form-control" style="width:10%" name="group[{$k}][maoli]" value="{$v.maoli}">
+                            <input type="text" class="form-control" style="width:10%" name="group[{$k}][maolilv]" value="{$v.maolilv}">
+                            <input type="text" class="form-control" style="width:10%" name="group[{$k}][renjunmaoli]" value="{$v.renjunmaoli}">
+                            <input type="text" class="form-control" style="width:15%" name="group[{$k}][remark]" value="{$v.remark}">
+                            <!--<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('group_con_{$k}')">删除</a>-->
+                        </div>
+                    </foreach>
+                <?php } ?>
+            </div>
+
+            <!--<div class="form-group col-md-12" id="useraddbtns">
+                <a href="javascript:;" class="btn btn-success btn-sm" onClick="addGroup()"><i class="fa fa-fw fa-plus"></i> 拼团信息</a>
+            </div>-->
+        </div>
+        <?php } ?>
     </div>
 
     <div class="content" style="border-top:2px solid #f39c12; margin-top:20px; padding-bottom:20px;">

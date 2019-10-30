@@ -353,6 +353,10 @@
         $('#plans').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
         });
+
+        $('#addGroupContent').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
     }
 
     //保存信息

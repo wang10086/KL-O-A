@@ -683,7 +683,8 @@ class FinanceController extends BaseController {
         $money_back             = check_money_back($opid);
         $this->yihuikuan        = $money_back;
         $this->guide            = M()->table('__GUIDE_PAY__ as p')->field('g.name as title,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id=g.id')->where(array('p.op_id'=>$opid,'p.status'=>2))->select();
-
+        $this->businessDep      = C('DIJIE_NAME');
+        $this->groups           = M('op_group')->where(array('op_id'=>$opid))->select(); //拼团信息
         $this->display('settlement');
     }
 	

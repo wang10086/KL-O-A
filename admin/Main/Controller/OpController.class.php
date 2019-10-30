@@ -2717,8 +2717,11 @@ class OpController extends BaseController {
 		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
 
 			$info	                = I('info');
-            $data                   = I('data');
+			$add_group              = I('add_group',0); //拼团
+            $group                  = I('group');
+            $resid                  = I('resid','');
 
+            if($add_group == 1 && !$group){ $this->error('拼团信息填写有误'); }
 			//判断团号是否可用
 			$where                  = array();
 			$where['group_id']	    = $info['group_id'];
@@ -2740,7 +2743,12 @@ class OpController extends BaseController {
             if (!is_numeric($info['days']) || $info['days']==0)$this->error('实际天数填写有误');
             if (!is_numeric($info['num_adult'])) $this->error('出团成人人数格式错误');
             if (!is_numeric($info['num_children'])) $this->error('出团儿童人数格式错误');
-			//判断是否已经确认
+
+            $op_info                = array();
+            $op_info['type']        = 1; //已成团
+            $op_info['add_group']   = $add_group; //拼团
+            M('op')->where(array('op_id'=>$opid))->save($op_info);
+            //判断是否已经确认
 			if($confirm){
                 if($upd_num == 1){
                     if (in_array(cookie('userid'),array(1,11))){
@@ -2753,13 +2761,11 @@ class OpController extends BaseController {
                     $res = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
                 }
 			}else{
-                $op_info            = array();
-                $op_info['type']    = 1;
-                M('op')->where(array('op_id'=>$opid))->save($op_info);
 				$res = M('op_team_confirm')->add($info);
 			}
 
 			if ($res) {
+                $this->save_add_group($opid,$resid,$group); //保存拼团信息
                 //如果是内部地接, 生成一个新地接团
                 if ($op['in_dijie'] == 1 && !$op['dijie_opid']) {
                     $new_op             = array();
@@ -2840,7 +2846,6 @@ class OpController extends BaseController {
                         $record['explain']      = '创建地接项目并成团';
                         op_record($record);
                     }
-
                 }
 
                 $infos = array();
@@ -2856,16 +2861,6 @@ class OpController extends BaseController {
                 $record['optype']       = 4;
                 $record['explain']      = '成团确认';
                 op_record($record);
-
-                //给教务组长 roleid  102
-                $uid     = cookie('userid');
-                $title   = '您有来自'.$op['create_user_name'].'的团号为['.$info['group_id'].']的团待安排专家辅导员!';
-                $content = '项目编号:'.$op['op_id'].'；团号:'.$info['group_id'].';请登录"辅导员/教师、专家管理系统完成相关操作(如其他同事已完成操作,请忽略)!"';
-                $url     = 'http://tcs.kexueyou.com/op.php?m=Main&c=Task&a=detail&id='.$op['id'];
-                $user    = '';
-                $roleid  = 102; //教务组长
-                send_msg($uid,$title,$content,$url,$user,$roleid);
-
                 $this->success('保存成功！');
             }else{
                 $this->error('保存信息失败');
@@ -2956,11 +2951,29 @@ class OpController extends BaseController {
                 '3'         => '其他'
             );
             $this->additive_con = $additive_con;
+            $this->businessDep  = C('DIJIE_NAME');
+            $this->groups       = M('op_group')->where(array('op_id'=>$opid))->select();
 
 			$this->display('confirm');
 		}
 	}
 
+	//保存拼团信息
+    private function save_add_group($opid,$resid='',$arr=''){
+        $db                             = M('op_group');
+        $delids                         = array();
+        foreach ($arr as $v){
+            if (in_array($v['id'],$resid)){
+                $res                    = $db->where(array('id'=>$v['id']))->save($v);
+                $delids[]               = $v['id'];
+            }else{
+                $v['op_id']             = $opid;
+                $res                    = $db->add($v);
+                $delids[]               = $res;
+            }
+        }
+        $db->where(array('id'=>array('not in',$delids)))->delete();
+    }
 
 
     // @@@NODE-3###change_op###项目交接###
