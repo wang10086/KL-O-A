@@ -315,7 +315,7 @@
                             <input type="text" class="form-control" style="width:10%" name="group[{$k}][maoli]" value="{$v.maoli}" id="group_maoli_{$k}">
                             <!--<input type="text" class="form-control" style="width:10%" name="group[{$k}][maolilv]" value="{$v.maolilv}">
                             <input type="text" class="form-control" style="width:10%" name="group[{$k}][renjunmaoli]" value="{$v.renjunmaoli}">-->
-                            <input type="text" class="form-control" style="width:20%" name="group[{$k}][remark]" value="{$v.remark}">
+                            <input type="text" class="form-control" style="width:20%" name="group[{$k}][jd_remark]" value="<?php echo $v['jd_remark'] ? $v['jd_remark'] : $v['remark']; ?>">
                         </div>
                     </foreach>
 

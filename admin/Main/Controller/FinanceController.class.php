@@ -691,7 +691,6 @@ class FinanceController extends BaseController {
 	
 	//@@@NODE-3###save_settlement###保存结算###
     public function save_settlement(){
-		
 		$db				= M('op_costacc');
 		$opid			= I('opid');
 		$costacc		= I('costacc');
@@ -699,25 +698,26 @@ class FinanceController extends BaseController {
 		$resid			= I('resid');
 		$referer		= I('referer');
 		$settlement		= I('settlement',0);
+		$group          = I('group','');
 		$num			= 0;
 
 		//保存结算
 		if($opid && $costacc){
 
-			$delid = array();
+			$delid                  = array();
 			foreach($costacc as $k=>$v){
-				$data = array();
-				$data = $v;
-				$data['op_id'] = $opid;
-				$data['status'] = 2;
+				$data               = array();
+				$data               = $v;
+				$data['op_id']      = $opid;
+				$data['status']     = 2;
 					
 				if($resid && $resid[$k]['id']>0){
-					$edits = $db->data($data)->where(array('id'=>$resid[$k]['id']))->save();
-					$delid[] = $resid[$k]['id'];
+					$edits          = $db->data($data)->where(array('id'=>$resid[$k]['id']))->save();
+					$delid[]        = $resid[$k]['id'];
 					$num++;
 				}else{
-					$savein = $db->add($data);
-					$delid[] = $savein;
+					$savein         = $db->add($data);
+					$delid[]        = $savein;
 					if($savein) $num++;
 				}
 			}
@@ -725,13 +725,23 @@ class FinanceController extends BaseController {
 			if($settlement){
 				M('op_settlement')->data($info)->where(array('id'=>$settlement))->save();
 			}else{
-				$info['create_time'] = time();
-				M('op_settlement')->add($info);
+				$info['create_time']= time();
+				$settlement         = M('op_settlement')->add($info);
 			}
 			
-			$del = $db->where(array('op_id'=>$opid,'status'=>2,'id'=>array('not in',$delid)))->delete();
+			$del                    = $db->where(array('op_id'=>$opid,'status'=>2,'id'=>array('not in',$delid)))->delete();
 			if($del) $num++;
 		}
+
+		if ($group){ //保存个拼团数据毛利
+		    $group_db               = M('op_group');
+		    foreach ($group as $gk=>$gv){
+                $data               = $gv;
+                $data['settlement_id'] = $settlement;
+                $res                = $group_db->where(array('id'=>$gv['id']))->save($data);
+                if ($res) $num++;
+            }
+        }
 		
 		if($num){
 			$record = array();
