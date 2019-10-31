@@ -69,6 +69,17 @@
                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('group_con_{$k}')">删除</a>
                         </div>
                     </foreach>
+                <?php }else{ ?>
+                    <div class="userlist no-border" id="group_con_1">
+                        <span class="title"></span>
+                        <input type="text"  class="form-control" style="width:15%" name="group[1][username]" id="name_1" value="{$op.create_user_name}">
+                        <input type="hidden"  class="form-control" style="width:15%" name="group[1][userid]" id="uid_1" value="{$op.create_user}">
+                        <select class="form-control" style="width:15%" name="group[1][code]">
+                            <foreach name="businessDep" key="k" item="v"> <option value="{$k}">{$v}</option> </foreach> </select>
+                        <input type="text"  class="form-control" style="width:15%" name="group[1][num]" value="">
+                        <input type="text"  class="form-control" style="width:20%" name="group[1][remark]">
+                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('group_con_1')">删除</a>
+                    </div>
                 <?php } ?>
             </div>
 
@@ -92,7 +103,7 @@
 <script>
     var keywords = <?php echo $userkey; ?>;
     $(function () {
-        //autocomplete_id('name_1','uid_1',keywords);
+        autocomplete_id('name_1','uid_1',keywords);
         let groups      = <?php echo $groups?1:0; ?>;
         if (!groups){
             $('#add_group_box').hide();
@@ -150,9 +161,9 @@
             '<div id="group_val">1</div>';
         if (val == 0){ //不拼团
             $('#add_group_box').hide();
-            $('#addGroupContent').html('');
-        }else{ //拼团
             $('#addGroupContent').html(html);
+        }else{ //拼团
+            //$('#addGroupContent').html(html);
             $('#add_group_box').show();
         }
     }
