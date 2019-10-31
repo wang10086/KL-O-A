@@ -8,9 +8,10 @@ class ManageModel extends Model{
     //月度部门人数(从工资表取值)
     public function get_number($year,$month){
         $datetime                   = $this->datetime($year,$month);
-        $datime['datetime']         = $datetime;
-        $datime['status']           = 4;//数据锁定
-        $wages_lists                = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->field('s.id,s.account_id,s.user_name,s.department,s.insurance_id,s.datetime,s.Should_distributed,a.position_id')->where(array('s.datetime'=>$datetime,'s.status'=>4))->select(); //应付工资
+        $where['s.datetime']        = $datetime;
+        $where['s.status']          = 4;//数据锁定
+        $where['s.user_name']       = array('notlike','%1');
+        $wages_lists                = M()->table('__SALARY_WAGES_MONTH__ as s')->join('__ACCOUNT__ as a on a.id=s.account_id','left')->field('s.id,s.account_id,s.user_name,s.department,s.insurance_id,s.datetime,s.Should_distributed,a.position_id')->where($where)->select(); //应付工资
         $depart_account             = $this->get_account($wages_lists);
         $info                       = array();
         foreach ($depart_account as $k=>$v){
