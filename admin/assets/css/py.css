@@ -4217,6 +4217,7 @@ th{outline: none;}
 #addGroupContent .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
 #addGroupContent .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
 #addGroupContent .btn{ padding:7px 12px; font-size:12px;}
+#addGroupContent .sumUserList{  width:100%; height:auto !important; float:left; clear:both; border-top:1px solid #cccccc; text-align: center; }
 #group_val{ display:none}
 .addGroupContent{ padding:0 0px;}
 .addGroupContent .form-control{ width:120px; float:left; margin-right:10px; border-radius:0;}
@@ -4224,6 +4225,7 @@ th{outline: none;}
 .addGroupContent .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
 .addGroupContent .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px;}
 .addGroupContent .btn{ padding:7px 12px; font-size:12px;}
+
 
 
 

@@ -99,6 +99,7 @@
 
 <script>
 	$(document).ready(function(e) {
+        get_total_group_shouru(); //各拼团收入之和
         cost_total();
 		orderno();
 
@@ -264,10 +265,19 @@
 
 	//检查是否全部回款
     function check_huikuan(){
-        var noSupplierResNum = {$noSupplierResNum};
+        let add_group           = {$op.add_group};
+        if (add_group == 1) { //拼团 检查结算收入数据和个拼团数据收入
+            let total_shouru    = parseFloat($('#shouru').val());
+            let group_shouru    = parseFloat($('#groupShouruSum').html());
+            if (group_shouru != total_shouru){
+                art_show_msg('请保证各拼团收入之和等于该团总收入',3);
+                return false;
+            }
+        }
+        let noSupplierResNum = {$noSupplierResNum};
         if(noSupplierResNum){ art_show_msg('您有结算项未填写合格供方',3); return false; }
-        var yihuikuan  = <?php echo $yihuikuan?$yihuikuan:0; ?>;
-        var is_dijie   = {$is_dijie};
+        let yihuikuan  = <?php echo $yihuikuan?$yihuikuan:0; ?>;
+        let is_dijie   = {$is_dijie};
 
         if (yihuikuan || (!yihuikuan && is_dijie)){
            checkGrossRate();
@@ -349,6 +359,30 @@
         }else{
             $('#'+num+'_supplierRes_name').attr({'readonly':false,'disabled':false});
         }
+    }
+
+    //各拼团方毛利
+    function get_group_maoli(group_shouru,num) { //各自毛利 = (各自收入/总收入)*总毛利
+        let total_shouru = $('#shouru').val() ? $('#shouru').val() : 0;
+        let total_maoli  = $('#maoli').val() ? $('#maoli').val() : 0;
+        let num1        = accDiv(group_shouru,total_shouru); //相除
+        let group_maoli = accMul(num1,total_maoli).toFixed(2); //相乘
+
+        $('#group_maoli_'+num).val(group_maoli);
+        get_total_group_shouru();
+    }
+
+    //更新拼团各团总收入
+    function get_total_group_shouru(){
+        let op_total_shouru = $('#shouru').val() ? parseFloat($('#shouru').val()) : 0;
+        let total   = 0;
+        $('.group-content').each(function () {
+            let groupShouru = $(this).find($('.group-shouru')).val() ? $(this).find($('.group-shouru')).val() : 0;
+            total   += parseFloat(groupShouru);
+        })
+
+        if (total > op_total_shouru){ art_show_msg('各拼团方收入合计不应超过该团总收入',3); }
+        $('#groupShouruSum').html(total);
     }
 </script>
 
