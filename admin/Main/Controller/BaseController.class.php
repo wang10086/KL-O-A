@@ -389,7 +389,6 @@ class BaseController extends Controller {
         //结算审核
         if ($row['req_type'] == P::REQ_TYPE_SETTLEMENT) {
             $dstdata = M()->table('__' . strtoupper($row['req_table']) . '__')->where('id='.$row['req_id'])->find();
-
             $record = array();
             $record['op_id']   = $dstdata['op_id'];
             $record['optype']  = 10;
@@ -409,6 +408,11 @@ class BaseController extends Controller {
                     M()->table('__' . strtoupper($row['req_table']) . '__')
                         ->where('id='.$row['req_id'])->setField('audit_status', P::AUDIT_STATUS_MORE_AUDIT);
                     $record['explain'] = '结算毛利率未达标,待复批';
+                }else{
+                    $op             = M('op')->where(array('op_id'=>$dstdata['op_id']))->find();
+                    if ($op['add_group'] == 1){ //拼团
+                        save_op_groups_settlement($op);
+                    }
                 }
             }else{
                 $record['explain'] = '结算审核未通过';

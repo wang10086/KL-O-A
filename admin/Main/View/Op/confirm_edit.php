@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    const keywords = <?php echo $userkey; ?>;
+    var keywords = <?php echo $userkey; ?>;
     function autoComLode(name,id){
         autocomplete_id(name,id,keywords);
     }

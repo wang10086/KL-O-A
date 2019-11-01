@@ -4450,4 +4450,66 @@ function HR_notice(){
     }
 }
 
+/**
+ * 组团项目结算审核通过后根据组团方自动生成多个已审批结算的新项目
+ * @param $op
+ */
+function save_op_groups_settlement($op){
+    $groups     = M('op_group')->where(array('op_id'=>$op['op_id']))->select();
+    $dep_time   = M('op_team_confirm')->where(array('op_id'=>$op['op_id']))->getField('dep_time'); //出团时间
+    if ($groups){ //重新生成多个项目以及各项目的结算信息
+        foreach ($groups as $k=>$v){
+            //保存项目基本信息
+            $newOp                  = array();
+            $newOp['project']       = '【拼团】'.$op['project'];
+            $newOp['op_id']         = opid();
+            $newOp['group_id']      = get_group_id($v['code'],$dep_time);
+            $newOp['number']        = $op['number'];
+            $newOp['departure']     = $op['departure'];
+            $newOp['days']          = $op['days'];
+            $newOp['destination']   = $op['destination'];
+            $newOp['create_time']   = NOW_TIME;
+            $newOp['status']        = $op['status'];
+            $newOp['audit_status']  = $op['audit_status'];
+            $newOp['create_user']   = $v['userid'];
+            $newOp['create_user_name'] = $v['username'];
+            $newOp['kind']          = $op['kind'];
+            $newOp['sale_user']     = $v['username'];
+            $newOp['customer']      = $op['customer'];
+            $newOp['op_create_date']= date('Y-m-d');
+            $newOp['op_create_user']= userRole($v['userid'])['role_name']; //角色名称
+            $newOp['line_id']       = $op['line_id'];
+            $newOp['apply_to']      = $op['apply_to'];
+            $newOp['type']          = $op['type'];
+            $res                    = M('op')->add($newOp);
+            if (!$res){ //保存结算信息和结算审核信息
+                $settlement         = M('op_settlement')->where(array('id'=>$v['settlement_id']))->find();
+                $sett               = array();
+                $sett['name']       = $newOp['project'];
+                $sett['op_id']      = $newOp['op_id'];
+                $sett['renshu']     = $v['num'];
+                $sett['shouru']     = $v['shouru'];
+                $sett['maoli']      = $v['maoli'];
+                $sett['maolilv']    = $settlement['maolilv'];
+                $sett['renjunmaoli']= $settlement['renjunmaoli'];
+                $sett['audit']      = $settlement['audit'];
+                $sett['audit_status']= $settlement['audit_status'];
+                $sett['create_time']= NOW_TIME;
+                $sett_res           = M('op_settlement')->add($sett);
+                if ($sett_res){
+                    $log                = array();
+                    $log['req_type']    = 801; //结算
+                    $log['req_id']      = $sett_res;
+                    $log['req_table']   = 'op_settlement';
+                    $log['req_time']    = NOW_TIME;
+                    $log['dst_status']  = 1; //审核通过
+                    $audit_res          = M('audit_log')->add($log);
+                }
+            }
+        }
+    }
+}
+
+
+
 

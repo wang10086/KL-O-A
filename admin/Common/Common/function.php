@@ -233,12 +233,20 @@ function P($var, $stop = true){
 	if ($stop) die();
 }
 
-function var_d($var, $stop = false){
+/*function var_d($var, $stop = false){
     header("Content-Type: text/html;charset=utf-8");
     echo '<pre>';
     var_dump($var);
     echo '</pre>';
     if ($stop) die();
+}*/
+
+//求某个人员的角色信息
+function userRole($userid=0){
+    $where              = array();
+    $where['a.id']      = $userid;
+    $list               = M()->table('__ACCOUNT__ as a')->join('__ROLE__ as r on r.id=a.roleid','left')->field('a.id as account_id,a.nickname,r.*')->where($where)->find();
+    return $list;
 }
 
 
@@ -5598,4 +5606,24 @@ function get_half_year_cycle($year,$month){
             updatekpi($yearMonth,$user_id);
         }
     }
+
+/**
+ * 自动生成团号 递归检查
+ * @param $code
+ * @param $dep_time 出团时间 int
+ * @param $n
+ * @return string
+ */
+function get_group_id($code,$dep_time,$n=0){
+    global $str;
+    global $n;
+    $group_ids                      = array_filter(M('op')->getField('group_id',true));
+    $str_date                       = date('Ymd',$dep_time);
+    $str                            = $n == 0 ? $code.$str_date : $code.$str_date.'-'.$n;
+    if (in_array($str,$group_ids)){
+        $n++;
+        get_group_id($code,$dep_time,$n);
+    }
+    return $str;
+}
 
