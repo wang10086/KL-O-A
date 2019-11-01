@@ -77,7 +77,7 @@
                                             <td>{$row.audit_reason}</td>
                                             <td class="taskOptions">
                                             <?php if ($row['dst_status'] == P::AUDIT_STATUS_PASS) { ?>
-                                                <button onClick="javascript:;" title="审批" class="btn btn-disable btn-sm"><i class="fa fa-check-circle-o"></i></button>
+                                                <button onClick="javascript:;" title="已审批" class="btn btn-disable btn-sm"><i class="fa fa-check-circle-o"></i></button>
                                             <?php } else { ?>
                                                 <button onClick="javascript:{:open_audit($row['id'])}" title="审批" class="btn btn-success btn-sm"><i class="fa fa-check-circle-o"></i></button>
                                             <?php } ?>

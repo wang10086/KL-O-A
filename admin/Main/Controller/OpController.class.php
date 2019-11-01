@@ -136,7 +136,7 @@ class OpController extends BaseController {
                 $info['expert']         = $expert?implode(',',$expert):0;
 				$info['create_time']    = time();
                 $info['op_id']          = $opid;
-                $info['speed']          = 1;
+                //$info['speed']          = 1;
                 $info['op_create_date'] = date('Y-m-d',time());
                 $info['destination']    = $province.'--'.$addr;
 				$info['create_user']    = cookie('userid');
