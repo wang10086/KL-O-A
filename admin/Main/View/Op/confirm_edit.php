@@ -9,13 +9,13 @@
 <input type="hidden" name="opid" value="{$op.op_id}">
 <input type="hidden" name="id" value="{$confirm.id}">
 <div class="content" style="padding-bottom:20px;">
-	
+
     <div style="width:100%; float:left;">
         <div class="form-group col-md-12">
             <label>项目团号：</label>
             <input type="text" name="info[group_id]"  class="form-control" onblur="check_group_id()" value="<?php if($confirm['group_id']){ echo $confirm['group_id'];}else{ echo $op['group_id'];} ?>" required />
         </div>
-        
+
         <div class="form-group col-md-4">
             <label>实际出团成人数：</label>
             <input type="text" name="info[num_adult]" class="form-control" value="{$confirm.num_adult}" required />
@@ -33,7 +33,7 @@
             <label>实际返回时间：</label>
             <input type="text" name="info[ret_time]" class="form-control inputdate" value="<if condition="$confirm['ret_time']">{$confirm.ret_time|date='Y-m-d',###}</if>" required />
         </div>
-        
+
         <div class="form-group col-md-4">
             <label>实际天数：</label>
             <input type="text" name="info[days]"  class="form-control" value="{$confirm.days}" required />
@@ -77,16 +77,7 @@
                         <script> autoComLode('name_'+{$k},'uid_'+{$k}); </script>
                     </foreach>
                 <?php }else{ ?>
-                    <div class="userlist no-border" id="group_con_1">
-                        <span class="title"></span>
-                        <input type="text"  class="form-control" style="width:15%" name="group[1][username]" id="name_1" value="{$op.create_user_name}">
-                        <input type="hidden"  class="form-control" style="width:15%" name="group[1][userid]" id="uid_1" value="{$op.create_user}">
-                        <select class="form-control" style="width:15%" name="group[1][code]">
-                            <foreach name="businessDep" key="k" item="v"> <option value="{$k}">{$v}</option> </foreach> </select>
-                        <input type="text"  class="form-control" style="width:15%" name="group[1][num]" value="">
-                        <input type="text"  class="form-control" style="width:20%" name="group[1][remark]">
-                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('group_con_1')">删除</a>
-                    </div>
+
                 <?php } ?>
             </div>
 
@@ -110,7 +101,7 @@
 <script>
     //var keywords = <?php echo $userkey; ?>;
     $(function () {
-        autocomplete_id('name_1','uid_1',keywords);
+       // autocomplete_id('name_1','uid_1',keywords);
         let groups      = <?php echo $groups?1:0; ?>;
         if (!groups){
             $('#add_group_box').hide();
@@ -166,12 +157,23 @@
             '<div class="unitbox" style="width:15%">出团人数</div>' +
             '<div class="unitbox" style="width:20%">备注</div> </div>' +
             '<div id="group_val">1</div>';
+        let html1 = '<div class="userlist no-border" id="group_con_1">'+
+            '<span class="title"></span>'+
+            '<input type="text"  class="form-control" style="width:15%" name="group[1][username]" id="name_1" value="{$op.create_user_name}">'+
+            '<input type="hidden"  class="form-control" style="width:15%" name="group[1][userid]" id="uid_1" value="{$op.create_user}">'+
+            '<select class="form-control" style="width:15%" name="group[1][code]">'+
+            '<foreach name="businessDep" key="k" item="v"> <option value="{$k}">{$v}</option> </foreach> </select>'+
+            '<input type="text"  class="form-control" style="width:15%" name="group[1][num]" value="">'+
+            '<input type="text"  class="form-control" style="width:20%" name="group[1][remark]">'+
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(`group_con_1`)">删除</a>'+
+            '</div>';
         if (val == 0){ //不拼团
             $('#add_group_box').hide();
             $('#addGroupContent').html(html);
         }else{ //拼团
-            //$('#addGroupContent').html(html);
+            $('#addGroupContent').html(html+html1);
             $('#add_group_box').show();
+            autocomplete_id('name_1','uid_1',keywords);
         }
     }
 
@@ -194,4 +196,3 @@
     }
 
 </script>
-    

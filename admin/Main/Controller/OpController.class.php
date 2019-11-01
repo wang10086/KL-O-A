@@ -10,7 +10,7 @@ use Sys\Pinyin;
 
 // @@@NODE-2###Op###计调操作###
 class OpController extends BaseController {
-    
+
     protected $_pagetitle_ = '计调操作';
     protected $_pagedesc_  = '';
 
@@ -98,12 +98,12 @@ class OpController extends BaseController {
 
 		$this->display('index');
     }
-	
-    
+
+
     // @@@NODE-3###plans###制定出团计划###
     public function plans(){
 		$PinYin                         = new Pinyin();
-		
+
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
             $db                         = M('op');
             $op_cost_db                 = M('op_cost');
@@ -131,7 +131,7 @@ class OpController extends BaseController {
             if (!$info['line_id']) { $this->error('行程方案不能为空'); }
 
 			if($info){
-				
+
 				$opid                   = opid();
                 $info['expert']         = $expert?implode(',',$expert):0;
 				$info['create_time']    = time();
@@ -144,7 +144,7 @@ class OpController extends BaseController {
                 $info['audit_status']   = 1; //项目不用审核,默认通过
 				$addok                  = $db->add($info);
 				//$this->request_audit(P::REQ_TYPE_PROJECT_NEW, $addok);
-                
+
 				if($addok){
                     $data               = array();
                     $data['hesuan']     = session('userid');
@@ -163,7 +163,7 @@ class OpController extends BaseController {
 					$record['optype']   = 1;
 					$record['explain']  = '项目立项';
 					op_record($record);
-					
+
 					/*
 					//收录客户信息
 					$company_name = iconv("utf-8","gb2312",trim($info['customer']));
@@ -173,8 +173,8 @@ class OpController extends BaseController {
 					$data['cm_name'] = $info['create_user_name'];
 					$data['cm_time'] = $info['create_time'];
 					$data['create_time'] = $info['create_time'];
-					$data['pinyin'] = strtolower($PinYin->getFirstPY($company_name));	
-					
+					$data['pinyin'] = strtolower($PinYin->getFirstPY($company_name));
+
 					if(!M('customer_gec')->where(array('company_name'=>$info['customer'],'cm_id'=>$info['create_user']))->find()){
 						M('customer_gec')->add($data);
 					}
@@ -243,11 +243,11 @@ class OpController extends BaseController {
 				}else{
 					$this->error('保存失败' . $db->getError());
 				}
-				
+
 			}else{
 				$this->error('保存失败' . $db->getError());
 			}
-			
+
 		}else{
             //固定线路
             $linelist   = M('product_line')->field('id,title,pinyin')->where(array('type'=>2))->select();
@@ -306,26 +306,26 @@ class OpController extends BaseController {
         $data                   = M('customer_gec')->where($where)->group("company_name")->order('pinyin ASC')->getField('company_name',true);
         return $data;
     }
-    
-	
+
+
 	// @@@NODE-3###plans_info###出团计划###
     public function plans_info(){
-		
+
 		$opid = I('opid');
 		$id   = I('id');
 		if($id){
 			$op   = M('op')->where($where)->find($id);
-			$opid = $op['op_id'];		
+			$opid = $op['op_id'];
 		}else if($opid){
 			$where = array();
 			$where['op_id'] = $opid;
-			$op   = M('op')->where($where)->find();	
+			$op   = M('op')->where($where)->find();
 		}
-		
+
 		if(!$op){
-			$this->error('项目不存在');	
+			$this->error('项目不存在');
 		}
-		
+
 		$pro        = M('product')->find($op['product_id']);
 		$guide      = M()->table('__OP_GUIDE__ as g')->field('g.*,c.cost,c.amount,c.total')->join('__OP_COST__ as c on c.relevant_id=g.guide_id','LEFT')->where(array('g.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>2))->order('g.id')->select();
 		$supplier   = M()->table('__OP_SUPPLIER__ as s')->field('s.id as sid,s.op_id,s.supplier_id,s.supplier_name,s.city,s.kind,s.remark as sremark,c.*')->join('__OP_COST__ as c on c.relevant_id=s.supplier_id')->where(array('s.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>3))->order('sid')->select();
@@ -336,13 +336,13 @@ class OpController extends BaseController {
 		$wuzi       = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.material=c.remark')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
 		$pretium    = M('op_pretium')->where(array('op_id'=>$opid))->order('id')->select();
 		$costacc    = M('op_costacc')->where(array('op_id'=>$opid))->order('id')->select();
-		
+
 		$days       = M('op_line_days')->where(array('op_id'=>$opid))->select();
 		$opauth     = M('op_auth')->where(array('op_id'=>$opid))->find();
 		$record     = M('op_record')->where(array('op_id'=>$opid))->order('id DESC')->select();
-		
-		
-		
+
+
+
 		$where = array();
 		$where['req_type'] = P::REQ_TYPE_PROJECT_NEW;
 		$where['req_id']   = $op['id'];
@@ -365,14 +365,14 @@ class OpController extends BaseController {
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
-		
+
 		if($op['line_id']){
 			$linetext   = M('product_line')->find($op['line_id']);
-			$this->linetext = '<h4>行程来源：<a href="'.U('Product/view_line',array('id'=>$linetext['id'])).'" target="" id="travelcom">'.$linetext['title'].'</a><input type="hidden" name="line_id" value="'.$linetext['id'].'" ></h4>';	
+			$this->linetext = '<h4>行程来源：<a href="'.U('Product/view_line',array('id'=>$linetext['id'])).'" target="" id="travelcom">'.$linetext['title'].'</a><input type="hidden" name="line_id" value="'.$linetext['id'].'" ></h4>';
 		}else{
-			$this->linetext = '';		
+			$this->linetext = '';
 		}
-		
+
 		$this->kinds          =  M('project_kind')->getField('id,name', true);
 		$this->user           =  M('account')->where('`id`>3')->getField('id,nickname', true);
 		$this->op             = $op;
@@ -396,7 +396,7 @@ class OpController extends BaseController {
 	}
 
 
-	
+
 	// @@@NODE-3###plans_follow###项目跟进###
     public function plans_follow(){
 
@@ -407,15 +407,15 @@ class OpController extends BaseController {
             $where      = array();
             $where['id']= $id;
 			$op   = M('op')->where($where)->find($id);
-			$opid = $op['op_id'];		
+			$opid = $op['op_id'];
 		}else if($opid){
 			$where = array();
 			$where['op_id'] = $opid;
-			$op   = M('op')->where($where)->find();	
+			$op   = M('op')->where($where)->find();
 		}
 
 		if(!$op){
-			$this->error('项目不存在');	
+			$this->error('项目不存在');
 		}
 
         $pro        = M('product')->find($op['product_id']);
@@ -470,19 +470,19 @@ class OpController extends BaseController {
 		$op['show_user']  = $show_user;
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
-		
+
 		if($op['line_id']){
 			$linetext   = M('product_line')->find($op['line_id']);
-			$this->linetext = '<h4>已选方案：<a href="'.U('Product/view_line',array('id'=>$linetext['id'])).'" target="_blank" id="travelcom">'.$linetext['title'].'</a><input type="hidden" name="line_id" value="'.$linetext['id'].'" ></h4>';	
+			$this->linetext = '<h4>已选方案：<a href="'.U('Product/view_line',array('id'=>$linetext['id'])).'" target="_blank" id="travelcom">'.$linetext['title'].'</a><input type="hidden" name="line_id" value="'.$linetext['id'].'" ></h4>';
 		}else{
-			$this->linetext = '';		
+			$this->linetext = '';
 		}
-		
+
 		//自动生成团号
 		$roles = M('role')->where(array('role_name'=>$op['op_create_user']))->find();
 		$tuanhao = $roles['name'].str_replace("-", "",$op['departure']);
 		//验证团号是否可用
-		$istuanhao = M('op')->where(array('group_id'=>array('like','%'.$tuanhao.'%')))->count();		
+		$istuanhao = M('op')->where(array('group_id'=>array('like','%'.$tuanhao.'%')))->count();
 		if($istuanhao){
 			$this->tuanhao    = $tuanhao.'-'.($istuanhao);
 		}else{
@@ -636,7 +636,7 @@ class OpController extends BaseController {
         $this->ziyuan       = $ziyuan;
         $this->is_dijie     = is_dijie($opid); //是否是地接团
         $this->display('plans_edit');
-		
+
 	}
 
     private function get_score_user($opid){
@@ -661,13 +661,13 @@ class OpController extends BaseController {
         //$data['jidiao']     = $jidiao;
         return $data;
     }
-	
-	
+
+
 	// @@@NODE-3###public_save###保存项目###
     public function public_save(){
-		
+
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
-			
+
 			$db             = M('op');
 			$op_cost_db     = M('op_cost');
 			$op_guide_db    = M('op_guide');
@@ -708,14 +708,14 @@ class OpController extends BaseController {
 						$cost[$k]['link_id'] = $savein;
 						if($savein) $num++;
 					}
-				}	
-				
+				}
+
 				$where = array();
 				$where['op_id'] = $opid;
 				if($delid) $where['id'] = array('not in',$delid);
 				$del = $op_guide_db->where($where)->delete();
 				if($del) $num++;
-				
+
 				if($num){
 					$record = array();
 					$record['op_id']   = $opid;
@@ -723,14 +723,14 @@ class OpController extends BaseController {
 					$record['explain'] = '专家辅导员资源';
 					op_record($record);
 				}
-				
-				
-			
+
+
+
 			}
-				
+
 			//保存合格供方信息
-			if($opid && $savetype==3 ){		
-					
+			if($opid && $savetype==3 ){
+
 				$delid = array();
 				foreach($supplier as $k=>$v){
 					$data = array();
@@ -747,14 +747,14 @@ class OpController extends BaseController {
 						$cost[$k]['link_id'] = $savein;
 						if($savein) $num++;
 					}
-				}	
-				
+				}
+
 				$where = array();
 				$where['op_id'] = $opid;
 				if($delid) $where['id'] = array('not in',$delid);
 				$del = $op_supplier_db->where($where)->delete();
 				if($del) $num++;
-				
+
 				if($num){
 					$record = array();
 					$record['op_id']   = $opid;
@@ -763,10 +763,10 @@ class OpController extends BaseController {
 					op_record($record);
 				}
 			}
-					
-			//保存物资信息	
+
+			//保存物资信息
 			if($opid && $savetype==4 ){
-				
+
 				$delid = array();
 				foreach($wuzi as $k=>$v){
 					$data = array();
@@ -783,14 +783,14 @@ class OpController extends BaseController {
 						$delid[] = $savein;
 						if($savein) $num++;
 					}
-				}	
-				
+				}
+
 				$where = array();
 				$where['op_id'] = $opid;
 				if($delid) $where['id'] = array('not in',$delid);
 				$del = M('op_material')->where($where)->delete();
 				if($del) $num++;
-				
+
 				if($num){
 					$record = array();
 					$record['op_id']   = $opid;
@@ -799,10 +799,10 @@ class OpController extends BaseController {
 					op_record($record);
 				}
 			}
-			
+
 			//保存用户名单信息
 			if($opid && $savetype==5 ){
-				
+
 				$delid = array();
 				foreach($member as $k=>$v){
 					$data = array();
@@ -818,7 +818,7 @@ class OpController extends BaseController {
 						$savein = $op_member_db->add($data);
 						$delid[] = $savein;
 						if($savein) $num++;
-						
+
 						//将名单保存至客户名单
 						if(!M('customer_member')->where(array('number'=>$v['number']))->find()){
 							$mem = $v;
@@ -827,14 +827,14 @@ class OpController extends BaseController {
 							M('customer_member')->add($mem);
 						}
 					}
-				}	
-				
+				}
+
 				$where = array();
 				$where['op_id'] = $opid;
 				if($delid) $where['id'] = array('not in',$delid);
 				$del = $op_member_db->where($where)->delete();
 				if($del) $num++;
-				
+
 				if($num){
 					$record = array();
 					$record['op_id']   = $opid;
@@ -842,12 +842,12 @@ class OpController extends BaseController {
 					$record['explain'] = '保存用户名单';
 					op_record($record);
 				}
-				
+
 			}
-			
+
 			//确定成团
 			if($opid && $savetype==9 ){
-				
+
 				$data = array();
 				$data['status'] = I('status');
 				$data['group_id'] = strtoupper(I('gid'));
@@ -870,7 +870,7 @@ class OpController extends BaseController {
 					op_record($record);
 				}
 			}
-			
+
 			//修改项目基本信息
 			if($opid && $savetype==10 ){
 			    $returnMsg              = array();
@@ -915,7 +915,7 @@ class OpController extends BaseController {
                 $returnMsg['msg']   = $msg;
                 $this->ajaxReturn($returnMsg);
 			}
-				
+
 			//保存价格
 			if($cost){
 				$i = 0;
@@ -928,11 +928,11 @@ class OpController extends BaseController {
 						$data['amount'] = $info['number'];
 					}
 					$data['total'] = $data['cost']*$data['amount'];
-					
+
 					$op_cost_db->add($data);
-					
+
 					$i++;
-				}	
+				}
 			}
 
 			//保存资源需求单
@@ -1522,7 +1522,7 @@ class OpController extends BaseController {
 
             echo $num;
         }
-	
+
 	}
 
 
@@ -1580,9 +1580,9 @@ class OpController extends BaseController {
 		$opid       = I('opid');
 		$info       = I('info');
 		$user       =  M('account')->getField('id,nickname', true);
-		
+
 		if(isset($_POST['dosubmit']) && $info){
-			
+
 			$data = array();
 			$data['line'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
@@ -1597,17 +1597,17 @@ class OpController extends BaseController {
 				$data['op_id'] = $opid;
 				M('op_auth')->add($data);
 			}
-			
+
 			$record = array();
 			$record['op_id']   = $opid;
 			$record['optype']  = 2;
 			$record['explain'] = '指派【'.$user[$info].'】负责项目行程';
 			op_record($record);
-				
+
 			echo '<script>window.top.location.reload();</script>';
-			
+
 		}else{
-			
+
 			//用户列表
 			$key = I('key');
 			$db = M('account');
@@ -1801,14 +1801,14 @@ class OpController extends BaseController {
             $this->display('assign_jiesuan');
         }
     }
-	
+
 	//@@@NODE-3###assign_res###指派人员跟进资源调度###
     public function assign_res(){
 		$opid       = I('opid');
 		$info       = I('info');
 		$user       =  M('account')->getField('id,nickname', true);
 		if(isset($_POST['dosubmit']) && $info){
-			
+
 			$data = array();
 			$data['res'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
@@ -1831,11 +1831,11 @@ class OpController extends BaseController {
 			$record['optype']  = 2;
 			$record['explain'] = '指派【'.$user[$info].'】负责项目所需资源调度';
 			op_record($record);
-			
+
 			echo '<script>window.top.location.reload();</script>';
-			
+
 		}else{
-			
+
 			//用户列表
 			$key = I('key');
 			$db = M('account');
@@ -1858,7 +1858,7 @@ class OpController extends BaseController {
 		$info       = I('info');
 		$user       =  M('account')->getField('id,nickname', true);
 		if(isset($_POST['dosubmit']) && $info){
-			
+
 			$data = array();
 			$data['guide'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
@@ -1873,17 +1873,17 @@ class OpController extends BaseController {
 				$data['op_id'] = $opid;
 				M('op_auth')->add($data);
 			}
-			
+
 			$record = array();
 			$record['op_id']   = $opid;
 			$record['optype']  = 2;
 			$record['explain'] = '指派【'.$user[$info].'】负责项目导游辅导员调度';
 			op_record($record);
-			
+
 			echo '<script>window.top.location.reload();</script>';
-			
+
 		}else{
-			
+
 			//用户列表
 			$key = I('key');
 			$db = M('account');
@@ -1906,7 +1906,7 @@ class OpController extends BaseController {
 		$info       = I('info');
 		$user       =  M('account')->getField('id,nickname', true);
 		if(isset($_POST['dosubmit']) && $info){
-			
+
 			$data = array();
 			$data['material'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
@@ -1921,17 +1921,17 @@ class OpController extends BaseController {
 				$data['op_id'] = $opid;
 				M('op_auth')->add($data);
 			}
-			
+
 			$record = array();
 			$record['op_id']   = $opid;
 			$record['optype']  = 2;
 			$record['explain'] = '指派【'.$user[$info].'】负责项目合格供方调度';
 			op_record($record);
-			
+
 			echo '<script>window.top.location.reload();</script>';
-			
+
 		}else{
-			
+
 			//用户列表
 			$key = I('key');
 			$db = M('account');
@@ -1954,7 +1954,7 @@ class OpController extends BaseController {
 		$info       = I('info');
 		$user       =  M('account')->getField('id,nickname', true);
 		if(isset($_POST['dosubmit']) && $info){
-			
+
 			$data = array();
 			$data['price'] = $info;
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
@@ -1974,11 +1974,11 @@ class OpController extends BaseController {
 			$record['optype']  = 2;
 			$record['explain'] = '指派【'.$user[$info].'】负责项目标价';
 			op_record($record);
-			
+
 			echo '<script>window.top.location.reload();</script>';
-			
+
 		}else{
-			
+
 			//用户列表
 			$key = I('key');
 			$db = M('account');
@@ -1997,16 +1997,16 @@ class OpController extends BaseController {
 
 	//@@@NODE-3###public_save_price###保存项目价格###
     public function public_save_price(){
-		
+
 		$db         = M('op_pretium');
 		$opid       = I('opid');
 		$pretium    = I('pretium');
 		$resid      = I('resid');
 		$num        = 0;
-		
+
 		//保存价格政策
 		if($opid && $pretium){
-			
+
 			$delid = array();
 			foreach($pretium as $k=>$v){
 				$data = array();
@@ -2021,12 +2021,12 @@ class OpController extends BaseController {
 					$delid[] = $savein;
 					if($savein) $num++;
 				}
-			}	
-			
+			}
+
 			$del = $db->where(array('op_id'=>$opid,'id'=>array('not in',$delid)))->delete();
 			if($del) $num++;
 		}
-		
+
 		if($num){
 			$record = array();
 			$record['op_id']   = $opid;
@@ -2034,18 +2034,18 @@ class OpController extends BaseController {
 			$record['explain'] = '保存项目标价';
 			op_record($record);
 		}
-			
+
 		echo $num;
 	}
 
 	// @@@NODE-3###public_save_line###保存线路###
     public function public_save_line(){
-			
+
 		$opid       = I('opid');
 		$days       = I('days');
 		$line_id    = I('line_id');
 		$num        = 0;
-		
+
 		//保存线路
 		$isadd = M('op')->data(array('line_id'=>$line_id))->where(array('op_id'=>$opid))->save();
 		if($isadd) $num++;
@@ -2061,41 +2061,41 @@ class OpController extends BaseController {
 			 $data['remarks']  =  $v['remarks'];
 			 $savein = M('op_line_days')->add($data);
 			 if($savein) $num++;
-		}	
-		
+		}
+
 		/*
 		//剔除其他线路所带过来的物资
 		$where_del = array();
 		$where_del['line_id']   = array('gt',0);
 		$where_del['line_id']   = array('neq',$line_id);
-		$where_del['op_id']     = $opid;	
+		$where_del['op_id']     = $opid;
 		$isdel = M('op_material')->where($where_del)->delete();
 		if($isdel) $num++;
-		
+
 		//剔除其他线路所带过来的物资价格
-		$where_del['cost_type'] = 4;	
+		$where_del['cost_type'] = 4;
 		$isdel = M('op_cost')->where($where_del)->delete();
 		if($isdel) $num++;
-		
+
 		//将线路中所包含的模块物资清单转入项目中
 		$pdata = M('product_line_tpl')->where(array('line_id'=>$line_id,'type'=>1))->getField('pro_id',true);
 		$where = array();
 		$where['product_id'] = array('in',implode(',',$pdata));
 		$list = M('product_material')->where($where)->select();
-		
+
 		//保存物资清单
 		foreach($list as $v){
-			
+
 			//获取物资编号
 			$mid = M('material')->where(array('material'=>$v['material']))->getField('id');
-			
+
 			$material = array();
 			$material['op_id']       = $opid;
 			$material['material']    = $v['material'];
 			$material['remarks']     = $v['remarks'];
 			$material['material_id'] = $mid;
 			$material['line_id']     = $line_id;
-			
+
 			$cost = array();
 			$cost['op_id']       = $opid;
 			$cost['item']        = '物资费';
@@ -2106,24 +2106,24 @@ class OpController extends BaseController {
 			$cost['remark']      = $v['material'];
 			$cost['relevant_id'] = $mid;
 			$cost['line_id']     = $line_id;
-			
+
 			//判断物资是否存在
 			if(!M('op_material')->where(array('material'=>$v['material'],'op_id'=>$opid))->find()){
 				$addmate = M('op_material')->add($material);
 				$cost['link_id'] = $addmate;
 				$addcost = M('op_cost')->add($cost);
 			}
-			
+
 			if($addcost || $addmate) $num++;
 		}
 		*/
-		 
+
 		$record = array();
 		$record['op_id']   = $opid;
 		$record['optype']  = 3;
 		$record['explain'] = '保存项目行程线路';
-		op_record($record);	 
-		
+		op_record($record);
+
 		echo $num;
 	}
 
@@ -2134,17 +2134,17 @@ class OpController extends BaseController {
 		$list = $db->where(array('line_id'=>$line_id))->select();
 		if($list){
 			foreach($list as $k=>$row){
-			 	echo '<div class="daylist" id="task_a_'.$row['id'].'"><a class="aui_close" href="javascript:;" style="right:25px;" onClick="del_timu(\'task_a_'.$row['id'].'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>第<span class="tihao">'.($k+1).'</span>天</strong></label><div class="input-group"><input type="text" placeholder="所在城市" name="days['.$row['id'].'][citys]" class="form-control" value="'.$row['citys'].'"></div><div class="input-group pads"><textarea class="form-control" placeholder="行程安排"  name="days['.$row['id'].'][content]">'.$row['content'].'</textarea></div><div class="input-group"><input type="text" placeholder="房餐车安排" name="days['.$row['id'].'][remarks]" value="'.$row['remarks'].'" class="form-control"></div></div></div>';	
+			 	echo '<div class="daylist" id="task_a_'.$row['id'].'"><a class="aui_close" href="javascript:;" style="right:25px;" onClick="del_timu(\'task_a_'.$row['id'].'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>第<span class="tihao">'.($k+1).'</span>天</strong></label><div class="input-group"><input type="text" placeholder="所在城市" name="days['.$row['id'].'][citys]" class="form-control" value="'.$row['citys'].'"></div><div class="input-group pads"><textarea class="form-control" placeholder="行程安排"  name="days['.$row['id'].'][content]">'.$row['content'].'</textarea></div><div class="input-group"><input type="text" placeholder="房餐车安排" name="days['.$row['id'].'][remarks]" value="'.$row['remarks'].'" class="form-control"></div></div></div>';
 			}
 		}
-		
+
 	}
 
 	// @@@NODE-3###public_ajax_material###获取模块物资信息###
 	public function public_ajax_material(){
 		$opid = I('id');
 		$list = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.material=c.remark')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
-		
+
 		foreach($list as $v){
 			echo '<tr class="expense" id="wuzi_nid_'.$v['id'].'"><td><input type="hidden" name="cost['.(20000+$v['id']).'][item]" value="物资费"><input type="hidden" name="cost['.(20000+$v['id']).'][cost_type]" value="4"><input type="hidden" name="cost['.(20000+$v['id']).'][relevant_id]" value="'.$v['material_id'].'"><input type="hidden" name="cost['.(20000+$v['id']).'][remark]" value="'.$v['material'].'"><input type="hidden" name="resid['.(20000+$v['id']).'][id]" value="'.$v['id'].'"><input type="hidden" name="wuzi['.(20000+$v['id']).'][material]" value="'.$v['material'].'"><input type="hidden" name="wuzi['.(20000+$v['id']).'][material_id]" value="'.$v['material_id'].'">'.$v['material'].'</td><td><input type="text" name="cost['.(20000+$v['id']).'][cost]" value="'.$v['cost'].'" placeholder="价格" class="form-control min_input cost"></td><td><span>X</span></td><td><input type="text" name="cost['.(20000+$v['id']).'][amount]" value="'.$v['amount'].'" placeholder="数量" class="form-control min_input amount"></td><td class="total">¥'.($v['cost']*$v['amount']).'</td><td><input type="text" name="wuzi['.(20000+$v['id']).'][remarks]" value="'.$v['remarks'].'" class="form-control"></td><td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'wuzi_nid_'.$v['id'].'\')">删除</a></td></tr>';
 		}
@@ -2166,7 +2166,7 @@ class OpController extends BaseController {
 		if($this->kind != '-1')   $where['kind'] = $this->kind;
 		if($key)    $where['title'] = array('like','%'.$key.'%');
 		if($mdd)    $where['dest']  = array('like','%'.$mdd.'%');
-		
+
 		$pagecount   = $db->where($where)->count();
         $page        = new Page($pagecount,25);
         $this->pages = $pagecount>25 ? $page->show():'';
@@ -2227,7 +2227,7 @@ class OpController extends BaseController {
         $this->display('select_product_module');
 
     }
-	
+
 	// @@@NODE-3###select_guide###选择导游辅导员###
 	public function select_guide(){
 		$kind = I('kind');
@@ -2243,12 +2243,12 @@ class OpController extends BaseController {
 		if($kind) $where['kind'] = $kind;
 		if($key)  $where['name'] = array('like','%'.$key.'%');
 		if($sex)  $where['sex']  = $sex;
-		
+
 		//分页
 		$pagecount = M('guide')->where($where)->count();
 		$page = new Page($pagecount,25);
 		$this->pages = $pagecount>25 ? $page->show():'';
-        
+
         $this->reskind = M('guidekind')->getField('id,name', true);
         $lists = M('guide')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
         foreach($lists as $k=>$v){
@@ -2259,114 +2259,114 @@ class OpController extends BaseController {
 
         }
         $this->lists = $lists;
-		
+
 		$this->display('select_guide');
 	}
-	
-	
+
+
 	// @@@NODE-3###select_supplier###选择合格供方###
 	public function select_supplier(){
-		
+
 		$kind = I('kind');
 		$key  = I('key');
-		
+
 		$where = array();
 		$where['1'] = priv_where(P::REQ_TYPE_SUPPLIER_RES_U);
 		if($kind) $where['kind'] = $kind;
 		if($key)  $where['name'] = array('like','%'.$key.'%');
-		
+
 		//分页
 		$pagecount = M('supplier')->where($where)->count();
 		$page = new Page($pagecount,25);
 		$this->pages = $pagecount>25 ? $page->show():'';
-        
+
         $this->reskind = M('supplierkind')->getField('id,name', true);
         $this->lists = M('supplier')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
-		
+
 		$this->display('select_supplier');
 	}
-    
-	
+
+
 	// @@@NODE-3###importuser###导入名单###
 	public function importuser(){
 		$time = time();
 		if(isset($_POST['dosubmit'])){
-			
+
 			$data = array();
-			
-			$file = $_FILES["file"] ? $_FILES["file"] : $this->error('请提交要导入的文件！');	
-			
+
+			$file = $_FILES["file"] ? $_FILES["file"] : $this->error('请提交要导入的文件！');
+
 			//获取文件扩展名
 			$fileext = explode('.',$file["name"]);
-			
+
 			if($fileext[1]=='xls' || $fileext[1]=='xlsx'){
 				if ($file["size"] < 10*1024*1024){
 					if ($_FILES["file"]["error"] > 0){
 						//报错
 						$this->error($file["error"],I('referer',''));
 					}else{
-						
+
 						//新文件名
 						$newname = "upload/xls/".cookie('comid').'_'.date('YmdHis',time()).'.'.$fileext[1];
-						
+
 						//上传留存
-						$ismove = move_uploaded_file($file["tmp_name"],$newname);	
-						
+						$ismove = move_uploaded_file($file["tmp_name"],$newname);
+
 						//读取EXCEL文件
 						if($ismove) $data = importexcel($newname);
 						$sum = count($data)-1;
-						
+
 						$this->data = $data;
-						
-						
+
+
 					}
 				}else{
-					$this->error('文件大小不能超过10M！');	
+					$this->error('文件大小不能超过10M！');
 				}
 			}else{
-				$this->error('请上传Excel文件！');	
+				$this->error('请上传Excel文件！');
 			}
-  			
-			
-		} 
-		
+
+
+		}
+
 		$this->display('importuser');
-		
-		
-		
+
+
+
 	}
-	
-	
+
+
 	// @@@NODE-3###app_materials###申请物资###
 	public  function  app_materials(){
 		$opid = I('opid');
-		
-		if(!$opid) $this->error('出团计划不存在');	
-		
+
+		if(!$opid) $this->error('出团计划不存在');
+
 		$where = array();
 		$where['op_id'] = $opid;
-		
+
 		$op         = M('op')->where($where)->find();
 		$budget     = M('op_budget')->where($where)->find();
 		$settlement = M('op_settlement')->where(array('op_id'=>$opid))->find();
-		
+
 		$matelist       = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.id=c.link_id')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
 		foreach($matelist as $k=>$v){
 			//获取物资库存
-			$stock = M('material')->where(array('material'=>$v['material']))->find();	
+			$stock = M('material')->where(array('material'=>$v['material']))->find();
 			$matelist[$k]['stock']  = $stock['stock'] ?$stock['stock']:0;
 			$matelist[$k]['stages'] = $stock['stages']?$stock['stages']:0;
-			$matelist[$k]['lastcost'] = $stock ? $stock['price'] : '0.00';	
-			
+			$matelist[$k]['lastcost'] = $stock ? $stock['price'] : '0.00';
+
 			$yichuku = $v['amount']-$v['outsum'];
 			if($matelist[$k]['stock']<$yichuku){
-				$matelist[$k]['status'] = $v['purchasesum'] ? '<span class="yellow">等待入库</span>' : '<span class="red">申请采购</span>';	
+				$matelist[$k]['status'] = $v['purchasesum'] ? '<span class="yellow">等待入库</span>' : '<span class="red">申请采购</span>';
 			}else{
-				$matelist[$k]['status'] = $v['outsum'] ? '<span class="blue">完成出库</span>' : '<span class="green">申请出库</span>';		
+				$matelist[$k]['status'] = $v['outsum'] ? '<span class="blue">完成出库</span>' : '<span class="green">申请出库</span>';
 			}
-			
+
 		}
-		
+
 		$where = array();
 		$where['req_type'] = P::REQ_TYPE_BUDGET;
 		$where['req_id']   = $budget['id'];
@@ -2400,33 +2400,33 @@ class OpController extends BaseController {
 		$this->kinds          =  M('project_kind')->getField('id,name', true);
 		$this->display('app_materials');
 	}
-	
-	
+
+
 	// @@@NODE-3###out_materials###申请物资###
 	public  function  out_materials(){
 		$opid = I('opid');
-		
+
 		//获取项目信息
 		$where = array();
 		$where['op_id'] = $opid;
 		$op         = M('op')->where($where)->find();
 		$budget     = M('op_budget')->where($where)->find();
 		$roledet    = M('role')->where(array('role_name'=>$op['op_create_user']))->find();
-		
+
 		$ckinfo = array();
 		$cginfo = array();
-		
-		
+
+
 		//物资列表
 		$matelist       = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.id=c.link_id')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
 		foreach($matelist as $k=>$v){
 			//获取物资库存
-			$wz = M('material')->where(array('material'=>$v['material']))->find();	
+			$wz = M('material')->where(array('material'=>$v['material']))->find();
 			$stock    = $wz['stock']?$wz['stock']:0;
-			$lastcost = $wz['price'] ? $wz['price'] : 0;	
+			$lastcost = $wz['price'] ? $wz['price'] : 0;
 			$wz_id = $wz['id'];
-			
-			
+
+
 			/*处理出库*/
 			$outrand = M('material_out')->where(array('op_id'=>$opid,'material'=>$v['material'],'audit_status'=>array('neq',2)))->sum('amount');
 			$outsum = $v['amount']-$outrand;
@@ -2444,15 +2444,15 @@ class OpController extends BaseController {
 				if($stock>=$outsum){
 					//如果库存充足，直接出库
 					$ckinfo[$k]['amount']          = $outsum;
-					$ckinfo[$k]['total']           = $outsum*$lastcost;	
+					$ckinfo[$k]['total']           = $outsum*$lastcost;
 				}else{
 					//如果库存不够，申请部分出库
 					$ckinfo[$k]['amount']          = $stock;
-					$ckinfo[$k]['total']           = $stock*$lastcost;		
+					$ckinfo[$k]['total']           = $stock*$lastcost;
 				}
 			}
-			
-			
+
+
 			/*处理采购*/
 			$gourand = M('material_purchase')->where(array('op_id'=>$opid,'material'=>$v['material'],'audit_status'=>array('neq',2)))->sum('amount');
 			$gousum = $v['amount']-$gourand-$outrand;
@@ -2467,13 +2467,13 @@ class OpController extends BaseController {
 				$cginfo[$k]['department']      = $roledet['id'];
 				$cginfo[$k]['create_time']     = time();
 				$cginfo[$k]['amount']          = $caigou;
-				$cginfo[$k]['total']           = $caigou*$v['cost'];	
-				$cginfo[$k]['op_user']         = $op['create_user_name'];	
+				$cginfo[$k]['total']           = $caigou*$v['cost'];
+				$cginfo[$k]['op_user']         = $op['create_user_name'];
 			}
-			
+
 		}
-		
-		
+
+
 		$opnum = 0;
 		if(count($ckinfo)){
 			//申请出库
@@ -2493,16 +2493,16 @@ class OpController extends BaseController {
 					$info = $v;
 					$info['batch_id'] = $batch_id;
 					M('material_out')->add($info);
-				}	
+				}
 				$opnum++;
 			}
 		}
-		
+
 		if(count($cginfo)){
-			
+
 			//采购备注
 			$proid = M()->table('__PRODUCT_LINE_TPL__ as t')->join('__OP__ as o on o.line_id = t.line_id')->where(array('o.op_id'=>$opid,'t.type'=>1))->GetField('pro_id',true);
-			
+
 			//申请采购
 			$cg = array();
 			$cg['op_id']           = $opid;
@@ -2527,41 +2527,41 @@ class OpController extends BaseController {
 						$info['remarks'] = $wzcg['channel'];
 					}
 					M('material_purchase')->add($info);
-				}	
+				}
 				$opnum++;
 			}
 		}
-		
+
 		if($opnum){
-			M('op')->data(array('app_material_time'=>time()))->where(array('op_id'=>$opid))->save();	
+			M('op')->data(array('app_material_time'=>time()))->where(array('op_id'=>$opid))->save();
 		}
-		
+
 		echo $opnum;
-		
-		
+
+
 	}
-	
-	
-	
+
+
+
 	// @@@NODE-3###revert_materials###归还物资###
 	public  function  revert_materials(){
 		$opid = I('opid');
-		
+
 		$matelist       = M()->table('__OP_MATERIAL__ as m')->field('c.*,m.*')->join('__OP_COST__ as c on m.id=c.link_id')->where(array('m.op_id'=>$opid,'c.op_id'=>$opid,'c.cost_type'=>4))->order('m.id')->select();
 		foreach($matelist as $k=>$v){
 			//获取物资库存
-			$stock = M('material')->where(array('material'=>$v['material']))->find();	
+			$stock = M('material')->where(array('material'=>$v['material']))->find();
 			$matelist[$k]['stock']  = $stock['stock'] ?$stock['stock']:0;
 			$matelist[$k]['stages'] = $stock['stages']?$stock['stages']:0;
-			$matelist[$k]['lastcost'] = $stock ? $stock['price'] : 0;	
+			$matelist[$k]['lastcost'] = $stock ? $stock['price'] : 0;
 		}
-		
+
 		$this->matelist       = $matelist;
 		$this->kinds          =  M('project_kind')->getField('id,name', true);
 		$this->display('revert_materials');
 	}
-	
-	
+
+
 	// @@@NODE-3###select_material###调度物资###
 	public  function  select_material(){
 		//物料关键字
@@ -2570,29 +2570,29 @@ class OpController extends BaseController {
 		$this->material = M('material')->select();
 		$this->display('select_material');
 	}
-	
-	
-	
+
+
+
 	public function public_checkname_ajax(){
 		$group_id = I('gid',0);
-		
+
 		//判断会员是否存在
 		$db = M('op');
 		if($db->where(array('group_id'=>$group_id))->find()) {
 			exit('0');
 		}else {
 			exit('1');
-		}	
+		}
 	}
-	
-	
-	
+
+
+
 	// @@@NODE-3###delpro###删除项目###
     public function delpro(){
         $this->title('删除项目');
-		
+
         $id = I('id', -1);
-		
+
 		$op = M('op')->find($id);
 		if($op &&( cookie('roleid')==10 || cookie('roleid')==1)){
 			$opid = $op['op_id'];
@@ -2628,28 +2628,28 @@ class OpController extends BaseController {
 			M('op')->delete($id);
 			$this->success('删除成功！');
 		}else{
-			$this->error('删除失败！：' . $db->getError());	
+			$this->error('删除失败！：' . $db->getError());
 		}
     }
-	
-	
+
+
 	//排课
 	public function course(){
 		$op_id    = I('opid');
 		$guide_id = I('id');
-		
+
 		//判断项目是否已结算
 		$jiesuan = M('op_settlement')->where(array('op_id'=>$op_id))->find();
-		
+
 		$this->op_id     = $op_id;
 		$this->guide_id  = $guide_id;
 		$this->jiesuan   = $jiesuan['audit_status'] ? $jiesuan['audit_status'] : 0;
-		$this->display('course');	
+		$this->display('course');
 	}
- 	
+
 	//排课详情
 	public function courselist(){
-		
+
 		$op_id    = I('get.opid');
 		$guide_id = I('get.id');
 
@@ -2662,52 +2662,52 @@ class OpController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
-	
+
+
 	//排课详情
 	public function addcourse(){
-		
+
 		$op_id    = I('op_id');
 		$guide_id = I('guide_id');
 		$date     = I('date');
-		
+
 		$info = array();
 		$info['op_id']    = $op_id;
 		$info['guide_id'] = $guide_id;
 		$info['coures_date'] = $date;
-		$info['userid'] = cookie('userid'); 
-				
+		$info['userid'] = cookie('userid');
+
 		$add = M('op_course')->add($info);
 		if($add){
-			echo $add;	
+			echo $add;
 		}else{
-			echo 0;	
+			echo 0;
 		}
-		
+
 	}
-	
-	
+
+
 	//删除课程
 	public function delcourse(){
-		$id = I('id');	
+		$id = I('id');
 		$course = M('op_course')->find($id);
 		//if($course && $course['userid'] == cookie('userid')){
 			$del = M('op_course')->where(array('id'=>$id))->delete();
 			if($del){
-				echo 1;	
+				echo 1;
 			}else{
-				echo 0;	
+				echo 0;
 			}
 		//}else{
-		//	echo 0;	
+		//	echo 0;
 		//}
 	}
 
 	// @@@NODE-3###confirm###出团确认###
 	public  function confirm(){
 		$opid                       = I('opid');
-		if(!$opid) $this->error('项目不存在');	
-		
+		if(!$opid) $this->error('项目不存在');
+
 		$where                      = array();
 		$where['op_id']             = $opid;
 		$op				            = M('op')->where($where)->find();
@@ -2731,8 +2731,8 @@ class OpController extends BaseController {
 
 			$info['op_id']			= $opid;
             $info['group_id']       = trim($info['group_id']);
-			$info['user_id']		= cookie('userid'); 
-			$info['user_name']		= cookie('nickname'); 
+			$info['user_id']		= cookie('userid');
+			$info['user_name']		= cookie('nickname');
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
 			$info['confirm_time']	= time();
@@ -2972,7 +2972,12 @@ class OpController extends BaseController {
                 $delids[]               = $res;
             }
         }
-        $db->where(array('id'=>array('not in',$delids)))->delete();
+
+        if ($delids){
+            $res = $db->where(array('id'=>array('not in',$delids),'op_id'=>$opid))->delete();
+        }else{
+            $res = $db->where(array('op_id'=>$opid))->delete();
+        }
     }
 
 
@@ -3055,79 +3060,79 @@ class OpController extends BaseController {
 
         $this->display();
     }
-	
-	
+
+
 	// @@@NODE-3###relpricelist###项目比价记录###
     public function relpricelist(){
         $this->title('项目比价记录');
-		
+
 		$db		= M('rel_price');
 		$kinds	= C('REL_TYPE');
-		
+
 		$title	= I('title');		//项目名称
 		$opid	= I('opid');			//项目编号
 		$op		= I('op');			//计调
 		$type 	= I('type');
-		
+
 		$where = array();
-		
+
 		if($title)			$where['business_name']			= array('like','%'.$title.'%');
 		if($op)				$where['op_user_name']			= array('like','%'.$op.'%');
 		if($opid)			$where['op_id']					= $opid;
 		if($type)			$where['type']					= $type;
-		
+
 		//分页
 		$pagecount		= $db->where($where)->count();
 		$page			= new Page($pagecount, P::PAGE_SIZE);
 		$this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
-        
-       
+
+
 		$lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
 		foreach($lists as $k=>$v){
-			$lists[$k]['kinds'] 			= $kinds[$v['type']];	
+			$lists[$k]['kinds'] 			= $kinds[$v['type']];
 			$lists[$k]['create_time'] 	= date('Y-m-d H:i:s',$v['create_time']);
 		}
-		
-		
-		$this->lists   		=  $lists;  
+
+
+		$this->lists   		=  $lists;
 		$this->kinds 		= C('REL_TYPE');
 		$this->opid 			= $opid;
 		$this->type 			= $type;
 		$this->display('relpricelist');
     }
-	
-	
+
+
 	// @@@NODE-3###confirm###项目比价###
 	public  function relprice(){
 		$opid 			= I('opid');
 		$relid			= I('relid');
 		$type 			= I('type');
 		$op				= M('op')->where(array('op_id'=>$opid))->find();
-	
-		
-		
+
+
+
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
-			
+
 			$info		= I('info');
 			$com		= I('com');
 			$reid 		= I('reid');
-			
+
 			$info['op_user_id']		= cookie('userid');
 			$info['op_user_name']	= cookie('name');
-			
+
 			//保存主表
 			if($reid){
-				M('rel_price')->where(array('id'=>$reid))->data($info)->save();	
+				M('rel_price')->where(array('id'=>$reid))->data($info)->save();
 			}else{
 				$info['create_time']		= time();
-				$reid = M('rel_price')->add($info);	
+				$reid = M('rel_price')->add($info);
 			}
-			
-			
-			
+
+
+
 			$coms = array();
 			$list = array();
-			
+
 			foreach($com as $k=>$v){
 				//保存比价单位
 				$cominfo = array();
@@ -3139,49 +3144,49 @@ class OpController extends BaseController {
 				$cominfo['contacts_email']	= $v['contacts_email'];
 				$cominfo['checkout']			= 0;//isqual($v['company']);
 				if($v['comid']){
-					M('rel_price_com')->where(array('id'=>$v['comid']))->data($cominfo)->save();	
+					M('rel_price_com')->where(array('id'=>$v['comid']))->data($cominfo)->save();
 					$comid 		= $v['comid'];
 					$coms[] 	= $v['comid'];
 				}else{
-					$comid 		= M('rel_price_com')->add($cominfo);	
+					$comid 		= M('rel_price_com')->add($cominfo);
 					$coms[] 	= $comid;
 				}
-				
-				//保存比价项目		
+
+				//保存比价项目
 				foreach($v['info'] as $kk=>$vv){
 					$termlist = array();
 					$termlist['op_id'] 			= $info['op_id'];
-					$termlist['rel_id'] 			= $reid;	
-					$termlist['rel_com_id']		= $comid;	
-					$termlist['term'] 			= $vv['term'];	
-					$termlist['term_standard']	= $vv['term_standard'];	
-					$termlist['price'] 			= $vv['price'];	
+					$termlist['rel_id'] 			= $reid;
+					$termlist['rel_com_id']		= $comid;
+					$termlist['term'] 			= $vv['term'];
+					$termlist['term_standard']	= $vv['term_standard'];
+					$termlist['price'] 			= $vv['price'];
 					if($vv['id']){
-						M('rel_price_list')->where(array('id'=>$vv['id']))->data($termlist)->save();	
+						M('rel_price_list')->where(array('id'=>$vv['id']))->data($termlist)->save();
 						$list[]	= $vv['id'];
 					}else{
 						$list[]	= M('rel_price_list')->add($termlist);
 					}
-					
-				}	
-					
+
+				}
+
 			}
-			
+
 			//清除已删除单位和项目
 			$where = array();
 			$where['rel_id'] 	= $reid;
 			$where['id'] 		= array('not in',implode(',',$coms));
 			M('rel_price_com')->where($where)->delete();
-			
+
 			$where = array();
 			$where['rel_id'] 	= $reid;
 			$where['id'] 		= array('not in',implode(',',$list));
 			M('rel_price_list')->where($where)->delete();
-			
+
 			$this->success('保存成功！',I('referer',''));
-		
+
 		}else{
-			
+
 			if($relid){
 				$rel = M('rel_price')->find($relid);
 				$com = M('rel_price_com')->where(array('rel_id'=>$relid))->select();
@@ -3189,7 +3194,7 @@ class OpController extends BaseController {
 					$com[$k]['info'] = M('rel_price_list')->where(array('rel_id'=>$relid,'rel_com_id'=>$v['id']))->select();
 				}
 			}
-			
+
 			$this->kinds 		= C('REL_TYPE');
 			$this->b_name		= $rel['business_name'] ? $rel['business_name'] : $op['project'];
 			$this->op_id		= $rel['op_id'] ? $rel['op_id'] : $opid;
@@ -3200,23 +3205,23 @@ class OpController extends BaseController {
 			$this->display('relprice');
 		}
 	}
-	
-	
+
+
 
 	// @@@NODE-3###delrel###删除项目比价###
     public function delrel(){
-		
+
 		$relid	= I('relid');
 		M('rel_price')->where(array('id'=>$relid))->delete();
 		M('rel_price_com')->where(array('rel_id'=>$relid))->delete();
 		M('rel_price_list')->where(array('rel_id'=>$relid))->delete();
-		
+
 		$this->success('删除成功！');
-		
+
     }
-	
-	
-	
+
+
+
 	// @@@NODE-3###evaluate###项目评价###
     public function evaluate(){
         $opid               = I('opid');
@@ -3459,7 +3464,7 @@ class OpController extends BaseController {
 		$pagecount		            = $db->count();
 		$page			            = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages	            = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        
+
         $lists                      = $db->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
         $this->lists                = $lists;
         $this->display('cost_type');
