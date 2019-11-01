@@ -1,3 +1,9 @@
+<script type="text/javascript">
+    const keywords = <?php echo $userkey; ?>;
+    function autoComLode(name,id){
+        autocomplete_id(name,id,keywords);
+    }
+</script>
 <form method="post" action="{:U('Op/confirm')}" name="myform" id="appsubmint">
 <input type="hidden" name="dosubmit" value="1">
 <input type="hidden" name="opid" value="{$op.op_id}">
@@ -68,6 +74,7 @@
                             <input type="text" class="form-control" style="width:20%" name="group[{$k}][remark]" value="{$v.remark}">
                             <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('group_con_{$k}')">删除</a>
                         </div>
+                        <script> autoComLode('name_'+{$k},'uid_'+{$k}); </script>
                     </foreach>
                 <?php }else{ ?>
                     <div class="userlist no-border" id="group_con_1">
@@ -101,7 +108,7 @@
 </form>
 
 <script>
-    var keywords = <?php echo $userkey; ?>;
+    //var keywords = <?php echo $userkey; ?>;
     $(function () {
         autocomplete_id('name_1','uid_1',keywords);
         let groups      = <?php echo $groups?1:0; ?>;
