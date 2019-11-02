@@ -4482,7 +4482,7 @@ function save_op_groups_settlement($op){
             $newOp['apply_to']      = $op['apply_to'];
             $newOp['type']          = $op['type'];
             $res                    = M('op')->add($newOp);
-            if (!$res){ //保存结算信息和结算审核信息
+            if ($res){ //保存结算信息和结算审核信息
                 $settlement         = M('op_settlement')->where(array('id'=>$v['settlement_id']))->find();
                 $sett               = array();
                 $sett['name']       = $newOp['project'];
@@ -4502,6 +4502,7 @@ function save_op_groups_settlement($op){
                     $log['req_id']      = $sett_res;
                     $log['req_table']   = 'op_settlement';
                     $log['req_time']    = NOW_TIME;
+                    $log['audit_time']  = NOW_TIME;
                     $log['dst_status']  = 1; //审核通过
                     $audit_res          = M('audit_log')->add($log);
                 }

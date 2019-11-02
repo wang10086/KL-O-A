@@ -3768,6 +3768,7 @@ function tplist($department,$times){
 	$where = array();
 	$where['b.audit_status']		= 1;
 	$where['l.req_type']			= 801;
+	$where['o.add_group']           = array('neq',1);
 	if($times){
 		$where['l.audit_time']		= array('between',$times);
 	}else{
@@ -3827,6 +3828,7 @@ function personal_income($userid,$time,$yearTime){
 	$where['b.audit_status']	= 1;
 	$where['o.create_user']		= $userid;
 	$where['a.req_type']		= 801;
+	$where['o.add_group']       = array('neq',1);
 
 	if($time == 0){
 		$where['a.audit_time']		= array('between',$yearTime);

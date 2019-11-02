@@ -38,6 +38,7 @@ class ChartModel extends Model
             $where['l.req_type']    = 801;
             $where['l.audit_time']  = array('between', "$yeartimes[yearBeginTime],$yeartimes[yearEndTime]");
             $where['a.id']          = array('in', $v['users']);
+            $where['o.add_group']   = array('neq',1);
 
             $field                  = array();
             $field[]                = 'count(o.id) as xms';
@@ -70,6 +71,7 @@ class ChartModel extends Model
                 $where['l.req_type']    = 801;
                 $where['l.audit_time']  = array('between', "$quarterbegintime,$quarterendtime");
                 $where['a.id']          = array('in', $v['users']);
+                $where['o.add_group']   = array('neq',1);
 
                 $field                  = array();
                 $field[]                = 'count(o.id) as xms';
@@ -98,6 +100,7 @@ class ChartModel extends Model
                 $where['l.req_type']    = 801;
                 $where['l.audit_time']  = array('between', "$monthBeginTime,$monthEndTime");
                 $where['a.id']          = array('in', $v['users']);
+                $where['o.add_group']   = array('neq',1);
 
                 $field                  = array();
                 $field[]                = 'count(o.id) as xms';
