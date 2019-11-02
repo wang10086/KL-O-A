@@ -809,8 +809,11 @@ class SalaryController extends BaseController {
         if ($month) $where['datetime']          = $month;
         if ($months)$where['datetime']          = array('in',$months); //数据统计页面
 
-        if (in_array($userid,array(1,11,12,32,38,55,77,185))){
+        if (in_array($userid,array(1,11,12,32,38,55,77,185))){ //查看全部人员信息
 
+        }elseif(in_array($userid,array(100))){ //查看所管辖人员信息
+            $auth                               = explode(',',Rolerelation(cookie('roleid')));
+            $where['account_id']                = array('in',$auth);
         }else{
             $where['account_id']                = $userid;
         }
