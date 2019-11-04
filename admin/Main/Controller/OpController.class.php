@@ -2622,7 +2622,16 @@ class OpController extends BaseController {
             M('contract')->where(array('op_id'=>$opid))->delete(); //合同
             M('contract_pay')->where(array('op_id'=>$opid))->delete(); //回款计划
             M('op_huikuan')->where(array('op_id'=>$opid))->delete(); //回款
+            $score_user_ids = M('tcs_score_user')->where(array('op_id'=>$opid))->getField('id',true);
+            M('tcs_score')->where(array('uid'=>array('in',$score_user_ids)))->delete(); //删除评分信息
+            M('tcs_score_user')->where(array('op_id'=>$opid))->delete();
+            M('tcs_score_problem')->where(array('op_id'=>$opid))->delete();
 
+            $record             = array();
+            $record['op_id']    = $opid;
+            $record['optype']   = 1;
+            $record['explain']  = '删除项目';
+            op_record($record);
 
 			//删除主项目
 			M('op')->delete($id);
