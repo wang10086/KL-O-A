@@ -579,48 +579,11 @@ class BaseController extends Controller {
         }
     }
 
-    /**
-     * file_remind_number 文件提醒条数
-     */
-//   public function file_remind_number()
-//   {
-//       $useid                           = $_SESSION['userid'];//用户id
-//       $sun                             = 0;//信息条数
-//       $file                            = M('approval_flie')->where()->select();
-//       foreach($file as $key =>$val){
-//           $where = array();
-//            $where['file_id']             = $val['id'];
-//            $annotatio                    = M('approval_annotation')->where($where)->find();
-//            if($annotatio){//判断有无文件批注
-//                if($useid==13 && $annotatio['statu']==2){$where['statu']=2;$where['file_id']=$val['id'];}//判断综合
-//
-//                $conside                  = explode(',', $val['file_consider']);//显示审议人员id
-//                if(in_array($useid,$conside) && $annotatio['statu']==3){$where['statu']=3;$where['file_id']=$val['id'];}//判断审议
-//
-//                $judgment                 = explode(',', $val['file_judgment']);//显示终审人员id
-//                if(in_array($useid,$judgment) && $annotatio['statu']==4){$where['statu']=4;$where['file_id']=$val['id'];}//判断终审
-//
-//                $where['account_id']      = $useid;
-//                $annotation               = M('approval_annotation')->where($where)->find();//判断状态文件是否存在
-//                if(!$annotation){$sun     = $sun+1;}//没有查到文件
-//            }else{
-//                $where['account_id']      =  $val['pid'];
-//                if($useid==$val['pid']){//判断上级
-//                    $where['type']        = 1;
-//                    $annotation           = M('approval_annotation')->where($where)->find();
-//                    if(!$annotation){$sun = $sun+1;}// 有文件没有批注
-//                }
-//            }
-//       }
-//       $_SESSION['file_sum']              = $sun;//保存缓存
-//        return $sun;
-//   }
-
 
     /**
      * file_remind_number 文件提醒条数
      */
-    public function file_remind_number()
+    /*public function file_remind_number()
     {
         $useid                              = $_SESSION['userid'];//用户id
         $sun                                = 0;//信息条数
@@ -656,7 +619,7 @@ class BaseController extends Controller {
         }
         $_SESSION['file_sum']               = $sun;//保存缓存
         return $sun;
-    }
+    }*/
 
     /**
      * 未查看的资源

@@ -231,7 +231,7 @@
                         </li>
 
 
-                        <if condition="rolemenu(array('Files/index','Approval/Approval_Index'))">
+                        <if condition="rolemenu(array('Files/index','Approval/index'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:on('File')} {:on('Approval')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
@@ -252,24 +252,18 @@
                                         </a>
                                     </li>
                                 </if>
-                                <if condition="rolemenu(array('Approval/Approval_Index','Approval/Approval_list','Approval/approval_table','Approval/Approval_Upload','Approval/file_upload','Approval/Approval_Update','Approval/file_change','Approval/add_final_judgment','Approval/add_annotation'))">
-
-                                    <li class="{:on('Approval/Approval_Index')}{:on('Approval/Approval_list')}{:on('Approval/approval_table')}{:on('Approval/Approval_Upload')}{:on('Approval/file_upload')}{:on('Approval/Approval_Update')}{:on('Approval/file_change')}{:on('Approval/add_final_judgment')}{:on('Approval/add_annotation')}">
-
-                                        <a href="{:U('Approval/Approval_Index')}">
+                                <if condition="rolemenu(array('Approval/index','Approval/Approval_list','Approval/approval_table','Approval/Approval_Upload','Approval/file_upload','Approval/Approval_Update','Approval/file_change','Approval/add_final_judgment','Approval/add_annotation'))">
+                                    <li class="{:on('Approval/index')}{:on('Approval/Approval_list')}{:on('Approval/approval_table')}{:on('Approval/Approval_Upload')}{:on('Approval/file_upload')}{:on('Approval/Approval_Update')}{:on('Approval/file_change')}{:on('Approval/add_final_judgment')}{:on('Approval/add_annotation')}">
+                                        <a href="{:U('Approval/index')}">
                                             <i class="fa fa-angle-right"></i> 文件审批
                                             <?php if($_SESSION['file_sum']){ ?>
                                                 <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['file_sum'];?></small>
                                             <?php }?>
-
                                         </a>
                                     </li>
                                 </if>
 
                                 <li class="treeview {:on('File/companyFile')} {:on('File/departmentFile')} {:on('File/postFile')}">
-                                    <!--<if condition="rolemenu(array('File/companyFile','File/departmentFile','File/postFile'))">
-                                        <a href="javascript:;"><i class="fa  fa-file"></i> 我的文件</a>
-                                    </if>-->
                                     <a href="javascript:;"><i class="fa  fa-file"></i> 我的文件</a>
                                     <ul class="treeview-menu">
                                         <li class="{:on('File/companyFile')}"><a href="{:U('File/companyFile')}"><i class="fa fa-angle-right"></i> 公司通用</a></li>
