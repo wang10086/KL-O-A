@@ -89,10 +89,6 @@ class SalaryModel extends Model
     }
 
 
-    /***************************************************************************************************************/
-    /***************************************************************************************************************/
-    /***************************************************************************************************************/
-
     public function get_salary_status($datetime){
         $list                           = M('salary_sign')->where(array('datetime'=>$datetime))->find();
         $sign_db                        = M('user_sign');
@@ -189,12 +185,6 @@ class SalaryModel extends Model
 
     //获取本人季度业绩提成
     private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter){
-        //$salary                                 = $salary;    //工资岗位薪酬
-
-        /************************************start***************************************/
-        //201904调工资 , 基本工资取上个月数据(5月份删除此项)
-        //$salary                       = M('salary_wages_month')->where(array('account_id'=>$user['id'],'status'=>4,'datetime'=>'201903'))->getField('standard');
-        /*************************************end****************************************/
         foreach ($sale_configs as $k=>$v){
             if ($user['id'] == 59){ //李保罗
                 $coefficient                    = $this->get_lbl_coefficient($quarter);
