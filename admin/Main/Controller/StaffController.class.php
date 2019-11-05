@@ -48,8 +48,11 @@ class StaffController extends Controller{
             $ip             = get_client_ip();
             $filename       = I('newname','');
             $fileid         = I('fileid','');
+            $day            = date('Y-m-d');
+            $hour           = date('H');
+            $holiday        = get_holidays();
 
-            if (in_array($ip,$arr_ip)){
+            if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(12,13,14,15,16,17))))){
                 if ($token == $_SESSION['token']){
                     $info           = array();
                     $info['title']  = stripslashes(trim(I('title')));
@@ -69,7 +72,7 @@ class StaffController extends Controller{
                     $this->error('非法数据');
                 }
             }else{
-                $this->error('请在公司网络环境下填写!');
+                $this->error('请在公司网络环境下或在规定时间内填写!');
             }
         }else{
             $token = md5(uniqid(rand(), true));

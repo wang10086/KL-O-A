@@ -17,37 +17,29 @@
                         <h3 class="box-title">{$_action_}</h3>
                     </div><!-- /.box-header -->
 
-                    <style>
-                        <style>
-                        .username_div{ margin-top:20px;}
-                        .username_box{display: inline-block; width:8rem; float: left;}
-                        .box_close{width: 1rem; background:#ff3300; color:#ffffff; float: left; height: 34px; line-height: 34px; text-align: center;}
-                        .box_close:hover{ color:#ffffff;}
-                        .border-line-label{ border-bottom: solid 1px #A8A8A8;}
-                    </style>
-
                     <form method="post" action="{:U('Approval/upd_file')}" name="myform" id="myform">
                         <input type="hidden" name="dosubmint" value="1">
-                        <div class="content">
+                        <div class="content fileAudit">
                             <!-------------------------------------------start------------------------------------------>
                             <div class="form-group box-float-6">
                                 <label>文件上传人</label>：
-                                <input type="text" name="info[user_name]" value="{$username}" class="form-control" readonly />
+                                <input type="text" name="info[create_user_name]" value="<?php echo $row['create_user_name'] ? $row['create_user_name'] : session('username'); ?>" class="form-control" readonly />
+                                <input type="hidden" name="info[create_user]" value="<?php echo $row['create_user'] ? $row['create_user'] : session('userid'); ?>" class="form-control" readonly />
                             </div>
                             <div class="form-group box-float-6">
                                 <label>审核所需工作日（单位：天）</label>：
-                                <input type="text" name="info[month]" value="{$month}" class="form-control" />
+                                <input type="text" name="info[day]" value="{$row.day}" class="form-control" />
                             </div>
 
                             <div class="form-group box-float-12 mt20" id="satisfaction_box">
                                 <p class="black border-line-label">已选定评分人</p>
 
                                 <foreach name="lists" key="k" item="v">
-                                    <div class="col-md-3 username_div" id="username_div_{$v.score_user_id}">
+                                    <div class="col-md-3 username_div" id="username_div_{$v.audit_user_id}">
                                         <input type="hidden" name="data[888{$k}][resid]" value="{$v.id}" />
-                                        <input type="hidden" name="data[888{$k}][score_user_id]" value="{$v.score_user_id}">
-                                        <input type="text" class="form-control username_box" name="data[888{$k}][score_user_name]" value="{$v.score_user_name}" />
-                                        <a class="box_close" href="javascript:;" onClick="del_timu({$v.score_user_id})">X</a>
+                                        <input type="hidden" name="data[888{$k}][audit_uids]" value="{$v.audit_user_id}">
+                                        <input type="text" class="form-control username_box" name="data[888{$k}][audit_user_name]" value="{$v.audit_user_name}" />
+                                        <a class="box_close" href="javascript:;" onClick="del_timu({$v.audit_user_id})">X</a>
                                     </div>
                                 </foreach>
                             </div>
@@ -64,15 +56,14 @@
                             <div class="form-group box-float-12 mt-50"></div>
                             <div class="form-group box-float-12">
                                 <label>文件描述：</label>
-                               <!-- <input type="text" name="info[month]" value="{$month}" class="form-control" />-->
-                                <textarea class="form-control"  name="info[worder_content]" >{$data.context}</textarea>
+                                <textarea class="form-control"  name="info[content]" >{$data.content}</textarea>
                             </div>
                             <!---------------------------------------------end------------------------------------------>
 
                             <div class="form-group col-md-12"></div>
                             <div class="form-group col-md-12">
                                 <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
-                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于20M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
+                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择<font color="red">一个</font>小于20M的PDF文件<!--，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型--></span>
 
                                 <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
                                     <tr>
@@ -91,7 +82,7 @@
                             <div class="form-group col-md-12">
                                 <a href="javascript:;" id="pickupfile1" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择附件</a>
 
-                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于20M的文件，支持DOC文件类型</span>
+                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于20M的PDF文件</span>
                                 <div class="form-group col-md-12"></div>
                                 <table id="flist1" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
                                     <tr>
@@ -145,12 +136,12 @@
             runtimes : 'html5,flash,silverlight,html4',
             browse_button : 'pickupfile', // you can pass in id...
             container: document.getElementById('container'), // ... or DOM Element itself
-            url : 'index.php?m=Main&c=File&a=upload_file',
+            url : 'index.php?m=Main&c=Approval&a=public_upload_file',
             flash_swf_url : '__HTML__/comm/plupload/Moxie.swf',
             silverlight_xap_url : '__HTML__/comm/plupload/Moxie.xap',
             multiple_queues:false,
             multipart_params: {
-                catid: 1
+                fileType: 1
             },
 
             filters : {
@@ -213,13 +204,13 @@
         var uploader1 = new plupload.Uploader({
             runtimes : 'html5,flash,silverlight,html4',
             browse_button : 'pickupfile1', // you can pass in id...
-            container: document.getElementById('container'), // ... or DOM Element itself
-            url : 'index.php?m=Main&c=File&a=upload_file',
+            container: document.getElementById('container1'), // ... or DOM Element itself
+            url : 'index.php?m=Main&c=Approval&a=public_upload_file',
             flash_swf_url : '__HTML__/comm/plupload/Moxie.swf',
             silverlight_xap_url : '__HTML__/comm/plupload/Moxie.xap',
             multiple_queues:false,
             multipart_params: {
-                catid: 1
+                fileType: 1
             },
 
             filters : {
@@ -313,8 +304,8 @@
         var round   = m.toString() + s.toString();
         if (userid){
             var html  = '<div class="col-md-3 username_div" id="username_div_'+round+'">'+
-                '<input type="hidden" name="data['+round+'][score_user_id]" value="'+userid+'">'+
-                '<input type="text" class="form-control username_box" name="data['+round+'][score_user_name]" value="'+username+'" />'+
+                '<input type="hidden" name="data['+round+'][audit_uids]" value="'+userid+'">'+
+                '<input type="text" class="form-control username_box" name="data['+round+'][audit_user_name]" value="'+username+'" />'+
                 '<a class="box_close" href="javascript:;" onClick="del_timu('+round+')">X</a>'+
                 '</div>';
             $('#satisfaction_box').append(html);
@@ -327,7 +318,7 @@
     function init_write_user_div() {
         var init_html = '<input type="hidden" name="userid" id="userid" />'+
             '<input type="text" name="username" id="username" style=" height: 32px; width: 230px; display: inline-block;" />'+
-            '<input type="submit" class="btn btn-info btn-sm" style="margin-top: -3px" value="添加" onclick="sure_userinfo($(`#userid`).val(),$(`#username`).val())" />';
+            '<input type="button" class="btn btn-info btn-sm" style="margin-top: -3px" value="添加" onclick="sure_userinfo($(`#userid`).val(),$(`#username`).val())" />';
         $('#write_user_div').html(init_html);
         autocomplete_id('username','userid',keywords);
     }
