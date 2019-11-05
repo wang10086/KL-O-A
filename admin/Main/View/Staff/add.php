@@ -61,7 +61,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <div id="formsbtn">
-                                <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                <button type="button" class="btn btn-info btn-lg" id="lrpd">保存</button>
                             </div>
                         </form>
                     </div><!--/.col (right) -->
@@ -182,5 +182,14 @@
             $('input[rel=' + fid +']').remove();
         }
     }
+
+    $('#lrpd').click(function () {
+        let title = $('input[name="title"]').val().trim();
+        if (!title){
+            art_show_msg('帖子标题和内容不能为空!'); return false;
+        }else{
+            $('#myform').submit();
+        }
+    })
     </script>
 		 

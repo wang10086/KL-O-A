@@ -46,21 +46,28 @@ class StaffController extends Controller{
             $token          = I('token');
             $arr_ip         = C('ARR_IP');
             $ip             = get_client_ip();
+            $title          = trim(I('title'));
+            $content        = trim(I('content'));
             $filename       = I('newname','');
             $fileid         = I('fileid','');
             $day            = date('Y-m-d');
             $hour           = date('H');
             $holiday        = get_holidays();
+            $time           = NOW_TIME - 24*3600;
+            $num            = M('staff')->where(array('IP'=>$ip,'send_time'=>array('gt',$time)))->count();
 
+            if (!$title || !$content){ $this->error('标题或内容不能为空'); }
+            if ($num >= 5){ $this->error('24小时内发送数量已超过允许最大值'); }
             if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(12,13,14,15,16,17))))){
                 if ($token == $_SESSION['token']){
                     $info           = array();
-                    $info['title']  = stripslashes(trim(I('title')));
-                    $info['content']= stripslashes(trim(I('content')));
+                    $info['title']  = stripslashes($title);
+                    $info['content']= stripslashes($content);
                     $info['send_time']= NOW_TIME;
                     $info['userid'] = cookie('staff_userid')?cookie('staff_userid'):0;
                     $info['youke']  = cookie('staff_youke');
                     $info['fileids'] = $fileid?implode(',',$fileid):'';
+                    $info['IP']     = $ip;
                     $res = M('staff')->add($info);
                     if ($res){
                         $this->success('发布成功',U('Staff/index'));
