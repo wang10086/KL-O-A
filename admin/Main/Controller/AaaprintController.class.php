@@ -738,4 +738,22 @@ class AaaprintController extends BasepubController {
             $this->display();
         }
     }
+
+    //导出在某个时间段返回的团(以成团确认返回时间为准)
+    public function testE(){
+        $begin                  = '2019-11-01';
+        $end                    = '2019-11-04';
+        $beginTime              = strtotime($begin);
+        $endTime                = strtotime($end);
+        $where                  = array();
+        $where['c.ret_time']    = array('between',array($beginTime,$endTime));
+        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,c.ret_time';
+        $list                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->field($field)->where($where)->select();
+        foreach ($list as $k=>$v){
+            $list[$k]['ret_time']   = date('Y-m-d',$v['ret_time']);
+        }
+
+        $title = array('项目编号','团号','项目名称','业务','返回时间');
+        exportexcel($list,$title,$begin.'至'.$end.'返回项目');
+    }
 }

@@ -404,6 +404,17 @@ $config = array(
 		)
 	),
 
+	//文件流转状态
+    'FILE_STATUS'   => array(
+        -1          => '<span class="red">总经理审核未通过</span>',
+        0           => '编辑中,未提交',
+        1           => '文件正常流转中',
+        2           => '<span class="yellow">文件超时流转中</span>',
+        3           => '<span class="blue">已返回至发布者</span>',
+        4           => '已提交总经理审核',
+        5           => '<span class="green">总经理审核通过</span>'
+    ),
+
 	//锁屏时间
 	'LOCKSCREEN'     => 60*60*24,
 

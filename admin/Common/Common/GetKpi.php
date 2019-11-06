@@ -4303,7 +4303,7 @@ function get_yw_department(){
             case 2: //从1月累计到当月
                 $num            = intval($month);
                 for ($i=1;$i<=$num;$i++){
-                    $newMonth   = strlen($i) < 2 ?str_pad($i,2,'0',STR_PAD_LEFT) : $month;
+                    $newMonth   = strlen($i) < 2 ? str_pad($i,2,'0',STR_PAD_LEFT) : $i;
                     $data[]     = $year.$newMonth;
                 }
                 break;

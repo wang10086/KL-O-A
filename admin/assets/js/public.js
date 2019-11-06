@@ -679,7 +679,7 @@ function public_save(id,url){
 		success:function(data){
 			if(parseInt(data.num)>0){
 				art.dialog.alert(data.msg,'success');
-				//window.location.href = '';
+				setTimeout("history.go(0)",1000);
 			}else{
 				art.dialog.alert(data.msg,'warning');
 				return false;
@@ -689,8 +689,6 @@ function public_save(id,url){
 			alert('error');
 		}
 	});
-
-	setTimeout("history.go(0)",1000);
 }
 
 //去除最后一个指定字符

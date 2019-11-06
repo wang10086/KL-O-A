@@ -16,10 +16,10 @@
                     <div class="box-header">
                         <h3 class="box-title">{$_action_}</h3>
                     </div><!-- /.box-header -->
-
-                    <form method="post" action="{:U('Approval/upd_file')}" name="myform" id="myform">
-                        <input type="hidden" name="dosubmint" value="1">
-                        <div class="content fileAudit">
+                    <div class="content fileAudit">
+                        <form method="post" action="{:U('Approval/public_save')}" name="myform" id="myform">
+                            <input type="hidden" name="dosubmint" value="1">
+                            <input type="hidden" name="saveType" value="1">
                             <!-------------------------------------------start------------------------------------------>
                             <div class="form-group box-float-6">
                                 <label>文件上传人</label>：
@@ -115,12 +115,14 @@
                                 </table>
                                 <div id="container1" style="display:none;"></div>
                             </div>
-
-                            <div id="formsbtn">
-                                <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                            </div>
+                            <button type="submit" class="btn">&emsp;保存&emsp;</button>
+                        </form>
+                        <div id="formsbtn">
+                            <button type="button" class="btn btn-info" id="file_form_submit_btn">&emsp;保存&emsp;</button>
+                            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:public_save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>-->
+                            <button type="button" class="btn btn-warning" style="margin-left: 10px" id="audit_form_submit_btn">提交审核</button>
                         </div>
-                   </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -130,7 +132,12 @@
 <include file="Index:footer" />
 
 <script type="text/javascript">
+    const keywords = <?php echo $userkey; ?>;
+
     $(document).ready(function(e) {
+        $('#write_user_div').hide();
+        autocomplete_id('username','userid',keywords);
+
         //主文件
         var uploader = new plupload.Uploader({
             runtimes : 'html5,flash,silverlight,html4',
@@ -141,7 +148,7 @@
             silverlight_xap_url : '__HTML__/comm/plupload/Moxie.xap',
             multiple_queues:false,
             multipart_params: {
-                fileType: 1
+                fileType: 1 //主文件
             },
 
             filters : {
@@ -162,8 +169,8 @@
                         var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
                         $('#flist').append(
                             '<tr id="' + file.id + '"  valign="middle" class="un_upload"><td class="iptval">'
-                            + '<input type="hidden" name="pid_' + file.id + '" value="{$pid}" class="pid_val" />'
-                            + '<input type="hidden" name="level_' + file.id + '" value="{$level}" class="level_val" />'
+                           /* + '<input type="hidden" name="pid_' + file.id + '" value="{$pid}" class="pid_val" />'
+                            + '<input type="hidden" name="level_' + file.id + '" value="{$level}" class="level_val" />'*/
                             + '<input type="text" name="nm_' + file.id + '" value="'+ file.name +'" class="form-control file_val" />'
                             + '</td> <td>' + plupload.formatSize(file.size) +''
                             + '</td> <td>'
@@ -182,8 +189,8 @@
                         $('div[rel=' + file.id + ']').css('width', '100%');
                         $('#container').append('<input type="hidden" rel="'+file.id+'" name="resfiles[]" value="' + rs.aid + '" />');
                         $('input[name=nm_' + file.id +']').prop('name', 'newname['+rs.aid+']');
-                        $('input[name=pid_' + file.id +']').prop('name', 'pid['+rs.aid+']');
-                        $('input[name=level_' + file.id +']').prop('name', 'level['+rs.aid+']');
+                        /*$('input[name=pid_' + file.id +']').prop('name', 'pid['+rs.aid+']');
+                        $('input[name=level_' + file.id +']').prop('name', 'level['+rs.aid+']');*/
                         $('#' + file.id).find('.iptval').append('<input type="hidden" name="fileid['+rs.aid+']" value="'+rs.aid+'" class="id_val" />');
                     } else {
                         alert('上传文件失败，请重试');
@@ -210,7 +217,7 @@
             silverlight_xap_url : '__HTML__/comm/plupload/Moxie.xap',
             multiple_queues:false,
             multipart_params: {
-                fileType: 1
+                fileType: 2 //附件
             },
 
             filters : {
@@ -231,8 +238,8 @@
                         var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
                         $('#flist1').append(
                             '<tr id="' + file.id + '"  valign="middle" class="un_upload"><td class="iptval">'
-                            + '<input type="hidden" name="pid_' + file.id + '" value="{$pid}" class="pid_val" />'
-                            + '<input type="hidden" name="level_' + file.id + '" value="{$level}" class="level_val" />'
+                           /* + '<input type="hidden" name="pid_' + file.id + '" value="{$pid}" class="pid_val" />'
+                            + '<input type="hidden" name="level_' + file.id + '" value="{$level}" class="level_val" />'*/
                             + '<input type="text" name="nm_' + file.id + '" value="'+ file.name +'" class="form-control file_val" />'
                             + '</td> <td>' + plupload.formatSize(file.size) +''
                             + '</td> <td>'
@@ -251,8 +258,8 @@
                         $('div[rel=' + file.id + ']').css('width', '100%');
                         $('#container').append('<input type="hidden" rel="'+file.id+'" name="resfiles_annex[]" value="' + rs.aid + '" />');
                         $('input[name=nm_' + file.id +']').prop('name', 'newname_annex['+rs.aid+']');
-                        $('input[name=pid_' + file.id +']').prop('name', 'pid_annex['+rs.aid+']');
-                        $('input[name=level_' + file.id +']').prop('name', 'level_annex['+rs.aid+']');
+                        /*$('input[name=pid_' + file.id +']').prop('name', 'pid_annex['+rs.aid+']');
+                        $('input[name=level_' + file.id +']').prop('name', 'level_annex['+rs.aid+']');*/
                         $('#' + file.id).find('.iptval').append('<input type="hidden" name="fileid_annex['+rs.aid+']" value="'+rs.aid+'" class="id_val" />');
                     } else {
                         alert('上传文件失败，请重试');
@@ -282,12 +289,6 @@
     }
 
     /**************************************************start******************************************/
-    const keywords = <?php echo $userkey; ?>;
-    $(function () {
-        $('#write_user_div').hide();
-        autocomplete_id('username','userid',keywords);
-    })
-
     function del_timu(sid) {
         $('#username_div_'+sid).remove();
     }
@@ -322,6 +323,11 @@
         $('#write_user_div').html(init_html);
         autocomplete_id('username','userid',keywords);
     }
+
+    $('#file_form_submit_btn').click(function () {
+        public_save('myform','<?php echo U('Approval/public_save'); ?>');
+    });
+
     /*************************************************end*********************************************/
 
 </script>
