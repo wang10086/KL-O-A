@@ -20,7 +20,7 @@
                         <form method="post" action="{:U('Approval/public_save')}" name="myform" id="myform">
                             <input type="hidden" name="dosubmint" value="1">
                             <input type="hidden" name="saveType" value="1">
-                            <!-------------------------------------------start------------------------------------------>
+
                             <div class="form-group box-float-6">
                                 <label>文件上传人</label>：
                                 <input type="text" name="info[create_user_name]" value="<?php echo $row['create_user_name'] ? $row['create_user_name'] : session('username'); ?>" class="form-control" readonly />
@@ -36,7 +36,7 @@
 
                                 <foreach name="lists" key="k" item="v">
                                     <div class="col-md-3 username_div" id="username_div_{$v.audit_user_id}">
-                                        <input type="hidden" name="data[888{$k}][resid]" value="{$v.id}" />
+                                        <!--<input type="hidden" name="data[888{$k}][resid]" value="{$v.id}" />-->
                                         <input type="hidden" name="data[888{$k}][audit_uids]" value="{$v.audit_user_id}">
                                         <input type="text" class="form-control username_box" name="data[888{$k}][audit_user_name]" value="{$v.audit_user_name}" />
                                         <a class="box_close" href="javascript:;" onClick="del_timu({$v.audit_user_id})">X</a>
@@ -58,7 +58,6 @@
                                 <label>文件描述：</label>
                                 <textarea class="form-control"  name="info[content]" >{$data.content}</textarea>
                             </div>
-                            <!---------------------------------------------end------------------------------------------>
 
                             <div class="form-group col-md-12"></div>
                             <div class="form-group col-md-12">
@@ -288,7 +287,6 @@
         }
     }
 
-    /**************************************************start******************************************/
     function del_timu(sid) {
         $('#username_div_'+sid).remove();
     }
@@ -328,7 +326,6 @@
         public_save('myform','<?php echo U('Approval/public_save'); ?>');
     });
 
-    /*************************************************end*********************************************/
 
 </script>
         
