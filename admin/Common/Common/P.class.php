@@ -113,6 +113,7 @@ final class P {
 
     //未读内容表 unread表
     const UNREAD_CAS_RES            = 1;    //未读科普资源信息
+    const UNREAD_AUDIT_FILE         = 2;    //未读文件流转数量
 
     //满意度评分种类
     const SCORE_KIND_ACCOUNT        = 1;    //内部人员满意度评分

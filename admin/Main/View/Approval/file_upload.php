@@ -20,6 +20,7 @@
                         <form method="post" action="{:U('Approval/public_save')}" name="myform" id="myform">
                             <input type="hidden" name="dosubmint" value="1">
                             <input type="hidden" name="saveType" value="1">
+                            <input type="hidden" name="id" value="{$list.id}">
 
                             <div class="form-group box-float-6">
                                 <label>文件上传人</label>：
@@ -28,18 +29,17 @@
                             </div>
                             <div class="form-group box-float-6">
                                 <label>审核所需工作日（单位：天）</label>：
-                                <input type="text" name="info[day]" value="{$row.day}" class="form-control" />
+                                <input type="text" name="info[day]" value="{$list.day}" class="form-control" />
                             </div>
 
                             <div class="form-group box-float-12 mt20" id="satisfaction_box">
                                 <p class="black border-line-label">已选定评分人</p>
 
-                                <foreach name="lists" key="k" item="v">
-                                    <div class="col-md-3 username_div" id="username_div_{$v.audit_user_id}">
-                                        <!--<input type="hidden" name="data[888{$k}][resid]" value="{$v.id}" />-->
-                                        <input type="hidden" name="data[888{$k}][audit_uids]" value="{$v.audit_user_id}">
-                                        <input type="text" class="form-control username_box" name="data[888{$k}][audit_user_name]" value="{$v.audit_user_name}" />
-                                        <a class="box_close" href="javascript:;" onClick="del_timu({$v.audit_user_id})">X</a>
+                                <foreach name="audit_users" key="k" item="v">
+                                    <div class="col-md-3 username_div" id="username_div_{$v.id}">
+                                        <input type="hidden" name="data[888{$k}][audit_uids]" value="{$v.id}">
+                                        <input type="text" class="form-control username_box" name="data[888{$k}][audit_user_name]" value="{$v.nickname}" />
+                                        <a class="box_close" href="javascript:;" onClick="del_timu({$v.id})">X</a>
                                     </div>
                                 </foreach>
                             </div>
@@ -56,13 +56,13 @@
                             <div class="form-group box-float-12 mt-50"></div>
                             <div class="form-group box-float-12">
                                 <label>文件描述：</label>
-                                <textarea class="form-control"  name="info[content]" >{$data.content}</textarea>
+                                <textarea class="form-control"  name="info[content]" >{$list.content}</textarea>
                             </div>
 
                             <div class="form-group col-md-12"></div>
                             <div class="form-group col-md-12">
                                 <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
-                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择<font color="red">一个</font>小于20M的PDF文件<!--，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型--></span>
+                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择<font color="red">一个</font>小于20M的PDF文件</span>
 
                                 <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
                                     <tr>
@@ -71,6 +71,23 @@
                                         <th align="left" width="30%">上传进度</th>
                                         <th align="left" width="60">操作</th>
                                     </tr>
+
+                                    <?php if ($file){ ?>
+                                    <tr id="{$file['id']}"  valign="middle" class="un_upload">
+                                        <td class="iptval">
+                                            <input type="text" name="newname[{$file['id']}]" value="{$file['newFileName']}" class="form-control file_val" />
+                                            <input type="hidden" name="fileid[{$file['id']}]" value="{$file['id']}">
+                                        </td>
+                                        <td> <?php echo round($file[file_size]/1024,2); ?>Kb</td>
+                                        <td>
+                                            <div class="progress sm">
+                                                <div class="progress-bar progress-bar-aqua" rel="{$file['id']}"  role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                            </div>
+                                        </td>
+                                        <td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile({$file['id']});"><i class="fa fa-times"></i>删除</a></td>
+                                    </tr>
+                                    <?php } ?>
+
                                 </table>
                                 <div id="container" style="display:none;"></div>
                             </div>
@@ -91,35 +108,42 @@
                                         <th align="left" width="60" style="font-size: 14px;">操作</th>
                                     </tr>
 
-                                    <foreach name="save[1]" item="s">
-                                        <?php if(!empty($s['id'])){?>
-                                        <tr id="<?php echo $s['id'];?>"  valign="middle" class="un_upload" >
-                                            <td class="iptval"><input type="text" value="<?php echo $s['file_name'];?>" class="form-control file_val" readonly="readonly" /></td>
-                                            <td> <?php echo $s['file_size'];?></td>
+                                    <?php if($annex_files){?>
+                                    <foreach name="annex_files" key="k" item="v">
+                                    <tr id="<?php echo $v['id']?>"  valign="middle" class="un_upload" >
+                                            <td class="iptval">
+                                                <input type="text" name="newname_annex[{$v['id']}]" value="<?php echo $v['newFileName'];?>" class="form-control file_val" />
+                                                <input type="hidden" name="fileid_annex[{$v['id']}]" value="{$v['id']}">
+                                            </td>
+                                            <td> <?php echo $v['filesize'];?></td>
                                             <td>
                                                 <div class="progress sm">
                                                     <div class="progress-bar progress-bar-aqua" rel="o_1d1aj6qv6hneji21v471vah17u1c" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile1(<?php echo $s['id'];?>)">
+                                                <a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(<?php echo $v['id']?>)">
                                                     <i class="fa fa-times"></i>删除
                                                 </a>
                                             </td>
                                         </tr>
-                                        <?php } ?>
                                     </foreach>
-
-
+                                    <?php } ?>
                                 </table>
                                 <div id="container1" style="display:none;"></div>
                             </div>
-                            <button type="submit" class="btn">&emsp;保存&emsp;</button>
+                        </form>
+
+                        <form method="post" action="{:U('Approval/public_save')}" id="auditForm">
+                            <input type="hidden" name="dosubmint" value="1">
+                            <input type="hidden" name="saveType" value="2">
+                            <input type="hidden" name="id" value="{$list.id}">
                         </form>
                         <div id="formsbtn">
-                            <button type="button" class="btn btn-info" id="file_form_submit_btn">&emsp;保存&emsp;</button>
-                            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:public_save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>-->
-                            <button type="button" class="btn btn-warning" style="margin-left: 10px" id="audit_form_submit_btn">提交审核</button>
+                            <!--<button type="button" class="btn btn-info" id="file_form_submit_btn">&emsp;保存&emsp;</button>
+                            <button type="button" class="btn btn-warning" style="margin-left: 10px" id="audit_form_submit_btn">提交审核</button>-->
+                            <button type="button" class="btn btn-info" onclick="javascript:public_save('myform','<?php echo U('Approval/public_save'); ?>')">&emsp;保存&emsp;</button>
+                            <button type="button" class="btn btn-warning" style="margin-left: 10px" onclick="javascript:ConfirmSub('auditForm','提交审核后，文件流转期间将不可更改，<br />确定提交审核吗？')">提交审核</button>
                         </div>
                     </div>
                 </div>
@@ -322,9 +346,10 @@
         autocomplete_id('username','userid',keywords);
     }
 
-    $('#file_form_submit_btn').click(function () {
-        public_save('myform','<?php echo U('Approval/public_save'); ?>');
-    });
+    /*$('#file_form_submit_btn').click(function () { //保存
+        ;
+    });*/
+
 
 
 </script>

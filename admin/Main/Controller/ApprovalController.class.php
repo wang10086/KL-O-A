@@ -36,12 +36,15 @@ class ApprovalController extends BaseController {
             $db                     = M('approval');
             $file_db                = M('approval_files');
             $list                   = $db->find($id);
+            if ($list['status'] != 0){ $this->error('禁止编辑'); }
             $annex_ids              = $list['file_annex_ids'] ? explode(',',$list['file_annex_ids']) : '';
             $audit_uids             = $list['audit_uids'] ? explode(',',$list['audit_uids']) : '';
-            $annex_list             = $file_db -> where(array('id'=>array('in',$annex_ids)))->select();
+            $file                   = $file_db -> where(array('id'=>$list['file_id']))->find();
+            $annex_files            = $file_db -> where(array('id'=>array('in',$annex_ids)))->select();
             $audit_users            = M('account')->where(array('id'=>array('in',$audit_uids)))->field('id,nickname')->select();
             $this->list             = $list;
-            $this->annex_list       = $annex_list;
+            $this->file             = $file; //主文件
+            $this->annex_files      = $annex_files; //附件
             $this->audit_users      = $audit_users;
         }
         $this->userkey              = get_username();
@@ -90,6 +93,7 @@ class ApprovalController extends BaseController {
             //保存上传审核文件基本信息
             if ($saveType == 1){
                 $db                         = M('approval');
+                $id                         = I('id',0);
                 $info                       = I('info');
                 $data                       = I('data');
                 $newname                    = I('newname'); //主文件
@@ -133,17 +137,44 @@ class ApprovalController extends BaseController {
                 $save['audit_uids']         = $audit_uids;
                 $save['create_user']        = $info['create_user'];
                 $save['create_user_name']   = $info['create_user_name'];
-                $save['create_time']        = NOW_TIME;
                 $save['status']             = 0; //未提交
-                $res                        = $db->add($save);
+                if ($id){
+                    $res                    = $db->where(array('id'=>$id))->save($save);
+                }else{
+                    $save['create_time']    = NOW_TIME;
+                    $res                    = $db->add($save);
+                }
 
                 if ($res){
-                    $num++;
+                    $num++ ;
                     $msg                    = '保存成功';
                 }else{
                     $msg                    = '保存失败';
                 }
                 $this->returnFunction($num,$msg);
+            }
+
+            //保存提交审核信息
+            if ($saveType == 2){
+                $id                         = I('id');
+                if (!$id){ $this->error('请先保存数据'); }
+                $db                         = M('approval');
+                $list                       = $db->find($id);
+                $data                       = array();
+                $data['status']             = 1; //已提交
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $read                               = array();
+                    $read['type']                       = P::UNREAD_AUDIT_FILE;
+                    $read['req_id']                     = $id;
+                    $read['userids']                    = $list['audit_uids'];
+                    $read['create_time']                = NOW_TIME;
+                    $read['read_type']                  = 0;
+                    M('unread')->add($read);
+                    $this->success('提交成功',U('Approval/index'));
+                }else{
+                    $this->error('提交审核失败');
+                }
             }
         }
     }
@@ -172,6 +203,14 @@ class ApprovalController extends BaseController {
             $data['newFileName']= $v;
             $db->where(array('id'=>$k))->save($data);
         }
+    }
+
+    public function file_detail(){
+        $this->title('文件详情');
+        $id                                 = I('id');
+        if (!$id){ $this->error('获取数据失败'); }
+
+        $this->display();
     }
 }
 

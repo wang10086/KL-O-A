@@ -62,8 +62,9 @@ class BaseController extends Controller {
 		$this->__additional_jscode__    = '';
 		
 		$this->_sum_audit               = $this->get_sum_audit();
-        $this->_no_read_cas_res         = $this->get_no_read_res(P::UNREAD_CAS_RES);
-		
+        $this->_no_read_cas_res         = $this->get_no_read_res(P::UNREAD_CAS_RES); //科普资源
+        $this->_no_read_audit_file      = $this->get_no_read_res(P::UNREAD_AUDIT_FILE); //文件流转
+
 		$this->assign('_pagetitle_', $this->_pagetitle_);
 		$this->assign('_pagedesc_',  $this->_pagedesc_);
 		$this->assign('_action_',    $this->_action_);

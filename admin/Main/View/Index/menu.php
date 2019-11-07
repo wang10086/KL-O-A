@@ -236,12 +236,18 @@
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
-                                <?php if($_SESSION['file_sum']){ ?>
-                                    <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['file_sum'];?></small>
+                                <?php if($_no_read_audit_file){ ?>
+                                    <small class="badge pull-right bg-red" style="margin-right:6px;">{$_no_read_audit_file}</small>
                                 <?php }else{ ?>
                                     <i class="fa fa-angle-left pull-right"></i>
                                 <?php } ?>
-<!--                                <i class="fa fa-angle-left pull-right"></i>-->
+
+                                <!--
+
+                                <if condition="rolemenu(array('ScienceRes/res'))">
+                                <if condition="$_no_read_cas_res"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_cas_res}</small></if>
+                                </if>
+                                -->
                             </a>
                             <ul class="treeview-menu">
                             	<if condition="rolemenu(array('Files/index'))">
@@ -256,8 +262,8 @@
                                     <li class="{:on('Approval/index')}{:on('Approval/Approval_list')}{:on('Approval/approval_table')}{:on('Approval/Approval_Upload')}{:on('Approval/file_upload')}{:on('Approval/Approval_Update')}{:on('Approval/file_change')}{:on('Approval/add_final_judgment')}{:on('Approval/add_annotation')}">
                                         <a href="{:U('Approval/index')}">
                                             <i class="fa fa-angle-right"></i> 文件审批
-                                            <?php if($_SESSION['file_sum']){ ?>
-                                                <small class="badge pull-right bg-red" style="margin-right:6px;"><?php echo $_SESSION['file_sum'];?></small>
+                                            <?php if($_no_read_audit_file){ ?>
+                                                <small class="badge pull-right bg-red" style="margin-right:6px;">{$_no_read_audit_file}</small>
                                             <?php }?>
                                         </a>
                                     </li>
