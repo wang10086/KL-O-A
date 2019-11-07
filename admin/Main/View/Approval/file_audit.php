@@ -20,46 +20,18 @@
 
                             <div class="box box-primary">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$_action_}</h3>
+                                    <h3 class="box-title">文件详情</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green mr20">文件状态：{$status[$list['status']]}</span></h3>
 
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <table class="table table-bordered dataTable fontmini">
-                                            <tr role="row" class="orders" >
-                                                <th>文件名称</th>
-                                                <th>文件类型</th>
-                                            </tr>
-                                            <foreach name="file_list" item="row">
-                                                <tr>
-                                                    <td>
-                                                        <?php if ($list['status'] == 1 && (in_array(cookie('userid'),$all_audit_users['uids']) || in_array(cookie('userid'),array(1)))){ ?>
-                                                        <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.filename}</a>
-                                                        <?php }else{ ?>
-                                                        <a href="{$row.filepath}" title="查看" target="_blank">{$row.filename}</a>
-                                                        <?php } ?>
-                                                    </td>
-                                                    <td><?php if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } ?></td>
-                                                </tr>
-                                            </foreach>
-                                        </table>
-
-                                        <div class="form-group col-md-12 mt20"></div>
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>上传人：{$list.create_user_name}</p>
+                                        <div class="form-group col-md-12 viwe">
+                                            <p>文件名：{$list.file_name}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>已审核人：{$audit_users.str_users}</p>
-                                        </div>
-
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>未审核人：{$audited_users.str_users}</p>
-                                        </div>
-
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>计划流转工作日：{$list.day} 天</p>
+                                            <p>上传人：{$list.create_user_name} </p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
@@ -76,6 +48,19 @@
                                         </div>
                                     </div>
                                     
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">{$_action_}</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
+
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="content">
+
+                                    </div>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                         </div>

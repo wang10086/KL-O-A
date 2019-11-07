@@ -237,7 +237,9 @@
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
                                 <?php if($_no_read_audit_file){ ?>
+                                <if condition="rolemenu(array('Approval/index'))">
                                     <small class="badge pull-right bg-red" style="margin-right:6px;">{$_no_read_audit_file}</small>
+                                </if>
                                 <?php }else{ ?>
                                     <i class="fa fa-angle-left pull-right"></i>
                                 <?php } ?>

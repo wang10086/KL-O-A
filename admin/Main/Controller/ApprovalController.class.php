@@ -104,6 +104,9 @@ class ApprovalController extends BaseController {
                 $day                        = trim($info['day']) ? intval($info['day']) : 0;
                 $newname_all                = $this->get_newFileName_arr($newname,$newname_annex);
                 $this->save_file_new_name($newname_all); //保存文件信息
+                $file_ids                   = array_keys($newname_all);
+                $fileext                    = M('approval_files')->where(array('id'=>array('in',$file_ids)))->getField('fileext',true); //文件类型
+                $isNotPDF                   = $this->isPDF($fileext);
 
                 if (!$audit_uids){
                     $msg                    = '审核人员不能为空';
@@ -114,6 +117,11 @@ class ApprovalController extends BaseController {
                     $msg                    = '文件流转时间填写错误';
                     $this->returnFunction($num,$msg);
                     //$this->error('文件流转时间填写错误');
+                }
+                if ($isNotPDF){
+                    $msg                    = '请上传PDF格式文件';
+                    $this->returnFunction($num,$msg);
+                    //$this->error('请上传PDF格式文件');
                 }
                 if (!$fileid){
                     $msg                    = '主文件不能为空';
@@ -205,10 +213,68 @@ class ApprovalController extends BaseController {
         }
     }
 
+    /**
+     * 判断是否是PDF格式
+     * @param $arr
+     * @return int
+     */
+    private function isPDF($arr){
+        $num                    = 0;
+        foreach ($arr as $v){
+            if (!in_array($v,array('pdf','PDF'))){
+                $num++;
+            }
+        }
+        return $num;
+    }
+
+    private function get_audit_users($str_uids){
+        $uids                               = $str_uids ? array_filter(explode(',',$str_uids)) : '';
+        $users                              = M('account')->where(array('id'=>array('in',$uids)))->getField('id,nickname',true);
+        $str_users                          = $users ? implode(',',$users) : '<font color="#999">暂无人员</font>';
+        $data                               = array();
+        $data['uids']                       = $users ? array_keys($users) : '';
+        $data['str_users']                  = $str_users;
+        $data['users']                      = $users;
+        return $data;
+    }
+
+    //文件详情
     public function file_detail(){
         $this->title('文件详情');
         $id                                 = I('id');
         if (!$id){ $this->error('获取数据失败'); }
+        $db                                 = M('approval');
+        $file_db                            = M('approval_files');
+        $list                               = $db->find($id);
+        $str_file_ids                       = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id'];
+        $file_ids                           = array_filter(explode(',',$str_file_ids));
+        $file_list                          = $file_db->where(array('id'=>array('in',$file_ids)))->select();
+        $all_users                          = $list['audit_uids'].','.$list['audited_uids'];
+
+        $this->list                         = $list;
+        $this->file_list                    = $file_list;
+        $this->status                       = C('FILE_STATUS');
+        $this->all_audit_users              = $this->get_audit_users($all_users); //全部人员信息
+        $this->audit_users                  = $this->get_audit_users($list['audit_uids']); //未审核人员信息
+        $this->audited_users                = $this->get_audit_users($list['audited_uids']); //已审核人员信息
+        $this->display();
+    }
+
+    //文件审核
+    public function file_audit(){
+        $this->title('文件审核');
+        $appid                              = I('appid');
+        $file_id                            = I('fid');
+        if (!$appid || !$file_id){ $this->error('获取数据失败'); }
+        $db                                 = M('approval');
+        $file_db                            = M('approval_files');
+        $list                               = $db->find($appid);
+        $file_list                          = $file_db->find($file_id);
+
+        $this->list                         = $list;
+        $this->file_list                    = $file_list;
+        $this->status                       = C('FILE_STATUS');
 
         $this->display();
     }

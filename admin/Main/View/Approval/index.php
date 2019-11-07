@@ -50,7 +50,7 @@
                                     <foreach name="list" item="row">
                                     <tr>
                                         <td class="taskOptions">{$row.id}</td>
-                                        <td><a href="javascript:;">{$row.file_name}</a></td>
+                                        <td>{$row.file_name}</td>
                                         <td>{$row.create_time|date="Y-m-d H:i",###}</td>
                                         <td>{$row.create_user_name}</td>
                                         <td>{$file_status[$row['status']]}</td>
@@ -70,7 +70,8 @@
 
                                         <if condition="rolemenu(array('Approval/file_del'))">
                                             <td class="taskOptions">
-                                                <a href="{:U('Approval/file_del',array('id'=>$row['id']))}" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>
+                                                <!--<a href="{:U('Approval/file_del',array('id'=>$row['id']))}" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>-->
+                                                <a href="javascript:;" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>
                                             </td>
                                         </if>
                                     </tr>
