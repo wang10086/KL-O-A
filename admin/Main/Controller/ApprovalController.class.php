@@ -36,7 +36,7 @@ class ApprovalController extends BaseController {
             $db                     = M('approval');
             $file_db                = M('approval_files');
             $list                   = $db->find($id);
-            if ($list['status'] != 0){ $this->error('禁止编辑'); }
+            if ($list['status'] != 0){ $this->error('文件流转期间禁止编辑'); }
             $annex_ids              = $list['file_annex_ids'] ? explode(',',$list['file_annex_ids']) : '';
             $audit_uids             = $list['audit_uids'] ? explode(',',$list['audit_uids']) : '';
             $file                   = $file_db -> where(array('id'=>$list['file_id']))->find();
@@ -271,10 +271,13 @@ class ApprovalController extends BaseController {
         $file_db                            = M('approval_files');
         $list                               = $db->find($appid);
         $file_list                          = $file_db->find($file_id);
+        $server_name                        = $_SERVER['SERVER_NAME'];
+        $file_url                           = 'http://'.$server_name.'/'.$file_list['filepath'];
 
         $this->list                         = $list;
         $this->file_list                    = $file_list;
         $this->status                       = C('FILE_STATUS');
+        $this->file_url                     = $file_url;
 
         $this->display();
     }
