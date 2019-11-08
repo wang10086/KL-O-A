@@ -269,12 +269,11 @@ class FilesController extends BaseController {
 		up_file_level(0);
 		
 		$datalist = getTree(0);
-	
-		foreach($datalist as $k=>$v){
-			
-			$datalist[$k]['tab']        = fortext($v['level']-1,'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-		}
-		
+
+        foreach($datalist as $k=>$v){
+            $datalist[$k]['tab']        = fortext($v['level']-1,'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+        }
+
 		$this->datalist = $datalist;
 			
 		$this->display('movefile');
@@ -335,7 +334,7 @@ class FilesController extends BaseController {
 		
 		$this->roles = M('role')->where('id>3')->select();
 		
-		$this->users = M('account')->where('id>10')->order('id ASC')->select();
+		$this->users = M('account')->where(array('id'=>array('gt',10),'status'=>0))->order('id ASC')->select();
 	
 		$this->display('authfile');
 	}

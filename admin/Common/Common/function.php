@@ -1486,20 +1486,17 @@ function getTree($pid=0){
 
 	$str_level = $str_level ? $str_level : 0;
 
-	$db = M('files');
-	$where = array();
-	$where['pid']          = $pid;
-	$where['file_type']    = 0;
+	$db                     = M('files');
+	$where                  = array();
+	$where['pid']           = $pid;
+	$where['file_type']     = 0;
 	//权限识别
-	if (C('RBAC_SUPER_ADMIN') != cookie('userid')){
+	if (C('RBAC_SUPER_ADMIN') != cookie('username')){
 
 		$userid = cookie('userid');
 		$roleid = cookie('roleid');
-
 		$where['_string'] = ' (auth_group like "%'.$roleid.'%")  OR ( auth_user like "%'.$userid.'")   OR ( est_user_id = '.$userid.') ';
-
 	}
-
 
 	$list = $db->where($where)->order('`id` ASC')->select();
 	$str_level++;
