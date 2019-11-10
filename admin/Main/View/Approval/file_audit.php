@@ -85,7 +85,7 @@
                                     <input type="hidden" name="dosubmint" value="1">
                                     <input type="hidden" name="saveType" value="3">
                                     <div class="form-group box-float-12">
-                                        <label>原文件内容</label>
+                                        <label>原文件内容(请复制原文件相关内容)</label>
                                         <textarea class="form-control" name=""></textarea>
                                     </div>
                                     <div class="form-group box-float-12">
@@ -118,6 +118,6 @@
 </script>
 
 
-     
+
 
 

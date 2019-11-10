@@ -13,7 +13,7 @@
 
                 <!-- Main content -->
                 <section class="content">
-                
+
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12" style="padding-bottom:200px;">
@@ -37,7 +37,7 @@
                                                         <?php if ($list['status'] == 1 && (in_array(cookie('userid'),$all_audit_users['uids']) || in_array(cookie('userid'),array(1)))){ ?>
                                                         <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.filename}</a>
                                                         <?php }else{ ?>
-                                                        <a href="{$row.filepath}" title="查看" target="_blank">{$row.filename}</a>
+                                                        <a href="{$row.filepath}" title="查看" target="_blank">{$row.newFileName}</a>
                                                         <?php } ?>
                                                     </td>
                                                     <td><?php if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } ?></td>
@@ -75,7 +75,7 @@
                                             <div style="width:100%; margin-top:10px;">{$list.content}</div>
                                         </div>
                                     </div>
-                                    
+
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                         </div>
@@ -88,6 +88,6 @@
 <include file="Index:footer2" />
 
 
-     
+
 
 
