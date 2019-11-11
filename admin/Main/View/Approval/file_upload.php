@@ -345,9 +345,19 @@
         autocomplete_id('username','userid',keywords);
     }
 
-    /*$('#file_form_submit_btn').click(function () { //保存
-        ;
-    });*/
+    artDialog.alert = function (content, status) {
+        return artDialog({
+            id: 'Alert',
+            icon: status,
+            width: 300,
+            height: 120,
+            fixed: true,
+            lock: true,
+            time: 1,
+            content: content,
+            ok: true
+        });
+    }
 
 
 

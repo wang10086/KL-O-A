@@ -51,11 +51,11 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>已审核人：{$audit_users.str_users}</p>
+                                            <p>已审核人：{$audited_users.str_users}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>未审核人：{$audited_users.str_users}</p>
+                                            <p>待审核人：{$audit_users.str_users}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
