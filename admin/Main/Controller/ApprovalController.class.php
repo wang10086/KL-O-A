@@ -86,6 +86,105 @@ class ApprovalController extends BaseController {
         }
     }
 
+    private function returnFunction($num,$msg){
+        $returnMsg['num']       = $num;
+        $returnMsg['msg']       = $msg;
+        $this->ajaxReturn($returnMsg);
+    }
+
+    private function get_newFileName_arr($arr1,$arr2){
+        $arr                    = array();
+        foreach ($arr1 as $k=>$v){
+            $arr[$k]            = $v;
+        }
+        foreach ($arr2 as $k2=>$v2){
+            $arr[$k2]           = $v2;
+        }
+        return $arr;
+    }
+
+    private function save_file_new_name($newname_all){
+        $db                     = M('approval_files');
+        foreach ($newname_all as $k=>$v){
+            $data               = array();
+            $data['newFileName']= $v;
+            $db->where(array('id'=>$k))->save($data);
+        }
+    }
+
+    /**
+     * 判断是否是PDF格式
+     * @param $arr
+     * @return int
+     */
+    private function isPDF($arr){
+        $num                    = 0;
+        foreach ($arr as $v){
+            if (!in_array($v,array('pdf','PDF'))){
+                $num++;
+            }
+        }
+        return $num;
+    }
+
+    private function get_audit_users($str_uids){
+        $uids                               = $str_uids ? array_filter(explode(',',$str_uids)) : '';
+        $users                              = M('account')->where(array('id'=>array('in',$uids)))->getField('id,nickname',true);
+        $str_users                          = $users ? implode(',',$users) : '<font color="#999">暂无人员</font>';
+        $data                               = array();
+        $data['uids']                       = $users ? array_keys($users) : '';
+        $data['str_users']                  = $str_users;
+        $data['users']                      = $users;
+        return $data;
+    }
+
+    //文件详情
+    public function file_detail(){
+        $this->title('文件详情');
+        $id                                 = I('id');
+        if (!$id){ $this->error('获取数据失败'); }
+        $db                                 = M('approval');
+        $file_db                            = M('approval_files');
+        $list                               = $db->find($id);
+        $str_file_ids                       = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id'];
+        $file_ids                           = array_filter(explode(',',$str_file_ids));
+        $file_list                          = $file_db->where(array('id'=>array('in',$file_ids)))->select();
+        $all_users                          = $list['audit_uids'].','.$list['audited_uids'];
+
+        $this->list                         = $list;
+        $this->file_list                    = $file_list;
+        $this->status                       = C('FILE_STATUS');
+        $this->all_audit_users              = $this->get_audit_users($all_users); //全部人员信息
+        $this->audit_users                  = $this->get_audit_users($list['audit_uids']); //未审核人员信息
+        $this->audited_users                = $this->get_audit_users($list['audited_uids']); //已审核人员信息
+        $this->display();
+    }
+
+    //文件审核
+    public function file_audit(){
+        $this->title('文件审核');
+        $appid                              = I('appid');
+        $file_id                            = I('fid');
+        if (!$appid || !$file_id){ $this->error('获取数据失败'); }
+        $db                                 = M('approval');
+        $file_db                            = M('approval_files');
+        $record_db                          = M('approval_record');
+        $list                               = $db->find($appid);
+        $file_list                          = $file_db->find($file_id);
+        $record_list                        = $record_db->where(array('file_id'=>$file_id))->order('id asc')->select();
+        $server_name                        = $_SERVER['SERVER_NAME'];
+        $file_url                           = 'http://'.$server_name.'/'.$file_list['filepath'];
+
+        $this->audit_uids                   = explode(',',$list['audit_uids']);
+        $this->list                         = $list;
+        $this->file_list                    = $file_list;
+        $this->record_list                  = $record_list;
+        $this->status                       = C('FILE_STATUS');
+        $this->file_url                     = $file_url;
+
+        $this->display();
+    }
+
     public function public_save(){
         $saveType                   = I('saveType');
         $num                        = 0;
@@ -184,100 +283,81 @@ class ApprovalController extends BaseController {
                     $this->error('提交审核失败');
                 }
             }
-        }
-    }
 
-    private function returnFunction($num,$msg){
-        $returnMsg['num']       = $num;
-        $returnMsg['msg']       = $msg;
-        $this->ajaxReturn($returnMsg);
-    }
+            //保存审核信息
+            if ($saveType == 3){
+                $db                             = M('approval_record');
+                $file_id                        = I('file_id');
+                $appid                          = I('appid');
+                $file_content                   = trim(I('file_content'));
+                $suggest                        = trim(I('suggest'));
+                $num                            = 0;
 
-    private function get_newFileName_arr($arr1,$arr2){
-        $arr                    = array();
-        foreach ($arr1 as $k=>$v){
-            $arr[$k]            = $v;
-        }
-        foreach ($arr2 as $k2=>$v2){
-            $arr[$k2]           = $v2;
-        }
-        return $arr;
-    }
+                if (!$file_id || !$appid){
+                    $msg                        = '获取文件信息失败';
+                    $this->returnFunction($num,$msg);
+                }
+                if (!$file_content){
+                    $msg                        = '请输入原文件内容';
+                    $this->returnFunction($num,$msg);
+                }
+                if (!$suggest){
+                    $msg                        = '请输入您的修改意见';
+                    $this->returnFunction($num,$msg);
+                }
 
-    private function save_file_new_name($newname_all){
-        $db                     = M('approval_files');
-        foreach ($newname_all as $k=>$v){
-            $data               = array();
-            $data['newFileName']= $v;
-            $db->where(array('id'=>$k))->save($data);
+                $data                           = array();
+                $data['file_id']                = $file_id;
+                $data['file_content']           = $file_content;
+                $data['suggest']                = $suggest;
+                $data['create_user']            = cookie('userid');
+                $data['create_user_name']       = cookie('nickname');
+                $data['create_time']            = NOW_TIME;
+                $res                            = $db->add($data);
+                if ($res){
+                    $this->save_approval_stu($appid,cookie('userid'));
+                    $num                        += 1;
+                    $msg                        = '保存成功';
+                }else{
+                    $msg                        = '保存失败';
+                }
+                $this->returnFunction($num,$msg);
+            }
         }
     }
 
     /**
-     * 判断是否是PDF格式
-     * @param $arr
-     * @return int
+     * 更新审核人信息
+     * @param $approval_id
+     * @param $user_id
      */
-    private function isPDF($arr){
-        $num                    = 0;
-        foreach ($arr as $v){
-            if (!in_array($v,array('pdf','PDF'))){
-                $num++;
+    private function save_approval_stu($approval_id,$user_id){
+        $db                                 = M('approval');
+        $list                               = $db->find($approval_id);
+        $audit_uids                         = array_filter(explode(',',$list['audit_uids']));
+        $audited_uids                       = array_filter(explode(',',$list['audited_uids']));
+        $new_audit_uids                     = array();
+        foreach ($audit_uids as $v){
+            if ($v != $user_id){
+                $new_audit_uids[]           = $v;
+            }else{
+                if (!in_array($v,$audited_uids)){
+                    $audited_uids[]         = $v;
+                }
             }
         }
-        return $num;
-    }
-
-    private function get_audit_users($str_uids){
-        $uids                               = $str_uids ? array_filter(explode(',',$str_uids)) : '';
-        $users                              = M('account')->where(array('id'=>array('in',$uids)))->getField('id,nickname',true);
-        $str_users                          = $users ? implode(',',$users) : '<font color="#999">暂无人员</font>';
         $data                               = array();
-        $data['uids']                       = $users ? array_keys($users) : '';
-        $data['str_users']                  = $str_users;
-        $data['users']                      = $users;
-        return $data;
+        $data['audit_uids']                 = implode(',',$new_audit_uids);
+        $data['audited_uids']               = implode(',',$audited_uids);
+        $db->where(array('id'=>$approval_id))->save($data);
     }
 
-    //文件详情
-    public function file_detail(){
-        $this->title('文件详情');
-        $id                                 = I('id');
-        if (!$id){ $this->error('获取数据失败'); }
-        $db                                 = M('approval');
-        $file_db                            = M('approval_files');
-        $list                               = $db->find($id);
-        $str_file_ids                       = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id'];
-        $file_ids                           = array_filter(explode(',',$str_file_ids));
-        $file_list                          = $file_db->where(array('id'=>array('in',$file_ids)))->select();
-        $all_users                          = $list['audit_uids'].','.$list['audited_uids'];
-
-        $this->list                         = $list;
-        $this->file_list                    = $file_list;
-        $this->status                       = C('FILE_STATUS');
-        $this->all_audit_users              = $this->get_audit_users($all_users); //全部人员信息
-        $this->audit_users                  = $this->get_audit_users($list['audit_uids']); //未审核人员信息
-        $this->audited_users                = $this->get_audit_users($list['audited_uids']); //已审核人员信息
-        $this->display();
-    }
-
-    //文件审核
-    public function file_audit(){
-        $this->title('文件审核');
-        $appid                              = I('appid');
+    //编辑审核记录
+    public function edit_record(){
+        $record_id                          = I('rid');
         $file_id                            = I('fid');
-        if (!$appid || !$file_id){ $this->error('获取数据失败'); }
-        $db                                 = M('approval');
-        $file_db                            = M('approval_files');
-        $list                               = $db->find($appid);
-        $file_list                          = $file_db->find($file_id);
-        $server_name                        = $_SERVER['SERVER_NAME'];
-        $file_url                           = 'http://'.$server_name.'/'.$file_list['filepath'];
-
-        $this->list                         = $list;
-        $this->file_list                    = $file_list;
-        $this->status                       = C('FILE_STATUS');
-        $this->file_url                     = $file_url;
+        $this->file                         = M('approval_files')->find($file_id);
+        $this->record                       = M('approval_record')->find($record_id);
 
         $this->display();
     }
