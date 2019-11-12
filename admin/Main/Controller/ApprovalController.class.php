@@ -270,12 +270,12 @@ class ApprovalController extends BaseController {
                 $data['status']             = 1; //已提交
                 $res                        = $db->where(array('id'=>$id))->save($data);
                 if ($res){
-                    $read                               = array();
-                    $read['type']                       = P::UNREAD_AUDIT_FILE;
-                    $read['req_id']                     = $id;
-                    $read['userids']                    = $list['audit_uids'];
-                    $read['create_time']                = NOW_TIME;
-                    $read['read_type']                  = 0;
+                    $read                   = array();
+                    $read['type']           = P::UNREAD_AUDIT_FILE;
+                    $read['req_id']         = $id;
+                    $read['userids']        = $list['audit_uids'];
+                    $read['create_time']    = NOW_TIME;
+                    $read['read_type']      = 0;
                     M('unread')->add($read);
                     $this->success('提交成功',U('Approval/index'));
                 }else{
@@ -350,6 +350,66 @@ class ApprovalController extends BaseController {
                 }
                 $this->display('audit_ok');
             }
+
+            //保存上传终审文件信息
+            if ($saveType == 5){
+                $num                        = 0;
+                $db                         = M('approval');
+                $sure_uid                   = I('sure_uid');
+                $id                         = I('id',0);
+                $newname                    = I('newname'); //主文件
+                $fileid                     = I('fileid');
+                $newname_annex              = I('newname_annex'); //附件
+                $fileid_annex               = I('fileid_annex');
+                $newname_all                = $this->get_newFileName_arr($newname,$newname_annex);
+                $this->save_file_new_name($newname_all); //保存文件信息
+                $file_ids                   = array_keys($newname_all);
+                $fileext                    = M('approval_files')->where(array('id'=>array('in',$file_ids)))->getField('fileext',true); //文件类型
+                $isNotPDF                   = $this->isPDF($fileext);
+
+                if (!$sure_uid){
+                    $msg                    = '终审人员信息错误';
+                    $this->returnFunction($num,$msg);
+                }
+                if (!$id){
+                    $msg                    = '参数错误';
+                    $this->returnFunction($num,$msg);
+                }
+                if ($isNotPDF){
+                    $msg                    = '请上传PDF格式文件';
+                    $this->returnFunction($num,$msg);
+                }
+                if (!$fileid){
+                    $msg                    = '主文件不能为空';
+                    $this->returnFunction($num,$msg);
+                }
+                if (count($fileid) > 1){
+                    $msg                    = '主文件数量只能是一个';
+                    $this->returnFunction($num,$msg);
+                }
+
+                $data                       = array();
+                $data['sfile_id']           = implode(',',$fileid);
+                $data['sfile_annex_ids']    = $fileid_annex ? implode(',',$fileid_annex) : '';
+                $data['status']             = 4; //已提交总经理审核
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $num++;
+                    $msg                    = '提交成功';
+
+                    $file_name              = implode(',',$newname);
+                    //给发布者发送系统消息
+                    $uid                    = cookie('userid');
+                    $title                  = '您有新的文件待审批，请及时处理!';
+                    $content                = '文件名称：'.$file_name;
+                    $url                    = U('Approval/file_detail',array('id'=>$id));
+                    $user                   = '['.$sure_uid.']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+                }else{
+                    $msg                    = '数据保存失败';
+                }
+                $this->returnFunction($num,$msg);
+            }
         }
     }
 
@@ -380,7 +440,7 @@ class ApprovalController extends BaseController {
             $data['status']                 = 3; //流转完成,已返回至发布者
             //给发布者发送系统消息
             $uid                            = cookie('userid');
-            $title                          = '关于文件流转结果的通知!';
+            $title                          = '关于文件流转结果的反馈!';
             $content                        = '文件名称：'.$list['file_name'];
             $url                            = U('Approval/index');
             $user                           = '['.$list['create_user'].']';
@@ -409,6 +469,63 @@ class ApprovalController extends BaseController {
         }else{
             $this->error('删除数据失败');
         }
+    }
+
+    //上传终审文件
+    public function file_re_upload(){
+        $this->title('上传文件');
+        $id                         = I('id',0);
+        if ($id){
+            $db                     = M('approval');
+            $file_db                = M('approval_files');
+            $list                   = $db->find($id);
+            if ($list['status'] != 3){ $this->error('非法操作'); }
+            $annex_ids              = $list['file_annex_ids'] ? explode(',',$list['file_annex_ids']) : '';
+            $audit_uids             = $list['audit_uids'] ? explode(',',$list['audit_uids']) : '';
+            //$file                   = $file_db -> where(array('id'=>$list['file_id']))->find();
+            //$annex_files            = $file_db -> where(array('id'=>array('in',$annex_ids)))->select();
+            $audit_users            = M('account')->where(array('id'=>array('in',$audit_uids)))->field('id,nickname')->select();
+            $this->list             = $list;
+            //$this->file             = $file; //主文件
+            //$this->annex_files      = $annex_files; //附件
+            $this->audit_users      = $audit_users;
+        }
+        $this->userkey              = get_username();
+
+        $this->display();
+    }
+
+    //最终审核
+    public function file_re_audit(){
+        $this->title('文件审核');
+        $appid                              = I('appid');
+        $file_id                            = I('fid');
+        if (!$appid || !$file_id){ $this->error('获取数据失败'); }
+        
+        P($_GET,false);
+        P('开发中.....');
+
+        /**
+         *
+
+        $db                                 = M('approval');
+        $file_db                            = M('approval_files');
+        $record_db                          = M('approval_record');
+        $list                               = $db->find($appid);
+        $file_list                          = $file_db->find($file_id);
+        $record_list                        = $record_db->where(array('file_id'=>$file_id))->order('id asc')->select();
+        $server_name                        = $_SERVER['SERVER_NAME'];
+        $file_url                           = 'http://'.$server_name.'/'.$file_list['filepath'];
+
+        $this->audit_uids                   = explode(',',$list['audit_uids']);
+        $this->list                         = $list;
+        $this->file_list                    = $file_list;
+        $this->record_list                  = $record_list;
+        $this->status                       = C('FILE_STATUS');
+        $this->file_url                     = $file_url;
+
+        $this->display();
+         */
     }
 }
 

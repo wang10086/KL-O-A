@@ -19,44 +19,13 @@
                     <div class="content fileAudit">
                         <form method="post" action="{:U('Approval/public_save')}" name="myform" id="myform">
                             <input type="hidden" name="dosubmint" value="1">
-                            <input type="hidden" name="saveType" value="1">
+                            <input type="hidden" name="saveType" value="5">
                             <input type="hidden" name="id" value="{$list.id}">
 
-                            <div class="form-group box-float-6">
-                                <label>文件上传人</label>：
-                                <input type="text" name="info[create_user_name]" value="<?php echo $row['create_user_name'] ? $row['create_user_name'] : session('username'); ?>" class="form-control" readonly />
-                                <input type="hidden" name="info[create_user]" value="<?php echo $row['create_user'] ? $row['create_user'] : session('userid'); ?>" class="form-control" readonly />
-                            </div>
-                            <div class="form-group box-float-6">
-                                <label>审核所需工作日（单位：天）</label>：
-                                <input type="text" name="info[day]" value="{$list.day}" class="form-control" />
-                            </div>
-
-                            <div class="form-group box-float-12 mt20" id="satisfaction_box">
-                                <p class="black border-line-label">已选定评分人</p>
-
-                                <foreach name="audit_users" key="k" item="v">
-                                    <div class="col-md-3 username_div" id="username_div_{$v.id}">
-                                        <input type="hidden" name="data[888{$k}][audit_uids]" value="{$v.id}">
-                                        <input type="text" class="form-control username_box" name="data[888{$k}][audit_user_name]" value="{$v.nickname}" />
-                                        <a class="box_close" href="javascript:;" onClick="del_timu({$v.id})">X</a>
-                                    </div>
-                                </foreach>
-                            </div>
-
-                            <div class="form-group box-float-12 mt-20">
-                                <div class="form-group box-float-6" id="write_user_div">
-                                    <input type="hidden" name="userid" id="userid" />
-                                    <input type="text" name="username" id="username" style=" height: 32px; width: 230px; display: inline-block;" />
-                                    <input type="button" class="btn btn-info btn-sm" style="margin-top: -3px" value="添加" onclick="sure_userinfo($('#userid').val(),$('#username').val())" />
-                                </div>
-                                <a href="javascript:;" class="btn btn-info btn-sm" onClick="add_write_user_div()" id="add_btn"><i class="fa fa-fw fa-plus"></i> 新增评分人</a>
-                            </div>
-
-                            <div class="form-group box-float-12 mt-50"></div>
                             <div class="form-group box-float-12">
-                                <label>文件描述：</label>
-                                <textarea class="form-control"  name="info[content]" >{$list.content}</textarea>
+                                <label>请填写文件最终审核人(点击匹配到的下拉列表)</label>：
+                                <input type="text" class="form-control" id="username" />
+                                <input type="hidden" name="sure_uid" class="form-control" id="userid" />
                             </div>
 
                             <div class="form-group col-md-12"></div>
@@ -131,18 +100,12 @@
                                     <?php } ?>
                                 </table>
                                 <div id="container1" style="display:none;"></div>
-                                <!--<input type="submit" value="提交">-->
+                                <input type="submit" value="提交">
                             </div>
                         </form>
 
-                        <form method="post" action="{:U('Approval/public_save')}" id="auditForm">
-                            <input type="hidden" name="dosubmint" value="1">
-                            <input type="hidden" name="saveType" value="2">
-                            <input type="hidden" name="id" value="{$list.id}">
-                        </form>
                         <div id="formsbtn">
-                            <button type="button" class="btn btn-info" onclick="javascript:public_save('myform','<?php echo U('Approval/public_save'); ?>')">&emsp;保存&emsp;</button>
-                            <button type="button" class="btn btn-warning" style="margin-left: 10px" onclick="javascript:ConfirmSub('auditForm','提交审核后，文件流转期间将不可更改，<br />确定提交审核吗？')">提交审核</button>
+                            <button type="button" class="btn btn-info" style="margin-left: 10px" onclick="javascript:ConfirmSubmit('myform','文件将直接提交至最终审核人处，<br />确定提交吗？')">提交审核</button>
                         </div>
                     </div>
                 </div>
@@ -310,41 +273,6 @@
         }
     }
 
-    function del_timu(sid) {
-        $('#username_div_'+sid).remove();
-    }
-
-    function add_write_user_div(){
-        $('#write_user_div').show();
-        $('#add_btn').hide();
-    }
-
-    function sure_userinfo(userid,username){
-        var myDate  = new Date();
-        var m       = myDate.getMinutes(); //分
-        var s       = myDate.getSeconds(); //秒
-        var round   = m.toString() + s.toString();
-        if (userid){
-            var html  = '<div class="col-md-3 username_div" id="username_div_'+round+'">'+
-                '<input type="hidden" name="data['+round+'][audit_uids]" value="'+userid+'">'+
-                '<input type="text" class="form-control username_box" name="data['+round+'][audit_user_name]" value="'+username+'" />'+
-                '<a class="box_close" href="javascript:;" onClick="del_timu('+round+')">X</a>'+
-                '</div>';
-            $('#satisfaction_box').append(html);
-            init_write_user_div();
-            $('#write_user_div').hide();
-            $('#add_btn').show();
-        }
-    }
-
-    function init_write_user_div() {
-        var init_html = '<input type="hidden" name="userid" id="userid" />'+
-            '<input type="text" name="username" id="username" style=" height: 32px; width: 230px; display: inline-block;" />'+
-            '<input type="button" class="btn btn-info btn-sm" style="margin-top: -3px" value="添加" onclick="sure_userinfo($(`#userid`).val(),$(`#username`).val())" />';
-        $('#write_user_div').html(init_html);
-        autocomplete_id('username','userid',keywords);
-    }
-
     artDialog.alert = function (content, status) {
         return artDialog({
             id: 'Alert',
@@ -359,6 +287,29 @@
         });
     }
 
+    function ConfirmSubmit(obj,msg) {
+        if(!msg){
+            var msg = '您确定保存该信息吗？';
+        }
+
+        art.dialog({
+            title: '提示',
+            id: 'confirmBox',
+            width:400,
+            height:100,
+            lock:true,
+            fixed: true,
+            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+            ok: function () {
+                public_save('myform','<?php echo U('Approval/public_save'); ?>');
+                parent.art.dialog.list["confirmBox"].close();
+                return false;
+            },
+            cancelVal: '取消',
+            cancel: true //为true等价于function(){}
+        });
+
+    }
 
 
 </script>

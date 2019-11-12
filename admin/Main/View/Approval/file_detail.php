@@ -34,7 +34,13 @@
                                             <foreach name="file_list" item="row">
                                                 <tr>
                                                     <td>
-                                                        <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.filename}</a>
+                                                        <?php if ($list['status'] == 0){ ?>
+                                                            <a href="javascript:art_show_msg('文件编辑中...',2);" title="审核">{$row.newFileName}</a>
+                                                        <?php }elseif ($list['status'] == 4){ ?>
+                                                            <a href="{:U('Approval/file_re_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.newFileName}</a>
+                                                        <?php }else{ ?>
+                                                            <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.newFileName}</a>
+                                                        <?php } ?>
                                                     </td>
                                                     <td><?php if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } ?></td>
                                                 </tr>
