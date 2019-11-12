@@ -51,8 +51,7 @@ class ApprovalController extends BaseController {
         $this->display();
     }
 
-    public function public_upload_file ()
-    {
+    public function public_upload_file (){
         $db                         = M('approval_files');
         $upload                     = new Upload(C('UPLOAD_FILE_CFG'));
         $info                       = $upload->upload();
@@ -323,6 +322,33 @@ class ApprovalController extends BaseController {
                 }
                 $this->returnFunction($num,$msg);
             }
+
+            //修改审核记录
+            if ($saveType == 4){
+                $db                 = M('approval_record');
+                $id                 = I('id');
+                $file_content       = trim(I('file_content'));
+                $suggest            = trim(I('suggest'));
+                if (!$file_content){
+                    $this->msg      = '原文件内容不能为空';
+                    $this->display('audit_ok');
+                }
+                if (!$suggest){
+                    $this->msg      = '修改意见不能为空';
+                    $this->display('audit_ok');
+                }
+
+                $data               = array();
+                $data['file_content']= $file_content;
+                $data['suggest']    = $suggest;
+                $res                = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $this->msg      = '修改成功';
+                }else{
+                    $this->msg      = '修改失败';
+                }
+                $this->display('audit_ok');
+            }
         }
     }
 
@@ -360,6 +386,18 @@ class ApprovalController extends BaseController {
         $this->record                       = M('approval_record')->find($record_id);
 
         $this->display();
+    }
+
+    //删除审核记录
+    public function del_record(){
+        $id                                 = I('id');
+        $db                                 = M('approval_record');
+        $res                                = $db->where(array('id'=>$id))->delete();
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除数据失败');
+        }
     }
 }
 

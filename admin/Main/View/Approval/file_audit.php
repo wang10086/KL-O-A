@@ -84,8 +84,10 @@
                                             <div class="mt20 record_detail_box">
                                                 <P class="record_detail_title">审核人：{$v['create_user_name']} | 审核时间：{$v['create_time']|date='Y-m-d H:i',###}
                                                     <?php if (($v['create_user'] == cookie('userid') && in_array($list['status'],array(1,2))) || in_array(cookie('userid'),array(1,11))){ ?>
-                                                        | <a href="javascript:edit_record('/index.php?m=Main&c=Approval&a=edit_record&rid='+{$v.id}+'&fid='+{$file_list.id})">编辑</a>
-                                                        | <a href="">删除</a>
+                                                         | <a href="javascript:edit_record('/index.php?m=Main&c=Approval&a=edit_record&rid='+{$v.id}+'&fid='+{$file_list.id})">编辑</a>
+                                                        <?php if (in_array(cookie('userid'),array(1,11))){ ?>
+                                                         | <a href="javascript:ConfirmDel(`{:U('Approval/del_record',array('id'=>$v['id']))}`)">删除</a>
+                                                        <?php } ?>
                                                     <?php } ?>
                                                 </P>
                                                 <P><span class="black">原文件内容：</span>{$v['file_content']}</P>
@@ -113,7 +115,6 @@
                                         <textarea class="form-control" name="suggest"></textarea>
                                     </div>
                                     <div class="form-group box-float-12 mt20" style="width:100%; text-align:center;">
-                                        <input type="submit" value="提交测试">
                                         <button type="button" onclick="submit_audit_form()" class="btn btn-info btn-lg" id="lrpd">保存</button>
                                     </div>
                                 </form>
@@ -164,7 +165,8 @@
     function edit_record(obj) {
         art.dialog.open(obj, {
             lock:true,
-            title: '文件审核记录',
+            id:'edit_box',
+            title: '编辑文件审核记录',
             width:700,
             height:320,
             okVal: '提交',
