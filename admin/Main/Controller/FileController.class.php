@@ -298,7 +298,7 @@ class FileController extends BasepubController {
         $this->title('部门通用文件');
         $db                             = M('files');
         $file_type                      = C('FILE_TAG')[2];
-        $pin                            = I('pin',0);
+        $pin                            = I('pin',11);
         $department                     = I('department',0);
         $posts                          = I('posts',0);
         $fileName                       = trim(I('fileName'));
@@ -310,15 +310,11 @@ class FileController extends BasepubController {
         $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
         if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            $department                     = $department ? '['.$department.']' : '['.session('department').']';
-            $where['department']            = array('like','%'.$department.'%');
-            //$posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
-            //$where['posts']                 = array('like','%'.$posts.'%');
+            $new_department                 = $department ? '['.$department.']' : '['.session('department').']';
+            $where['department']            = array('like','%'.$new_department.'%');
         }else{
-            $department                     = '['.session('department').']';
-            $where['department']            = array('like','%'.$department.'%');
-            //$posts                          = '['.session('posts').']';
-            //$where['posts']                 = array('like','%'.$posts.'%');
+            $new_department                 = '['.session('department').']';
+            $where['department']            = array('like','%'.$new_department.'%');
         }
 
         $pagecount                      = $db->where($where)->count();
@@ -341,7 +337,7 @@ class FileController extends BasepubController {
         $this->title('岗位专用文件');
         $db                             = M('files');
         $file_type                      = C('FILE_TAG')[3];
-        $pin                            = I('pin',0);
+        $pin                            = I('pin',21);
         $department                     = I('department',0);
         $posts                          = I('posts',0);
         $fileName                       = trim(I('fileName'));
@@ -355,13 +351,13 @@ class FileController extends BasepubController {
         if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             //$department                     = $department ? '['.$department.']' : '['.session('department').']';
             //$where['department']            = array('like','%'.$department.'%');
-            $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
-            $where['posts']                 = array('like','%'.$posts.'%');
+            $new_posts                      = $posts ? '['.$posts.']' : '['.session('posts').']';
+            $where['posts']                 = array('like','%'.$new_posts.'%');
         }else{
             //$department                     = '['.session('department').']';
             //$where['department']            = array('like','%'.$department.'%');
-            $posts                          = '['.session('posts').']';
-            $where['posts']                 = array('like','%'.$posts.'%');
+            $new_posts                      = '['.session('posts').']';
+            $where['posts']                 = array('like','%'.$new_posts.'%');
         }
 
         $pagecount                      = $db->where($where)->count();
