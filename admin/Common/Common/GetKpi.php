@@ -4511,6 +4511,16 @@ function save_op_groups_settlement($op){
     }
 }
 
+//自动更新文件审核状态
+function save_audit_file_stu(){
+    $db                                 = M('approval');
+    $where                              = array();
+    $where['status']                    = 1; //审核中
+    $where['plan_time']                 = array('lt',NOW_TIME);
+    $approval_ids                       = $db->where($where)->getField('id',true);
+    $db->where(array('id'=>array('in',$approval_ids)))->setField('status',2);
+}
+
 
 
 

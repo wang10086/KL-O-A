@@ -64,8 +64,9 @@ class BaseController extends Controller {
 		$this->_sum_audit               = $this->get_sum_audit();
         $this->_no_read_cas_res         = $this->get_no_read_res(P::UNREAD_CAS_RES); //科普资源
         $this->_no_read_audit_file      = $this->get_no_read_res(P::UNREAD_AUDIT_FILE); //文件流转
+        save_audit_file_stu(); //自动更新文件审核状态
 
-		$this->assign('_pagetitle_', $this->_pagetitle_);
+        $this->assign('_pagetitle_', $this->_pagetitle_);
 		$this->assign('_pagedesc_',  $this->_pagedesc_);
 		$this->assign('_action_',    $this->_action_);
 		$this->assign('_sum_audit',    $this->_sum_audit);
@@ -580,48 +581,6 @@ class BaseController extends Controller {
         }
     }
 
-
-    /**
-     * file_remind_number 文件提醒条数
-     */
-    /*public function file_remind_number()
-    {
-        $useid                              = $_SESSION['userid'];//用户id
-        $sun                                = 0;//信息条数
-        $file                               = M('approval_flie')->select();
-        foreach($file as $key =>$val){
-            $where                          = array();
-            $where['file_id']               = $val['id'];
-            $annotatio                      = M('approval_annotation')->where($where)->find();
-            if($annotatio){//判断有无文件批注
-                if($useid==$val['pid'] && $annotatio['statu']==1){$sun  = $sun+1; }//判断综合
-                if($useid==13 && $annotatio['statu']==2){ $sun  = $sun+1;}//判断综合
-                if($val['account_id']==$useid && $annotatio['statu']==6){$sun  = $sun+1;} //驳回
-
-                $conside                    = explode(',', $val['file_consider']);//显示审议人员id
-                if(in_array($useid,$conside) && $annotatio['statu']==3){//判断审议
-                    $where['type']          = 3;
-                    $where['account_id']    = $useid;
-                    $annotation2            = M('approval_annotation')->where($where)->find();//判断状态文件是否存在
-                    if(!$annotation2){$sun  = $sun+1;}//没有查到文件
-                }
-                $judgment                   = explode(',', $val['file_judgment']);//显示终审人员id
-                if(in_array($useid,$judgment) && $annotatio['statu']==4){//判断终审
-                    $where['type']          = 4;
-                    $where['account_id']    = $useid;
-                    $annotation3            = M('approval_annotation')->where($where)->find();//判断状态文件是否存在
-                    if(!$annotation3){$sun  = $sun+1;}//没有查到文件
-                }
-            }else{
-                if($useid==$val['pid']){//判断上级有文件没有批注
-                 $sun                       = $sun+1;
-                }
-            }
-        }
-        $_SESSION['file_sum']               = $sun;//保存缓存
-        return $sun;
-    }*/
-
     /**
      * 未查看的资源
      * @param $type 类型
@@ -656,7 +615,12 @@ class BaseController extends Controller {
             if ($v == session('userid')) unset($user_ids[$k]);
         }
         $userids                            = implode(',',$user_ids);
-        $db -> where('id = '.$list['id'])->setField('userids',$userids);
+        if (!$userids){ $read_type          = 1; } //所有人已读完,无需查阅该数据
+        //$db -> where('id = '.$list['id'])->setField('userids',$userids);
+        $data                               = array();
+        $data['userids']                    = $userids;
+        $data['read_type']                  = $read_type ? $read_type : 0;
+        $db->where(array('id'=>$list['id']))->save($data);
     }
 
     /**

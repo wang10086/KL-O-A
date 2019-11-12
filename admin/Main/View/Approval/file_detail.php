@@ -34,11 +34,7 @@
                                             <foreach name="file_list" item="row">
                                                 <tr>
                                                     <td>
-                                                        <?php if ($list['status'] == 1 && (in_array(cookie('userid'),$all_audit_users['uids']) || in_array(cookie('userid'),array(1)))){ ?>
                                                         <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.filename}</a>
-                                                        <?php }else{ ?>
-                                                        <a href="{$row.filepath}" title="查看" target="_blank">{$row.newFileName}</a>
-                                                        <?php } ?>
                                                     </td>
                                                     <td><?php if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } ?></td>
                                                 </tr>

@@ -314,7 +314,8 @@ class ApprovalController extends BaseController {
                 $data['create_time']            = NOW_TIME;
                 $res                            = $db->add($data);
                 if ($res){
-                    $this->save_approval_stu($appid,cookie('userid'));
+                    $this->save_approval_stu($appid,cookie('userid')); //更新审核人信息
+                    $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
                     $num                        += 1;
                     $msg                        = '保存成功';
                 }else{
@@ -375,6 +376,16 @@ class ApprovalController extends BaseController {
         $data                               = array();
         $data['audit_uids']                 = implode(',',$new_audit_uids);
         $data['audited_uids']               = implode(',',$audited_uids);
+        if(!$data['audit_uids']){
+            $data['status']                 = 3; //流转完成,已返回至发布者
+            //给发布者发送系统消息
+            $uid                            = cookie('userid');
+            $title                          = '关于文件流转结果的通知!';
+            $content                        = '文件名称：'.$list['file_name'];
+            $url                            = U('Approval/index');
+            $user                           = '['.$list['create_user'].']';
+            send_msg($uid,$title,$content,$url,$user,'');
+        }
         $db->where(array('id'=>$approval_id))->save($data);
     }
 
