@@ -236,6 +236,7 @@ $config = array(
         ),
         '2'         => array( //部门文件
                               '11'    => '部门职责',
+                              '14'    => '部门制度',
                               '12'    => '管理规程',
                               '13'    => '其他'
         ),
@@ -411,7 +412,7 @@ $config = array(
         1           => '文件正常流转中',
         2           => '<span class="yellow">文件超时流转中</span>',
         3           => '<span class="blue">已返回至发布者</span>',
-        4           => '已提交总经理审核',
+        4           => '<span class="primary">已提交总经理审核</span>',
         5           => '<span class="green">总经理审核通过</span>'
     ),
 

@@ -3586,6 +3586,7 @@ input{ font-family:'微软雅黑';}
 .red{ color:#F03;}
 .yellow{ color:#F90;}
 .blue{ color:#00c0ef;}
+.primary{ color: #367fa9;}
 
 .sucai{ position:relative; border-radius:6px; overflow:hidden; margin:10px 0;}
 .sucai img{ width:100%; border-radius:6px; overflow:hidden;}
