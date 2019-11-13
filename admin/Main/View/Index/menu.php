@@ -232,7 +232,7 @@
 
 
                         <if condition="rolemenu(array('Files/index','Approval/index'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:on('File')} {:on('Approval')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:ison(CONTROLLER_NAME, 'Approval')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
@@ -243,13 +243,6 @@
                                 <?php }else{ ?>
                                     <i class="fa fa-angle-left pull-right"></i>
                                 <?php } ?>
-
-                                <!--
-
-                                <if condition="rolemenu(array('ScienceRes/res'))">
-                                <if condition="$_no_read_cas_res"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_cas_res}</small></if>
-                                </if>
-                                -->
                             </a>
                             <ul class="treeview-menu">
                             	<if condition="rolemenu(array('Files/index'))">
@@ -260,8 +253,8 @@
                                         </a>
                                     </li>
                                 </if>
-                                <if condition="rolemenu(array('Approval/index','Approval/Approval_list','Approval/approval_table','Approval/Approval_Upload','Approval/file_upload','Approval/Approval_Update','Approval/file_change','Approval/add_final_judgment','Approval/add_annotation'))">
-                                    <li class="{:on('Approval/index')}{:on('Approval/Approval_list')}{:on('Approval/approval_table')}{:on('Approval/Approval_Upload')}{:on('Approval/file_upload')}{:on('Approval/Approval_Update')}{:on('Approval/file_change')}{:on('Approval/add_final_judgment')}{:on('Approval/add_annotation')}">
+                                <if condition="rolemenu(array('Approval/index','Approval/file_upload','Approval/file_detail','Approval/file_audit','Approval/edit_record','Approval/file_re_upload','Approval/file_re_audit'))">
+                                    <li class="{:on('Approval/index')} {:on('Approval/file_upload')} {:on('Approval/file_detail')} {:on('Approval/file_audit')} {:on('Approval/edit_record')} {:on('Approval/file_re_upload')} {:on('Approval/file_re_audit')}">
                                         <a href="{:U('Approval/index')}">
                                             <i class="fa fa-angle-right"></i> 文件审批
                                             <?php if($_no_read_audit_file){ ?>
