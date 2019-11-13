@@ -147,12 +147,18 @@ class ApprovalController extends BaseController {
         $list                               = $db->find($id);
         if (in_array($list['status'],array(4,5))){ //从终审文件取值
             $str_file_ids                   = $list['sfile_annex_ids'] ? $list['sfile_id'].','.$list['sfile_annex_ids'] : $list['sfile_id'];
+            $old_str_file_ids               = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id']; //初审文件
         }else{ //从初审文件取值
             $str_file_ids                   = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id'];
         }
         $file_ids                           = array_filter(explode(',',$str_file_ids));
         $file_list                          = $file_db->where(array('id'=>array('in',$file_ids)))->select();
         $all_users                          = $list['audit_uids'].','.$list['audited_uids'];
+        if ($old_str_file_ids){
+            $old_file_ids                   = array_filter(explode(',',$old_str_file_ids));
+            $old_file_list                  = $file_db->where(array('id'=>array('in',$old_file_ids)))->select();
+            $this->old_file_list            = $old_file_list;
+        }
 
         $this->list                         = $list;
         $this->file_list                    = $file_list;

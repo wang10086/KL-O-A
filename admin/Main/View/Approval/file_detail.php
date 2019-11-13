@@ -37,14 +37,17 @@
                                                         <?php if ($list['status'] == 0){ ?>
                                                             <a href="javascript:art_show_msg('文件编辑中...',2);" title="审核">{$row.newFileName}</a>
                                                         <?php }elseif ($list['status'] == 4){ ?>
-                                                            <a href="{:U('Approval/file_re_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.newFileName}</a>
+                                                            <a href="{:U('Approval/file_re_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核" target="_blank">{$row.newFileName}</a>
                                                         <?php }else{ ?>
-                                                            <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.newFileName}</a>
+                                                            <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核" target="_blank">{$row.newFileName}</a>
                                                         <?php } ?>
                                                     </td>
                                                     <td><?php if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } ?></td>
                                                 </tr>
                                             </foreach>
+                                            <tr>
+                                                <td colspan="2">提示：点击文件名称进入审核页面！</td>
+                                            </tr>
                                         </table>
 
                                         <div class="form-group col-md-12 mt20"></div>
@@ -80,6 +83,33 @@
 
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
+
+                            <?php if (in_array($list['status'],array(4,5))){ ?>
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">查看初审文件信息</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="content">
+                                        <table class="table table-bordered dataTable fontmini">
+                                            <tr role="row" class="orders" >
+                                                <th>初审文件名称</th>
+                                                <th>文件类型</th>
+                                            </tr>
+                                            <foreach name="old_file_list" item="row">
+                                                <tr>
+                                                    <td>
+                                                        <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.newFileName}</a>
+                                                    </td>
+                                                    <td><?php if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } ?></td>
+                                                </tr>
+                                            </foreach>
+                                        </table>
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                            <?php } ?>
                         </div>
                     </div>
                 </section><!-- /.content -->

@@ -24,7 +24,7 @@
 
                             <div class="form-group box-float-6">
                                 <label>文件上传人</label>：
-                                <input type="text" name="info[create_user_name]" value="<?php echo $row['create_user_name'] ? $row['create_user_name'] : session('username'); ?>" class="form-control" readonly />
+                                <input type="text" name="info[create_user_name]" value="<?php echo $row['create_user_name'] ? $row['create_user_name'] : session('nickname'); ?>" class="form-control" readonly />
                                 <input type="hidden" name="info[create_user]" value="<?php echo $row['create_user'] ? $row['create_user'] : session('userid'); ?>" class="form-control" readonly />
                             </div>
                             <div class="form-group box-float-6">
