@@ -62,7 +62,6 @@
                                     <h4>提示！</h4>
                                     <p>1、请优先使用谷歌浏览器，其他浏览器可能无法在线显示文件内容；</p>
                                 </div>
-
                                 <div class="form-group fileContentTitle">文件内容</div>
                                 <div class="form-group fileAuditTitle">审核记录</div>
                                 <div id="fileContentBox">
@@ -74,7 +73,7 @@
                                         <foreach name="record_list" key="k" item="v">
                                             <div class="mt20 record_detail_box">
                                                 <P class="record_detail_title">审核人：{$v['create_user_name']} | 审核时间：{$v['create_time']|date='Y-m-d H:i',###}
-                                                    <?php if (($v['create_user'] == cookie('userid') && in_array($list['status'],array(1,2))) || in_array(cookie('userid'),array(1,11))){ ?>
+                                                    <?php if (($v['create_user'] == cookie('userid') && in_array($list['status'],array(4))) || in_array(cookie('userid'),array(1,11))){ ?>
                                                          | <a href="javascript:edit_record('/index.php?m=Main&c=Approval&a=edit_record&rid='+{$v.id}+'&fid='+{$file_list.id})">编辑</a>
                                                         <?php if (in_array(cookie('userid'),array(1,11))){ ?>
                                                          | <a href="javascript:ConfirmDel(`{:U('Approval/del_record',array('id'=>$v['id']))}`)">删除</a>
@@ -91,10 +90,10 @@
                                 </div>
                                 <div class="form-group col-md-12 mt40">&emsp;</div>
 
-                                <?php if ((in_array(cookie('userid'),$audit_uids) || cookie('userid')==1) && in_array($list['status'],array(1,2))){ ?>
+                                <?php if ((in_array(cookie('userid'),array(1,$list['sure_uid']))) && in_array($list['status'],array(4))){ ?>
                                 <form method="post" action="{:U('Approval/public_save')}" id="audit_form">
                                     <input type="hidden" name="dosubmint" value="1">
-                                    <input type="hidden" name="saveType" value="3">
+                                    <input type="hidden" name="saveType" value="6">
                                     <input type="hidden" name="file_id" value="{$file_list.id}">
                                     <input type="hidden" name="appid" value="{$list.id}">
                                     <div class="form-group box-float-12">
@@ -105,10 +104,18 @@
                                         <label>建议调整为</label>
                                         <textarea class="form-control" name="suggest"></textarea>
                                     </div>
+                                </form>
+
+                                    <form method="post" action="{:U('Approval/public_save')}" id="sureSubmit">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="saveType" value="7">
+                                        <input type="hidden" name="appid" value="{$list.id}">
+                                    </form>
+
                                     <div class="form-group box-float-12 mt20" style="width:100%; text-align:center;">
                                         <button type="button" onclick="submit_audit_form()" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                        <button type="button" onclick="ConfirmSub('sureSubmit','请确认本批次所有文件(包含附件)已审核完毕,提交后将无法修改审核信息!')" class="btn btn-danger btn-lg" id="lrpd">提交</button>
                                     </div>
-                                </form>
                                 <?php } ?>
                             </div>
 

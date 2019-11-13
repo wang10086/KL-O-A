@@ -145,7 +145,11 @@ class ApprovalController extends BaseController {
         $db                                 = M('approval');
         $file_db                            = M('approval_files');
         $list                               = $db->find($id);
-        $str_file_ids                       = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id'];
+        if (in_array($list['status'],array(4,5))){ //从终审文件取值
+            $str_file_ids                   = $list['sfile_annex_ids'] ? $list['sfile_id'].','.$list['sfile_annex_ids'] : $list['sfile_id'];
+        }else{ //从初审文件取值
+            $str_file_ids                   = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id'];
+        }
         $file_ids                           = array_filter(explode(',',$str_file_ids));
         $file_list                          = $file_db->where(array('id'=>array('in',$file_ids)))->select();
         $all_users                          = $list['audit_uids'].','.$list['audited_uids'];
@@ -316,7 +320,7 @@ class ApprovalController extends BaseController {
                 if ($res){
                     $this->save_approval_stu($appid,cookie('userid')); //更新审核人信息
                     $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
-                    $num                        += 1;
+                    $num++;
                     $msg                        = '保存成功';
                 }else{
                     $msg                        = '保存失败';
@@ -389,6 +393,7 @@ class ApprovalController extends BaseController {
                 }
 
                 $data                       = array();
+                $data['sure_uid']           = $sure_uid;
                 $data['sfile_id']           = implode(',',$fileid);
                 $data['sfile_annex_ids']    = $fileid_annex ? implode(',',$fileid_annex) : '';
                 $data['status']             = 4; //已提交总经理审核
@@ -397,18 +402,73 @@ class ApprovalController extends BaseController {
                     $num++;
                     $msg                    = '提交成功';
 
-                    $file_name              = implode(',',$newname);
-                    //给发布者发送系统消息
-                    $uid                    = cookie('userid');
-                    $title                  = '您有新的文件待审批，请及时处理!';
-                    $content                = '文件名称：'.$file_name;
-                    $url                    = U('Approval/file_detail',array('id'=>$id));
-                    $user                   = '['.$sure_uid.']';
-                    send_msg($uid,$title,$content,$url,$user,'');
+                    //菜单栏增加红点提示
+                    $unread_db              = M('unread');
+                    $unread_list            = $unread_db->where(array('type'=>P::UNREAD_AUDIT_FILE,'req_id'=>$id))->find();
+                    $unread                 = array();
+                    $unread['userids']      = $unread_list['userids'] ? $unread_list['userids'].','.$sure_uid : $sure_uid;
+                    $unread['read_type']    = 0;
+                    $unread_db->where(array('id'=>$unread_list['id']))->save($unread);
                 }else{
                     $msg                    = '数据保存失败';
                 }
                 $this->returnFunction($num,$msg);
+            }
+
+            //保存最终审核信息
+            if ($saveType == 6){
+                $db                             = M('approval_record');
+                $file_id                        = I('file_id');
+                $appid                          = I('appid');
+                $file_content                   = trim(I('file_content'));
+                $suggest                        = trim(I('suggest'));
+                $num                            = 0;
+
+                if (!$file_id || !$appid){
+                    $msg                        = '获取文件信息失败';
+                    $this->returnFunction($num,$msg);
+                }
+                if (!$file_content){
+                    $msg                        = '请输入原文件内容';
+                    $this->returnFunction($num,$msg);
+                }
+                if (!$suggest){
+                    $msg                        = '请输入您的修改意见';
+                    $this->returnFunction($num,$msg);
+                }
+
+                $data                           = array();
+                $data['file_id']                = $file_id;
+                $data['file_content']           = $file_content;
+                $data['suggest']                = $suggest;
+                $data['create_user']            = cookie('userid');
+                $data['create_user_name']       = cookie('nickname');
+                $data['create_time']            = NOW_TIME;
+                $res                            = $db->add($data);
+                if ($res){
+                    $num++;
+                    $msg                        = '保存成功';
+                }else{
+                    $msg                        = '保存失败';
+                }
+                $this->returnFunction($num,$msg);
+            }
+
+            //最终审核完毕,提交审核
+            if ($saveType == 7){
+                $appid                      = I('appid');
+                if (!$appid){ $this->error('数据错误'); }
+                $db                         = M('approval');
+                $data                       = array();
+                $data['sure_time']          = NOW_TIME;
+                $data['status']             = 5; //总经理审核通过
+                $res                        = $db->where(array('id'=>$appid))->save($data);
+                if ($res){
+                    $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
+                    $this->success('保存成功');
+                }else{
+                    $this->error('提交数据失败');
+                }
             }
         }
     }
@@ -501,13 +561,6 @@ class ApprovalController extends BaseController {
         $appid                              = I('appid');
         $file_id                            = I('fid');
         if (!$appid || !$file_id){ $this->error('获取数据失败'); }
-        
-        P($_GET,false);
-        P('开发中.....');
-
-        /**
-         *
-
         $db                                 = M('approval');
         $file_db                            = M('approval_files');
         $record_db                          = M('approval_record');
@@ -517,7 +570,6 @@ class ApprovalController extends BaseController {
         $server_name                        = $_SERVER['SERVER_NAME'];
         $file_url                           = 'http://'.$server_name.'/'.$file_list['filepath'];
 
-        $this->audit_uids                   = explode(',',$list['audit_uids']);
         $this->list                         = $list;
         $this->file_list                    = $file_list;
         $this->record_list                  = $record_list;
@@ -525,7 +577,6 @@ class ApprovalController extends BaseController {
         $this->file_url                     = $file_url;
 
         $this->display();
-         */
     }
 }
 

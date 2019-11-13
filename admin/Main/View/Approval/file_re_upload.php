@@ -100,7 +100,6 @@
                                     <?php } ?>
                                 </table>
                                 <div id="container1" style="display:none;"></div>
-                                <input type="submit" value="提交">
                             </div>
                         </form>
 
