@@ -105,10 +105,18 @@
                                         <label>建议调整为</label>
                                         <textarea class="form-control" name="suggest"></textarea>
                                     </div>
+                                </form>
+
+                                    <form method="post" action="{:U('Approval/public_save')}" id="sureSubmit">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="saveType" value="8">
+                                        <input type="hidden" name="appid" value="{$list.id}">
+                                    </form>
+
                                     <div class="form-group box-float-12 mt20" style="width:100%; text-align:center;">
                                         <button type="button" onclick="submit_audit_form()" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                        <button type="button" onclick="ConfirmSub('sureSubmit','请确认本批次所有文件(包含附件)已审核完毕,提交后将无法修改审核信息!')" class="btn btn-danger btn-lg" id="lrpd">提交</button>
                                     </div>
-                                </form>
                                 <?php } ?>
                             </div>
 

@@ -318,8 +318,6 @@ class ApprovalController extends BaseController {
                 $data['create_time']            = NOW_TIME;
                 $res                            = $db->add($data);
                 if ($res){
-                    $this->save_approval_stu($appid,cookie('userid')); //更新审核人信息
-                    $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
                     $num++;
                     $msg                        = '保存成功';
                 }else{
@@ -463,12 +461,32 @@ class ApprovalController extends BaseController {
                 $data['sure_time']          = NOW_TIME;
                 $data['status']             = 5; //总经理审核通过
                 $res                        = $db->where(array('id'=>$appid))->save($data);
+
                 if ($res){
+                    $list                   = $db->find($id);
+                    //给发布者发送系统消息
+                    $uid                    = cookie('userid');
+                    $title                  = '关于文件流转终审结果的反馈!';
+                    $content                = '文件名称：'.$list['file_name'];
+                    $url                    = U('Approval/file_detail',array('id'=>$appid));
+                    $user                   = '['.$list['create_user'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+
                     $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
                     $this->success('保存成功');
                 }else{
                     $this->error('提交数据失败');
                 }
+            }
+
+            //提交初审结果
+            if ($saveType == 8){
+                $appid                      = I('appid');
+                if (!$appid){ $this->error('数据错误'); }
+
+                $this->save_approval_stu($appid,cookie('userid')); //更新审核人信息
+                $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
+                $this->success('保存成功');
             }
         }
     }
@@ -502,7 +520,7 @@ class ApprovalController extends BaseController {
             $uid                            = cookie('userid');
             $title                          = '关于文件流转结果的反馈!';
             $content                        = '文件名称：'.$list['file_name'];
-            $url                            = U('Approval/index');
+            $url                            = U('Approval/file_detail',array('id'=>$approval_id));
             $user                           = '['.$list['create_user'].']';
             send_msg($uid,$title,$content,$url,$user,'');
         }
