@@ -164,7 +164,7 @@ class FilesController extends BaseController {
 
         $department = $department?implode(',',$department):'';
         $posts      = $posts?implode(',',$posts):'';
-        $file_tag   = I('file_tag',0);
+        $file_tag   = I('file_tag','');
 		$filename   = I('newname','');
 		$fileid     = I('fileid',0);
 		$pid        = I('pid',0);
@@ -196,7 +196,7 @@ class FilesController extends BaseController {
 				$data['pid']           = $v['pid'];
                 $data['department']    = $department;
                 $data['posts']         = $posts;
-                $data['file_tag']      = $file_tag;
+                $data['file_tag']      = implode(',',$file_tag);
 				
 				//继承父级目录权限
 				if($v['pid']){
@@ -385,14 +385,12 @@ class FilesController extends BaseController {
         $id         = I('id');
         $db         = M('files');
         $file       = $db->where(array('id'=>$id))->find();
-        /*if ($file['file_type']=='0'){
-            $this->error('不能直接编辑文件夹');
-        }*/
 
         if (isset($_POST['dosubmit'])){
             $info               = I('info');
             $department         = I('department');
             $posts              = I('posts');
+            $file_tag           = implode(',',array_filter(I('file_tag')));
 
             if ($department){
                 foreach ($department as $k=>$v){
@@ -409,6 +407,7 @@ class FilesController extends BaseController {
             $posts              = $posts?implode(',',$posts):'';
             $info['department'] = $department;
             $info['posts']      = $posts;
+            $info['file_tag']   = $file_tag;
 
             $res = $db->where(array('id'=>$id))->save($info);
             if ($res){
@@ -430,6 +429,7 @@ class FilesController extends BaseController {
             $file['department'] = array_filter(explode(',',$file['department']));
             $file['posts']      = array_filter(explode(',',$file['posts']));
             $this->file         = $file;
+            $this->tags         = explode(',',$file['file_tag']);
             $this->posts        = M('posts')->where(array('departmentid'=>array('in',$file['department'])))->select();
             $arr_departmentid   = $file['department'];
             $departmentids      = array();

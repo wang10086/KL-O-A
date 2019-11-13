@@ -51,19 +51,19 @@
                         <div class="col-md-12">
                             <span class="mr20">公司文件：</span>
                             <foreach name="file_tag[1]" key="k" item="v">
-                                <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
+                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]"> &nbsp;{$v}</span>
                             </foreach>
                         </div>
                         <div class="col-md-12">
                             <span class="mr20">部门文件：</span>
                             <foreach name="file_tag[2]" key="k" item="v">
-                                <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
+                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]"> &nbsp;{$v}</span>
                             </foreach>
                         </div>
                         <div class="col-md-12">
                             <span class="mr20">岗位文件：</span>
                             <foreach name="file_tag[3]" key="k" item="v">
-                                <span class="lebal-span"><input type="radio" value="{$k}" name="file_tag"> &nbsp;{$v}</span>
+                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]"> &nbsp;{$v}</span>
                             </foreach>
                         </div>
                     </div>
