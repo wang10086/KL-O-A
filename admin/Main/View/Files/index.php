@@ -72,14 +72,18 @@
                                         <input type="checkbox"  value="{$row.id}" class="accessdata" />
                                         </td>
                                         <td><a href="{$row.url}" {$row.target}>{$row.file_name}</a></td>
-                                        <td>{$row.file_type}</td>
+                                        <td>{$row.file_types}</td>
                                         <td><if condition="$row['file_ext']">{$row.file_ext}</if></td>
                                         <td><if condition="$row['file_size']">{:fsize($row['file_size'])}</if></td>
                                         <td>{$row.est_user}</td>
                                         <td>{$row.est_time|date='Y-m-d H:i:s',###}</td>
                                         <if condition="rolemenu(array('Files/upd_file'))">
                                             <td class="taskOptions">
-                                                <a href="{:U('Files/upd_file',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                <if condition="$row['file_type'] eq 0">
+                                                    <a href="javascript:edit_dir('/index.php?m=Main&c=Files&a=edit_dir&id='+{$row.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                    <else />
+                                                    <a href="{:U('Files/upd_file',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                </if>
                                             </td>
                                         </if>
                                     </tr>
@@ -300,6 +304,25 @@
 					}
 				});	
 			}
+
+			//编辑文件夹
+            function edit_dir(obj) {
+                art.dialog.open(obj, {
+                    lock:true,
+                    id:'audit_win',
+                    title: '编辑文件夹',
+                    width:500,
+                    height:200,
+                    okVal: '提交',
+                    ok: function () {
+                        this.iframe.contentWindow.gosubmint();
+                        return false;
+                    },
+                    cancelVal:'取消',
+                    cancel: function () {
+                    }
+                });
+            }
 
 			
 			</script>

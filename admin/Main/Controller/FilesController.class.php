@@ -57,7 +57,7 @@ class FilesController extends BaseController {
 		
 		$datalist = $db->where($where)->order($this->orders('file_type'))->select();
 		foreach($datalist as $k=>$v){
-			$datalist[$k]['file_type']	 = $this->type[$v['file_type']];
+			$datalist[$k]['file_types']	 = $this->type[$v['file_type']];
 			if($v['file_type']==0){
 				$datalist[$k]['url']         = U('Files/index',array('pid'=>$v['id']));
 				$datalist[$k]['target']      = '';
@@ -68,6 +68,7 @@ class FilesController extends BaseController {
 		}
 		
 		$this->datalist = $datalist;
+		//P($datalist);
 		
 		//文件路径
 		$this->dir_path = array();	
@@ -384,9 +385,9 @@ class FilesController extends BaseController {
         $id         = I('id');
         $db         = M('files');
         $file       = $db->where(array('id'=>$id))->find();
-        if ($file['file_type']=='0'){
+        /*if ($file['file_type']=='0'){
             $this->error('不能直接编辑文件夹');
-        }
+        }*/
 
         if (isset($_POST['dosubmit'])){
             $info               = I('info');
@@ -440,6 +441,29 @@ class FilesController extends BaseController {
             $this->display();
         }
     }
-	
-    
+
+    //编辑文件夹
+    public function edit_dir(){
+        $db                         = M('files');
+        if (isset($_POST['dosubmint'])){
+            $id                     = I('id');
+            $file_name              = trim(I('file_name'));
+            if (!$id || !$file_name){
+                if (!$id) $msg      = '获取数据失败';
+                if (!$file_name) $msg = '文件夹名称不能为空';
+                $this->msg          = $msg;
+                $this->display("Rights:audit_ok");
+            }
+            $res                    = $db->where(array('id'=>$id))->setField('file_name',$file_name);
+            $msg                    = $res ? '保存成功' : '保存数据失败';
+            $this->msg              = $msg;
+            $this->display("Rights:audit_ok");
+        }else{
+            $id                     = I('id');
+            if (!$id){ $this->error('获取数据失败'); }
+            $list                   = $db->find($id);
+            $this->list             = $list;
+            $this->display();
+        }
+    }
 }
