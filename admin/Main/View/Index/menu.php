@@ -232,7 +232,7 @@
 
 
                         <if condition="rolemenu(array('Files/index','Approval/index'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:ison(CONTROLLER_NAME, 'Approval')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Files')} {:ison(CONTROLLER_NAME, 'File')} {:ison(CONTROLLER_NAME, 'Approval')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-folder-open"></i>
                                 <span>文件管理</span>
