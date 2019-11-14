@@ -22,7 +22,7 @@
                                     <select name="department" onchange="get_depart()" id="department">
                                         <option value="" selected disabled>请选择</option>
                                         <foreach name="departments" key="k" item="v">
-                                            <option value="{$k}" <?php if ($dep==$k) echo "selected"; ?>>{$v}</option>
+                                            <option value="{$k}" <?php if ($department==$k) echo "selected"; ?>>{$v}</option>
                                         </foreach>
                                     </select>
                                 </div>
@@ -30,7 +30,15 @@
                                 <div class="content-neck-body">
                                     <lebal>岗位</lebal>&emsp14;
                                     <select name="posts" id="posts">
-                                        <option value="">请先选择部门</option>
+                                        <?php if ($department){ ?>
+                                            <script type="text/javascript">
+                                                $(function () {
+                                                    get_depart();
+                                                })
+                                            </script>
+                                        <?php }else{ ?>
+                                            <option value="">请先选择部门</option>
+                                        <?php } ?>
                                     </select>
                                 </div>
 
