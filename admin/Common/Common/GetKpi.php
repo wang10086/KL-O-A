@@ -1285,7 +1285,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $op_average_sum                 = array_sum(array_filter(explode(',',str_replace('%','',implode(',',array_column($shishi_lists,'op_average'))))));
         $score_average                  = round($op_average_sum/$score_num,2).'%'; //已调查顾客满意度
         $shishi_num                     = count($shishi_lists); //所有实施团的数量(包括未调查的数量)
-        $average                        = round($op_average_sum/$shishi_num,2)/100; //全部平均值
+        $average                        = $shishi_num ? round($op_average_sum/$shishi_num,2)/100 : 0; //全部平均值
 
         if (($shishi_num==0 && $gross_margin && $gross_margin['monthTarget']==0) || ($shishi_true_num != 0 && $shishi_num==0)) { //当月目标为0 有发起团, 无满意度调查(发起团不做满意度调查,地接团做满意度调查)
             $complete = '100%';
