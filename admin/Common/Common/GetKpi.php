@@ -3962,7 +3962,7 @@ function get_yw_department(){
         foreach ($lists as $k=>$v){
             $eval                               = M('op_eval')->where(array('op_id'=>$v['op_id'],'type'=>$type))->find();
             $dimension                          = $eval['dimension'] ? $eval['dimension'] : ($type == 2 ? 5 : 4);
-            if ($eval) {
+            //if ($eval) {
                 $lists[$k]['input_userid']      = $eval['input_userid'];
                 $lists[$k]['input_username']    = $eval['input_username'];
                 $lists[$k]['account_id']        = $eval['account_id'];
@@ -3975,12 +3975,13 @@ function get_yw_department(){
                 $lists[$k]['DD']                = $eval['DD'];
                 $lists[$k]['EE']                = $eval['EE'];
                 $op_defen                       = $eval['AA'] + $eval['BB'] + $eval['CC'] + $eval['DD'] + $eval['EE'];
+                $op_defen                       = $op_defen ? $op_defen : ((5*$dimension)/2); //默认50%
                 $op_zongfen                     = 5*$dimension; //考核维度
                 $lists[$k]['average']           = (round($op_defen/$op_zongfen,4)*100).'%';
                 $score_num++;
-                $defen                          += $eval['AA'] + $eval['BB'] + $eval['CC'] + $eval['DD'] + $eval['EE'];
+                $defen                          += $op_defen;
                 $score_zongfen                  += 5*$dimension;
-            }
+            //}
             $sum_num++;
             $sum_zongfen                        += 5*$dimension;
         }

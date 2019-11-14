@@ -2795,7 +2795,7 @@ function updatekpi($month,$user){
                             $url            = '';
                         }
 
-                        //月度顾客满意度(业务)
+                        //月度顾客满意度-业务岗人员
                         if($v['quota_id']==124){
                             //获取当月月度累计毛利额目标值(如果毛利额系数目标为0,则不考核)
                             $gross_margin   = get_gross_margin($v['month'],$v['user_id'],1);
