@@ -194,64 +194,6 @@ class FileController extends BasepubController {
         $this->display('Files/company');
     }
 
-    //岗位作业指导书
-    /*public function instruction(){
-
-        $department         = I('department');
-        $posts              = I('posts');
-        $this->dep          = $department;
-        $this->post         = $posts;
-
-        $db                 = M('files');
-        if (cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            $where          = array();
-            if($department){
-                $department         = '['.$department.']';
-                $where['department']= array('like',"%$department%");
-            }
-            if ($posts){
-                $posts              = '['.$posts.']';
-                $where['posts']     = array('like',"%$posts%");
-            }
-
-        }else{
-            $where              = array();
-            $department         = '['.cookie('department').']';
-            $where['department']= array('like',"%$department%");
-            $posts              = '['.cookie('posts').']';
-            $where['posts']     = array('like',"%$posts%");
-        }
-        //部门职责
-        $where['file_tag']      = 1;
-        $pagecount = $db->where($where)->count();
-        $page = new Page($pagecount, P::PAGE_SIZE);
-        $this->zhize_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $this->zhize            = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order('est_time desc')->select();
-        //岗位说明
-        $where['file_tag']      = 2;
-        $pagecount = $db->where($where)->count();
-        $page = new Page($pagecount, P::PAGE_SIZE);
-        $this->shuoming_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $this->shuoming         = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order('est_time desc')->select();
-        //相关规程
-        $where['file_tag']      = 3;
-        $pagecount = $db->where($where)->count();
-        $page = new Page($pagecount, P::PAGE_SIZE);
-        $this->guicheng_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $this->guicheng         = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order('est_time desc')->select();
-        //相关制度
-        $where['file_tag']      = 4;
-        $pagecount = $db->where($where)->count();
-        $page = new Page($pagecount, P::PAGE_SIZE);
-        $this->zhidu_pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $this->zhidu            = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order('est_time desc')->select();
-
-        $this->departments      = M('salary_department')->getField('id,department',true);           //部门
-        $this->posts            = M('posts')->where(array('post_name'=>array('neq','')))->select(); //岗位
-
-        $this->display('Files/instruction');
-    }*/
-
     //公司通用
     public function companyFile(){
         $this->title('公司通用文件');
