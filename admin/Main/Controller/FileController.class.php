@@ -11,7 +11,7 @@ class FileController extends BasepubController {
     {
         die();
     }
-    
+
     /*
     public function upload_img ()
     {
@@ -19,7 +19,7 @@ class FileController extends BasepubController {
         $info = $upload->upload();
         $rs = array();
         if ($info) {
-            
+
             foreach ($info as $row) {
                 $rs['rs'] = 'ok';
                 $rs['picurl'] = $upload->rootPath . $row['savepath'] . $row['savename'];
@@ -27,7 +27,7 @@ class FileController extends BasepubController {
                 break;
             }
             echo json_encode($rs);
-            
+
         } else {
             $rs['rs']  = 'err';
             $rs['msg'] = '上传失败';
@@ -35,7 +35,7 @@ class FileController extends BasepubController {
         }
     }
     */
-    
+
     public function upload_file ()
     {
         $db = M('attachment');
@@ -54,7 +54,7 @@ class FileController extends BasepubController {
                 } else {
                     $att['isimage'] = 0;
                 }
-                
+
                 $att['filesize']    = $row['size'];
                 $att['fileext']     = $row['ext'];
                 $att['filename']    = $row['name'];
@@ -65,34 +65,34 @@ class FileController extends BasepubController {
                 $att['uploadip']    = get_client_ip();
                 $att['rel_id']      = 0;
                 $att['hashcode']    = $row['md5'];
-                
+
                 $aid = $db->add($att);
                 $rs['aid'] = $aid;
 
                 break;
             }
-            
+
             echo json_encode($rs);
-    
+
         } else {
             $rs['rs']  = 'err';
             $rs['msg'] = '上传失败';
             echo json_encode($rs);
         }
     }
-    
+
     public function upload_file_ck ()
     {
         if (!isset($_GET['CKEditorFuncNum'])) {
             die();
         }
-        
+
         $db = M('attachment');
         $upload = new Upload(C('UPLOAD_FILE_CFG'));
         $info = $upload->upload();
         $att = array();
         $rs = array();
-    
+
         if ($info) {
             foreach ($info as $row) {
                 $rs['rs'] = 'ok';
@@ -103,7 +103,7 @@ class FileController extends BasepubController {
                 } else {
                     $att['isimage'] = 0;
                 }
-    
+
                 $att['filesize']    = $row['size'];
                 $att['fileext']     = $row['ext'];
                 $att['filename']    = $row['name'];
@@ -114,20 +114,20 @@ class FileController extends BasepubController {
                 $att['uploadip']    = get_client_ip();
                 $att['rel_id']      = 0;
                 $att['hashcode']    = $row['md5'];
-    
+
                 $aid = $db->add($att);
                 $rs['aid'] = $aid;
-    
+
                 break;
             }
-    
+
             $path = $rs['fileurl'];
             $CKEditorFuncNum = $_GET['CKEditorFuncNum'];
-            
+
             die("<script type=\"text/javascript\">
 					    window.parent.CKEDITOR.tools.callFunction(" . $CKEditorFuncNum . ",'" . $path . "','');
                         </script>");
-    
+
         } else {
             die("<script type=\"text/javascript\">alert('". $upload->getErrorMsg() ."');</script>");
         }
@@ -257,7 +257,7 @@ class FileController extends BasepubController {
         $this->title('公司通用文件');
         $db                             = M('files');
         $file_type                      = C('FILE_TAG')[1];
-        $pin                            = I('pin',0);
+        $pin                            = I('pin',1);
         $department                     = I('department',0);
         $posts                          = I('posts',0);
         $fileName                       = trim(I('fileName'));
@@ -266,16 +266,16 @@ class FileController extends BasepubController {
 
         $where                          = array();
         $where['file_type']             = 1; //文件
-        $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
+        $where['file_tag']              = array('like','%['.$pin.']%');
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
         if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            $department                     = $department ? '['.$department.']' : '['.session('department').']';
-            $posts                          = $posts ? '['.$posts.']' : '['.session('posts').']';
-            $where['_string']               = "(department like '%$department%') OR ( posts like '%$posts%')";
+            $new_department             = $department ? '['.$department.']' : '['.session('department').']';
+            $new_posts                  = $posts ? '['.$posts.']' : '['.session('posts').']';
+            $where['_string']           = "(department like '%$new_department%') OR ( posts like '%$new_posts%')";
         }else{
-            $department                     = '['.session('department').']';
-            $posts                          = '['.session('posts').']';
-            $where['_string']               = "(department like '%$department%') OR ( posts like '%$posts%')";
+            $new_department             = '['.session('department').']';
+            $new_posts                  = '['.session('posts').']';
+            $where['_string']           = "(department like '%$new_department%') OR ( posts like '%$new_posts%')";
         }
 
         $pagecount                      = $db->where($where)->count();
@@ -307,7 +307,7 @@ class FileController extends BasepubController {
 
         $where                          = array();
         $where['file_type']             = 1; //文件
-        $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
+        $where['file_tag']              = array('like','%['.$pin.']%');
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
         if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             $new_department                 = $department ? '['.$department.']' : '['.session('department').']';
@@ -346,7 +346,7 @@ class FileController extends BasepubController {
 
         $where                          = array();
         $where['file_type']             = 1; //文件
-        $where['file_tag']              = $pin ? $pin : array('in',$file_tags);
+        $where['file_tag']              = array('like','%['.$pin.']%');
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
         if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             //$department                     = $department ? '['.$department.']' : '['.session('department').']';
@@ -392,5 +392,5 @@ class FileController extends BasepubController {
         $title                  = array('文件名称','上传时间');
         exportexcel($data,$title,'文件信息');
     }
-    
+
 }

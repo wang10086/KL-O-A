@@ -4,17 +4,17 @@
         window.gosubmint= function(){
 			var rs = new Array();
 			$('.un_upload').each(function(index, element) {
-				
+
 					var obj = {};
 					obj.pid         = $(element).find(".pid_val").val();
 					obj.level       = $(element).find(".level_val").val();
 					obj.filename    = $(element).find(".file_val").val();
 					obj.fileid      = $(element).find(".id_val").val();
 					rs.push(obj);
-			
+
 			});
-			return rs;	
-		 } 
+			return rs;
+		 }
         </script>
 <aside class="right-side">
     <section class="content-header">
@@ -62,19 +62,19 @@
                         <div class="col-md-12">
                             <span class="mr20">公司文件：</span>
                             <foreach name="file_tag[1]" key="k" item="v">
-                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]" <?php if (in_array($k,$tags)) echo "checked"; ?>> &nbsp;{$v}</span>
+                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]" <?php if (in_array('['.$k.']',$tags)) echo "checked"; ?>> &nbsp;{$v}</span>
                             </foreach>
                         </div>
                         <div class="col-md-12">
                             <span class="mr20">部门文件：</span>
                             <foreach name="file_tag[2]" key="k" item="v">
-                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]" <?php if (in_array($k,$tags)) echo "checked"; ?>> &nbsp;{$v}</span>
+                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]" <?php if (in_array('['.$k.']',$tags)) echo "checked"; ?>> &nbsp;{$v}</span>
                             </foreach>
                         </div>
                         <div class="col-md-12">
                             <span class="mr20">岗位文件：</span>
                             <foreach name="file_tag[3]" key="k" item="v">
-                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]" <?php if (in_array($k,$tags)) echo "checked"; ?>> &nbsp;{$v}</span>
+                                <span class="lebal-span"><input type="checkbox" value="{$k}" name="file_tag[]" <?php if (in_array('['.$k.']',$tags)) echo "checked"; ?>> &nbsp;{$v}</span>
                             </foreach>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
 </aside>
 
         <include file="Index:footer" />
-        
+
         <script type="text/javascript">
         $(document).ready(function(e) {
             $('#supplierlist').show();
@@ -134,7 +134,7 @@
 				multipart_params: {
 					 catid: 1
 				},
-				
+
 				filters : {
 					max_file_size : '100mb',
 					/*
@@ -143,38 +143,38 @@
 					]
 					*/
 				},
-	
+
 				init: {
 					PostInit: function() {
 						//$('div.moxie-shim').width(104).height(67);
 					},
-	
+
 					FilesAdded: function(up, files) {
 						plupload.each(files, function(file) {
 							var time = new Date();
 							var month = time.getMonth() +1;
 							if (month < 10) month = "0" + month;
-							
+
 							var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
 							$('#flist').append(
 									'<tr id="' + file.id + '"  valign="middle" class="un_upload"><td class="iptval">'
 									+ '<input type="hidden" name="pid_' + file.id + '" value="{$pid}" class="pid_val" />'
             						+ '<input type="hidden" name="level_' + file.id + '" value="{$level}" class="level_val" />'
 									+ '<input type="text" name="nm_' + file.id + '" value="'+ file.name +'" class="form-control file_val" />'
-									+ '</td> <td>' + plupload.formatSize(file.size) +'' 
-									+ '</td> <td>' 
-									+ '<div class="progress sm"> ' 
-									+ '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">' 
+									+ '</td> <td>' + plupload.formatSize(file.size) +''
+									+ '</td> <td>'
+									+ '<div class="progress sm"> '
+									+ '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">'
 									+ '</div></div></td>'
 									+ '<td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(\''+ file.id +'\');"><i class="fa fa-times"></i>删除</a></td></tr>'
 								);
-	
+
 						});
-	
+
 						uploader.start();
-						
+
 					},
-	
+
 					FileUploaded: function(up, file, res) {
 						var rs = eval('(' + res.response +')');
 						if (rs.rs ==  'ok') {
@@ -187,19 +187,19 @@
 						} else {
 							alert('上传文件失败，请重试');
 						}
-	
+
 					},
-	
+
 					UploadProgress: function(up, file) {
 						$('div[rel=' + file.id + ']').css('width', file.percent + '%');
 					},
-	
+
 					Error: function(up, err) {
 						alert(err.code + ": " + err.message);
 					}
 				}
 			});
-	
+
 			uploader.init();
             reload();
             initdepartment(); //初始化部门信息
@@ -291,7 +291,7 @@
                 }
             })
         }
-		
+
 		function removeThisFile(fid) {
 			if (confirm('确定要删除此附件吗？')) {
 				$('#' + fid).empty().remove();
@@ -301,4 +301,3 @@
 
 
         </script>
-        
