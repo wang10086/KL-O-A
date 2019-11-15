@@ -316,8 +316,8 @@ function change_score_content() {
                         }else if(account_id == 13){ //综合部经理(杜莹)
                             var content = '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
-                                '<input type="hidden" name="data[AA]" value="及时性">'+
-                                '<label>及时性：</label>'+
+                                '<input type="hidden" name="data[AA]" value="工作及时性">'+
+                                '<label>工作及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -327,8 +327,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[BB]" value="态度">'+
-                                '<label>态度：</label>'+
+                                '<input type="hidden" name="data[BB]" value="工作态度">'+
+                                '<label>工作态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -349,8 +349,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;很低</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[DD]" value="工作要求准确性">'+
-                                '<label>工作要求准确性：</label>'+
+                                '<input type="hidden" name="data[DD]" value="宣传文案需求符合度">'+
+                                '<label>宣传文案需求符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;超出需求</span>&emsp;&emsp;'+
