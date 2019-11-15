@@ -26,21 +26,15 @@
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
-                                <div class="form-group col-md-12 viwe">
-                                    <p>文件名：{$file_list.newFileName}</p>
-                                </div>
+                                <div class="form-group col-md-12 viwe">文件名：{$file_list.newFileName}</div>
 
-                                <div class="form-group col-md-4 viwe">
-                                    <p>上传人：{$list.create_user_name} </p>
-                                </div>
+                                <div class="form-group col-md-4 viwe">起草部门 : {$department.department}</div>
+                                <div class="form-group col-md-4 viwe">拟稿人：{$list.create_user_name}</div>
+                                <div class="form-group col-md-4 viwe">文件类型：<?php echo $list['type'] == 1 ? '新编' : '修改'; ?></div>
 
-                                <div class="form-group col-md-4 viwe">
-                                    <p>上传时间：{$list.create_time|date='Y-m-d H:i',###}</p>
-                                </div>
-
-                                <div class="form-group col-md-4 viwe">
-                                    <p>计划结束时间：{$list.plan_time|date='Y-m-d H:i',###}</p>
-                                </div>
+                                <div class="form-group col-md-4 viwe">计划流转工作日：{$list.day} 天</div>
+                                <div class="form-group col-md-4 viwe">上传时间：{$list.create_time|date='Y-m-d H:i',###}</div>
+                                <div class="form-group col-md-4 viwe">计划结束时间：{$list.plan_time|date='Y-m-d H:i',###}</div>
 
                                 <div class="form-group col-md-12" style="margin-top:20px;">
                                     <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">文件说明</label>
@@ -117,9 +111,12 @@
                                         <button type="button" onclick="ConfirmSub('sureSubmit','请确认本批次所有文件(包含附件)已审核完毕,提交后将无法修改审核信息!')" class="btn btn-danger btn-lg" id="lrpd">提交</button>
                                     </div>
                                 <?php } ?>
-                            </div>
 
-                            <div class="form-group mt40"></div>
+                                <div class="form-group col-md-12">
+                                    <button class="btn btn-default" style="float:right" onclick="print_file_audit_record({$list.id},{$file_list.id},`{:U('Approval/print_file_audit_record',array('appid'=>$list[id],'fileid'=>$file_list[id]))}`)"> <i class="fa fa-print"></i> 打印</button>
+                                </div>
+
+                            </div>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
                 </div>
@@ -176,6 +173,15 @@
             cancel: function () {
             }
         });
+    }
+
+    //打印文件审核记录
+    function print_file_audit_record(appid,fileid,url) {
+        if (!appid || !fileid){
+            art_show_msg('获取审核信息失败',3);
+            return false;
+        }
+        window.location.href = url;
     }
 </script>
 

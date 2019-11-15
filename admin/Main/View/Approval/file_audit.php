@@ -26,21 +26,15 @@
                         </div><!-- /.box-header -->
                         <div class="box-body">
                             <div class="content">
-                                <div class="form-group col-md-12 viwe">
-                                    <p>文件名：{$file_list.newFileName}</p>
-                                </div>
+                                <div class="form-group col-md-12 viwe">文件名：{$file_list.newFileName}</div>
 
-                                <div class="form-group col-md-4 viwe">
-                                    <p>上传人：{$list.create_user_name} </p>
-                                </div>
+                                <div class="form-group col-md-4 viwe">起草部门 : {$department.department}</div>
+                                <div class="form-group col-md-4 viwe">拟稿人：{$list.create_user_name}</div>
+                                <div class="form-group col-md-4 viwe">文件类型：<?php echo $list['type'] == 1 ? '新编' : '修改'; ?></div>
 
-                                <div class="form-group col-md-4 viwe">
-                                    <p>上传时间：{$list.create_time|date='Y-m-d H:i',###}</p>
-                                </div>
-
-                                <div class="form-group col-md-4 viwe">
-                                    <p>计划结束时间：{$list.plan_time|date='Y-m-d H:i',###}</p>
-                                </div>
+                                <div class="form-group col-md-4 viwe">计划流转工作日：{$list.day} 天</div>
+                                <div class="form-group col-md-4 viwe">上传时间：{$list.create_time|date='Y-m-d H:i',###}</div>
+                                <div class="form-group col-md-4 viwe">计划结束时间：{$list.plan_time|date='Y-m-d H:i',###}</div>
 
                                 <div class="form-group col-md-12" style="margin-top:20px;">
                                     <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">文件说明</label>

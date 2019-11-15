@@ -51,29 +51,16 @@
                                         </table>
 
                                         <div class="form-group col-md-12 mt20"></div>
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>上传人：{$list.create_user_name}</p>
-                                        </div>
+                                        <div class="form-group col-md-4">起草部门 : {$department.department}</div>
+                                        <div class="form-group col-md-4 viwe">拟稿人：{$list.create_user_name}</div>
+                                        <div class="form-group col-md-4 viwe">文件类型：<?php echo $list['type'] == 1 ? '新编' : '修改'; ?></div>
 
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>已审核人：{$audited_users.str_users}</p>
-                                        </div>
+                                        <div class="form-group col-md-4 viwe">已审核人：{$audited_users.str_users}</div>
+                                        <div class="form-group col-md-4 viwe">待审核人：{$audit_users.str_users}</div>
+                                        <div class="form-group col-md-4 viwe">计划流转工作日：{$list.day} 天</div>
 
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>待审核人：{$audit_users.str_users}</p>
-                                        </div>
-
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>计划流转工作日：{$list.day} 天</p>
-                                        </div>
-
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>上传时间：{$list.create_time|date='Y-m-d H:i',###}</p>
-                                        </div>
-
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>计划结束时间：{$list.plan_time|date='Y-m-d H:i',###}</p>
-                                        </div>
+                                        <div class="form-group col-md-4 viwe">上传时间：{$list.create_time|date='Y-m-d H:i',###}</div>
+                                        <div class="form-group col-md-8 viwe">计划结束时间：{$list.plan_time|date='Y-m-d H:i',###}</div>
 
                                         <div class="form-group col-md-12" style="margin-top:20px;">
                                             <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">文件说明</label>
@@ -84,12 +71,12 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <?php if (in_array($list['status'],array(4,5))){ ?>
+                            <?php /*if (in_array($list['status'],array(4,5))){ */?><!--
                             <div class="box box-primary">
                                 <div class="box-header">
                                     <h3 class="box-title">查看初审文件信息</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
-                                </div><!-- /.box-header -->
+                                </div>
                                 <div class="box-body">
                                     <div class="content">
                                         <table class="table table-bordered dataTable fontmini">
@@ -102,18 +89,18 @@
                                                     <td>
                                                         <a href="{:U('Approval/file_audit',array('appid'=>$list['id'],'fid'=>$row['id']))}" title="审核">{$row.newFileName}</a>
                                                     </td>
-                                                    <td><?php if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } ?></td>
+                                                    <td><?php /*if ($row['id'] == $list['file_id']){ echo '主文件'; }else{ echo "附件"; } */?></td>
                                                 </tr>
                                             </foreach>
                                         </table>
                                     </div>
-                                </div><!-- /.box-body -->
-                            </div><!-- /.box -->
-                            <?php } ?>
+                                </div>
+                            </div>
+                            --><?php /*} */?>
                         </div>
                     </div>
-                </section><!-- /.content -->
-            </aside><!-- /.right-side -->
+                </section>
+            </aside>
   </div>
 </div>
 

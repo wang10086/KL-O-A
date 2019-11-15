@@ -22,14 +22,22 @@
                             <input type="hidden" name="saveType" value="1">
                             <input type="hidden" name="id" value="{$list.id}">
 
-                            <div class="form-group box-float-6">
+                            <div class="form-group box-float-4">
                                 <label>文件上传人</label>：
                                 <input type="text" name="info[create_user_name]" value="<?php echo $row['create_user_name'] ? $row['create_user_name'] : session('nickname'); ?>" class="form-control" readonly />
                                 <input type="hidden" name="info[create_user]" value="<?php echo $row['create_user'] ? $row['create_user'] : session('userid'); ?>" class="form-control" readonly />
                             </div>
-                            <div class="form-group box-float-6">
+                            <div class="form-group box-float-4">
                                 <label>审核所需工作日（单位：天）</label>：
                                 <input type="text" name="info[day]" value="{$list.day}" class="form-control" />
+                            </div>
+
+                            <div class="form-group box-float-4">
+                                <label>文件类型</label>：
+                                <select class="form-control" name="info[type]">
+                                    <option value="1" <?php if ($list['type'] == 1){ echo "selected"; }?>>新编</option>
+                                    <option value="2" <?php if ($list['type'] == 2){ echo "selected"; }?>>修改</option>
+                                </select>
                             </div>
 
                             <div class="form-group box-float-12 mt20" id="satisfaction_box">
@@ -362,4 +370,3 @@
 
 
 </script>
-        

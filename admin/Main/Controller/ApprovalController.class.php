@@ -48,6 +48,8 @@ class ApprovalController extends BaseController {
             $this->audit_users      = $audit_users;
         }
         $this->userkey              = get_username();
+
+        //P($list);
         $this->display();
     }
 
@@ -145,22 +147,24 @@ class ApprovalController extends BaseController {
         $db                                 = M('approval');
         $file_db                            = M('approval_files');
         $list                               = $db->find($id);
+        $department                         = M('salary_department')->find($list['create_user_department']);
         if (in_array($list['status'],array(4,5))){ //从终审文件取值
             $str_file_ids                   = $list['sfile_annex_ids'] ? $list['sfile_id'].','.$list['sfile_annex_ids'] : $list['sfile_id'];
-            $old_str_file_ids               = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id']; //初审文件
+            //$old_str_file_ids               = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id']; //初审文件
         }else{ //从初审文件取值
             $str_file_ids                   = $list['file_annex_ids'] ? $list['file_id'].','.$list['file_annex_ids'] : $list['file_id'];
         }
         $file_ids                           = array_filter(explode(',',$str_file_ids));
         $file_list                          = $file_db->where(array('id'=>array('in',$file_ids)))->select();
         $all_users                          = $list['audit_uids'].','.$list['audited_uids'];
-        if ($old_str_file_ids){
+        /*if ($old_str_file_ids){
             $old_file_ids                   = array_filter(explode(',',$old_str_file_ids));
             $old_file_list                  = $file_db->where(array('id'=>array('in',$old_file_ids)))->select();
             $this->old_file_list            = $old_file_list;
-        }
+        }*/
 
         $this->list                         = $list;
+        $this->department                   = $department;
         $this->file_list                    = $file_list;
         $this->status                       = C('FILE_STATUS');
         $this->all_audit_users              = $this->get_audit_users($all_users); //全部人员信息
@@ -179,6 +183,7 @@ class ApprovalController extends BaseController {
         $file_db                            = M('approval_files');
         $record_db                          = M('approval_record');
         $list                               = $db->find($appid);
+        $department                         = M('salary_department')->find($list['create_user_department']);
         $file_list                          = $file_db->find($file_id);
         $record_list                        = $record_db->where(array('file_id'=>$file_id))->order('id asc')->select();
         $server_name                        = $_SERVER['SERVER_NAME'];
@@ -186,6 +191,7 @@ class ApprovalController extends BaseController {
 
         $this->audit_uids                   = explode(',',$list['audit_uids']);
         $this->list                         = $list;
+        $this->department                   = $department;
         $this->file_list                    = $file_list;
         $this->record_list                  = $record_list;
         $this->status                       = C('FILE_STATUS');
@@ -253,10 +259,12 @@ class ApprovalController extends BaseController {
                 $save['audit_uids']         = $audit_uids;
                 $save['create_user']        = $info['create_user'];
                 $save['create_user_name']   = $info['create_user_name'];
+                $save['type']               = $info['type'];
                 $save['status']             = 0; //未提交
                 if ($id){
                     $res                    = $db->where(array('id'=>$id))->save($save);
                 }else{
+                    $save['create_user_department'] = session('department');
                     $save['create_time']    = NOW_TIME;
                     $res                    = $db->add($save);
                 }
@@ -520,6 +528,9 @@ class ApprovalController extends BaseController {
         $data                               = array();
         $data['audit_uids']                 = implode(',',$new_audit_uids);
         $data['audited_uids']               = implode(',',$audited_uids);
+        if (!$data['audit_uids']){
+            $data['audited_time']           = NOW_TIME;
+        }
         if(!$data['audit_uids']){
             $data['status']                 = 3; //流转完成,已返回至发布者
             //给发布者发送系统消息
@@ -566,12 +577,12 @@ class ApprovalController extends BaseController {
             if ($list['status'] != 3){ $this->error('非法操作'); }
             $annex_ids              = $list['file_annex_ids'] ? explode(',',$list['file_annex_ids']) : '';
             $audit_uids             = $list['audit_uids'] ? explode(',',$list['audit_uids']) : '';
-            //$file                   = $file_db -> where(array('id'=>$list['file_id']))->find();
-            //$annex_files            = $file_db -> where(array('id'=>array('in',$annex_ids)))->select();
+            $file                   = $file_db -> where(array('id'=>$list['file_id']))->find();
+            $annex_files            = $file_db -> where(array('id'=>array('in',$annex_ids)))->select();
             $audit_users            = M('account')->where(array('id'=>array('in',$audit_uids)))->field('id,nickname')->select();
             $this->list             = $list;
-            //$this->file             = $file; //主文件
-            //$this->annex_files      = $annex_files; //附件
+            $this->file             = $file; //主文件
+            $this->annex_files      = $annex_files; //附件
             $this->audit_users      = $audit_users;
         }
         $this->userkey              = get_username();
@@ -589,17 +600,40 @@ class ApprovalController extends BaseController {
         $file_db                            = M('approval_files');
         $record_db                          = M('approval_record');
         $list                               = $db->find($appid);
+        $department                         = M('salary_department')->find($list['create_user_department']);
         $file_list                          = $file_db->find($file_id);
         $record_list                        = $record_db->where(array('file_id'=>$file_id))->order('id asc')->select();
         $server_name                        = $_SERVER['SERVER_NAME'];
         $file_url                           = 'http://'.$server_name.'/'.$file_list['filepath'];
 
         $this->list                         = $list;
+        $this->department                   = $department;
         $this->file_list                    = $file_list;
         $this->record_list                  = $record_list;
         $this->status                       = C('FILE_STATUS');
         $this->file_url                     = $file_url;
 
+        $this->display();
+    }
+
+    //打印文件审批单(文件审核记录)
+    public function print_file_audit_record(){
+        $appid                              = I('appid');
+        $file_id                            = I('fileid');
+        if (!$appid || !$file_id){ $this->error('获取数据错误'); }
+        $db                                 = M('approval');
+        $file_db                            = M('approval_files');
+        $record_db                          = M('approval_record');
+        $list                               = $db->find($appid);
+        $department                         = M('salary_department')->find($list['create_user_department']);
+        $file_list                          = $file_db->find($file_id);
+        $record_list                        = $record_db->where(array('file_id'=>$file_id))->order('id asc')->select();
+
+        $this->list                         = $list;
+        $this->department                   = $department;
+        $this->file_list                    = $file_list;
+        $this->record_list                  = $record_list;
+        $this->status                       = C('FILE_STATUS');
         $this->display();
     }
 }
