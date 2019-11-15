@@ -27,7 +27,7 @@
                 <tr>
                     <td class="td_title td">相关人员修改意见</td>
                     <td colspan="5" class="td_con td">
-                        <div style="min-height: 300px">
+                        <div style="min-height: 500px">
                             <foreach name="record_list" key="k" item="v">
                                 <div class="mt10 record_detail_box">
                                     <P class="record_detail_title"><span class="black">{$k+1}</span>、审核人：{$v['create_user_name']} | 审核时间：{$v['create_time']|date='Y-m-d H:i',###}</P>
