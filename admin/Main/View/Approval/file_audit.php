@@ -112,9 +112,11 @@
                                         <button type="button" onclick="ConfirmSub('sureSubmit','请确认本批次所有文件(包含附件)已审核完毕,提交后将无法修改审核信息!')" class="btn btn-danger btn-lg" id="lrpd">提交</button>
                                     </div>
                                 <?php } ?>
-                            </div>
 
-                            <div class="form-group mt40"></div>
+                                <div class="form-group col-md-12">
+                                    <button class="btn btn-default" style="float:right" onclick="print_file_audit_record({$list.id},{$file_list.id},`{:U('Approval/print_file_audit_record',array('appid'=>$list[id],'fileid'=>$file_list[id]))}`)"> <i class="fa fa-print"></i> 打印</button>
+                                </div>
+                            </div>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
                 </div>
@@ -171,6 +173,15 @@
             cancel: function () {
             }
         });
+    }
+
+    //打印文件审核记录
+    function print_file_audit_record(appid,fileid,url) {
+        if (!appid || !fileid){
+            art_show_msg('获取审核信息失败',3);
+            return false;
+        }
+        window.location.href = url;
     }
 </script>
 
