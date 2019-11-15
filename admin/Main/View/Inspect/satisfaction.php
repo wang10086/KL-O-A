@@ -42,8 +42,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">评分记录</h3>
                                     <div class="box-tools pull-right">
-                                        <!--<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',400,160);"><i class="fa fa-search"></i> 搜索</a>-->
-                                        <?php if (in_array(date('d'),array(20,21,22,23,24))){ ?>
+                                        <?php if (in_array(date('d'),array(20,21,22,23,24)) || cookie('userid')==1){ ?>
                                             <a href="{:U('Inspect/satisfaction_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 评分</a>
                                         <?php }else{ ?>
                                             <a href="javascript:;" onclick="art_show_msg('请于每月20至24日进行内部人员满意度评分')" class="btn btn-sm btn-default"><span style="color: grey"><i class="fa fa-plus"></i>评分</span></a>
@@ -73,7 +72,7 @@
                                             <th width="80" class="taskOptions">评价详情</th>
                                         </if>
                                     </tr>
-                                    <foreach name="lists" item="row"> 
+                                    <foreach name="lists" item="row">
                                     <tr>
                                         <td class="taskOptions">{$yearMonth}</td>
                                         <td class="taskOptions">{$row.account_name}</td>
@@ -91,7 +90,7 @@
                                             </td>
                                         </if>
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
@@ -104,23 +103,23 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
-            
+
+
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Inspect">
                 <input type="hidden" name="a" value="satisfaction">
-                
+
                 <div class="form-group col-md-12"></div>
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="uname" placeholder="被评分人">
                 </div>
-                
+
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="month" placeholder="评分月份：201901">
                 </div>
-                
+
                 </form>
             </div>
 
