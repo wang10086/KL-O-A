@@ -636,6 +636,41 @@ class ApprovalController extends BaseController {
         $this->status                       = C('FILE_STATUS');
         $this->display();
     }
+
+    //删除文件
+    public function file_del(){
+        $id                                 = I('id');
+        if (!$id){ $this->error('删除数据失败'); }
+        $list                               = M('approval')->find($id);
+        $file_ids                           = $this->get_file_ids($list);
+        M('approval_record')->where(array('file_id'=>array('in',$file_ids)))->delete();
+        M('approval_files')->where(array('id'=>array('in',$file_ids)))->delete();
+        M('approval')->where(array('id'=>$id))->delete();
+        M('unread')->where(array('type'=>P::UNREAD_AUDIT_FILE,'req_id'=>$id))->delete();
+        $this->success('删除成功');
+    }
+
+    private function get_file_ids($list){
+        $file_id                            = explode(',',$list['file_id']); //流转文件详情
+        $file_annex_ids                     = explode(',',$list['file_annex_ids']); //流转附件ID信息
+        $sfile_id                           = explode(',',$list['sfile_id']); //最终审核文件详情
+        $sfile_annex_ids                    = explode(',',$list['sfile_annex_ids']); //最终审核附件ID信息
+        $arr                                = array();
+        foreach ($file_id as $k=>$v){
+            if ($v){ $arr[]                 = $v; }
+        }
+        foreach ($file_annex_ids as $k=>$v){
+            if ($v){ $arr[]                 = $v; }
+        }
+        foreach ($sfile_id as $k=>$v){
+            if ($v){ $arr[]                 = $v; }
+        }
+        foreach ($sfile_annex_ids as $k=>$v){
+            if ($v){ $arr[]                 = $v; }
+        }
+        $data                               = array_filter(array_unique($arr));
+        return $data;
+    }
 }
 
 

@@ -30,8 +30,8 @@
 
                             <div class="form-group col-md-12"></div>
                             <div class="form-group col-md-12">
-                                <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
-                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择<font color="red">一个</font>小于20M的PDF文件</span>
+                                <!--<a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
+                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择<font color="red">一个</font>小于20M的PDF文件</span>-->
 
                                 <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
                                     <tr>
@@ -65,9 +65,8 @@
 
                             <div class="form-group col-md-12"></div>
                             <div class="form-group col-md-12">
-                                <a href="javascript:;" id="pickupfile1" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择附件</a>
-
-                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于20M的PDF文件</span>
+                                <!--<a href="javascript:;" id="pickupfile1" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择附件</a>
+                                <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于20M的PDF文件</span>-->
                                 <div class="form-group col-md-12"></div>
                                 <table id="flist1" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;border-bottom:1px solid #dedede;">
                                     <tr>
@@ -102,7 +101,7 @@
                         </form>
 
                         <div id="formsbtn">
-                            <button type="button" class="btn btn-info" style="margin-left: 10px" onclick="javascript:ConfirmSubmit('myform','文件将直接提交至最终审核人处，<br />确定提交吗？')">提交审核</button>
+                            <button type="button" class="btn btn-info" style="margin-left: 10px" onclick="javascript:ConfirmSubmit('myform','文件将直接提交至最终审核人处，<br />确定提交吗？',`{:U('Approval/index')}`)">提交审核</button>
                         </div>
                     </div>
                 </div>
@@ -284,7 +283,7 @@
         });
     }
 
-    function ConfirmSubmit(obj,msg) {
+    function ConfirmSubmit(obj,msg,locationUrl) {
         if(!msg){
             var msg = '您确定保存该信息吗？';
         }
@@ -298,7 +297,7 @@
             fixed: true,
             content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
             ok: function () {
-                public_save('myform','<?php echo U('Approval/public_save'); ?>');
+                save('myform','<?php echo U('Approval/public_save'); ?>',locationUrl);
                 parent.art.dialog.list["confirmBox"].close();
                 return false;
             },
@@ -306,6 +305,29 @@
             cancel: true //为true等价于function(){}
         });
 
+    }
+
+    //保存信息
+    function save(id,url,locationUrl){
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType:'json',
+            data: $('#'+id).serialize(),
+            success:function(data){
+                if(parseInt(data.num)>0){
+                    art.dialog.alert(data.msg,'success');
+                    //setTimeout("history.go(0)",1000);
+                    setTimeout("window.location.href = '"+locationUrl+"'",1000);
+                }else{
+                    art.dialog.alert(data.msg,'warning');
+                    return false;
+                }
+            },
+            error:function () {
+                alert('error');
+            }
+        });
     }
 
 

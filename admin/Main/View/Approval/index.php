@@ -72,8 +72,7 @@
 
                                         <if condition="rolemenu(array('Approval/file_del'))">
                                             <td class="taskOptions">
-                                                <!--<a href="{:U('Approval/file_del',array('id'=>$row['id']))}" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>-->
-                                                <a href="javascript:;" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>
+                                                <a href=" javascript:ConfirmDel(`{:U('Approval/file_del',array('id'=>$row['id']))}`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></a>
                                             </td>
                                         </if>
                                     </tr>
