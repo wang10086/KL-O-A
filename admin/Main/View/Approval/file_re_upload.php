@@ -53,7 +53,7 @@
                                                 <div class="progress-bar progress-bar-aqua" rel="{$file['id']}"  role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
                                             </div>
                                         </td>
-                                        <td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile({$file['id']});"><i class="fa fa-times"></i>删除</a></td>
+                                        <td><!--<a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile({$file['id']});"><i class="fa fa-times"></i>删除</a>--></td>
                                     </tr>
                                     <?php } ?>
 
@@ -91,9 +91,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(<?php echo $v['id']?>)">
-                                                    <i class="fa fa-times"></i>删除
-                                                </a>
+                                                <!--<a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(<?php /*echo $v['id']*/?>)"><i class="fa fa-times"></i>删除</a>-->
                                             </td>
                                         </tr>
                                     </foreach>
