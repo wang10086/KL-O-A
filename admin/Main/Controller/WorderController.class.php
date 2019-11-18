@@ -45,7 +45,7 @@ class WorderController extends BaseController{
             $t2                     = NOW_TIME;
             $count['create_time']   = array('between',"$t1,$t2");
             $num = count(M('worder')->where($count)->select());
-            if ($num > 3){
+            if ($num > 3 && $info['urgent']==1){
                 $this->error("每月不能超过3条加急工单!");
             }
 
