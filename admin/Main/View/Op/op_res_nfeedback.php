@@ -117,7 +117,7 @@
                                 <td class="td_title td">活动时长（天）</td>
                                 <td colspan="2" class="td_con td">{$resource.use_time}</td>
                                 <td class="td_title td">活动地点</td>
-                                <td colspan="2" class="td_con td">{$resource.addr}</td>
+                                <td colspan="2" class="td_con td">{$province[$resource[province]]}{$resource.addr}</td>
                             </tr>
                             <tr>
                                 <td class="td_title td">提交时间</td>

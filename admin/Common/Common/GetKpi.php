@@ -4522,6 +4522,17 @@ function save_audit_file_stu(){
     $db->where(array('id'=>array('in',$approval_ids)))->setField('status',2);
 }
 
+//根据pid 获取城市信息(城市合伙人\资源需求单)
+function get_pid_citys($pid){
+    $citys_db                   = M('citys');
+    if($pid == 0 || $pid){
+        $data                   = $citys_db->where(array('pid'=>$pid))->getField('id,name',true);
+    }else{
+        $data                   = array();
+    }
+    return $data;
+}
+
 
 
 

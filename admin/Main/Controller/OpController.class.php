@@ -2920,6 +2920,7 @@ class OpController extends BaseController {
             $this->userkey      = get_username();
             //科普资源关键字
             $this->scienceRes   = getScienceRes();
+            $this->province     = get_pid_citys(0);
 
             //人员列表
             $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();

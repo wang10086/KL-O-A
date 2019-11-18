@@ -54,7 +54,16 @@
                         <label>活动时长（天）：</label><input type="text" name="info[use_time]" value="<?php echo $resource['use_time']?$resource['use_time']:$confirm['days'] ; ?>" class="form-control" />
                     </div>
 
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-md-4">
+                        <label>活动省份</label>
+                        <select class="form-control" name="info[province]">
+                            <foreach name="province" key="k" item="v">
+                                <option value="{$k}" <?php if ($resource['province'] == $k){ echo "selected"; } ?>>{$v}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group col-md-4">
                         <label>活动地点：</label><input type="text" name="info[addr]" value="<?php echo $resource['addr']?$resource['addr']:$confirm['address']; ?>" class="form-control" />
                     </div>
 
@@ -156,9 +165,7 @@
     <div class="row">
         <!-- right column -->
         <div class="form-group col-md-12">
-
             <div class="content">
-
                 <div class="form-group col-md-12">
                     <label>学校名称：</label><input type="text" name="info[client]" value="<?php echo $resource['client']?$resource['client']:$op['customer'] ?>" class="form-control" />
                 </div>
