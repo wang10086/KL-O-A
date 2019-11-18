@@ -112,9 +112,11 @@
                                     </div>
                                 <?php } ?>
 
+                                <if condition="rolemenu(array('Approval/print_file_audit_record'))">
                                 <div class="form-group col-md-12">
                                     <button class="btn btn-default" style="float:right" onclick="print_file_audit_record({$list.id},{$file_list.id},`{:U('Approval/print_file_audit_record',array('appid'=>$list[id],'fileid'=>$file_list[id]))}`)"> <i class="fa fa-print"></i> 打印</button>
                                 </div>
+                                </if>
 
                             </div>
                         </div><!-- /.box-body -->
