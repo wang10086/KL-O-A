@@ -336,8 +336,45 @@ class ScienceResController extends BaseController {
         $this->display('kpi_res');
 
     }
-    
 
-    
+    //设置各省份资源管理所属项目部
+    public function province(){
+        $this->title('设置各省份资源所属项目部');
+        $field                          = 'c.id,c.name,c.departmentid,d.department';
+        $list                           = M()->table('__CITYS__ as c')->join('__SALARY_DEPARTMENT__ as d on d.id=c.departmentid','left')->where(array('c.pid'=>0))->field($field)->select();
+
+        $this->list                     = $list;
+        $this->display();
+    }
+
+    public function province_edit(){
+        $db                             = M('citys');
+        if (isset($_POST['dosubmint'])){
+            $id                         = I('id');
+            $departmentid               = I('departmentid');
+            if (!$id || !$departmentid){
+                $this->msg              = '获取数据失败';
+                $this->display('Rights:audit_ok');
+            }
+            $data                       = array();
+            $data['departmentid']       = $departmentid;
+            $res                        = $db->where(array('id'=>$id))->save($data);
+            if ($res){
+                $this->msg              = '保存成功';
+            }else{
+                $this->msg              = '保存失败';
+            }
+            $this->display('Rights:audit_ok');
+        }else{
+            $id                         = I('id');
+            if (!$id){ $this->error('获取数据失败'); }
+            $list                       = $db->where(array('id'=>$id))->find();
+            $departments                = M('salary_department')->getField('id,department',true);
+
+            $this->list                 = $list;
+            $this->departments          = $departments;
+            $this->display();
+        }
+    }
     
 }

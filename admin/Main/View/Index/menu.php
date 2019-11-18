@@ -227,6 +227,10 @@
                                 <if condition="rolemenu(array('SupplierRes/chart'))">
                                     <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart"></i> 资源统计</a></li>
                                 </if>
+
+                                <if condition="rolemenu(array('ScienceRes/province'))">
+                                    <li class="{:on('ScienceRes/province')}"><a href="{:U('ScienceRes/province')}" title="设置各省份资源所属项目部"><i class="fa fa-cog"></i> 资源设置</a></li>
+                                </if>
                             </ul>
                         </li>
 
