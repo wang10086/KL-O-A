@@ -104,6 +104,23 @@
         }
     }
 
+    function init_score_3() {
+        $.fn.raty.defaults.path = "__HTML__/score/lib/img";
+        var res = <?php echo $pingfen?$pingfen:0; ?>;
+
+        if (res){
+            $('#content').html(res.content);
+
+            pingfen('AA',res.AA);
+            pingfen('BB',res.BB);
+            pingfen('CC',res.CC);
+        }else{
+            pingfen('AA',5);
+            pingfen('BB',5);
+            pingfen('CC',5);
+        }
+    }
+
     //初始化评分显示(6个维度)
     function init_score_6() {
         $.fn.raty.defaults.path = "__HTML__/score/lib/img";

@@ -821,9 +821,11 @@ class InspectController extends BaseController{
         $year               = I('year',date('Y'));
         $month              = I('month',date('m'));
         $yearMonth          = I('yearMonth')?I('yearMonth'):$year.$month;
-        $lists              = $this->get_satisfaction_list($yearMonth);
+        $pin                = I('pin',1);
+        $lists              = $this->get_satisfaction_list($yearMonth,$pin);
 
         $this->lists        = $lists;
+        $this->pin          = $pin;
         $this->yearMonth    = $yearMonth;
         $this->year         = $year;
         $this->month        = $month;
@@ -832,13 +834,14 @@ class InspectController extends BaseController{
         $this->display();
     }
 
-    public function get_satisfaction_list($yearMonth){
+    public function get_satisfaction_list($yearMonth,$pin){
         $mod                            = D('Inspect');
         $db                             = M('satisfaction');
         $satisfaction_config_db         = M('satisfaction_config');
         $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth,'kind'=>P::SCORE_KIND_ACCOUNT))->select(); //所有的已评分列表
         $should_users_lists             = $satisfaction_config_db->where(array('month'=>$yearMonth))->select(); //所有当月应评分信息
-        $user_lists                     = array_keys(C('SATISFACTION_USERS'));
+        //$user_lists                     = array_keys(C('SATISFACTION_USERS'));
+        $user_lists                     = array_keys($this->get_satisfaction_user($pin));
 
         $lists                          = array();
         foreach ($user_lists as $k=>$v){
@@ -881,8 +884,18 @@ class InspectController extends BaseController{
             $lists[$k]['score_accounts']= $average_data['score_account_name'];
             $lists[$k]['unscore_users'] = implode(',',$unscore_user_lists);
         }
-        //P($lists);
         return $lists;
+    }
+
+    //获取内部满意度需评分人员
+    private function get_satisfaction_user($type=0){
+        $db                             = M('Satisfaction_user');
+        if ($type){
+            $data                       = $db->where(array('type'=>$type))->getField('account_id,account_name',true);
+        }else{
+            $data                       = $db->getField('account_id,account_name',true);
+        }
+        return $data;
     }
 
 
@@ -1060,7 +1073,8 @@ class InspectController extends BaseController{
         $year                       = I('year',date('Y'));
         $month                      = I('month',date('m'));
         $yearMonth                  = I('yearMonth')?I('yearMonth'):$year.$month;
-        $users                      = C('SATISFACTION_USERS');
+        //$users                      = C('SATISFACTION_USERS');
+        $users                      = $this->get_satisfaction_user();
         $db                         = M('satisfaction_config');
         $lists                      = array();
         foreach ($users as $k=>$v){
@@ -1282,6 +1296,19 @@ class InspectController extends BaseController{
         $this->display();
     }
 
+    //删除
+    public function satisfaction_user_del(){
+        $id                         = I('id');
+        if (!$id){ $this->error('获取数据失败'); }
+        $db                         = M('satisfaction_user');
+        $res                        = $db->where(array('id'=>$id))->delete();
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
     public function public_save(){
         $savetype                   = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){
@@ -1309,12 +1336,6 @@ class InspectController extends BaseController{
         }
 
         if ($savetype == 2){
-            /**
-             * [id] =>
-            [account_name] => 王超
-            [account_id] => 140
-            [type] => 1
-             */
             $db                     = M('satisfaction_user');
             $id                     = I('id');
             $data                   = array();

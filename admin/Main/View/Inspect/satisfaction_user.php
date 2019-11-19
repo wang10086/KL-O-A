@@ -17,7 +17,7 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box box-success">
+                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
@@ -52,7 +52,7 @@
                                             </if>
                                             <if condition="rolemenu(array('Inspect/satisfaction_user_del'))">
                                                 <td class="taskOptions">
-                                                    <a href="javascript:;" onClick="province_edit({$row.id})" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
+                                                    <a href="javascript:;" onClick="ConfirmDel(`{:U('Inspect/satisfaction_user_del',array('id'=>$row['id']))}`)" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
                                                 </td>
                                             </if>
                                         </tr>
