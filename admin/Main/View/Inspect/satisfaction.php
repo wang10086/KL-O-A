@@ -47,6 +47,9 @@
                                         <?php }else{ ?>
                                             <a href="javascript:;" onclick="art_show_msg('请于每月20至24日进行内部人员满意度评分')" class="btn btn-sm btn-default"><span style="color: grey"><i class="fa fa-plus"></i>评分</span></a>
                                         <?php } ?>
+                                        <if condition="rolemenu(array('Inspect/satisfaction_user'))">
+                                            <a href="{:U('Inspect/satisfaction_user')}" class="btn btn-sm btn-danger"><i class="fa fa-cog"></i> 设置被评分人</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
 

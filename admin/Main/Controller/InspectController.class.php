@@ -1260,10 +1260,31 @@ class InspectController extends BaseController{
         $this->display();
     }
 
+    //设置内部满意度需评分人员
+    public function satisfaction_user(){
+        $this->title('内部满意度评分人员');
+        $db                         = M('satisfaction_user');
+        $list                       = $db->select();
+
+        $this->list                 = $list;
+        $this->display();
+    }
+
+    //编辑
+    public function satisfaction_user_edit(){
+        $id                         = I('id');
+        if (!$id){ $this->error('获取数据失败'); }
+        $db                         = M('satisfaction_user');
+        $list                       = $db->where(array('id'=>$id))->find();
+
+        $this->list                 = $list;
+        $this->userkey              = get_username();
+        $this->display();
+    }
+
     public function public_save(){
         $savetype                   = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){
-
             //保存不合格指标
             if ($savetype == 1){
                 $db                 = M('quota');
@@ -1285,6 +1306,36 @@ class InspectController extends BaseController{
 
                 echo '<script>window.top.location.reload();</script>';
             }
+        }
+
+        if ($savetype == 2){
+            /**
+             * [id] =>
+            [account_name] => 王超
+            [account_id] => 140
+            [type] => 1
+             */
+            $db                     = M('satisfaction_user');
+            $id                     = I('id');
+            $data                   = array();
+            $data['account_id']     = I('account_id');
+            $data['account_name']   = I('account_name');
+            $data['type']           = I('type');
+            if (!$data['account_id']){
+                $this->msg          = '人员信息输入错误';
+                $this->display('Rights:audit_ok');
+            }
+            if ($id){
+                $res                = $db->where(array('id'=>$id))->save($data);
+            }else{
+                $res                = $db->add($data);
+            }
+            if ($res){
+                $this->msg          = '保存成功';
+            }else{
+                $this->msg          = '保存失败';
+            }
+            $this->display('Rights:audit_ok');
         }
     }
 }
