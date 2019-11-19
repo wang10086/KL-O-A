@@ -4514,22 +4514,33 @@ function save_op_groups_settlement($op){
 
 //自动更新文件审核状态
 function save_audit_file_stu(){
-    $db                                 = M('approval');
-    $where                              = array();
-    $where['status']                    = 1; //审核中
-    $where['plan_time']                 = array('lt',NOW_TIME);
-    $approval_ids                       = $db->where($where)->getField('id',true);
+    $db                             = M('approval');
+    $where                          = array();
+    $where['status']                = 1; //审核中
+    $where['plan_time']             = array('lt',NOW_TIME);
+    $approval_ids                   = $db->where($where)->getField('id',true);
     $db->where(array('id'=>array('in',$approval_ids)))->setField('status',2);
 }
 
 //根据pid 获取城市信息(城市合伙人\资源需求单)
 function get_pid_citys($pid){
-    $citys_db                   = M('citys');
+    $citys_db                       = M('citys');
     if($pid == 0 || $pid){
-        $data                   = $citys_db->where(array('pid'=>$pid))->getField('id,name',true);
+        $data                       = $citys_db->where(array('pid'=>$pid))->getField('id,name',true);
     }else{
-        $data                   = array();
+        $data                       = array();
     }
+    return $data;
+}
+
+/**
+ * 获取需要资源部配置资源院所的省份(城市)信息
+ * @param int $departmentid 4=>资源管理部ID
+ * @return mixed
+ */
+function get_company_res_citys($departmentid=4){
+    $citys_db                       = M('citys');
+    $data                           = $citys_db->where(array('departmentid'=>$departmentid))->getField('id,name',true);
     return $data;
 }
 

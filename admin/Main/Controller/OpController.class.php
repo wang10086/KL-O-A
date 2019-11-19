@@ -3241,9 +3241,11 @@ class OpController extends BaseController {
         $jd_score           = get_op_score_data($opid,1);
         $jw_score           = get_op_score_data($opid,2);
         $cp_score           = get_op_score_data($opid,3);
+        $zy_score           = get_op_score_data($opid,4);
         $jd_id              = $jd_score['account_id'] ? $jd_score['account_id'] : M('op_auth')->where(array('op_id'=>$opid))->getField('yusuan');
         $jw_id              = $jw_score['account_id'] ? $jw_score['account_id'] : ($op_guide_list['first_dispatch_oa_uid']?$op_guide_list['first_dispatch_oa_uid']:$op_guide_list['heshi_oa_uid']);
         $cp_id              = $cp_score['account_id'] ? $cp_score['account_id'] : 232; //232=>梅轶宁
+        $zy_id              = $zy_score['account_id'] ? $zy_score['account_id'] : 82; //82=>吕严
         $jd                 = array();
         $jd['user_id']      = $jd_id;
         $jd['user_name']    = username($jd_id);
@@ -3253,13 +3255,22 @@ class OpController extends BaseController {
         $cp                 = array();
         $cp['user_id']      = $cp_id;
         $cp['user_name']    = username($cp_id);
+        $zy                 = array();
+        $zy['user_id']      = $zy_id;
+        $zy['user_name']    = username($zy_id);
+        $company_res_citys  = get_company_res_citys(); //需要公司资源管理部安排资源的省份信息
+        $company_res_cityids= array_keys($company_res_citys); //需要公司资源管理部安排资源的省份信息
+        $op_res             = M('op_res')->where(array('op_id'=>$opid,'province'=>array('in',$company_res_cityids)))->find();
 
+        if ($op_res){ $this->res_need = $op_res; }
         $this->jd_score     = $jd_score ? json_encode($jd_score) : '';
         $this->jw_score     = $jw_score ? json_encode($jw_score) : '';
         $this->cp_score     = $cp_score ? json_encode($cp_score) : '';
+        $this->zy_score     = $zy_score ? json_encode($zy_score) : '';
         $this->jidiao       = $jd;
         $this->jiaowu       = $jw;
         $this->chanpin      = $cp;
+        $this->ziyuan       = $zy;
         $this->op           = $op;
         $this->display();
     }

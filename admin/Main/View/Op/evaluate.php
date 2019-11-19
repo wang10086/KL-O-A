@@ -55,12 +55,15 @@
         var jd_res = <?php echo $jd_score ? $jd_score : 0; ?>; //计调评分结果
         var jw_res = <?php echo $jw_score ? $jw_score : 0; ?>; //教务评分结果
         var cp_res = <?php echo $cp_score ? $cp_score : 0; ?>; //产品经理评分结果
+        var zy_res = <?php echo $zy_score ? $zy_score : 0; ?>; //资源评分结果
         init_score('save_jd_afterOpScore',jd_res,'jd_'); //初始化计调星星图标
         init_score('save_jw_afterOpScore',jw_res,'jw_'); //初始化教务星星
         init_score('save_cp_afterOpScore',cp_res,'cp_'); //初始化产品经理星星
+        init_score('save_zy_afterOpScore',zy_res,'zy_'); //资源星星
         init_radio_checked('save_jd_afterOpScore',jd_res); //初始化计调单选
         init_radio_checked('save_jw_afterOpScore',jw_res); //初始化教务单选
         init_radio_checked('save_cp_afterOpScore',cp_res); //初始化产品经理单选
+        init_radio_checked('save_zy_afterOpScore',zy_res); //初始化资源单选
         init_radio();
     });
 

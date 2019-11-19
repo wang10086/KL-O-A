@@ -96,7 +96,7 @@
 
                     </div>
                 </div>
-                <div align="center" class="form-group col-md-12" style="alert:cennter;margin-top: 20px;">
+                <div align="center" class="form-group col-md-12">
                     <a  href="javascript:;" class="btn btn-info" onClick="javascript:submitBefore('save_jd_afterOpScore');" style="width:60px;">保存</a>
                 </div>
             </div>
@@ -203,7 +203,7 @@
 
                     </div>
                 </div>
-                <div align="center" class="form-group col-md-12" style="alert:cennter;margin-top: 20px;">
+                <div align="center" class="form-group col-md-12">
                     <a  href="javascript:;" class="btn btn-info" onClick="javascript:submitBefore('save_jw_afterOpScore');" style="width:60px;">保存</a>
                 </div>
             </div>
@@ -295,7 +295,7 @@
 
                         </div>
                     </div>
-                    <div align="center" class="form-group col-md-12" style="alert:cennter;margin-top: 20px;">
+                    <div align="center" class="form-group col-md-12">
                         <a  href="javascript:;" class="btn btn-info" onClick="javascript:submitBefore('save_cp_afterOpScore');" style="width:60px;">保存</a>
                     </div>
                 </div>
@@ -303,4 +303,101 @@
         </div>
     </div>
 <?php } ?>
+
+<!--对资源评价-->
+<?php if ($res_need || $zy_score){ ?>
+    <div class="box box-warning" style="margin-top:15px;">
+        <div class="box-header">
+            <h3 class="box-title">对资源人员评价</h3>
+            <h3 class="box-title pull-right" style="font-weight: normal; margin-right: 20px;">
+                <span class="green">评分状态：<?php if ($zy_score){ echo '<span class="green">已评分</span>'; }else{ echo "<span class='red'>未评分</span>"; } ?></span>
+                <span style="color: #000; margin-left: 20px;"> 资源负责人：{$ziyuan.user_name}</span>
+            </h3>
+        </div><!-- /.box-header -->
+
+        <div class="box-body">
+            <form method="post" action="<?php echo U('Op/public_save'); ?>" id="save_zy_afterOpScore">
+                <div class="content">
+                    <input type="hidden" name="dosubmint" value="1">
+                    <input type="hidden" name="savetype" value="23">
+                    <input type="hidden" name="opid" value="{$op.op_id}">
+                    <input type="hidden" name="info[type]" value="4">
+                    <input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->
+                    <div class="content" style="display:block;">
+                        <input type="hidden" id="zy_AA_num" name="info[AA]" value="" />
+                        <input type="hidden" id="zy_BB_num" name="info[BB]" value="" />
+                        <input type="hidden" id="zy_CC_num" name="info[CC]" value="" />
+                        <input type="hidden" id="zy_DD_num" name="info[DD]" value="" />
+                        <input type="hidden" id="zy_EE_num" name="info[EE]" value="" />
+                        <input type="hidden" name="info[account_id]" value="{$ziyuan.user_id}" />
+                        <input type="hidden" name="info[account_name]" value="{$ziyuan.user_name}" />
+
+                        <div style="width:100%;float:left;">
+                            <div class="form-group col-md-6">
+                                <label>资源需求匹配度：</label>
+                                <input type="hidden" name="data[AA]" value="资源需求匹配度">
+                                <div class="demo score inline-block"><div id="zy_AA"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[AA]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>资源调度及时性：</label>
+                                <input type="hidden" name="data[BB]" value="资源调度及时性">
+                                <div class="demo score inline-block"><div id="zy_BB"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[BB]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>专家辅导员质量：</label>
+                                <input type="hidden" name="data[CC]" value="专家辅导员质量">
+                                <div class="demo score inline-block"><div id="zy_CC"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="5">&nbsp;非常满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="4">&nbsp;较满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="2">&nbsp;不满意</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[CC]" value="1">&nbsp;非常不满意</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>活动开展效果：</label>
+                                <input type="hidden" name="data[DD]" value="活动开展效果">
+                                <div class="demo score inline-block"><div id="zy_DD"></div></div>
+                                <div class="form-control no-border star_div">
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="5">&nbsp;非常高</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="4">&nbsp;较高</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="3">&nbsp;一般</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="2">&nbsp;较低</span>&emsp;&emsp;
+                                    <span class="sco-star"><input type="radio" name="info[DD]" value="1">&nbsp;非常低</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12"></div>
+                            <textarea name="info[content]" class="form-control" id="zy_content"  rows="2" placeholder="请输入对资源评价内容"></textarea>
+                            <div class="form-group col-md-12"></div>
+
+                        </div>
+                    </div>
+                    <div align="center" class="form-group col-md-12">
+                        <a  href="javascript:;" class="btn btn-info" onClick="javascript:submitBefore('save_zy_afterOpScore');" style="width:60px;">保存</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php } ?>
+
 
