@@ -942,6 +942,8 @@ class InspectController extends BaseController{
                 }
             }
         }else{
+            $usernames                  = M('satisfaction_user')->getField('account_name',true);
+            $this->usernames            = implode('、',$usernames);
             $this->userkey  = get_username();
             $this->display('satisfaction_add');
         }
