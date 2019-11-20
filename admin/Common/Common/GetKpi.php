@@ -3912,6 +3912,12 @@ function get_yw_department(){
             case 2:
                 $code                       = '教务';
                 break;
+            case 3:
+                $code                       = '实验室建设产品经理';
+                break;
+            case 4:
+                $code                       = '资源';
+                break;
         }
         return $code;
     }

@@ -22,6 +22,7 @@
                                     <h3 class="box-title">岗位管理</h3>
                                     <if condition="rolemenu(array('Rbac/addpost'))">
                                     <div class="box-tools pull-right">
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,160);"><i class="fa fa-search"></i> 搜索</a>
                                          <!--<a href="{:U('Rbac/addpost')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建岗位</a>-->
                                          <a href="javascript:;" onclick="art_show_msg('请优先编辑使用没有人员的岗位')" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建岗位</a>
                                     </div>
@@ -70,5 +71,26 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
+<div id="searchtext">
+    <form action="" method="get" id="searchform">
+        <input type="hidden" name="m" value="Main">
+        <input type="hidden" name="c" value="Rbac">
+        <input type="hidden" name="a" value="post">
+
+        <div class="form-group col-md-12"></div>
+        <div class="form-group col-md-12">
+            <input type="text" class="form-control" name="name" placeholder="岗位名称">
+        </div>
+
+        <div class="form-group col-md-12">
+            <select name="department" class="form-control">
+                <option value="">==请选择==</option>
+                <foreach name="department" key="k" item="v">
+                    <option value="{$k}">{$v}</option>
+                </foreach>
+            </select>
+        </div>
+    </form>
+</div>
 
 <include file="Index:footer2" />

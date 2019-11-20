@@ -1326,7 +1326,12 @@ class RbacController extends BaseController {
 
         $this->title('岗位管理');
 
-        $db = M('posts');
+        $db                             = M('posts');
+        $name                           = trim(I('name'));
+        $department                     = I('department');
+        $where                          = array();
+        if ($name) $where['post_name']  = array('like','%'.$name.'%');
+        if ($department) $where['departmentid'] = $department;
 
 		//分页
 		$pagecount = $db->where($where)->count();
