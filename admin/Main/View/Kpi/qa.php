@@ -72,6 +72,8 @@
                                                         <td class="taskOptions">
                                                             <?php if(in_array($row['status'],array(0,3,2)) && ( C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 ||  cookie('userid')==$row['inc_user_id'])) { ?>
                                                                 <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                            <?php }elseif (in_array($row['status'],array(4,5)) && in_array(cookie('userid'),array(1,11,26))){ ?>
+                                                                <a href="{:U('Kpi/addqa',array('id'=>$row['id']))}"  title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                             <?php } ?>
                                                         </td>
                                                     </if>
