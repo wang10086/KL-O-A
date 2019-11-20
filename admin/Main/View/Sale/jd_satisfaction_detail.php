@@ -23,7 +23,11 @@
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green"><if condition="$data['jd_name']" >计调：{$data['jd_name']}</if></span> &nbsp;&nbsp;</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <p>备注：未完成评分项目按照50%得分计算！</p>
+                                    <div class="callout callout-danger">
+                                        <h4>提示！</h4>
+                                        <p>1、未评分项目将按照50%的基础得分取值；</p>
+                                        <p>2、如果有未评分项目,请及时联系该项目业务人员为您评分,以免影响您的KPI；</p>
+                                    </div>
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr>
                                             <th class="taskOptions">团号</th>
