@@ -23,7 +23,7 @@
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><span class="green"><if condition="$data['jd_name']" >计调：{$data['jd_name']}</if></span> &nbsp;&nbsp;</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-
+                                    <p>备注：未完成评分项目按照50%得分计算！</p>
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr>
                                             <th class="taskOptions">团号</th>

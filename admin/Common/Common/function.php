@@ -2175,8 +2175,10 @@ function updatekpi($month,$user){
                         if($v['quota_id']==17){
                             $mm                         = substr($v['month'],4,2);
                             $times                      = get_cycle($v['month']);
+                            $type                       = 1;
+                            $dimension                  = 5;
                             $settlement_list            = get_settlement_list($times['begintime'],$times['endtime']); //获取结算的团
-                            $list                       = get_jd_satis($v['user_id'],$settlement_list);
+                            $list                       = get_jd_satis($v['user_id'],$settlement_list,$type,$dimension);
                             $complete                   = $list['sum_average'];
                             $url                        = U('Sale/public_jd_satisfaction_detail',array('year'=>$v['year'],'month'=>$mm,'jd_uid'=>$v['user_id']));
                         }
@@ -3200,8 +3202,20 @@ function updatekpi($month,$user){
                             $url                    = U('ScienceRes/public_kpi_res',array('ids'=>implode(',',$res_ids),'target'=>$v['target']));
                         }
 
-                        //院内资源满意度 - 资源管理部经理
-                        //if ($v['quota_id']==180){}
+                        //接待实施资源工作满意度-资源专员
+                        if ($v['quota_id']==183){
+                            $startTime              = $v['start_date'];
+                            $endTime                = $v['end_date'];
+                            $type                   = 4; //资源
+                            $dimension              = 4; //考核维度
+                            $company_res_citys      = get_company_res_citys(); //需要公司资源管理部安排资源的省份信息
+                            $company_res_cityids    = array_keys($company_res_citys); //需要公司资源管理部安排资源的省份信息
+                            $op_list                = get_res_op_list($startTime,$endTime,$company_res_cityids);
+                            $data                   = get_res_op_satisfaction($op_list,$type,$dimension);
+
+                            $complete               = $data['sum_average'];
+                            $url                    = U('Kpi/public_res_satisfaction',array('st'=>$startTime,'et'=>$endTime));
+                        }
 
                         //渠道累计毛额-市场部经理
                         if ($v['quota_id']==188){
@@ -3459,7 +3473,7 @@ function updatekpi($month,$user){
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236);
+                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){

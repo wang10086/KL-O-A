@@ -2901,11 +2901,11 @@ function get_yw_department(){
      * 获取计调的满意度评分
      * @param $settlement_lists
      */
-    function get_jd_satis_chart($settlement_lists){
+    function get_jd_satis_chart($settlement_lists,$type=1,$dimension){
         $operator                               = array_unique(array_column($settlement_lists,'req_uname','req_uid'));
         $data                                   = array();
         foreach ($operator as $k => $v){
-            $data[$k]                           = get_jd_satis($k,$settlement_lists);
+            $data[$k]                           = get_jd_satis($k,$settlement_lists,$type,$dimension);
             $data[$k]['jd_uid']                 = $k;
             $data[$k]['jd_name']                = $v;
         }
@@ -2913,29 +2913,35 @@ function get_yw_department(){
     }
 
     /**
-     * 获取单个计调的满意度数据
+     * 获取单个的满意度数据
      * @param $uid
      * @param $lists
+     * @param $type 1=>计调 , 4=>资源
+     * @param $dimension 评分维度
      */
-    function get_jd_satis($uid,$lists){
+    function get_jd_satis($uid,$lists,$type=1,$dimension){
         $list                               = array(); //总操作的的团
         $score_list                         = array();  //已评分的团
         $zongfen                            = 0; //总分
         $yipingfen                          = 0; //已评分总分
         $defen                              = 0; //已得分
+        $sum_defen                          = 0; //总得分(未评分的50%)
         $num                                = 0; //所有团数量
         $score_num                          = 0; //已评分团数量
         foreach ($lists as $key => $value){
+            $real_score                     = 0;
             if ($value['req_uid'] == $uid){
-                $s_list                     = get_op_score_data($value['op_id'],1); //1=>计调
+                $s_list                     = get_op_score_data($value['op_id'],$type); //1=>计调
                 $list[]                     = $value;
-                if ($s_list) {
+                if ($s_list){
                     $score_list[]           = $s_list;
                     $score_num++;
-                    $defen                  += $s_list['AA'] + $s_list['BB'] + $s_list['CC'] + $s_list['DD'] + $s_list['EE'];
-                    $yipingfen              += 5*5; //5各维度,每个维度5颗星
+                    $real_score             = get_defen($s_list);
+                    $defen                  += $real_score;
+                    $yipingfen              += 5*$s_list['dimension']; //5各维度,每个维度5颗星
                 }
-                $zongfen                    += 5*5;
+                $sum_defen                  += $real_score ? $real_score: (5*$dimension)/2;
+                $zongfen                    += 5*$dimension;
                 $num++;
             }
         }
@@ -2945,63 +2951,135 @@ function get_yw_department(){
         $data['defen']                      = $defen;
         $data['num']                        = $num;
         $data['score_num']                  = $score_num;
-        $data['score_average']              = (round($defen/$yipingfen,4)*100).'%'; //已评分得分
-        $data['sum_average']                = (round($defen/$zongfen,4)*100).'%'; //合计得分(包含未评分的)
+        $data['score_average']              = $yipingfen ? (round($defen/$yipingfen,4)*100).'%' : '100%'; //已评分得分
+        $data['sum_average']                = $zongfen ? (round($sum_defen/$zongfen,4)*100).'%' : '100%'; //合计得分(包含未评分的)
         $data['score_list']                 = $score_list;
         $data['list']                       = $list;
         return $data;
     }
 
-    /**
-     * 获取计调某个团的评分信息
-     * @param $opid
-     * @return mixed
-     */
-    /*function get_jd_op_score($opid){
-        $db                                     = M('op_score');
-        $field                                  = 'op_id,pf_id,pf_name,ysjsx,zhunbei,peixun,genjin,yingji,jd_content,jd_uid,jd_uname,jd_score_time';
-        $where                                  = array();
-        $where['op_id']                         = $opid;
-        $where['ysjsx']                         = array('neq',0);
-        $list                                   = $db->where($where)->field($field)->find();
-        return $list;
-    }*/
+    //根据考核维度获取得分信息
+    function get_defen($list){
+        switch ($list['dimension']){
+            case 1:
+                $defen                      = $list['AA'];
+                break;
+            case 2:
+                $defen                      = $list['AA'] + $list['BB'];
+                break;
+            case 3:
+                $defen                      = $list['AA'] + $list['BB'] + $list['CC'];
+                break;
+            case 4:
+                $defen                      = $list['AA'] + $list['BB'] + $list['CC'] + $list['DD'];
+                break;
+            case 5:
+                $defen                      = $list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'];
+                break;
+            case 6:
+                $defen                      = $list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'] + $list['FF'];
+                break;
+        }
+        return $defen;
+    }
 
     /**
      * 获取公司总的计调满意度信息
      * @param $lists
      */
-    function get_company_jd_statis($lists){
+    function get_company_jd_statis($lists,$dimension){
         $score_list                         = array();  //已评分的团
         $zongfen                            = 0; //总分
         $yipingfen                          = 0; //已评分总分
         $defen                              = 0; //已得分
+        $sum_defen                          = 0; //总得分(未评分的50%)
         $num                                = 0; //所有团数量
         $score_num                          = 0; //已评分团数量
         foreach ($lists as $key => $value){
             $s_list                         = get_op_score_data($value['op_id'],1); //1=>计调
+            $listdefen                      = 0;
             if ($s_list) {
                 $score_list[]               = $s_list;
                 $score_num++;
-                $defen                      += $s_list['AA'] + $s_list['BB'] + $s_list['CC'] + $s_list['DD'] + $s_list['EE'];
-                $yipingfen                  += 5*5; //5各维度,每个维度5颗星
+                $listdefen                  = get_defen($s_list);
+                $defen                      += $listdefen;
+                $yipingfen                  += 5*$s_list['dimension']; //5各维度,每个维度5颗星
             }
-            $zongfen                        += 5*5;
+            $sum_defen                      += $listdefen ? $listdefen : ((5*$dimension)/2);
+            $zongfen                        += 5*$dimension;
             $num++;
         }
         $data                               = array();
         $data['zongfen']                    = $zongfen;
         $data['yipingfen']                  = $yipingfen;
         $data['defen']                      = $defen;
+        $data['sum_defen']                  = $sum_defen;
         $data['num']                        = $num;
         $data['score_num']                  = $score_num;
-        $data['score_average']              = (round($defen/$yipingfen,4)*100).'%'; //已评分得分
-        $data['sum_average']                = (round($defen/$zongfen,4)*100).'%'; //合计得分(包含未评分的)
+        $data['score_average']              = $yipingfen ? (round($defen/$yipingfen,4)*100).'%' : '0%'; //已评分得分
+        $data['sum_average']                = $zongfen ? (round($sum_defen/$zongfen,4)*100).'%' : '0%'; //合计得分(包含未评分的)
         $data['score_list']                 = $score_list;
         $data['list']                       = $lists;
         $data['jd_name']                    = '合计';
         return $data;
     }
+
+//获取在某周期实施(并且需要资源管理部配置资源)的项目
+function get_res_op_list($startTime,$endTime,$cityids){
+    $list   = M()->table('__OP_RES__ as r')
+        ->join('__OP_TEAM_CONFIRM__ as c on c.op_id=r.op_id','left')
+        ->join('__OP__ as o on o.op_id = r.op_id')
+        ->where(array('c.ret_time'=>array('between',array($startTime,$endTime)),'r.province'=>array('in',$cityids)))
+        ->field('o.op_id,o.group_id,o.project,o.create_user_name,c.ret_time')
+        ->select();
+    return $list;
+}
+
+/**
+ * 资源管理满意度信息
+ * @param $lists
+ * @param $type
+ * @param $dimension
+ * @return array
+ */
+function get_res_op_satisfaction($lists,$type,$dimension){
+    $list                               = array(); //总操作的的团
+    $score_list                         = array();  //已评分的团
+    $zongfen                            = 0; //总分
+    $yipingfen                          = 0; //已评分总分
+    $defen                              = 0; //已得分
+    $sum_defen                          = 0; //总得分(未评分的50%)
+    $num                                = 0; //所有团数量
+    $score_num                          = 0; //已评分团数量
+    foreach ($lists as $k=>$v){
+        $real_score                     = 0;
+        $s_list                         = get_op_score_data($v['op_id'],$type);
+        if ($s_list){
+            $score_list[]               = $s_list;
+            $score_num++;
+            $real_score                 = get_defen($s_list);
+            $defen                      += $real_score;
+            $yipingfen                  += 5*$s_list['dimension']; //5各维度,每个维度5颗星
+        }
+        $sum_defen                      += $real_score ? $real_score: (5*$dimension)/2;
+        $zongfen                        += 5*$dimension;
+        $num++;
+        $v['average']                   = $s_list ? (round($defen/(5*$s_list['dimension']),2)*100).'%' : '50%';
+        $v['score_stu']                 = $s_list ? "<span class='green'>已评分</span>" : "<span class='red'>未评分</span>";
+        $list[]                         = $v;
+    }
+    $data                               = array();
+    $data['zongfen']                    = $zongfen;
+    $data['yipingfen']                  = $yipingfen;
+    $data['defen']                      = $defen;
+    $data['num']                        = $num;
+    $data['score_num']                  = $score_num;
+    $data['score_average']              = $yipingfen ? (round($defen/$yipingfen,4)*100).'%' : '100%'; //已评分得分
+    $data['sum_average']                = $zongfen ? (round($sum_defen/$zongfen,4)*100).'%' : '100%'; //合计得分(包含未评分的)
+    $data['score_list']                 = $score_list;
+    $data['list']                       = $list;
+    return $data;
+}
 
     /**
      *  获取本周期报价及时性

@@ -381,9 +381,11 @@ class SaleController extends BaseController {
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
+        $type                       = 1; //1=>计调
+        $dimension                  = 5; //维度
         $settlement_list            = get_settlement_list($times['begintime'],$times['endtime']); //获取结算的团
-        $satis_data                 = get_jd_satis_chart($settlement_list); //获取计调满意度统计
-        $total_statis_data          = get_company_jd_statis($settlement_list); //获取公司总的计调满意度信息
+        $satis_data                 = get_jd_satis_chart($settlement_list,$type,$dimension); //获取计调满意度统计
+        $total_statis_data          = get_company_jd_statis($settlement_list,$dimension); //获取公司总的计调满意度信息
         $lists                      = $satis_data;
         $lists['合计']              = $total_statis_data;
 
@@ -401,28 +403,32 @@ class SaleController extends BaseController {
         $year                       = I('year',date('Y'));
         $month                      = I('month',date('m'));
         $jd_uid                     = I('jd_uid',0);
-        $jd_name                    = username($jd_uid);
+        $jd_name                    = $jd_uid ? username($jd_uid) : I('jd_name');
+        $type                       = 1; //1=>计调
+        $dimension                  = 5; //维度
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
         $settlement_list            = get_settlement_list($times['begintime'],$times['endtime']); //获取结算的团
         if ($jd_name == '合计'){
-            $list                   = get_company_jd_statis($settlement_list);
+            $list                   = get_company_jd_statis($settlement_list,$dimension);
             $list['jd_name']        = '';
         }else{
-            $list                   = get_jd_satis($jd_uid,$settlement_list);
+            $list                   = get_jd_satis($jd_uid,$settlement_list,$type,$dimension);
             $list['jd_name']        = $jd_name;
         }
 
         foreach ($list['list'] as $k=>$v){
-            foreach ($list['score_list'] as $value){
-                if ($value['op_id'] == $v['op_id']){
-                    $defen          = $value['AA'] + $value['BB'] + $value['CC'] + $value['DD'] + $value['EE'];
-                    $zongfen        = 5*$value['dimension'];
-                    $list['list'][$k]['average']    = (round($defen/$zongfen,4)*100).'%';
-                }
-            }
+            $score_list             = get_op_score_data($v['op_id'],$type);
+            //foreach ($list['score_list'] as $value){
+                //if ($value['op_id'] == $v['op_id']){
+                    $defen          = get_defen($score_list) ? get_defen($score_list) : (5*$dimension)/2; //未评分记50%
+                    $zongfen        = 5*$dimension;
+                    $list['list'][$k]['average']    = $defen ? (round($defen/$zongfen,4)*100).'%' : '0%';
+                //}
+            //}
         }
+
 
         $this->data                 = $list;
         $this->list                 = $list['list'];

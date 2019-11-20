@@ -2564,6 +2564,23 @@ class KpiController extends BaseController {
 	    $this->display('satisfied');
     }
 
+    //接待实施资源工作满意度-资源专员
+    public function public_res_satisfaction(){
+        $this->title('接待实施资源工作满意度');
+        $startTime                          = I('st');
+        $endTime                            = I('et');
+        $type                               = 4; //资源
+        $dimension                          = 4; //考核维度
+        $company_res_citys                  = get_company_res_citys(); //需要公司资源管理部安排资源的省份信息
+        $company_res_cityids                = array_keys($company_res_citys); //需要公司资源管理部安排资源的省份信息
+        $op_list                            = get_res_op_list($startTime,$endTime,$company_res_cityids);
+        $data                               = get_res_op_satisfaction($op_list,$type,$dimension);
+        $list                               = $data['list'];
+
+        $this->list                         = $list;
+        $this->data                         = $data;
+	    $this->display('res_satisfaction');
+    }
 
     public function aaa(){
         set_after_salary_kpi(201906);
