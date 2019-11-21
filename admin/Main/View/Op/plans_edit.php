@@ -1028,7 +1028,7 @@
     function open_change (opid) {
         art.dialog.open('<?php echo U('Op/change_op',array('opid'=>$opid)) ?>', {
             lock:true,
-            id: 'change',
+            id: 'audit_win',
             title: '项目交接',
             width:600,
             height:300,

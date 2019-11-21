@@ -245,6 +245,7 @@ function opencontent(cont){
   }
 
 function open_audit (obj) {
+    let url = `{:U('Rights/index',array('status'=>0))}`;
 		art.dialog.open(obj, {
 			lock:true,
 			id:'audit_win',
@@ -257,8 +258,10 @@ function open_audit (obj) {
 				return false;
 			},
 			cancelValue:'取消',
-			cancel: function () {
-			}
+			cancel: function () {},
+            close : function () {
+                art.dialog.open.origin.location.href= url;
+            }
 		});	
 }
 
