@@ -420,16 +420,11 @@ class SaleController extends BaseController {
 
         foreach ($list['list'] as $k=>$v){
             $score_list             = get_op_score_data($v['op_id'],$type);
-            //foreach ($list['score_list'] as $value){
-                //if ($value['op_id'] == $v['op_id']){
-                    $defen          = get_defen($score_list) ? get_defen($score_list) : (5*$dimension)/2; //未评分记50%
-                    $zongfen        = 5*$dimension;
-                    $list['list'][$k]['average']    = $defen ? (round($defen/$zongfen,4)*100).'%' : '0%';
-                //}
-            //}
+            $defen                  = $score_list ? get_defen($score_list) : (5*$dimension)/2; //未评分记50%
+            $zongfen                = 5*$dimension;
+            $list['list'][$k]['average']    = $defen ? (round($defen/$zongfen,4)*100).'%' : '0%';
+            $list['list'][$k]['score_stu']  = $score_list ? "<span class='green'>已评分</span>" : "<span class='red'>未评分</span>";
         }
-
-
         $this->data                 = $list;
         $this->list                 = $list['list'];
         $this->display('jd_satisfaction_detail');

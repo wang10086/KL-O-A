@@ -41,7 +41,7 @@
                                                 <td class="sorting">{$v['group_id']}</td>
                                                 <td class="sorting"><a href="{:U('Op/plans_follow',array('opid'=>$v['op_id']))}">{$v['project']}</a></td>
                                                 <td class="taskOptions">{$v['create_user_name']}</td>
-                                                <td class="taskOptions"><?php echo $v['average']?$v['average']:"<font color='#999999'>未评分</font>"; ?></td>
+                                                <td class="taskOptions"><?php echo in_array(cookie('userid'),array(1,11,12,32,38,77)) ? $v['average'] : $v['score_stu']; ?></td>
                                                 <td class="taskOptions">{$v['audit_time']|date='Y-m-d H:i',###}</td>
                                             </tr>
                                         </foreach>
