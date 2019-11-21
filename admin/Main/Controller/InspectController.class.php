@@ -1346,7 +1346,7 @@ class InspectController extends BaseController{
             $data['type']           = I('type');
             if (!$data['account_id']){
                 $this->msg          = '人员信息输入错误';
-                $this->display('Rights:audit_ok');
+                $this->display('Index:public_audit');
             }
             if ($id){
                 $res                = $db->where(array('id'=>$id))->save($data);
@@ -1358,7 +1358,7 @@ class InspectController extends BaseController{
             }else{
                 $this->msg          = '保存失败';
             }
-            $this->display('Rights:audit_ok');
+            $this->display('Index:public_audit');
         }
     }
 }

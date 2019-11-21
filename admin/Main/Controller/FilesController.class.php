@@ -465,12 +465,12 @@ class FilesController extends BaseController {
                 if (!$id) $msg      = '获取数据失败';
                 if (!$file_name) $msg = '文件夹名称不能为空';
                 $this->msg          = $msg;
-                $this->display("Rights:audit_ok");
+                $this->display("Index:public_audit");
             }
             $res                    = $db->where(array('id'=>$id))->setField('file_name',$file_name);
             $msg                    = $res ? '保存成功' : '保存数据失败';
             $this->msg              = $msg;
-            $this->display("Rights:audit_ok");
+            $this->display("Index:public_audit");
         }else{
             $id                     = I('id');
             if (!$id){ $this->error('获取数据失败'); }

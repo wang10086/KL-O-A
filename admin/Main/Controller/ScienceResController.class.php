@@ -354,7 +354,7 @@ class ScienceResController extends BaseController {
             $departmentid               = I('departmentid');
             if (!$id || !$departmentid){
                 $this->msg              = '获取数据失败';
-                $this->display('Rights:audit_ok');
+                $this->display('Index:public_audit');
             }
             $data                       = array();
             $data['departmentid']       = $departmentid;
@@ -364,7 +364,7 @@ class ScienceResController extends BaseController {
             }else{
                 $this->msg              = '保存失败';
             }
-            $this->display('Rights:audit_ok');
+            $this->display('Index:public_audit');
         }else{
             $id                         = I('id');
             if (!$id){ $this->error('获取数据失败'); }

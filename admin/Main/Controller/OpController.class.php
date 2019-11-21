@@ -3010,7 +3010,7 @@ class OpController extends BaseController {
             }else{
                 $this->msg = '人员信息错误!';
             }
-            $this->display('audit_ok');
+            $this->display('Index:public_audit');
         }else{
             //人员名单关键字
             $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
