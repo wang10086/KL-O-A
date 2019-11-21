@@ -3213,8 +3213,7 @@ function updatekpi($month,$user){
                             $op_list                = get_res_op_list($startTime,$endTime,$company_res_cityids);
                             $data                   = get_res_op_satisfaction($op_list,$type,$dimension);
 
-                            //$complete               = $data['sum_average'];
-                            $complete               = '';
+                            $complete               = $data['sum_average'];
                             $url                    = U('Kpi/public_res_satisfaction',array('st'=>$startTime,'et'=>$endTime));
                         }
 
