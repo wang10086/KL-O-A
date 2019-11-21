@@ -245,7 +245,7 @@ function opencontent(cont){
   }
 
 function open_audit (obj) {
-    let url = `{:U('Rights/index',array('status'=>0))}`;
+    let url = '/index.php?m=Main&c=Rights&a=index&status=0';
 		art.dialog.open(obj, {
 			lock:true,
 			id:'audit_win',
