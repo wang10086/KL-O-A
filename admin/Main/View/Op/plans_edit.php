@@ -78,7 +78,7 @@
                                        </h3>
                                    </div>
                                    <div class="box-body">
-                                       <?php if (in_array($op['kind'],$arr_product)){ ?>
+                                       <?php if (in_array($op['kind'],$arr_product)){ ?> <!--产品模块化-->
                                            <?php if(rolemenu(array('Op/select_module')) && $settlement['audit']!=1 && ($op['create_user']==cookie('userid') ||C('RBAC_SUPER_ADMIN')==cookie('username') ||cookie('roleid')==10)){ ?>
                                                 <include file="op_product_edit" />
                                            <?php }else{ ?>
@@ -89,7 +89,7 @@
                                                    <include file="op_line" />
                                                <?php } ?>
                                            <?php } ?>
-                                       <?php }else{ ?>
+                                       <?php }else{ ?> <!--线路-->
                                            <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
                                                <?php if($isFixedLine){ ?>
                                                    <include file="op_line" />

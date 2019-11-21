@@ -489,33 +489,13 @@ class OpController extends BaseController {
 			$this->tuanhao    = $tuanhao;
 		}
 
-		/*//项目需求单
-        $service_type         = explode(',',$resource['service_type']);
-        $act_need             = explode(',',$resource['act_need']);
-        $les_field            = explode(',',$resource['les_field']);
-        $act_field            = explode(',',$resource['act_field']);
-        if ($resource['cou_time']) $resource['cou_time'] = date('Y-m-d',$resource['cou_time']);
-
-
-        $job_name       = C('JOB_NAME');
-        $job_names      = array();
-        foreach($job_name as $key=>$value){
-            $job_names[$key]['job_name'] = $value;
-            foreach ($res_money as $k=>$v){
-                if ($value == $v['job_name']){
-                    $job_names[$key]['job_money']= $v['job_money'];
-                }
-            }
-            $job_names[$key]['job_money']= $job_names[$key]['job_money']?$job_names[$key]['job_money']:null;
-        }*/
-
         //项目类型
         //线路1 , 课程 2 , 其他 3
-        $kind       = $op['kind'];
-        $line       = M('project_kind')->where("id ='1' or pid ='1'")->getField('id',true);
-        $lessions   = M('project_kind')->where("id ='2' or pid ='2'")->getField('id',true);
-        $cgly       = M('project_kind')->where("name like '%常规旅游%'")->getField('id',true); //从'其他'栏目中提取 '常规旅游'放入线路中
-        $lines      = array_merge($line,$cgly);
+        //$kind       = $op['kind'];
+        //$line       = M('project_kind')->where("id ='1' or pid ='1'")->getField('id',true);
+        //$lessions   = M('project_kind')->where("id ='2' or pid ='2'")->getField('id',true);
+        //$cgly       = M('project_kind')->where("name like '%常规旅游%'")->getField('id',true); //从'其他'栏目中提取 '常规旅游'放入线路中
+        //$lines      = array_merge($line,$cgly);
         $fixed_lineids  = M('product_line')->where(array('type'=>2))->getField('id',true);    //固定线路
         if (in_array($line_id,$fixed_lineids)){
             $this->isFixedLine = 1;
@@ -612,7 +592,7 @@ class OpController extends BaseController {
 
         //客户名称关键字
 		$where = array();
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
 			$where['company_name'] = array('neq','');
 		}else{
 			$where['company_name'] = array('neq','');
@@ -2179,21 +2159,21 @@ class OpController extends BaseController {
     // @@@NODE-3###select_product###选择产品模块###
     public function select_module(){
 
-        $opid         = I('opid');
-        $key          = I('key');
-        $type         = I('type');
-        $subject_field= I('subject_field');
-        $from         = I('from');
-        $kind         = M('op')->where(array('op_id'=>$opid))->getField('kind');
+        $opid                           = I('opid');
+        $key                            = I('key');
+        $type                           = I('type');
+        $subject_field                  = I('subject_field');
+        $from                           = I('from');
+        $kind                           = M('op')->where(array('op_id'=>$opid))->getField('kind');
 
-        $db = M('product');
-        $this->opid   = $opid;
-        $where = array();
-        $where['audit_status']      = 1;
-        if($kind)   $where['business_dept']= $kind;
-        if($key)    $where['title'] = array('like','%'.$key.'%');
-        if ($type)  $where['type']  = array('eq',$type);
-        if ($from)  $where['from']  = array('eq',$type);
+        $db                             = M('product');
+        $this->opid                     = $opid;
+        $where                          = array();
+        $where['audit_status']          = 1;
+        if($kind)   $where['business_dept']= array('like','%'.$kind.'%');
+        if($key)    $where['title']     = array('like','%'.$key.'%');
+        if ($type)  $where['type']      = array('eq',$type);
+        if ($from)  $where['from']      = array('eq',$type);
         if ($subject_field)  $where['subject_field']  = array('eq',$subject_field);
 
         $pagecount   = $db->where($where)->count();
@@ -2201,28 +2181,33 @@ class OpController extends BaseController {
         $this->pages = $pagecount>25 ? $page->show():'';
         $lists       = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
 
-        $ageval      = C('AGE_LIST');
-        $reckon_mode = C('RECKON_MODE');
+        $ageval                         = C('AGE_LIST');
+        $reckon_mode                    = C('RECKON_MODE');
+        $new_lists                      = array();
         foreach ($lists as $k=>$v){
-            $agelist = array();
-            $ages    = explode(',',$v['age']);
-
-            foreach($ageval as $key=>$value){
-                if (in_array($key,$ages)){
-                    $agelist[] = $value;
+            $business_depts             = explode(',',$v['business_dept']);
+            if (in_array($kind,$business_depts)){
+                $agelist                = array();
+                $ages                   = explode(',',$v['age']);
+                foreach($ageval as $key=>$value){
+                    if (in_array($key,$ages)){
+                        $agelist[]      = $value;
+                    }
                 }
+                $v['agelist']           = implode(',',$agelist);
+                $v['reckon_modelist']   = $reckon_mode[$v['reckon_mode']]?$reckon_mode[$v['reckon_mode']]:"<span class='red'>未定</span>";
+                $v['sales_price']       = $v['sales_price'] ? $v['sales_price'] : '0.00';
+                $new_lists[]            = $v;
             }
-            $lists[$k]['agelist']           = implode(',',$agelist);
-            $lists[$k]['reckon_modelist']   = $reckon_mode[$v['reckon_mode']]?$reckon_mode[$v['reckon_mode']]:"<span class='red'>未定</span>";
-            if (!$v['sales_price']) $lists[$k]['sales_price'] = '0.00';
+
         }
 
-        $this->lists          = $lists;
-        $this->product_type   = C('PRODUCT_TYPE');
-        $this->subject_fields = C('SUBJECT_FIELD');
-        $this->product_from   = C('PRODUCT_FROM');
-        $this->ages           = C('AGE_LIST');
-        $this->kindlist       = M('project_kind')->select();
+        $this->lists                    = $new_lists;
+        $this->product_type             = C('PRODUCT_TYPE');
+        $this->subject_fields           = C('SUBJECT_FIELD');
+        $this->product_from             = C('PRODUCT_FROM');
+        $this->ages                     = C('AGE_LIST');
+        $this->kindlist                 = M('project_kind')->select();
 
         $this->display('select_product_module');
 
