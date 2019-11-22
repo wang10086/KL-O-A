@@ -239,7 +239,7 @@
 
                 if (n < 1){ alert('没有选择文件'); return false; }
                 if (n > 1){ alert('只能选择一个文件'); return false; }
-                if (in_array(newid,dir_ids)){ alert('暂不支付文件夹复制'); return false; }
+                if (in_array(newid,dir_ids)){ alert('暂不支持文件夹复制'); return false; }
 
                 if (confirm('确定要复制该文件吗?')){
                     //保存数据
