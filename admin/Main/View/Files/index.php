@@ -30,6 +30,9 @@
                                             <if condition="rolemenu(array('Files/delfile'))">
                                             <a href="javascript:;" onClick="delfile()"  class="btn btn-danger" style="padding:6px 12px;"><i class="fa fa-trash-o"></i> 删除</a>
                                             </if>
+                                            <if condition="rolemenu(array('Files/copyfile'))">
+                                                <a href="javascript:;" onClick="copyfile()"  class="btn btn-info" style="padding:6px 12px;"><i class="fa fa-copy"></i> 复制</a>
+                                            </if>
                                         </div>
                                     
                                     
@@ -196,7 +199,7 @@
                     if(checked=='true'){
 						fid += $(this).val() + '.';	
 					}
-                });	
+                });
 				
 				if (confirm("真的要删除吗？")){
 					//保存数据
@@ -220,7 +223,44 @@
 	
 				
 			}
-			
+
+            //复制文件
+            function copyfile(){
+                var fid = '';
+                $('.accessdata').each(function(index, element) {
+                    var checked = $(this).parent().attr('aria-checked');
+                    if(checked=='true'){
+                        fid += $(this).val() + '.';
+                    }
+                });
+                let n       = patch('.',fid);
+                let newid   = del_last_str(fid,'.');
+                let dir_ids = "{$dir_ids}".split(',');
+
+                if (n < 1){ alert('没有选择文件'); return false; }
+                if (n > 1){ alert('只能选择一个文件'); return false; }
+                if (in_array(newid,dir_ids)){ alert('暂不支付文件夹复制'); return false; }
+
+                if (confirm('确定要复制该文件吗?')){
+                    //保存数据
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo U('Files/copyfile'); ?>",
+                        dataType:'json',
+                        data: {fid:newid},
+                        success:function(data){
+                            art_show_msg(data.msg,3);
+                            if(data.num > 0){
+                                setInterval(function () {
+                                    window.location.reload();
+                                }, 1500);
+                            }
+                        }
+                    });
+                }else{
+                    return false;
+                }
+            }
 			
 			//配置权限
 			function authfile(){

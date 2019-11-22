@@ -694,12 +694,26 @@ function public_save(id,url){
 	});
 }
 
-//去除最后一个指定字符
+/*//去除最后一个指定字符
 function del_last_str(str) {
 	if(str.substr(str.length-1,str.length)==",") {
 		str=str.substr(0,str.length-1);
 	}
 	return str;
+}*/
+
+/**
+ * 去除字符串str1最后一个指定字符str2
+ * @param str1
+ * @param str2
+ * @returns {string | *}
+ */
+function del_last_str(str1,str2) {
+    if (!str2){ str2 = ','; }
+    if(str1.substr(str1.length-1,str1.length)==str2) {
+        str=str1.substr(0,str1.length-1);
+    }
+    return str;
 }
 
 //js 检测某个字符串是否在数组中
@@ -711,3 +725,15 @@ function in_array(str,array){
     }
     return false;
 }
+
+/**
+ * 判断字符st1在字符串st2中出现的次数
+ * @param st1
+ * @param st2
+ * @returns {number}
+ */
+function patch(st1,st2){
+    let n = (st2.split(st1)).length-1;
+    return n;
+}
+

@@ -68,12 +68,11 @@ class FilesController extends BaseController {
 		}
 
 		$this->datalist = $datalist;
-		//P($datalist);
 
 		//文件路径
 		$this->dir_path = array();
 		if($this->pid) $this->dir_path = file_dir($this->pid);
-
+		$this->dir_ids              = implode(',',$db->where(array('file_type'=>0))->getField('id',true));
 
 		$this->display('index');
     }
@@ -478,5 +477,30 @@ class FilesController extends BaseController {
             $this->list             = $list;
             $this->display();
         }
+    }
+
+    //复制文件
+    public function copyfile(){
+        $db                         = M('files');
+        $fid                        = I('fid','');
+        $num                        = 0;
+        if ($fid){
+            $list                   = $db->where(array('id'=>$fid))->find();
+            unset($list['id']);
+            $list['est_time']       = NOW_TIME;
+            $res                    = $db->add($list);
+            if ($res){
+                $num++;
+                $msg                = '复制成功';
+            }else{
+                $msg                = '复制失败';
+            }
+        }else{
+            $msg                    = '获取数据失败';
+        }
+        $data                       = array();
+        $data['num']                = $num;
+        $data['msg']                = $msg;
+        $this->ajaxReturn($data);
     }
 }
