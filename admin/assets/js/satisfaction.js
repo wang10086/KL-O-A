@@ -349,8 +349,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;很低</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[DD]" value="宣传文案需求符合度">'+
-                                '<label>宣传文案需求符合度：</label>'+
+                                '<input type="hidden" name="data[DD]" value="公司级宣传文案需求符合度">'+
+                                '<label>公司级宣传文案需求符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;超出需求</span>&emsp;&emsp;'+
