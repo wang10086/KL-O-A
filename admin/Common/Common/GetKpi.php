@@ -4628,6 +4628,31 @@ function get_company_res_citys($departmentid=4){
     return $data;
 }
 
+/**
+ * 获取某个时间段单进院所且使用标准化产品模块的项目结算信息
+ * @param $startTime
+ * @param $endTime
+ * @param $uid
+ * @param $kind 项目类型
+ */
+function get_res_settlement_op($startTime,$endTime,$uid,$kind){
+    $where                              = array();
+    $where['p.auth_id']                 = $uid;
+    $where['o.kind']                    = $kind;
+    $where['s.audit_status']            = 1;
+    $where['l.req_type']                = 801;
+    $where['l.audit_time']              = array('between', "$startTime,$endTime");
+    $oplist                             = M()->table('__OP_PRODUCT__ as opro')
+        ->join('__OP__ as o on o.op_id=opro.op_id','left')
+        ->join('__PRODUCT__ as p on p.id=opro.product_id','left')
+        ->join('__OP_SETTLEMENT__ as s on s.op_id=opro.op_id','left')
+        ->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')
+        ->where($where)
+        ->field('o.op_id,o.project,o.group_id,o.create_user_name,s.shouru,s.maoli,l.audit_time')
+        ->group('opro.op_id')
+        ->select();
+    return $oplist;
+}
 
 
 

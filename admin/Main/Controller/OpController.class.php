@@ -1080,7 +1080,7 @@ class OpController extends BaseController {
             }
 
 
-            //保存项目跟进校园科技节产品模块需求
+            //保存项目跟进保存产品模块需求
             if($opid && $savetype==14 ){
                 $costacc    = I('costacc');
                 $resid      = I('resid');

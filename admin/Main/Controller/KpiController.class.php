@@ -2582,6 +2582,21 @@ class KpiController extends BaseController {
 	    $this->display('res_satisfaction');
     }
 
+    //
+    public function public_kpi_res_settlement(){
+	    $this->title('单进院所业务月度累计毛利额');
+	    $uid                                = I('uid') ? I('uid') : 82; //吕严
+        $startTime                          = I('st') ? I('st') : '';
+        $endTime                            = I('et') ? I('et') : '';
+        $kind                               = 87; //单进院所
+        $oplist                             = get_res_settlement_op($startTime,$endTime,$uid,$kind);
+        $total                              = $oplist ? array_sum(array_column($oplist,'maoli')) : '0.00';
+
+        $this->list                         = $oplist;
+        $this->total                        = $total;
+        $this->display('kpi_res_settlement');
+    }
+
     public function aaa(){
         set_after_salary_kpi(201906);
     }
