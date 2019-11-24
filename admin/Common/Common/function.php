@@ -3477,8 +3477,7 @@ function updatekpi($month,$user){
                         $oplist                 = get_res_settlement_op($startTime,$v['end_date'],$v['user_id'],$kind);
                         $total                  = $oplist ? array_sum(array_column($oplist,'maoli')) : '0.00';
 
-                        //$complete               = $total;
-                        $complete               = '';
+                        $complete               = $total;
                         $url                    = U('Kpi/public_kpi_res_settlement',array('st'=>$startTime,'et'=>$v['end_date'],'uid'=>$v['user_id']));
                     }
 
