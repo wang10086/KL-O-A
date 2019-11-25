@@ -1,4 +1,5 @@
 <div class="contentAA">
+    <input type="hidden" name="info[dimension]" value="5"> <!--考核维度-->
     <input type="hidden" id="AA_num" name="info[AA]" value="" />
     <input type="hidden" id="BB_num" name="info[BB]" value="" />
     <input type="hidden" id="CC_num" name="info[CC]" value="" />

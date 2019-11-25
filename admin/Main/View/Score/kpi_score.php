@@ -13,7 +13,6 @@
                 <div class="content" style="padding: 5px;">
                     <input type="hidden" name="dosubmint" value="1">
                     <input type="hidden" name="token" value="{$token}">
-                    <input type="hidden" name="info[dimension]" value="5"> <!--考核维度-->
 
                     <?php if ($quota_id == 227){ ?>
                         <!--王丹-->
@@ -21,6 +20,9 @@
                     <?php }elseif($quota_id == 180){ ?>
                         <!--李徵红-->
                         <include file="quota_180" />
+                    <?php }elseif($quota_id == 184){ ?>
+                        <!--赵冬-->
+                        <include file="quota_184" />
                     <?php } ?>
 
                     <div align="center" class="form-group col-md-12">

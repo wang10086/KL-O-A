@@ -3217,6 +3217,11 @@ function updatekpi($month,$user){
                             $url                    = U('Kpi/public_res_satisfaction',array('st'=>$startTime,'et'=>$endTime));
                         }
 
+                        //讲座联络服务满意度-老科学家演讲团教务专员
+                        if ($v['quota_id']==184){
+
+                        }
+
                         //渠道累计毛额-市场部经理
                         if ($v['quota_id']==188){
                             $year           = $v['year']?$v['year']:date('Y');

@@ -1437,10 +1437,6 @@ class KpiController extends BaseController {
 		$this->allmonth   = $year.sprintf('%02s', $month);
 
 		$this->display('kpi_info');
-
-
-
-
 	}
 
 
