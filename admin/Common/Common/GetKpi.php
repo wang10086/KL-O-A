@@ -2303,7 +2303,7 @@ function get_yw_department(){
     function get_years_cycle($year,$month){
         $day                                    = 26;
         $now_day                                = date('d');
-        if ($month.$now_day > 1225){ //今年考核周期
+        if ($month.$now_day > 1225 && date('m')==12){ //今年考核周期
             $cycle['this_year_start_time']      = strtotime(($year-1).'1226'); ;
             $cycle['this_year_end_time']        = strtotime(($year-1).'12'.$now_day.date('His'));
         }else{
@@ -2313,7 +2313,7 @@ function get_yw_department(){
 
         //去年考核周期
         $cycle['last_year_start_time']          = strtotime(($year-2).'1226');
-        if ($now_day > 26){
+        if ($now_day > 25){
             $cycle['last_year_end_time']        = strtotime(($year-1).$month.'26');
         }else{
             $cycle['last_year_end_time']        = strtotime(($year-1).$month.date('dHis'));
