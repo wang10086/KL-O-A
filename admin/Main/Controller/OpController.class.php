@@ -2801,11 +2801,11 @@ class OpController extends BaseController {
                     $dijie_confirm            = array();
                     $dijie_confirm['op_id']   = $new_op['op_id'];
                     $dijie_confirm['group_id']= $new_op['group_id'];
-                    $dijie_confirm['dep_time']= $confirm['dep_time'];
-                    $dijie_confirm['ret_time']= $confirm['ret_time'];
-                    $dijie_confirm['num_adult']     = $confirm['num_adult'];
-                    $dijie_confirm['num_children']  = $confirm['num_children'];
-                    $dijie_confirm['days']          = $confirm['days'];
+                    $dijie_confirm['dep_time']= $info['dep_time'];
+                    $dijie_confirm['ret_time']= $info['ret_time'];
+                    $dijie_confirm['num_adult']     = $info['num_adult'];
+                    $dijie_confirm['num_children']  = $info['num_children'];
+                    $dijie_confirm['days']          = $info['days'];
                     $dijie_confirm['user_id']       = $new_op['create_user'];
                     $dijie_confirm['user_name']     = $new_op['user_name'];
                     $dijie_confirm['confirm_time']  = NOW_TIME;
