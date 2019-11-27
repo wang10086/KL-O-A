@@ -68,7 +68,6 @@
             guide_id        = <?php echo $guide_id?$guide_id:0; ?>;
             opid            = <?php echo $opid?$opid:0; ?>;
             title           = "<?php echo $title; ?>";
-            console.log(quota_id);
 
         $(function(){
             $("#myform").Validform({
@@ -125,10 +124,8 @@
                     dataType:'json',
                     data:{mobile:mobile,rand:parseInt(10000*Math.random()),token:token},
                     success:function(data){
-                        console.log(data);
-                        if(data.status=='n'){
-                            showmsg('提示',data.info);
-                        }
+                        showmsg('提示',data.info);
+                        if(data.status=='n'){ return false; }
                         time();
                     },
                     error:function () {
