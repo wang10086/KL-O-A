@@ -24,8 +24,8 @@ class ScoreController extends Controller{
             $mobile_code                = I('mobile_code');
             $uid                        = I('uid');
             $quota_id                   = I('quota_id');
-            //$monthly                    = date('Ym');
-            $monthly                    = get_kpi_yearMonth(date('Y'),date('m'));
+            $yearMonth                  = I('yearMonth','');
+            $monthly                    = $yearMonth ? $yearMonth : get_kpi_yearMonth(date('Y'),date('m'));
 
             //验证手机验证码
             if ($mobile_code != session('code')) {
@@ -64,10 +64,16 @@ class ScoreController extends Controller{
             }
         }else{
             $uid                    = I('uid');
-            $quota_id               = I('quota_id');
-            $title                  = trim(I('title'));
+            $quota_id               = I('kpi_quota_id');
+            $title                  = trim(I('tit'));
+            $ym                     = I('ym');
+            $guide_id               = I('guide_id');
+            $opid                   = I('opid');
             $this->uid              = $uid;
             $this->quota_id         = $quota_id;
+            $this->ym               = $ym;
+            $this->guide_id         = $guide_id;
+            $this->opid             = $opid;
             $this->title            = $title;
             $this->token            = make_token();
             $this->display('mob-login');
@@ -78,13 +84,19 @@ class ScoreController extends Controller{
     public function kpi_score(){
         $uid                        = I('uid');
         $title                      = I('tit');
-        $quota_id                   = I('quota_id');
+        $quota_id                   = I('kpi_quota_id');
+        $ym                         = I('ym','');
+        $guide_id                   = I('guide_id',0);
+        $opid                       = I('opid','');
 
         $this->uid                  = $uid;
         $this->token                = make_token();
         $this->scoreMobile          = session('scoreMobile');
         $this->title                = strpos($title,'-')?trim(substr($title,0,strrpos($title,"-"))):$title ;
         $this->quota_id             = $quota_id;
+        $this->ym                   = $ym;
+        $this->guide_id             = $guide_id;
+        $this->opid                 = $opid;
         $this->SYSTEM_NAME          = '客户满意度';
         $this->display('kpi_score');
     }
@@ -101,8 +113,8 @@ class ScoreController extends Controller{
             $id                     = session('score_uid');
             if (session('partner_satisfaction')){
                 $msg                = '请勿重复提交数据';
-                $data['num']            = $num;
-                $data['msg']            = $msg;
+                $data['num']        = $num;
+                $data['msg']        = $msg;
                 $this->ajaxReturn($data);
             }
             if ($token == session('token')){

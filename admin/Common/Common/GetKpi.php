@@ -1424,7 +1424,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $op_num 		                    = count($op_list);
         $contract_list                      = array();
         foreach ($op_list as $key=>$value){
-            //出团后5天内完成上传
+            //预算审核通后5天内完成上传
             $time                           = strtotime(getAfterWorkDay(6,$value['dep_time'])); //出团后6个工作日
             $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find(); //按规定时间上传合同
             $list2                          = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1))->find(); //查看截止当期有无合同

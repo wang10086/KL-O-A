@@ -13,6 +13,7 @@
                 <div class="content" style="padding: 5px;">
                     <input type="hidden" name="dosubmint" value="1">
                     <input type="hidden" name="token" value="{$token}">
+                    <!--<input type="hidden" name="info[quota_id]" value="{$quota_id}">-->
 
                     <?php if ($quota_id == 227){ ?>
                         <!--王丹-->
@@ -40,11 +41,15 @@
     var uid         = <?php echo $uid?$uid:0; ?>;
     var quota_id    = <?php echo $quota_id?$quota_id:0; ?>;
     var title       = "<?php echo $title; ?>";
+    var ym          = <?php echo $ym?$ym:0; ?>;
+    var guide_id    = <?php echo $guide_id?$guide_id:0; ?>;
+    var opid        = <?php echo $opid?$opid:0; ?>;
     var scoreMobile = <?php echo $scoreMobile?$scoreMobile:0; ?>;
     var host        = "<?php echo $_SERVER['SERVER_NAME']; ?>";
     var dimension   = $('input[name="info[dimension]"]').val();
     $(function () {
         if(dimension == 5) { init_score_5(); }
+        if(dimension == 4) { init_score_4(); }
         check_login(scoreMobile,host);
     })
 
@@ -59,7 +64,7 @@
     function con_sure(host){
         var a       = confirm('为了防止刷票,请您先使用手机号注册登陆!');
         if (a==true){
-            window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=login&uid='+uid+'&quota_id='+quota_id+'&title='+title;
+            window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=login&uid='+uid+'&kpi_quota_id='+quota_id+'&tit='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid;
         }else{
             window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=noScore';
         }
@@ -78,7 +83,6 @@
             pingfen('CC',res.CC);
             pingfen('DD',res.DD);
             pingfen('EE',res.EE);
-
             $('#AA_num').val(res.AA);
             $('#BB_num').val(res.BB);
             $('#CC_num').val(res.CC);
@@ -90,12 +94,39 @@
             pingfen('CC',5);
             pingfen('DD',5);
             pingfen('EE',5);
-
             $('#AA_num').val(5);
             $('#BB_num').val(5);
             $('#CC_num').val(5);
             $('#DD_num').val(5);
             $('#EE_num').val(5);
+        }
+    }
+
+    //初始化评分显示(5各维度)
+    function init_score_4() {
+        $.fn.raty.defaults.path = "__HTML__/score/lib/img";
+        var res = <?php echo $pingfen?$pingfen:0; ?>;
+
+        if (res){
+            $('#content').html(res.content);
+
+            pingfen('AA',res.AA);
+            pingfen('BB',res.BB);
+            pingfen('CC',res.CC);
+            pingfen('DD',res.DD);
+            $('#AA_num').val(res.AA);
+            $('#BB_num').val(res.BB);
+            $('#CC_num').val(res.CC);
+            $('#DD_num').val(res.DD);
+        }else{
+            pingfen('AA',5);
+            pingfen('BB',5);
+            pingfen('CC',5);
+            pingfen('DD',5);
+            $('#AA_num').val(5);
+            $('#BB_num').val(5);
+            $('#CC_num').val(5);
+            $('#DD_num').val(5);
         }
     }
 

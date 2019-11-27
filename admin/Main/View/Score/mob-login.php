@@ -28,6 +28,7 @@
             <input type="hidden" name="dosubmit" value="1" />
             <input type="hidden" name="uid" value="{$uid}">
             <input type="hidden" name="quota_id" value="{$quota_id}">
+            <input type="hidden" name="yearMonth" value="{$yearMonth}">
             <div class="sco-box-body">
                 <div class="mob-loginfrom gbg">
                     <ul>
@@ -63,7 +64,11 @@
         <script type="text/javascript">
             uid             = <?php echo $uid?$uid:0; ?>;
             quota_id        = <?php echo $quota_id?$quota_id:0; ?>;
+            ym              = <?php echo $ym?$ym:0; ?>;
+            guide_id        = <?php echo $guide_id?$guide_id:0; ?>;
+            opid            = <?php echo $opid?$opid:0; ?>;
             title           = "<?php echo $title; ?>";
+            console.log(quota_id);
 
         $(function(){
             $("#myform").Validform({
@@ -80,7 +85,7 @@
                     var obj = eval(data);
                     if(obj.status == 'y'){
                         showmsg('提示', obj.info);
-                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&quota_id='+quota_id+'&title='+title",1500);
+                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&kpi_quota_id='+quota_id+'&title='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid",1500);
                     }else{
                         showmsg('提示',obj.info);
                     }
@@ -120,6 +125,7 @@
                     dataType:'json',
                     data:{mobile:mobile,rand:parseInt(10000*Math.random()),token:token},
                     success:function(data){
+                        console.log(data);
                         if(data.status=='n'){
                             showmsg('提示',data.info);
                         }

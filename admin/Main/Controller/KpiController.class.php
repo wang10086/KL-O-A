@@ -2192,9 +2192,13 @@ class KpiController extends BaseController {
         $uid                                = I('uid');
         $title                              = trim(I('tit'));
         $quota_id                           = I('quota_id');
+        //赵冬
+        $ym                                 = I('ym','');
+        $guide_id                           = I('guide_id',0);
+        $opid                               = I('opid','');
 
         $server_name                        = $_SERVER['SERVER_NAME'];
-        $this->url                          = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title,'quota_id'=>$quota_id));
+        $this->url                          = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title,'kpi_quota_id'=>$quota_id,'ym'=>$ym,'guide_id'=>$guide_id,'opid'=>$opid));
         $this->title                        = $title;
         $this->display('qrcode');
     }
@@ -2591,6 +2595,40 @@ class KpiController extends BaseController {
         $this->list                         = $oplist;
         $this->total                        = $total;
         $this->display('kpi_res_settlement');
+    }
+
+    //讲座联络服务满意度-老科学家演讲团教务专员
+    public function public_sci_service(){
+	    $this->title('老科学家演讲团出团信息');
+	    $startTime                          = I('st');
+	    $endTime                            = I('et');
+	    $quota_id                           = I('quota_id');
+	    $yearMonth                          = I('ym');
+	    $user_id                            = I('uid');
+	    $title                              = trim(I('tit'));
+
+	    $where                              = array();
+	    $where['p.status']                  = 2; //已完成
+        $where['p.sure_time']               = array('between',array($startTime,$endTime));
+        $where['g.kind']                    = 10; //老科学家演讲团
+        $field                              = 'g.id,g.name,g.kind,o.op_id,o.group_id,o.project,o.create_user_name,p.sure_time';
+	    $list                               = M()->table('__GUIDE_PAY__ as p')
+            ->join('__GUIDE__ as g on g.id=p.guide_id','left')
+            ->join('__OP__ as o on o.op_id=p.op_id','left')
+            ->order('p.op_id asc')
+            ->field($field)
+            ->where($where)
+            ->select();
+        foreach ($list as $k=>$v){
+            $list[$k]['tit']                = $v['name'].'（'.$v['project'].'）';
+        }
+
+        $this->list                         = $list;
+        $this->uid                          = $user_id;
+        $this->yearMonth                    = $yearMonth;
+        $this->quota_id                     = $quota_id;
+        $this->title                        = strpos($title,'-')?trim(substr($title,0,strrpos($title,"-"))):$title ;
+        $this->display('kpi_sci_service');
     }
 
     public function aaa(){
