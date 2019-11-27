@@ -85,7 +85,7 @@
                     var obj = eval(data);
                     if(obj.status == 'y'){
                         showmsg('提示', obj.info);
-                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&kpi_quota_id='+quota_id+'&title='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid",1500);
+                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&kpi_quota_id='+quota_id+'&tit='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid",1500);
                     }else{
                         showmsg('提示',obj.info);
                     }

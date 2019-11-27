@@ -111,12 +111,12 @@ class ScoreController extends Controller{
             $info                   = I('info');
             $content                = trim(I('content'));
             $id                     = session('score_uid');
-            if (session('partner_satisfaction')){
+            /*if (session('partner_satisfaction')){
                 $msg                = '请勿重复提交数据';
                 $data['num']        = $num;
                 $data['msg']        = $msg;
                 $this->ajaxReturn($data);
-            }
+            }*/
             if ($token == session('token')){
                 $info['content']    = $content;
                 $info['create_time']= NOW_TIME;
@@ -125,7 +125,9 @@ class ScoreController extends Controller{
                 if ($res) {
                     $num++;
                     $msg            = '保存成功';
-                    session('partner_satisfaction',1);
+                    //session('partner_satisfaction',1);
+                    session(null);
+                    cookie(null);
                 }else{
                     $msg            = '保存失败';
                 }
