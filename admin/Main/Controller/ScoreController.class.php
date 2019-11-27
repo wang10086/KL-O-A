@@ -26,6 +26,8 @@ class ScoreController extends Controller{
             $quota_id                   = I('quota_id');
             $yearMonth                  = I('yearMonth','');
             $monthly                    = $yearMonth ? $yearMonth : get_kpi_yearMonth(date('Y'),date('m'));
+            $guide_id                   = I('guide',0);
+            $opid                       = I('opid','');
 
             //验证手机验证码
             if ($mobile_code != session('code')) {
@@ -34,7 +36,7 @@ class ScoreController extends Controller{
                 if (!$mobile) { die(return_msg('n','手机号码错误')); }
                 if (!$uid) { die(return_msg('n','获取被评分人信息失败')); }
                 $score_record           = $db->where(array('account_id'=>$uid,'quota_id'=>$quota_id,'mobile'=>$mobile,'monthly'=>$monthly,'status'=>1))->find();
-                if ($score_record){ die(return_msg('n','您本月已完成满意度评价,感谢您的参与!')); }
+                if ($score_record && !$opid){ die(return_msg('n','您本月已完成满意度评价,感谢您的参与!')); }
 
                 $register_record        = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly))->find(); //已注册,未评分
                 if ($register_record){
