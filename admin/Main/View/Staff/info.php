@@ -89,7 +89,7 @@
                                         <div class="note-info">
                                             <foreach name="huifu" key="k" item="v">
                                                 <div class="form-group col-md-12 mb0">
-                                                    {$k+1}、<span>{$v.content}</span>
+                                                    {$k+1} 、<span>{$v.content}</span>
                                                 </div>
 
                                                 <div class="note-info" >

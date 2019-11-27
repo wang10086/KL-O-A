@@ -2606,29 +2606,32 @@ class KpiController extends BaseController {
 	    $yearMonth                          = I('ym');
 	    $user_id                            = I('uid');
 	    $title                              = trim(I('tit'));
+	    $dimension                          = 4;
 
-	    $where                              = array();
-	    $where['p.status']                  = 2; //已完成
-        $where['p.sure_time']               = array('between',array($startTime,$endTime));
-        $where['g.kind']                    = 10; //老科学家演讲团
-        $field                              = 'g.id,g.name,g.kind,o.op_id,o.group_id,o.project,o.create_user_name,p.sure_time';
-	    $list                               = M()->table('__GUIDE_PAY__ as p')
-            ->join('__GUIDE__ as g on g.id=p.guide_id','left')
-            ->join('__OP__ as o on o.op_id=p.op_id','left')
-            ->order('p.op_id asc')
-            ->field($field)
-            ->where($where)
-            ->select();
-        foreach ($list as $k=>$v){
-            $list[$k]['tit']                = $v['name'].'（'.$v['project'].'）';
-        }
+	    $guide_sci_list                     = get_sci_list($startTime,$endTime); //获取当月老科学家演讲团成员带团信息
+        $guide_sci_score_list               = get_guide_sci_score_list($guide_sci_list,$quota_id,$dimension); //获取评分信息
+        $sum                                = $guide_sci_score_list['sum'];
+        unset($guide_sci_score_list['sum']);
 
-        $this->list                         = $list;
+        $this->list                         = $guide_sci_score_list;
+        $this->sum                          = $sum;
         $this->uid                          = $user_id;
         $this->yearMonth                    = $yearMonth;
         $this->quota_id                     = $quota_id;
         $this->title                        = strpos($title,'-')?trim(substr($title,0,strrpos($title,"-"))):$title ;
         $this->display('kpi_sci_service');
+    }
+
+    //讲座联络服务满意度-老科学家演讲团教务专员评分详情
+    public function public_sci_service_detail(){
+	    $db                                 = M('partner_satisfaction');
+        $sid                                = I('sid');
+	    if (!$sid){ $this->error('获取数据错误'); }
+	    $list                               = $db->where(array('id'=>$sid))->find();
+	    $list['average']                    = get_score_average($list);
+
+	    $this->list                         = $list;
+	    $this->display('kpi_sci_service_detail');
     }
 
     public function aaa(){

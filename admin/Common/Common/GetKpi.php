@@ -4655,5 +4655,88 @@ function get_res_settlement_op($startTime,$endTime,$uid,$kind){
     return $oplist;
 }
 
+/**
+ *  获取当月老科学家演讲团成员带团信息
+ * @param $startTime
+ * @param $endTime
+ * @return mixed
+ */
+function get_sci_list($startTime,$endTime){
+    $where                              = array();
+    $where['p.status']                  = 2; //已完成
+    $where['p.sure_time']               = array('between',array($startTime,$endTime));
+    $where['g.kind']                    = 10; //老科学家演讲团
+    $field                              = 'g.id,g.name,g.kind,o.op_id,o.group_id,o.project,o.create_user_name,p.sure_time';
+    $lists                              = M()->table('__GUIDE_PAY__ as p')
+        ->join('__GUIDE__ as g on g.id=p.guide_id','left')
+        ->join('__OP__ as o on o.op_id=p.op_id','left')
+        ->order('p.op_id asc')
+        ->field($field)
+        ->where($where)
+        ->select();
+    return $lists;
+}
+
+/**
+ * 获取老科学家演讲团成员带团评分信息
+ * @param $list
+ * @param $quota_id
+ * @param $dimension
+ * @return mixed
+ */
+function get_guide_sci_score_list($lists,$quota_id,$dimension=4){
+    $db                                 = M('partner_satisfaction');
+    foreach ($lists as $k=>$v){
+        $lists[$k]['tit']               = $v['name'].'（'.$v['project'].'）';
+        $where                          = array();
+        $where['guide_id']              = $v['id'];
+        $where['op_id']                 = $v['op_id'];
+        $where['quota_id']              = $quota_id;
+        $score_list                     = $db->where($where)->find();
+        $lists[$k]['score_stu']         = $score_list ? "<span class='green'>已评分</span>" : "<span class='red'>未评分</span>";
+        if ($score_list){
+            $average                    = get_score_average($score_list);
+            $lists[$k]['average']       = $average;
+            $lists[$k]['score_list']    = $score_list;
+        }
+    }
+
+    $sum_score_average_data             = get_sum_score_average($lists,$dimension);
+    $lists['sum']                       = $sum_score_average_data;
+    return $lists;
+}
+
+//获取单项评分满意度
+function get_score_average($list){
+    $score                              = $list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['DD'];
+    $sum                                = $list['dimension']*5;
+    $average                            = (round($score/$sum,4)*100).'%';
+    return $average;
+}
+
+//获取总满意度
+function get_sum_score_average($lists,$dimension){
+    $zongfen                            = 0;
+    $defen                              = 0;
+    $sum_num                            = 0;
+    $score_num                          = 0;
+    foreach ($lists as $k=>$v){
+        $sum_num++;
+        $zongfen                        += 5*$dimension;
+        if ($v['score_list']){
+            $score_num++;
+            $defen                      += $v['score_list']['AA'] + $v['score_list']['BB'] + $v['score_list']['CC'] + $v['score_list']['DD'] + $v['score_list']['EE'];
+        }else{
+            $defen                      += round((5*$dimension)/2,2);
+        }
+    }
+    $average                            = (round($defen/$zongfen,4)*100).'%';
+    $data                               = array();
+    $data['score_num']                  = $score_num;
+    $data['sum_num']                    = $sum_num;
+    $data['average']                    = $average;
+    return $data;
+}
+
 
 
