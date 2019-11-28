@@ -120,6 +120,7 @@ class ScienceResController extends BaseController {
 			$business_dept                      = I('business_dept');
 			$info['content']                    = stripslashes($_POST['content']);
 			$info['business_dept']              = implode(',',array_unique($business_dept));
+			$num                                = 0;
 
             if(!$id){
 				$info['input_user']             = session('userid');
@@ -169,15 +170,18 @@ class ScienceResController extends BaseController {
                         if ($v['id']){
                             $cas_res_kind_db->where(array('id'=>$v['id']))->save($karr);
                             $reset_ids[]        = $v['id'];
+                            $num++;
                         }else{
                             $res                = $cas_res_kind_db->add($karr);
                             $reset_ids[]        = $res;
+                            if ($res) $num++;
                         }
                     }
                 }
-                $cas_res_kind_db->where(array('res_id'=>$id,'id'=>array('not in',$reset_ids)))->delete();
+                $del                            = $cas_res_kind_db->where(array('res_id'=>$id,'id'=>array('not in',$reset_ids)))->delete();
                 $isedit                         = $db->data($info)->where(array('id'=>$id))->save();
-                if($isedit) {
+                if ($del || $isedit) $num++;
+                if($num) {
                     $this->success('修改成功！',$referer);
                 } else {
                     $this->error('修改失败：' . $db->getError());
