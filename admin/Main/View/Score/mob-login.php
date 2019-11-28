@@ -27,7 +27,7 @@
             <form method="post" action="{:U('Score/login')}" name="myform" id="myform">
             <input type="hidden" name="dosubmit" value="1" />
             <input type="hidden" name="uid" value="{$uid}">
-            <input type="hidden" name="quota_id" value="{$quota_id}">
+            <input type="hidden" name="kpi_quota_id" value="{$quota_id}">
             <input type="hidden" name="yearMonth" value="{$yearMonth}">
             <div class="sco-box-body">
                 <div class="mob-loginfrom gbg">

@@ -23,7 +23,7 @@ class ScoreController extends BasepubController {
             $mobile                     = trim(I('mobile'));
             $mobile_code                = I('mobile_code');
             $uid                        = I('uid');
-            $quota_id                   = I('quota_id');
+            $quota_id                   = I('kpi_quota_id');
             $yearMonth                  = I('yearMonth','');
             $monthly                    = $yearMonth ? $yearMonth : get_kpi_yearMonth(date('Y'),date('m'));
             $guide_id                   = I('guide',0);
@@ -38,7 +38,7 @@ class ScoreController extends BasepubController {
                 $score_record           = $db->where(array('account_id'=>$uid,'quota_id'=>$quota_id,'mobile'=>$mobile,'monthly'=>$monthly,'status'=>1))->find();
                 if ($score_record && !$opid){ die(return_msg('n','您本月已完成满意度评价,感谢您的参与!')); }
 
-                $register_record        = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly))->find(); //已注册,未评分
+                $register_record        = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly,'quota_id'=>$quota_id))->find(); //已注册,未评分
                 if ($register_record){
                     $register_id        = $register_record['id'];
                     $info               = array();
