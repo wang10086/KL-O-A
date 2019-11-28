@@ -4734,7 +4734,7 @@ function get_sum_score_average($lists,$dimension){
     $data                               = array();
     $data['score_num']                  = $score_num;
     $data['sum_num']                    = $sum_num;
-    $data['average']                    = $average;
+    $data['average']                    = !$sum_num ? '100%' : $average;
     return $data;
 }
 
