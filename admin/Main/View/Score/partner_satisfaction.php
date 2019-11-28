@@ -3,11 +3,11 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>城市合伙人满意度</h1>
+                    <h1>{$_action_}</h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
-                        <li class="active">城市合伙人满意度</li>
+                        <li class="active">{$_action_}</li>
                     </ol>
                 </section>
 
@@ -19,41 +19,45 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">城市合伙人满意度</h3>
+                                    <h3 class="box-title">{$_action_}</h3>
                                     <h3 class="box-title pull-right"><span class="green">被评分人：{$account.nickname}</span></h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
+                                    <?php if ($lists){ ?>
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" width="80" data="">评分月份</th>
-                                            <th class="sorting" data="">评分时间</th>
-                                            <th class="sorting" data="">客户联系方式</th>
-                                            <th class="sorting" data="">{$lists[0][AA_title]}</th>
-                                            <th class="sorting" data="">{$lists[0][BB_title]}</th>
-                                            <th class="sorting" data="">{$lists[0][CC_title]}</th>
-                                            <th class="sorting" data="">{$lists[0][DD_title]}</th>
-                                            <th class="sorting" data="">{$lists[0][EE_title]}</th>
-                                            <th class="sorting" data="">意见建议</th>
+                                            <th width="80">评分月份</th>
+                                            <th>评分时间</th>
+                                            <th>客户联系方式</th>
+                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][AA_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][BB_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][CC_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][DD_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][EE_title]}</th><?php } ?>
+                                            <th>意见建议</th>
                                         </tr>
                                         <foreach name="lists" item="row">
                                         <tr>
-                                            <td class="sorting">{$row.monthly}</td>
-                                            <td class="sorting">{$row.create_time|date='Y-m-d',###}</td>
-                                            <td class="sorting">{$row.mobile}</td>
-                                            <td class="sorting">{$row.AA} &nbsp;星</td>
-                                            <td class="sorting">{$row.BB} &nbsp;星</td>
-                                            <td class="sorting">{$row.CC} &nbsp;星</td>
-                                            <td class="sorting">{$row.DD} &nbsp;星</td>
-                                            <td class="sorting">{$row.EE} &nbsp;星</td>
-                                            <td class="sorting">{$row.content}</td>
+                                            <td>{$row.monthly}</td>
+                                            <td>{$row.create_time|date='Y-m-d',###}</td>
+                                            <td><?php echo in_array(cookie('userid'),array(11)) ? $row['mobile'] : $row['hide_mobile']; ?></td>
+                                            <?php if ($lists[0]['AA']){ ?><td>{$row.AA} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><td>{$row.BB} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><td>{$row.CC} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><td>{$row.DD} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['AA']){ ?><td>{$row.EE} &nbsp;星</td><?php } ?>
+                                            <td>{$row.content}</td>
                                         </tr>
                                         </foreach>
-                                        <tr class="black">
-                                            <td colspan="3">评分月份：{$month}</td>
-                                            <td colspan="3">评分次数：{$number}</td>
-                                            <td colspan="3">平均分：{$complete}</td>
-                                        </tr>
                                     </table>
+                                    <div class="form-group mt20">
+                                        <div style="display: inline-block; width:30%">评分月份：{$month}</div>
+                                        <div style="display: inline-block; width:30%">评分次数：{$number}</div>
+                                        <div style="display: inline-block; width:30%">平均分：{$complete}</div>
+                                    </div>
+                                    <?php }else{ ?>
+                                        <div class="content" style="padding-top:40px;">  暂无评分信息!</div>
+                                    <?php } ?>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
                                 	<div class="pagestyle">{$pages}</div>

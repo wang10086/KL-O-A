@@ -43,7 +43,7 @@
                                     <tr>
                                         <td>{$row.name}
                                             <?php if (!$row['average']){ ?>
-                                            <i class='fa fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick="get_qrcode(`/index.php?m=Main&c=Kpi&a=public_qrcode&uid={$uid}&tit={$row[tit]}&quota_id={$quota_id}&ym={$yearMonth}&guide_id={$row[id]}&opid={$row[op_id]}`)"></i>
+                                            <i class='fa fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick="get_qrcode(`/index.php?m=Main&c=Kpi&a=public_qrcode&uid={$uid}&tit={$row[tit]}&kpi_quota_id={$quota_id}&ym={$yearMonth}&guide_id={$row[id]}&opid={$row[op_id]}`)"></i>
                                             <?php } ?>
                                         </td>
                                         <td>{$row.group_id}</td>

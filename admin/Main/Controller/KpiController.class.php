@@ -2191,7 +2191,7 @@ class KpiController extends BaseController {
     public function public_qrcode(){
         $uid                                = I('uid');
         $title                              = trim(I('tit'));
-        $quota_id                           = I('quota_id');
+        $quota_id                           = I('kpi_quota_id');
         //赵冬
         $ym                                 = I('ym','');
         $guide_id                           = I('guide_id',0);
@@ -2630,7 +2630,7 @@ class KpiController extends BaseController {
 	    $list                               = $db->where(array('id'=>$sid))->find();
 	    $list['average']                    = get_score_average($list);
 
-	    $list['hide_mobile']                = substr($list['mobile'],0,3).'****'.substr($list['mobile'],7,4);
+	    $list['hide_mobile']                = hide_mobile($list['mobile']);
 	    $this->list                         = $list;
 	    $this->display('kpi_sci_service_detail');
     }

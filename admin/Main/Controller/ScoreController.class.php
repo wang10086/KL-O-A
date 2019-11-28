@@ -11,7 +11,7 @@ use Sys\Page;
 use Sys\P;
 use Think\Verify;
 
-class ScoreController extends Controller{
+class ScoreController extends BasepubController {
     protected $_pagetitle_  = '评分系统';
     protected $_pagedesc_   = '';
 
@@ -172,7 +172,9 @@ class ScoreController extends Controller{
     public function public_partner_satisfaction(){
         $uid                        = I('uid');
         $month                      = I('month');
-        $data                       = get_partner_satisfaction($uid,$month);
+        $quota_id                   = I('kpi_quota_id');
+        $tit                        = I('tit') ? trim(I('tit')) :'客户满意度';
+        $data                       = get_partner_satisfaction($uid,$month,$quota_id);
         $lists                      = $data['lists'];
         $number                     = $data['number']; //评分次数
         $average                    = $data['average'];
@@ -182,6 +184,7 @@ class ScoreController extends Controller{
         $this->lists                = $lists;
         $this->number               = $number;
         $this->complete             = ($average*100).'%';
+        $this->title($tit);
         $this->display('partner_satisfaction');
     }
 

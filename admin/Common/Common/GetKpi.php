@@ -2688,19 +2688,21 @@ function get_yw_department(){
     }
 
     //城市合伙人满意度评分
-    function get_partner_satisfaction($uid,$month){
+    function get_partner_satisfaction($uid,$month,$quota_id=0){
         $month                      = explode(',',$month);
         $db                         = M('partner_satisfaction');
         $where                      = array();
         $where['account_id']        = $uid;
         $where['monthly']           = array('in',$month);
         $where['status']            = 1; //已评分
+        $where['quota_id']          = $quota_id;
         $lists                      = $db->where($where)->select();
 
         $number                     = 0; //评分次数
         $score_num                  = 0; //评分得分
         $dimension_num              = 0; //维度合计
         foreach ($lists as $k=>$v){
+            $lists[$k]['hide_mobile'] = hide_mobile($v['mobile']);
             if ($v['AA']) $dimension_num++;
             if ($v['BB']) $dimension_num++;
             if ($v['CC']) $dimension_num++;
@@ -2710,7 +2712,7 @@ function get_yw_department(){
             $number++;
         }
         $score_sum                  = $dimension_num * 5;
-        $average                    = round($score_num/$score_sum,2);
+        $average                    = $score_sum ? round($score_num/$score_sum,2) : '0%';
         $data                       = array();
         $data['average']            = $average;
         $data['number']             = $number;

@@ -22,8 +22,11 @@
                         <!--李徵红-->
                         <include file="quota_180" />
                     <?php }elseif($quota_id == 184){ ?>
-                        <!--赵冬-->
+                        <!--赵冬--讲座联络服务满意度-老科学家演讲团教务专员-->
                         <include file="quota_184" />
+                    <?php }elseif($quota_id == 185){ ?>
+                        <!--赵冬--日常服务工作满意度-老科学家演讲团教务专员 -->
+                        <include file="quota_185" />
                     <?php } ?>
 
                     <div align="center" class="form-group col-md-12">
@@ -50,6 +53,7 @@
     $(function () {
         if(dimension == 5) { init_score_5(); }
         if(dimension == 4) { init_score_4(); }
+        if(dimension == 3) { init_score_3(); }
         check_login(scoreMobile,host);
     })
 
@@ -70,7 +74,7 @@
         }
     }
 
-    //初始化评分显示(5各维度)
+    //初始化评分显示(5个维度)
     function init_score_5() {
         $.fn.raty.defaults.path = "__HTML__/score/lib/img";
         var res = <?php echo $pingfen?$pingfen:0; ?>;
@@ -102,7 +106,7 @@
         }
     }
 
-    //初始化评分显示(5各维度)
+    //初始化评分显示(4个维度)
     function init_score_4() {
         $.fn.raty.defaults.path = "__HTML__/score/lib/img";
         var res = <?php echo $pingfen?$pingfen:0; ?>;
@@ -127,6 +131,30 @@
             $('#BB_num').val(5);
             $('#CC_num').val(5);
             $('#DD_num').val(5);
+        }
+    }
+
+    //初始化评分显示(3个维度)
+    function init_score_3() {
+        $.fn.raty.defaults.path = "__HTML__/score/lib/img";
+        var res = <?php echo $pingfen?$pingfen:0; ?>;
+
+        if (res){
+            $('#content').html(res.content);
+
+            pingfen('AA',res.AA);
+            pingfen('BB',res.BB);
+            pingfen('CC',res.CC);
+            $('#AA_num').val(res.AA);
+            $('#BB_num').val(res.BB);
+            $('#CC_num').val(res.CC);
+        }else{
+            pingfen('AA',5);
+            pingfen('BB',5);
+            pingfen('CC',5);
+            $('#AA_num').val(5);
+            $('#BB_num').val(5);
+            $('#CC_num').val(5);
         }
     }
 

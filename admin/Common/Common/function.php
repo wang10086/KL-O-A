@@ -3233,9 +3233,7 @@ function updatekpi($month,$user){
                         }
 
                         //日常服务工作满意度-老科学家演讲团教务专员
-                        if ($v['quota_id']==185){
-
-                        }
+                        //if ($v['quota_id']==185){ }
 
                         //渠道累计毛额-市场部经理
                         if ($v['quota_id']==188){
@@ -3425,23 +3423,20 @@ function updatekpi($month,$user){
 
                     //227 => 城市合伙人-满意度
                     //180 => 院内资源满意度 - 资源管理部经理
-                    if(in_array($v['quota_id'],array(227,180))){
+                    //185 => 日常服务工作满意度-老科学家演讲团教务专员
+                    if(in_array($v['quota_id'],array(227,180,185))){
                         $uid                    = $v['user_id'];
                         $month                  = $v['month'];
-                        $year                   = $v['year'];
+                        /*$year                   = $v['year'];
                         $monon                  = substr($v['month'],4,2);
-                        $yearMonth              = $year.$monon;
-                        $data                   = get_partner_satisfaction($uid,$month);
+                        $yearMonth              = $year.$monon;*/
+                        $data                   = get_partner_satisfaction($uid,$month,$v['quota_id']);
                         $average                = $data['average']; //平均分
                         $number                 = $data['number']; //评分次数
-                        /*if (!$number){
-                            $complete           = '100%';
-                        }else{
-                            $complete           = ($average*100).'%';
-                        }*/
                         $complete               = ($average*100).'%';
 
-                        $url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'ym'=>$yearMonth));
+                        //$url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'ym'=>$yearMonth,'kpi_quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
+                        $url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'kpi_quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
                     }
 
                     //业务岗人员比率(人事部经理)
@@ -3507,7 +3502,7 @@ function updatekpi($month,$user){
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,238);
+                    $auto_quta	= array(1,2,3,4,5,6,81,8,9,10,11,14,15,16,17,18,20,23,26,21,24,27,32,37,19,22,25,28,33,38,42,45,103,56,113,92,29,34,39,46,102,55,57,58,59,84,87,89,90,111,107,83,66,54,44,12,112,108,100,96,95,65,114,86,85,64,63,62,53,52,41,40,49,80,48,91,79,47,36,35,31,30,82,110,106,99,94,67,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,238);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
@@ -5677,5 +5672,11 @@ function get_group_id($code,$dep_time,$n=0){
         get_group_id($code,$dep_time,$n);
     }
     return $str;
+}
+
+//隐藏手机号码中间4位数字
+function hide_mobile($mobile){
+    $hide_mobile                = substr($mobile,0,3).'****'.substr($mobile,7,4);
+    return $hide_mobile;
 }
 
