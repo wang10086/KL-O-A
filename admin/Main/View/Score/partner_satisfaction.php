@@ -30,10 +30,10 @@
                                             <th>评分时间</th>
                                             <th>客户联系方式</th>
                                             <?php if ($lists[0]['AA']){ ?><th>{$lists[0][AA_title]}</th><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][BB_title]}</th><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][CC_title]}</th><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][DD_title]}</th><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><th>{$lists[0][EE_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['BB']){ ?><th>{$lists[0][BB_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['CC']){ ?><th>{$lists[0][CC_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['DD']){ ?><th>{$lists[0][DD_title]}</th><?php } ?>
+                                            <?php if ($lists[0]['EE']){ ?><th>{$lists[0][EE_title]}</th><?php } ?>
                                             <th>意见建议</th>
                                         </tr>
                                         <foreach name="lists" item="row">
@@ -42,10 +42,10 @@
                                             <td>{$row.create_time|date='Y-m-d',###}</td>
                                             <td><?php echo in_array(cookie('userid'),array(11)) ? $row['mobile'] : $row['hide_mobile']; ?></td>
                                             <?php if ($lists[0]['AA']){ ?><td>{$row.AA} &nbsp;星</td><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><td>{$row.BB} &nbsp;星</td><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><td>{$row.CC} &nbsp;星</td><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><td>{$row.DD} &nbsp;星</td><?php } ?>
-                                            <?php if ($lists[0]['AA']){ ?><td>{$row.EE} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['BB']){ ?><td>{$row.BB} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['CC']){ ?><td>{$row.CC} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['DD']){ ?><td>{$row.DD} &nbsp;星</td><?php } ?>
+                                            <?php if ($lists[0]['EE']){ ?><td>{$row.EE} &nbsp;星</td><?php } ?>
                                             <td>{$row.content}</td>
                                         </tr>
                                         </foreach>
