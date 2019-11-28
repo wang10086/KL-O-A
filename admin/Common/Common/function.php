@@ -3219,17 +3219,17 @@ function updatekpi($month,$user){
 
                         //讲座联络服务满意度-老科学家演讲团教务专员
                         if ($v['quota_id']==184){
-                            $year                       = $v['year'];
-                            $monon                      = substr($v['month'],4,2);
-                            $yearMonth                  = $year.$monon;
-                            $dimension                  = 4;
+                            $year                   = $v['year'];
+                            $monon                  = substr($v['month'],4,2);
+                            $yearMonth              = $year.$monon;
+                            $dimension              = 4;
 
-                            $guide_sci_list             = get_sci_list($v['start_date'],$v['end_date']); //获取当月老科学家演讲团成员带团信息
-                            $guide_sci_score_list       = get_guide_sci_score_list($guide_sci_list,$v['quota_id'],$dimension); //获取评分信息
-                            $sum                        = $guide_sci_score_list['sum'];
+                            $guide_sci_list         = get_sci_list($v['start_date'],$v['end_date']); //获取当月老科学家演讲团成员带团信息
+                            $guide_sci_score_list   = get_guide_sci_score_list($guide_sci_list,$v['quota_id'],$dimension); //获取评分信息
+                            $sum                    = $guide_sci_score_list['sum'];
 
-                            $complete                   = $sum['average'];
-                            $url                        = U('Kpi/public_sci_service',array('st'=>$v['start_date'],'et'=>$v['end_date'],'quota_id'=>$v['quota_id'],'ym'=>$yearMonth,'uid'=>$v['user_id'],'tit'=>$v['quota_title']));
+                            $complete               = $sum['average'];
+                            $url                    = U('Kpi/public_sci_service',array('st'=>$v['start_date'],'et'=>$v['end_date'],'quota_id'=>$v['quota_id'],'ym'=>$yearMonth,'uid'=>$v['user_id'],'tit'=>$v['quota_title']));
                         }
 
                         //日常服务工作满意度-老科学家演讲团教务专员
