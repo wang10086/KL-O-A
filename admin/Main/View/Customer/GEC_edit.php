@@ -30,12 +30,12 @@
                                     <div class="content">
                                     	
                                         <div class="form-group col-md-4">
-                                            <label>客户名称：</label><input type="text" name="info[company_name]" class="form-control" value="{$gec.company_name}"/>
+                                            <label><span class="red">*</span>客户名称：</label><input type="text" name="info[company_name]" class="form-control" value="{$gec.company_name}" required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>客户级别：</label>
-                                            <select  class="form-control"  name="info[level]">
+                                            <label><span class="red">*</span>客户级别：</label>
+                                            <select  class="form-control"  name="info[level]" required>
                                             	<option value="">请选择</option>
                                                 <option value="潜在客户" <?php if($gec['level']=='潜在客户'){ echo 'selected';} ?>>潜在客户</option>
                                                 <option value="一般客户" <?php if($gec['level']=='一般客户'){ echo 'selected';} ?>>一般客户</option>
@@ -46,8 +46,8 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>客户类型：</label>
-                                            <select  class="form-control"  name="info[type]">
+                                            <label><span class="red">*</span>客户类型：</label>
+                                            <select  class="form-control"  name="info[type]" required>
                                             	<option value="">请选择</option>
                                             	<option value="学校" <?php if($gec['type']=='学校'){ echo 'selected';} ?>>学校</option>
                                                 <option value="机构" <?php if($gec['type']=='机构'){ echo 'selected';} ?>>机构</option>
@@ -59,15 +59,15 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>联系人（一）：</label><input type="text" name="info[contacts]" class="form-control" value="{$gec.contacts}"/>
+                                            <label><span class="red">*</span>联系人（一）：</label><input type="text" name="info[contacts]" class="form-control" value="{$gec.contacts}" required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>联系人（一）职务：</label><input type="text" name="info[post]" class="form-control" value="{$gec.post}"/>
+                                            <label><span class="red">*</span>联系人（一）职务：</label><input type="text" name="info[post]" class="form-control" value="{$gec.post}" required />
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>联系人（一）手机：</label><input type="text" name="info[contacts_phone]"  class="form-control" value="{$gec.contacts_phone}"/>
+                                            <label><span class="red">*</span>联系人（一）手机：</label><input type="text" name="info[contacts_phone]"  class="form-control" value="{$gec.contacts_phone}" required />
                                         </div>
                                         
                                         
@@ -109,13 +109,13 @@
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>所在省份：</label>
-                                            <select id="s_province" class="form-control" name="info[province]"></select>
+                                            <label><span class="red">*</span>所在省份：</label>
+                                            <select id="s_province" class="form-control" name="info[province]" required></select>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
-                                            <label>所在城市：</label>
-                                            <select id="s_city" class="form-control" name="info[city]"></select>
+                                            <label><span class="red">*</span>所在城市：</label>
+                                            <select id="s_city" class="form-control" name="info[city]" required></select>
                                         </div>
                                         
                                         <div class="form-group col-md-4">
