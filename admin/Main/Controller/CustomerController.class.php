@@ -128,7 +128,7 @@ class CustomerController extends BaseController {
 		if($level)       $where['level'] = array('like','%'.$level.'%');
 		if($qianli)      $where['qianli'] = array('like','%'.$qianli.'%');
 		
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30 || cookie('roleid')==47|| cookie('roleid')==45|| cookie('roleid')==14){
+		if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,14,28,30,45,47))){
 			
 		}else{
 			$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
@@ -143,10 +143,8 @@ class CustomerController extends BaseController {
 			$hz = M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->order('create_time DESC')->find();	
 			$lists[$k]['hezuo'] = $hz['create_time'] ? '<a href="'.U('Op/index',array('cus'=>$v['company_name'])).'">'.date('Y-m-d',$hz['create_time']).'</a>' : '无结算记录';
 			$lists[$k]['hezuocishu'] = $hz['create_time'] ? M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->count() : '';	
+		    $lists[$k]['hide_mobile']= hide_mobile($v['contacts_phone']);
 		}
-		
-		
-		
 		$this->lists   = $lists;
 		
 		$this->display('GEC');
@@ -195,32 +193,31 @@ class CustomerController extends BaseController {
     public function GEC_edit(){
         $this->title('政企客户管理');
 		
-		$db = M('customer_gec');
-		$id = I('id');
-		$referer = I('referer');
-		$PinYin = new Pinyin();
+		$db                     = M('customer_gec');
+		$id                     = I('id');
+		$referer                = I('referer');
+		$PinYin                 = new Pinyin();
 		
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
 			
-			$gec_id = I('gec_id');
-			$info = I('info');
-			$info['cm_time'] = time();
-			$company_name = iconv("utf-8","gb2312",trim($info['company_name']));
-			$info['pinyin'] = strtolower($PinYin->getFirstPY($company_name));	
+			$gec_id             = I('gec_id');
+			$info               = I('info');
+			$info['cm_time']    = time();
+			$company_name       = iconv("utf-8","gb2312",trim($info['company_name']));
+			$info['pinyin']     = strtolower($PinYin->getFirstPY($company_name));
+			if (!$info['cm_id']){ $this->error('维护人信息错误,请选择匹配到的人员信息'); }
 			
 			if($info){
 				
 				if($gec_id){
-					
-					$u = $db->find($gec_id);
-					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==28 || cookie('roleid')==11 || cookie('roleid')==30){
+					$u          = $db->find($gec_id);
+					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
 						$isok = $db->data($info)->where(array('id'=>$gec_id))->save();
 					}else{
 						$this->error('您没有权限修改该用户信息' . $db->getError());		
 					}
 				}else{
 					$info['create_time'] = time();
-					$info['cm_id'] = cookie('userid');
 					$isok = $db->add($info);
 				}
 				
@@ -235,13 +232,13 @@ class CustomerController extends BaseController {
 			}
 			
 		}else{
-			$this->gec       = $db->find($id);
+			$this->gec                  = $db->find($id);
+			$this->userkey              = get_username();
 			//合作记录
-			$where = array();
-			$where['o.customer'] = $this->gec['company_name'];
-			$where['s.audit_status'] = 1;
-			
-			$this->hezuo = M()->table('__OP_SETTLEMENT__ as s')->field('s.*,o.group_id,o.project')->join('__OP__ as o on o.op_id = s.op_id','LEFT')->where($where)->select();
+			$where                      = array();
+			$where['o.customer']        = $this->gec['company_name'];
+			$where['s.audit_status']    = 1;
+			$this->hezuo                = M()->table('__OP_SETTLEMENT__ as s')->field('s.*,o.group_id,o.project')->join('__OP__ as o on o.op_id = s.op_id','LEFT')->where($where)->select();
 			
 			$this->display('GEC_edit');
 		}

@@ -5676,7 +5676,7 @@ function get_group_id($code,$dep_time,$n=0){
 
 //隐藏手机号码中间4位数字
 function hide_mobile($mobile){
-    $hide_mobile                = substr($mobile,0,3).'****'.substr($mobile,7,4);
+    $hide_mobile                = $mobile ? substr($mobile,0,3).'****'.substr($mobile,7,4) : '';
     return $hide_mobile;
 }
 

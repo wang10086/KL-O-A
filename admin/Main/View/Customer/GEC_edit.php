@@ -146,8 +146,9 @@
                                         
                                         
                                         <div class="form-group col-md-4">
-                                            <label>维护人：</label>
-                                            <input type="text" class="form-control" name="info[cm_name]" value="<?php if($gec['id']){ echo $gec['cm_name']; }else{ echo session('nickname');} ?>">
+                                            <label>维护人 <font color="#999">(选择匹配到的信息)</font>：</label>
+                                            <input type="text" class="form-control" name="info[cm_name]" id="cm_name" value="{$gec['cm_name']?$gec['cm_name']:session('nickname')}">
+                                            <input type="hidden" name="info[cm_id]" value="{$gec['cm_id']?$gec['cm_id']:session('userid')}" id="cm_id">
                                         </div>
                                         
                                         
@@ -215,8 +216,12 @@
                 </section><!-- /.content -->
                 
             </aside><!-- /.right-side -->
-			
   </div>
 </div>
 
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+    const userkey = {$userkey};
+    autocomplete_id('cm_name','cm_id',userkey);
+</script>
