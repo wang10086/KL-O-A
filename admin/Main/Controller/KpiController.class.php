@@ -2630,6 +2630,7 @@ class KpiController extends BaseController {
 	    $list                               = $db->where(array('id'=>$sid))->find();
 	    $list['average']                    = get_score_average($list);
 
+	    $list['hide_mobile']                = substr($list['mobile'],0,3).'****'.substr($list['mobile'],7,4);
 	    $this->list                         = $list;
 	    $this->display('kpi_sci_service_detail');
     }

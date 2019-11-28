@@ -8,13 +8,14 @@
     
     <div class="box-body art_box-body">
 
-       <!-- <div class="fromlist fromlistbrbr">
+        <div class="fromlist fromlistbrbr">
             <div class="formtexts">
-            	<h4>被评价人：{$list.account_name}</h4>
+            	<!--<h4>被评价人：{$list.account_name}</h4>-->
 				<span class="fr">评价月份：{$list.monthly}</span>
-                <span class="fr">已评价人：{$list.score_account_name}</span>
+				<span class="fr">联系方式：<?php echo in_array(cookie('userid'),array(11)) ? $list['mobile'] : $list['hide_mobile']; ?></span>
+                <span class="fr">评分时间：{$list.create_time|date='Y-m-d H:i',###}</span>
             </div>
-        </div>-->
+        </div>
 
         <div class="fromlist no-border"  style=" padding:15px 0 0 0;">
             <div class="form-group box-float-12 black" style="padding-left:0;">总平均分：{$list.average}&nbsp;</div>
