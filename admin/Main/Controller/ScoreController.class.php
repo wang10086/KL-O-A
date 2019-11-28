@@ -38,7 +38,7 @@ class ScoreController extends BasepubController {
                 $score_record           = $db->where(array('account_id'=>$uid,'quota_id'=>$quota_id,'mobile'=>$mobile,'monthly'=>$monthly,'status'=>1))->find();
                 if ($score_record && !$opid){ die(return_msg('n','您本月已完成满意度评价,感谢您的参与!')); }
 
-                $register_record        = $db->where(array('account_id'=>$uid,'mobile'=>$mobile,'monthly'=>$monthly,'quota_id'=>$quota_id))->find(); //已注册,未评分
+                $register_record        = $this->get_score_record($uid,$mobile,$monthly,$quota_id,$opid,$guide_id); //已注册,未评分
                 if ($register_record){
                     $register_id        = $register_record['id'];
                     $info               = array();
@@ -51,6 +51,8 @@ class ScoreController extends BasepubController {
                     $info['monthly']    = $monthly;
                     $info['reg_time']   = NOW_TIME;
                     $info['quota_id']   = $quota_id;
+                    $info['guide_id']   = $guide_id;
+                    $info['op_id']      = $opid;
                     $res = $db->add($info);
                     $register_id        = $res;
                 }
@@ -80,6 +82,19 @@ class ScoreController extends BasepubController {
             $this->token            = make_token();
             $this->display('mob-login');
         }
+    }
+
+    private function get_score_record($uid,$mobile,$monthly,$quota_id=0,$opid='',$guide_id=0){
+        $db                         = M('partner_satisfaction');
+        $where                      = array();
+        $where['account_id']        = $uid;
+        $where['mobile']            = $mobile;
+        $where['monthly']           = $monthly;
+        $where['quota_id']          = $quota_id;
+        if ($opid) $where['op_id']  = $opid;
+        if ($guide_id) $where['guide_id'] = $guide_id;
+        $list                       = $db->where($where)->find();
+        return $list;
     }
 
     //城市合伙人满意度KPI

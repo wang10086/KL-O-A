@@ -1,6 +1,6 @@
 <div class="contentAA">
-    <input type="hidden" name="info[guide_id]" value="{$guide_id}">
-    <input type="hidden" name="info[op_id]" value="{$opid}">
+    <!--<input type="hidden" name="info[guide_id]" value="{$guide_id}">
+    <input type="hidden" name="info[op_id]" value="{$opid}">-->
     <input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->
     <input type="hidden" id="AA_num" name="info[AA]" value="" />
     <input type="hidden" id="BB_num" name="info[BB]" value="" />
