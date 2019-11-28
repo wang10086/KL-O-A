@@ -29,6 +29,7 @@
             <input type="hidden" name="uid" value="{$uid}">
             <input type="hidden" name="kpi_quota_id" value="{$quota_id}">
             <input type="hidden" name="yearMonth" value="{$yearMonth}">
+            <input type="hidden" name="opid" value="{$opid}">
             <div class="sco-box-body">
                 <div class="mob-loginfrom gbg">
                     <ul>
