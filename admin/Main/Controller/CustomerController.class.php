@@ -206,7 +206,15 @@ class CustomerController extends BaseController {
 			if (!$info['cm_id']){ $this->error('维护人信息错误,请选择匹配到的人员信息'); }
 			
 			if($info){
-				
+			    $info['company_name']   = trim($info['company_name']);
+			    $info['level']          = trim($info['level']);
+			    $info['type']           = trim($info['type']);
+			    $info['contacts']       = trim($info['contacts']);
+			    $info['post']           = trim($info['post']);
+			    $info['contacts_phone'] = trim($info['contacts_phone']);
+			    $info['county']         = trim($info['county']);
+			    $info['remark']         = trim($info['remark']);
+
 				if($gec_id){
 					$u          = $db->find($gec_id);
 					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
