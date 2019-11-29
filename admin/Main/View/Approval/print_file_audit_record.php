@@ -41,9 +41,9 @@
 
                 <tr>
                     <td class="td_title td">文件审核</td>
-                    <td colspan="2" class="td_con td">&emsp;{$list.audited_time|date='Y-m-d',###}</td>
+                    <td colspan="2" class="td_con td">&emsp;<?php echo $list['audited_time'] ? date('Y-m-d',$list['audited_time']) :''; ?></td>
                     <td class="td_title td">文件批准</td>
-                    <td colspan="2" class="td_con td">&emsp;{$list.sure_time|date='Y-m-d',###}</td>
+                    <td colspan="2" class="td_con td">&emsp;<?php echo $list['sure_time'] ? date('Y-m-d',$list['sure_time']) :''; ?></td>
                 </tr>
                 <tr>
                     <td class="td_title td">备注</td>

@@ -214,6 +214,14 @@ class CustomerController extends BaseController {
 			    $info['contacts_phone'] = trim($info['contacts_phone']);
 			    $info['county']         = trim($info['county']);
 			    $info['remark']         = trim($info['remark']);
+			    if (!$info['company_name']) { $this->error('客户名称不能为空'); }
+			    if (!$info['level'])    { $this->error('客户级别不能为空'); }
+			    if (!$info['type'])     { $this->error('客户类型不能为空'); }
+			    if (!$info['contacts']) { $this->error('联系人不能为空'); }
+			    if (!$info['post'])     { $this->error('联系人职务不能为空'); }
+			    if (!$info['contacts_phone']){ $this->error('联系人手机不能为空'); }
+			    if (!$info['province']) { $this->error('所在省份不能为空'); }
+                if (!$info['city'])     { $this->error('所在城市不能为空'); }
 
 				if($gec_id){
 					$u          = $db->find($gec_id);
