@@ -1076,9 +1076,10 @@ function record($info){
     }
 }
 
-function get_public_record($field,$id){
+function get_public_record($id,$type,$field='qaqc_id'){
     $db                 = M('record');
     $where              = array();
+    $where['type']      = $type;
     $where[$field]      = $id;
     $lists              = $db->where($where)->select();
     return $lists;

@@ -192,7 +192,6 @@ class CustomerController extends BaseController {
         $this->title('政企客户管理');
 		
 		$db                     = M('customer_gec');
-		$id                     = I('id');
 		$referer                = I('referer');
 		$PinYin                 = new Pinyin();
 		
@@ -203,7 +202,7 @@ class CustomerController extends BaseController {
 			$info['cm_time']    = time();
 			$company_name       = iconv("utf-8","gb2312",trim($info['company_name']));
 			$info['pinyin']     = strtolower($PinYin->getFirstPY($company_name));
-			if (!$info['cm_id']){ $this->error('维护人信息错误,请选择匹配到的人员信息'); }
+			//if (!$info['cm_id']){ $this->error('维护人信息错误,请选择匹配到的人员信息'); }
 			
 			if($info){
 			    $info['company_name']   = trim($info['company_name']);
@@ -224,18 +223,28 @@ class CustomerController extends BaseController {
                 if (!$info['city'])     { $this->error('所在城市不能为空'); }
 
 				if($gec_id){
-					$u          = $db->find($gec_id);
-					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
-						$isok = $db->data($info)->where(array('id'=>$gec_id))->save();
+					$u                  = $db->find($gec_id);
+					if($u['create_user_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
+						$isok           = $db->data($info)->where(array('id'=>$gec_id))->save();
 					}else{
 						$this->error('您没有权限修改该用户信息' . $db->getError());		
 					}
+					$record_msg         = '编辑客户信息';
 				}else{
-					$info['create_time'] = time();
-					$isok = $db->add($info);
+					$info['create_time']= time();
+					$isok               = $db->add($info);
+					$gec_id             = $isok;
+					$record_msg         = '添加客户信息';
 				}
 				
 				if($isok){
+                    //保存操作记录
+                    $record             = array();
+                    $record['qaqc_id']  = $gec_id;
+                    $record['explain']  = $record_msg;
+                    $record['type']     = P::RECORD_GEC; //客户管理操作记录
+                    record($record);
+
 					$this->success('保存成功！',$referer);		
 				}else{
 					$this->error('保存失败' . $db->getError());	
@@ -246,7 +255,10 @@ class CustomerController extends BaseController {
 			}
 			
 		}else{
-			$this->gec                  = $db->find($id);
+            $id                         = I('id');
+            $this->gec                  = $db->find($id);
+			$this->transfer_uid         = C('GEC_TRANSFER_UID');
+			$this->records              = get_public_record($id,P::RECORD_GEC);
 			$this->userkey              = get_username();
 			//合作记录
 			$where                      = array();

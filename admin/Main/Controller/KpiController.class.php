@@ -935,7 +935,7 @@ class KpiController extends BaseController {
             $record                             = array();
             $record['qaqc_id']                  = $qaqcid;
             $record['explain']                  = $explain;
-            $record['type']                     = 1;
+            $record['type']                     = P::RECORD_QAQC;
             record($record);
 
 			$this->success('信息已保存！',I('referer'));
@@ -1084,7 +1084,7 @@ class KpiController extends BaseController {
             $record                             = array();
             $record['qaqc_id']                  = $editid;
             $record['explain']                  = '审核巡检记录';
-            $record['type']                     = 1;
+            $record['type']                     = P::RECORD_QAQC;
             record($record);
 
 			$this->success('已审批！',I('referer'));
@@ -1154,7 +1154,7 @@ class KpiController extends BaseController {
 			$this->userlist    = M('qaqc_user')->where(array('qaqc_id'=>$id))->select();
 
 			$this->pdca        = M('pdca')->find($row['pdcaid']);
-            $record_list       = get_public_record('qaqc_id',$id);
+            $record_list       = get_public_record($id,P::RECORD_QAQC,'qaqc_id');
             $this->records     = $record_list;
             $this->suggest     = $suggest;
 		}else{
@@ -1189,7 +1189,7 @@ class KpiController extends BaseController {
         $record                             = array();
         $record['qaqc_id']                  = $id;
         $record['explain']                  = '撤销巡检记录';
-        $record['type']                     = 1;
+        $record['type']                     = P::RECORD_QAQC;
         record($record);
 
 		$this->success('撤销成功！');
@@ -2334,7 +2334,7 @@ class KpiController extends BaseController {
                 $record                     = array();
                 $record['qaqc_id']          = $qaqc_id;
                 $record['explain']          = $explain;
-                $record['type']             = 1;
+                $record['type']             = P::RECORD_QAQC;
                 record($record);
                 $res ? $this->success('数据保存成功',U('Kpi/addqa',array('id'=>$qaqc_id))) : $this->error('数据保存失败');
             }
@@ -2368,7 +2368,7 @@ class KpiController extends BaseController {
                     $record                 = array();
                     $record['qaqc_id']      = $id;
                     $record['explain']      = '申请品控跟进';
-                    $record['type']         = 1;
+                    $record['type']         = P::RECORD_QAQC;
                     record($record);
                     $this->success('提交成功',U('Kpi/qa',array('pin'=>2)));
                 }else{
@@ -2430,7 +2430,7 @@ class KpiController extends BaseController {
                 $record                             = array();
                 $record['qaqc_id']                  = $editid;
                 $record['explain']                  = '跟进处理巡检记录';
-                $record['type']                     = 1;
+                $record['type']                     = P::RECORD_QAQC;
                 record($record);
 
                 $this->success('信息已保存！',I('referer')?I('referer'):U('Kpi/qa'));
@@ -2463,7 +2463,7 @@ class KpiController extends BaseController {
                     $record                 = array();
                     $record['qaqc_id']      = $id;
                     $record['explain']      = '申请审核';
-                    $record['type']         = 1;
+                    $record['type']         = P::RECORD_QAQC;
                     record($record);
                     $this->success('提交成功',U('Kpi/qa',array('pin'=>1)));
                 }else{

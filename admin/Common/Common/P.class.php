@@ -119,6 +119,10 @@ final class P {
     const SCORE_KIND_ACCOUNT        = 1;    //内部人员满意度评分
     const SCORE_KIND_WORDER         = 2;    //工单满意度评分
 
+    //公共操作记录类型
+    const RECORD_QAQC               = 1;    //品控巡检操作记录
+    const RECORD_GEC                = 2;    //客户管理操作记录
+
 }
 
 
