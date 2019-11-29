@@ -1846,5 +1846,28 @@ class AjaxController extends Controller {
     public function auto_init_kpi(){
         auto_init_kpi();
     }
+
+    //查询客户信息是否完整
+    public function check_customer(){
+        $customer                   = I('customer');
+        $db                         = M('customer_gec');
+        $list                       = $db->where(array('company_name'=>$customer))->find();
+        if ($list){
+            if (!trim($list['company_name']) || !trim($list['type']) || !trim($list['contacts']) || !trim($list['contacts_phone']) || !trim($list['post']) || !trim($list['level']) || !trim($list['province']) || !trim($list['city'])){
+                $stu                = 0;
+                $msg                = '请在客户管理中完善该客户信息,否则数据无法提交';
+            }else{
+                $stu                = 1;
+                $msg                = '客户信息正确';
+            }
+        }else{
+            $stu                    = 0;
+            $msg                    = '客户信息错误';
+        }
+        $data                       = array();
+        $data['stu']                = $stu;
+        $data['msg']                = $msg;
+        $this->ajaxReturn($data);
+    }
 }
 

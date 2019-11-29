@@ -157,10 +157,8 @@ class CustomerController extends BaseController {
       
 		$db = M('customer_gec');
 		$PinYin = new Pinyin();
-		
 		$id = M('op')->where(array('customer'=>array('like','%散客%')))->Getfield('id',true);
-		
-		
+
 		$where = array();
 		$where['customer'] = array('neq','NULL');
 		$where['id'] = array('not in',implode(',',$id));

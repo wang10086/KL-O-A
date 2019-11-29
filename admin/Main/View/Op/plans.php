@@ -98,7 +98,7 @@
                                             </foreach>
                                         </select>-->
 
-                                        <input type="text" class="form-control" name="info[customer]" value="" list="customer" />
+                                        <input type="text" class="form-control" name="info[customer]" value="" list="customer" onblur="check_customer($(this).val())" />
                                         <datalist id="customer">
                                             <foreach name="geclist" item="v">
                                                 <option value="{$v}" label="" />
@@ -158,6 +158,9 @@
                         </div><!-- /.box -->
 
                         <div style="width:100%; text-align:center;">
+                            <div class="callout callout-danger" id="noSubmitDiv" style="display: none">
+                                <h4>提示：如果无法提交立项,请按要求及时完善客户信息！</h4>
+                            </div>
                             <button type="button" onclick="save_form('save_plans')" class="btn btn-info btn-lg" id="lrpd">我要立项</button>
                         </div>
 
@@ -231,7 +234,7 @@
            }
        }
 
-        function autocom(e) {
+        /*function autocom(e) {
             var keywords = <?php echo $linelist; ?>;
 
             $("#lineName").autocomplete(keywords, {
@@ -248,7 +251,7 @@
                 $('#line_id').val(item.id);
             });
 
-        }
+        }*/
 
         $('#kind').on('change',function () {
             var kind    = $(this).val();
@@ -304,6 +307,7 @@
             let addr        = $('input[name="addr"]').val();
             let customer    = $('input[name="info[customer]"]').val();
             let in_dijie    = $('select[name="info[in_dijie]"]').val();
+            let dijie_name  = $('select[name="info[dijie_name]"]').val();
 
             let geclist     = <?php echo $geclist_str; ?>;
             let customer_num = 0;
@@ -323,7 +327,35 @@
             if (!addr)      { art_show_msg('详细地址不能为空',3); return false; }
             if (!customer_num){ art_show_msg('客户单位填写错误',3); return false; }
             if (!in_dijie)  { art_show_msg('是否内部地接不能为空',3); return false; }
+            if (in_dijie == 1 && !dijie_name){ art_show_msg('内部地接名称不能为空',3); return false; }
             $('#'+id).submit();
+        }
+
+        //检查客户信息是否完善
+        function check_customer(customer){
+            if (!customer){
+                art_show_msg('客户单位不能为空',2); return false;
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: "{:U('Ajax/check_customer')}",
+                    data:{customer:customer},
+                    success:function (data) {
+                        if (data.stu == 0){
+                            art_show_msg(data.msg,3);
+                            $('#lrpd').hide();
+                            $('#noSubmitDiv').show();
+                            return false;
+                        }else{
+                            $('#lrpd').show();
+                            $('#noSubmitDiv').hide();
+                        }
+                    },
+                    error:function (data) {
+                        console.log(data.statusText);
+                    }
+                })
+            }
         }
 
     </script>

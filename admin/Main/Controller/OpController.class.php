@@ -131,8 +131,14 @@ class OpController extends BaseController {
             if (!$info['line_id']) { $this->error('行程方案不能为空'); }
 
 			if($info){
+                $opid                   = opid();
 
-				$opid                   = opid();
+                $info['project']        = trim($info['project']);
+                $info['number']         = trim($info['number']);
+                $info['departure']      = trim($info['departure']);
+                $info['days']           = trim($info['days']);
+                $info['customer']       = trim($info['customer']);
+                $info['context']        = trim($info['context']);
                 $info['expert']         = $expert?implode(',',$expert):0;
 				$info['create_time']    = time();
                 $info['op_id']          = $opid;
@@ -876,6 +882,13 @@ class OpController extends BaseController {
                     }
                     $expert                 = I('expert');
                     $info['expert']         = $expert?implode(',',$expert):0;
+                    $info['project']        = trim($info['project']);
+                    $info['number']         = trim($info['number']);
+                    $info['departure']      = trim($info['departure']);
+                    $info['days']           = trim($info['days']);
+                    $info['destination']    = trim($info['destination']);
+                    $info['customer']       = trim($info['customer']);
+                    $info['context']        = trim($info['context']);
 
                     //保存成团
                     $issave = M('op')->data($info)->where(array('op_id' => $opid))->save();
