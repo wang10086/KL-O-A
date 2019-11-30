@@ -5,7 +5,7 @@ use Org\Util\Rbac;
 use Sys\P;
 
 class BaseController extends Controller {
-    
+
     private $_cssaddon;
     private $_scriptaddon;
     private $_jscode;
@@ -15,11 +15,11 @@ class BaseController extends Controller {
     protected $_action_    = '';
 
     public $_sum_audit = 0;
-    
+
     // 初始化函数
 	public function _initialize()
 	{
-		
+
 		if(!in_array(ACTION_NAME,explode(",",C('NOT_AUTH_ACTION')))){
 			if(cookie('userid')){
 				if(ACTION_NAME!='public_lock' && ACTION_NAME!='online' && ACTION_NAME!='public_serverdata'){
@@ -30,16 +30,16 @@ class BaseController extends Controller {
 				if(cookie('username')){
 					header("location: ".U('Index/public_lockscreen','','',true)."");
 				}else{
-					$this->error('您尚未登陆，请先登录！',U('Main/Index/login'));	
+					$this->error('您尚未登陆，请先登录！',U('Main/Index/login'));
 					die();
 				}
 			}
-			
+
 		}
-		
+
 		//P($_SESSION['_ACCESS_LIST']['MAIN']);
-		
-		
+
+
 		$notAuth =  strpos(ACTION_NAME, 'public_') === 0;
 
 		if (!$notAuth) {
@@ -49,18 +49,18 @@ class BaseController extends Controller {
 					$this->error('无权访问',U('Main/Index/login'));
 					//P($_SESSION);
 				}
-			} 
+			}
 		}
-		
-		
+
+
 		$this->_cssaddon                = array();
 		$this->_scriptaddon             = array();
 		$this->_jscode                  = array();
-		
+
 		$this->__additional_css__       = '';
 		$this->__additional_js__        = '';
 		$this->__additional_jscode__    = '';
-		
+
 		$this->_sum_audit               = $this->get_sum_audit();
         $this->_no_read_cas_res         = $this->get_no_read_res(P::UNREAD_CAS_RES); //科普资源
         $this->_no_read_audit_file      = $this->get_no_read_res(P::UNREAD_AUDIT_FILE); //文件流转
@@ -72,7 +72,7 @@ class BaseController extends Controller {
 		$this->assign('_sum_audit',    $this->_sum_audit);
 
     }
-    
+
     /*
      * 设置页面主标题，在右侧主页面区域上方显示
      * @access protected
@@ -84,12 +84,17 @@ class BaseController extends Controller {
         $this->_action_ = $str;
         $this->assign('_action_',    $this->_action_);
     }
-    
-    
+
+    protected function record_title($str='') {
+        $title          = $str ? $str : '操作记录';
+        $this->assign('_record_box_title_',    $title);
+    }
+
+
     /*
      * 获取待我审批的和我申请的未审批数据数量，用来显示气泡提示
      * @access protected
-     * @param 
+     * @param
      * @return int  统计数据
      *
      */
@@ -106,15 +111,15 @@ class BaseController extends Controller {
         $sum = M('audit_log')->where($where)->count();
         return $sum;
     }
-    
+
    /*
     * 为页面额外添加CSS样式文件
     * @access protected
     * @param string $fname  CSS文件名，不需要写.css后缀。自动从assets/css 目录寻找同名文件
-    * @return void     
-    * 
+    * @return void
+    *
     */
-    protected final function css($fname) 
+    protected final function css($fname)
     {
         $fname = preg_replace('/\.css$/', '', $fname);
         $this->_cssaddon[] = '<link href="'.__ROOT__. '/admin/assets/css/'.$fname.'.css" rel="stylesheet" type="text/css" />';
@@ -129,41 +134,41 @@ class BaseController extends Controller {
      * @return void
      *
      */
-    protected  final function js($fname) 
+    protected  final function js($fname)
     {
         $fname = preg_replace('/\.js$/', '', $fname);
         $this->_scriptaddon[] = '<script type="text/javascript" src="' .__ROOT__. '/admin/assets/js/'.$fname.'.js"></script>';
         $this->__additional_js__ = join(PHP_EOL, $this->_scriptaddon);
         //$this->assign('__additional_js__', join(PHP_EOL, $this->_scriptaddon));
     }
-    
+
     protected final function jscode($value)
     {
         $this->_jscode[] = '<script type="text/javascript">' . PHP_EOL . $value . PHP_EOL . '</script>';
         $this->__additional_jscode__ = join(PHP_EOL, $this->_jscode);
     }
-	
-	
+
+
 	protected final function orders($field=''){
-		
+
 		$cname = strtolower(CONTROLLER_NAME);
 		$aname = strtolower(ACTION_NAME);
-		
+
 		$order_field = I('cookie.'.$cname.'_'.$aname.'_ofield', $field);
 		$order_type  = I('cookie.'.$cname.'_'.$aname.'_otype', 'desc');
-		
+
 		$order ='';
 		if($order_field) $order = $order_field . ' ' .$order_type;
 
 		$this->js('plugins/cookie/jquery.cookie');
 		$this->jscode(" var order_page = '".$cname."_".$aname."'; ");
-		$this->jscode("$(document).ready(function(){ init_order(); });");	
-		
-		
+		$this->jscode("$(document).ready(function(){ init_order(); });");
+
+
 		return $order;
 	}
-	
-	
+
+
 	protected final function request_audit($req_type, $req_id, $req_reason = '', $src_status = P::AUDIT_STATUS_NOT_AUDIT,  $req_uid = null, $req_uname = null)
 	{
 	    // 如果没有指定用户ID 则使用当前登录用户
@@ -171,7 +176,7 @@ class BaseController extends Controller {
 	        $req_uid    = session('userid');
 	        $req_uname  = session('nickname');
 	    }
-	    
+
 	    $data = array();
 	    $data['req_type']     = $req_type;
 	    $data['req_id']       = $req_id;
@@ -183,15 +188,15 @@ class BaseController extends Controller {
 	    $data['src_status']   = $src_status;
 	    $roleids = M('audit_config')->field('group_concat(audit_roleid) as rid')->where('req_type='.$req_type)->find();
 	    $data['audit_roleid'] =$roleids['rid'];
-	    
+
 	    $data['audit_uid']   = 0;
 	    $data['audit_uname'] = '';
 	    $data['audit_reason']= '';
 	    $data['audit_time']  = 0;
 	    $data['dst_status']  = 0;
-	    
+
 	    return M('audit_log')->add($data);
-	    
+
 	}
 
     protected final function do_audit($audit_id, $audit_reason = '', $dst_status = P::AUDIT_STATUS_PASS, $audit_param = '')
