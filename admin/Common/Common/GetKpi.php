@@ -4710,7 +4710,7 @@ function get_guide_sci_score_list($lists,$quota_id,$dimension=4){
 
 //获取单项评分满意度
 function get_score_average($list){
-    $score                              = $list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['DD'];
+    $score                              = $list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'];
     $sum                                = $list['dimension']*5;
     $average                            = (round($score/$sum,4)*100).'%';
     return $average;

@@ -30,6 +30,7 @@
             <input type="hidden" name="kpi_quota_id" value="{$quota_id}">
             <input type="hidden" name="yearMonth" value="{$yearMonth}">
             <input type="hidden" name="opid" value="{$opid}">
+            <input type="hidden" name="guide_id" value="{$guide_id}">
             <div class="sco-box-body">
                 <div class="mob-loginfrom gbg">
                     <ul>
@@ -58,7 +59,7 @@
         <!-- jQuery 1.11.1 -->
         <script src="__HTML__/js/jquery-1.11.1.min.js"></script>
         <!-- Bootstrap -->
-        <script src="__HTML__/js/bootstrap.min.js" type="text/javascript"></script>      
+        <script src="__HTML__/js/bootstrap.min.js" type="text/javascript"></script>
         <script type="text/javascript" src="__HTML__/js/Validform_v5.3.2.js"></script>
         <script src="__HTML__/js/commen.js"></script>
 

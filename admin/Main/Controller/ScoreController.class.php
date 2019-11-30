@@ -26,7 +26,7 @@ class ScoreController extends BasepubController {
             $quota_id                   = I('kpi_quota_id');
             $yearMonth                  = I('yearMonth','');
             $monthly                    = $yearMonth ? $yearMonth : get_kpi_yearMonth(date('Y'),date('m'));
-            $guide_id                   = I('guide',0);
+            $guide_id                   = I('guide_id',0);
             $opid                       = I('opid','');
 
             //验证手机验证码
