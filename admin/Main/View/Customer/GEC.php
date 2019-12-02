@@ -50,6 +50,9 @@
                                         <if condition="rolemenu(array('Customer/GEC_edit'))">
                                         <th width="50" class="taskOptions">维护</th>
                                         </if>
+                                        <if condition="rolemenu(array('Customer/GEC_transfer'))">
+                                            <th width="50" class="taskOptions">交接</th>
+                                        </if>
                                         <if condition="rolemenu(array('Customer/delgec'))">
                                         <th width="50" class="taskOptions">删除</th>
                                         </if>
@@ -72,10 +75,15 @@
                                         <td class="taskOptions">
                                         <a href="{:U('Customer/GEC_edit',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
+                                        <if condition="rolemenu(array('Customer/GEC_transfer'))">
+                                            <td class="taskOptions">
+                                                <a href="javascript:;" onclick="open_change(`{:U('Customer/public_GEC_transfer',array('id'=>$row['id']))}`)" title="交接客户" class="btn btn-warning btn-smsm"><i class="fa fa-refresh"></i></a>
+                                            </td>
+                                        </if>
                                         </if>
                                         <if condition="rolemenu(array('Customer/delgec'))">
                                         <td class="taskOptions">
-                                        <button onclick="javascript:ConfirmDel('{:U('Customer/delgec',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                        <button onclick="javascript:ConfirmDel('{:U('Customer/delgec',array('id'=>$row['id']))}')" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></button>
                                        
                                         </td>
                                         </if>
@@ -163,3 +171,27 @@
             </div>
 			
 			<include file="Index:footer2" />
+
+<script type="text/javascript">
+    //客户交接
+    function open_change (url) {
+        art.dialog.open(url, {
+            lock:true,
+            id: 'audit_win',
+            title: '客户交接',
+            width:600,
+            height:300,
+            okVal: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                //location.reload();
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {},
+            close: function () {
+                window.location.href = "{:U('Customer/GEC')}";
+            }
+        });
+    }
+</script>

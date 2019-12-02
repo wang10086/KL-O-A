@@ -326,6 +326,40 @@ class CustomerController extends BaseController {
 		}
 	}
 
+	//交接客户(某一个客户)
+    public function public_GEC_transfer(){
+        $db                             = M('customer_gec');
+        if (isset($_POST['dosubmint'])){
+            $id                         = I('id');
+            $info                       = I('info');
+            if ($id){
+                if (!$info['cm_id'] || !$info['cm_name']){
+                    $this->msg          = '接收人员信息输入错误';
+                    $this->display('Index:public_audit');
+                }else{
+                    $res                = $db ->where(array('id'=>$id))->save($info);
+                    if ($res){
+                        $this->msg      = '交接成功';
+                    }else{
+                        $this->msg      = '交接失败';
+                    }
+                    $this->display('Index:public_audit');
+                }
+            }else{
+                $this->msg              = '获取数据失败';
+                $this->display('Index:public_audit');
+            }
+            $this->display('Index:public_audit');
+        }else{
+            $id                         = I('id');
+            if (!$id){ $this->error('获取数据错误'); }
+            $list                       = $db->where(array('id'=>$id))->find();
+            $this->list                 = $list;
+            $this->userkey              = get_username();
+            $this->display('change_GEC');
+        }
+    }
+
 
 	// @@@NODE-3###GEC_viwe###编辑政企客户###
     public function GEC_viwe(){
