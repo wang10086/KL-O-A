@@ -3492,8 +3492,10 @@ function updatekpi($month,$user){
                     //新客户开拓数量-老科学家演讲团教务专员
                     if ($v['quota_id']==237){
                         $startTime              = get_year_cycle($v['year'])['beginTime'];
+                        $new_GEC_lists          = get_new_GEC($startTime,$v['end_date'],$v['user_id']); //获取某个时间段内新增加的客户信息
+                        $data                   = get_kpi_new_GEC_data($v['target'],count($new_GEC_lists));
 
-                        $complete               = '测试';
+                        $complete               = $data['complete'];
                         $url                    = U('Kpi/public_kpi_new_GEC',array('st'=>$startTime,'et'=>$v['end_date'],'uid'=>$v['user_id'],'kmid'=>$v['id']));
                     }
 

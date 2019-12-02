@@ -2644,7 +2644,8 @@ class KpiController extends BaseController {
         $kpi_more_id                        = I('kmid');
         $kpi_more_list                      = M('kpi_more')->where(array('id'=>$kpi_more_id))->find();
         $new_GEC_lists                      = get_new_GEC($startTime,$endTime,$user_id); //获取某个时间段内新增加的客户信息
-
+        $data                               = get_kpi_new_GEC_data($kpi_more_list['target'],count($new_GEC_lists));
+        $this->data                         = $data;
         $this->lists                        = $new_GEC_lists;
         $this->display('kpi_new_GEC');
     }

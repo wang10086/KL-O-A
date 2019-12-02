@@ -30,7 +30,6 @@
                                         <th data="company_name">单位名称</th>
                                         <th data="contacts">联系人</th>
                                         <th data="contacts_phone">联系电话</th>
-                                        <!--<th data="province">所在地</th>-->
                                         <th data="cm_id">维护人</th>
                                         <th>项目数</th>
                                         <th>项目记录</th>
@@ -42,13 +41,18 @@
                                         <td><a href="{:U('Customer/GEC_viwe',array('id'=>$row['id']))}" title="详情">{$row.company_name}</a></td>
                                         <td>{$row.contacts}</td>
                                         <td>{$row.contacts_phone}</td>
-                                        <!--<td>{$row.province} {$row.city} {$row.county}</td>-->
                                         <td>{$row.cm_name}</td>
                                         <td>{$row.}</td>
                                         <td>{$row.}</td>
                                         <td>{$row.}</td>
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
+                                    <tr class="black">
+                                        <td>合计</td>
+                                        <td colspan="2">目标客户数量：{$data.target}</td>
+                                        <td colspan="2">新增客户数量：{$data.finish}</td>
+                                        <td colspan="3">完成率：{$data.complete}</td>
+                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">

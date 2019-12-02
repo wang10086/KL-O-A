@@ -4751,5 +4751,14 @@ function get_new_GEC($startTime,$endTime,$user_id=0){
     return $lists;
 }
 
+//
+function get_kpi_new_GEC_data($target,$finish){
+    $complete                           = $target ? ((round($finish/$target,4)<1 ? round($finish/$target,4) : 1)*100).'%' : '100%';
+    $data                               = array();
+    $data['target']                     = $target;
+    $data['finish']                     = $finish;
+    $data['complete']                   = $complete;
+    return $data;
+}
 
 
