@@ -217,7 +217,7 @@ class CustomerController extends BaseController {
 
 				if($gec_id){
 					$u                  = $db->find($gec_id);
-					if($u['create_user_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
+					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
 						$isok           = $db->data($info)->where(array('id'=>$gec_id))->save();
 					}else{
 						$this->error('您没有权限修改该用户信息' . $db->getError());
