@@ -95,15 +95,12 @@ class CustomerController extends BaseController {
 			$this->fid   = $fid;
 			$this->display('o2o_apply');
 		}
-
-
 	}
 
 
     // @@@NODE-3###GEC###政企客户管理###
     public function GEC(){
         $this->title('政企客户管理');
-
 
 		$db = M('customer_gec');
 		$keywords     = I('keywords');
@@ -145,13 +142,11 @@ class CustomerController extends BaseController {
 			$lists[$k]['hezuocishu'] = $hz['create_time'] ? M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->count() : '';
 		    $lists[$k]['hide_mobile']= hide_mobile($v['contacts_phone']);
 		}
-		$this->lists   = $lists;
+		$this->lists                = $lists;
+		$this->msg_gec_ids          = $this->get_msg_GEC_ids();
 
 		$this->display('GEC');
     }
-
-
-
 
     public function op(){
 
@@ -183,9 +178,6 @@ class CustomerController extends BaseController {
 
 		echo $i;
     }
-
-
-
 
 	// @@@NODE-3###GEC_edit###编辑政企客户###
     public function GEC_edit(){
@@ -230,11 +222,23 @@ class CustomerController extends BaseController {
 						$this->error('您没有权限修改该用户信息' . $db->getError());
 					}
 					$record_msg         = '编辑客户信息';
+
+					//查询有无给相关人员发送客户交接提示
+                    if (!$info['cm_id']){
+                        $send_msg       = $this->get_GEC_transfer_msg($gec_id);
+                        if (!$send_msg){
+                            $this->send_GEC_transfer_msg($gec_id);
+                        }
+                    }
 				}else{
 					$info['create_time']= time();
 					$isok               = $db->add($info);
 					$gec_id             = $isok;
 					$record_msg         = '添加客户信息';
+
+					if (!$info['cm_id']){ //需要转交维护人
+					    $this->send_GEC_transfer_msg($gec_id);
+                    }
 				}
 
 				if($isok){
@@ -249,11 +253,9 @@ class CustomerController extends BaseController {
 				}else{
 					$this->error('保存失败' . $db->getError());
 				}
-
 			}else{
 				$this->error('请填写企业信息' . $db->getError());
 			}
-
 		}else{
             $id                         = I('id');
             $this->gec                  = $db->find($id);
@@ -268,8 +270,57 @@ class CustomerController extends BaseController {
 
 			$this->display('GEC_edit');
 		}
+    }
 
+    //给相关人员发送客户交接提示
+    private function send_GEC_transfer_msg($GEC_id){
+        $uids                       = C('GEC_TRANSFER_UID'); //提示
+        $read                       = array();
+        $read['type']               = P::UNREAD_GEC_TRANSFER;
+        $read['req_id']             = $GEC_id;
+        $read['userids']            = implode(',',$uids);
+        $read['create_time']        = NOW_TIME;
+        $read['read_type']          = 0;
+        M('unread')->add($read);
+    }
 
+    //获取该记录有无发送客户交接提示
+    private function get_GEC_transfer_msg($GEC_id){
+        $where                      = array();
+        $where['type']              = P::UNREAD_GEC_TRANSFER;
+        $where['req_id']            = $GEC_id;
+        $list                       = M('unread')->where($where)->find();
+        return $list;
+    }
+
+    //修改客户交接提示信息
+    private function upd_GEC_transfer_msg($GEC_id){
+        $where                      = array();
+        $where['type']              = P::UNREAD_GEC_TRANSFER;
+        $where['req_id']            = $GEC_id;
+        $list                       = M('unread')->where($where)->find();
+        if ($list){
+            $userids                = explode(',',$list['userids']);
+            $newUserIds             = array();
+            foreach ($userids as $v){
+                if (session('userid') != $v){
+                    $newUserIds[]   = $v;
+                }
+            }
+            $data                   = array();
+            $data['userids']        = implode(',',$newUserIds);
+            $data['read_type']      = 1;
+            M('unread')->where($where)->save($data);
+        }
+    }
+
+    //获取待交接的客户信息
+    private function get_msg_GEC_ids(){
+        $where                      = array();
+        $where['read_type']         = 0;
+        $where['type']              = P::UNREAD_GEC_TRANSFER;
+        $ids                        = M('unread')->where($where)->getField('req_id',true);
+        return $ids;
     }
 
 	// @@@NODE-3###GEC_transfer###交接客户###
@@ -303,7 +354,7 @@ class CustomerController extends BaseController {
 					$i++;
 				}
 			}
-
+            $this->upd_GEC_transfer_msg($v); //修改客户交接提示信息
 			$this->success('成功交接了'.$i.'条客户信息！',$referer);
 
 		}else{
@@ -332,6 +383,10 @@ class CustomerController extends BaseController {
         if (isset($_POST['dosubmint'])){
             $id                         = I('id');
             $info                       = I('info');
+            if (!in_array(session('userid'),C('GEC_TRANSFER_UID'))){
+                $this->msg              = '您无权交接该客户信息';
+                $this->display('Index:public_audit');
+            }
             if ($id){
                 if (!$info['cm_id'] || !$info['cm_name']){
                     $this->msg          = '接收人员信息输入错误';
@@ -340,6 +395,7 @@ class CustomerController extends BaseController {
                     $res                = $db ->where(array('id'=>$id))->save($info);
                     if ($res){
                         $this->msg      = '交接成功';
+                        $this->upd_GEC_transfer_msg($id); //修改客户交接提示信息
                     }else{
                         $this->msg      = '交接失败';
                     }

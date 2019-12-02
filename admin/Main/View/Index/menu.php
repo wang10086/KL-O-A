@@ -295,6 +295,7 @@
                             <a href="javascript:;">
                                 <i class="fa fa-group"></i>
                                 <span>销售管理</span>
+                                <if condition="$_no_read_GEC_transfer_"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_GEC_transfer_}</small></if>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
@@ -307,7 +308,12 @@
                                 </if>
 
                             	<if condition="rolemenu(array('Customer/GEC'))">
-                                	<li class="{:on('Customer/GEC')} {:on('Customer/GEC_edit')}"><a href="{:U('Customer/GEC')}"><i class="fa fa-angle-right"></i> 客户管理</a></li>
+                                	<li class="{:on('Customer/GEC')} {:on('Customer/GEC_edit')}">
+                                        <a href="{:U('Customer/GEC')}"><i class="fa fa-angle-right"></i>
+                                            客户管理
+                                            <?php if($_no_read_GEC_transfer_){ ?> <small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_GEC_transfer_}</small> <?php } ?>
+                                        </a>
+                                    </li>
                                 </if>
 
                                 <if condition="rolemenu(array('Customer/IC'))">

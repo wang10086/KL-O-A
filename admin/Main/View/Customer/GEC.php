@@ -59,7 +59,7 @@
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
-                                        <td>{$row.id}</td>
+                                        <td><?php if (in_array($row['id'],$msg_gec_ids)){ echo "<span class='red'>*</span>"; } ?>{$row.id}</td>
                                         <td><a href="{:U('Customer/GEC_viwe',array('id'=>$row['id']))}" title="详情">{$row.company_name}</a></td>
                                         <td>{$row.type}</td>
                                         <td>{$row.contacts}</td>
@@ -84,10 +84,8 @@
                                         <if condition="rolemenu(array('Customer/delgec'))">
                                         <td class="taskOptions">
                                         <button onclick="javascript:ConfirmDel('{:U('Customer/delgec',array('id'=>$row['id']))}')" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></button>
-                                       
                                         </td>
                                         </if>
-                                       
                                     </tr>
                                     </foreach>					
                                 </table>
@@ -96,13 +94,10 @@
                                 	<div class="pagestyle">{$pages}</div>
                                 </div>
                             </div><!-- /.box -->
-
                         </div><!-- /.col -->
                      </div>
-
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
             
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
