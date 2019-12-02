@@ -437,7 +437,8 @@ class WorderController extends BaseController{
                 $data['account_id']     = $sco['account_id'];
                 $data['account_name']   = $sco['account_name'];
                 if ($score_info){
-                    $res                = $score_db->where(array('worder_id'=>$id))->save($sco);
+                    //$res                = $score_db->where(array('worder_id'=>$id))->save($sco);
+                    $res                = $score_db->where(array('pub_id'=>$id))->save($sco);
                     $data['satisfaction_id']= $score_info['id'];
                     $score_dimension_db->where(array('id'=>$score_info['id']))->save($data);
                 }else{
