@@ -4740,5 +4740,16 @@ function get_sum_score_average($lists,$dimension){
     return $data;
 }
 
+//获取某个时间段内新增加的客户信息
+function get_new_GEC($startTime,$endTime,$user_id=0){
+    $user_id = 1;
+    $db                                 = M('customer_gec');
+    $where                              = array();
+    $where['create_time']               = array('between',array($startTime,$endTime));
+    $where['create_user_id']            = $user_id;
+    $lists                              = $db->where($where)->select();
+    return $lists;
+}
+
 
 

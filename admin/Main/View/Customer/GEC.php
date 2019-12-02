@@ -77,11 +77,11 @@
                                         <td class="taskOptions">
                                         <a href="{:U('Customer/GEC_edit',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
+                                        </if>
                                         <if condition="rolemenu(array('Customer/GEC_transfer'))">
                                             <td class="taskOptions">
                                                 <a href="javascript:;" onclick="open_change(`{:U('Customer/public_GEC_transfer',array('id'=>$row['id']))}`)" title="交接客户" class="btn btn-warning btn-smsm"><i class="fa fa-refresh"></i></a>
                                             </td>
-                                        </if>
                                         </if>
                                         <if condition="rolemenu(array('Customer/delgec'))">
                                         <td class="taskOptions">

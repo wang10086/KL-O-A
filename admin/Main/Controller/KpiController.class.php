@@ -2635,6 +2635,20 @@ class KpiController extends BaseController {
 	    $this->display('kpi_sci_service_detail');
     }
 
+    //累计新增客户信息
+    public function public_kpi_new_GEC(){
+	    $this->title('累计新增客户');
+        $startTime                          = I('st');
+        $endTime                            = I('et');
+        $user_id                            = I('uid');
+        $kpi_more_id                        = I('kmid');
+        $kpi_more_list                      = M('kpi_more')->where(array('id'=>$kpi_more_id))->find();
+        $new_GEC_lists                      = get_new_GEC($startTime,$endTime,$user_id); //获取某个时间段内新增加的客户信息
+
+        $this->lists                        = $new_GEC_lists;
+        $this->display('kpi_new_GEC');
+    }
+
     public function aaa(){
         set_after_salary_kpi(201906);
     }
