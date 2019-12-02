@@ -26,14 +26,15 @@
                                 <div class="box-body">
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
-                                        <th width="60" data="id">ID</th>
-                                        <th data="company_name">单位名称</th>
-                                        <th data="contacts">联系人</th>
-                                        <th data="contacts_phone">联系电话</th>
-                                        <th data="cm_id">维护人</th>
+                                        <th width="60">ID</th>
+                                        <th>单位名称</th>
+                                        <th>联系人</th>
+                                        <th>联系电话</th>
+                                        <th>维护人</th>
                                         <th>项目数</th>
-                                        <th>项目记录</th>
+                                        <th width="340">项目记录</th>
                                         <th>结算收入</th>
+                                        <th>录入时间</th>
                                     </tr>
                                     <foreach name="lists" item="row"> 
                                     <tr>
@@ -42,18 +43,24 @@
                                         <td>{$row.contacts}</td>
                                         <td>{$row.contacts_phone}</td>
                                         <td>{$row.cm_name}</td>
-                                        <td>{$row.}</td>
-                                        <td>{$row.}</td>
-                                        <td>{$row.}</td>
+                                        <td>{$row.op_num}</td>
+                                        <td>
+                                            <?php foreach ($row['settlement_lists'] as $v){ ?>
+                                                <a href="{:U('Finance/settlement',array('opid'=>$v['op_id']))}" title="{$v['project']}"><span style="display: inline-block; margin-right: 10px;">{$v.group_id}</span></a>
+                                            <?php } ?>
+                                        </td>
+                                        <td>{$row.sum_shouru}</td>
+                                        <td>{$row.create_time|date="Y-m-d",###}</td>
                                     </tr>
                                     </foreach>
-                                    <tr class="black">
-                                        <td>合计</td>
-                                        <td colspan="2">目标客户数量：{$data.target}</td>
-                                        <td colspan="2">新增客户数量：{$data.finish}</td>
-                                        <td colspan="3">完成率：{$data.complete}</td>
-                                    </tr>
                                 </table>
+                                    <div class="form-group black">
+                                        <div style="width: 19%; display: inline-block;">合计</div>
+                                        <div style="width: 19%; display: inline-block;">目标客户数量：{$data.target}</div>
+                                        <div style="width: 19%; display: inline-block;">新增客户数量：{$data.finish}</div>
+                                        <div style="width: 19%; display: inline-block;">完成率：{$data.complete}</div>
+                                        <div style="width: 19%; display: inline-block;">总收入: {$data.sum_shouru}</div>
+                                    </div>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
                                 	<div class="pagestyle">{$pages}</div>

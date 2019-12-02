@@ -2642,11 +2642,18 @@ class KpiController extends BaseController {
         $endTime                            = I('et');
         $user_id                            = I('uid');
         $kpi_more_id                        = I('kmid');
+
         $kpi_more_list                      = M('kpi_more')->where(array('id'=>$kpi_more_id))->find();
         $new_GEC_lists                      = get_new_GEC($startTime,$endTime,$user_id); //获取某个时间段内新增加的客户信息
+        $new_GEC_settlement_lists           = get_new_GEC_settlement($new_GEC_lists,$startTime,$endTime);
+
         $data                               = get_kpi_new_GEC_data($kpi_more_list['target'],count($new_GEC_lists));
+        $data['sum_shouru']                 = array_sum(array_column($new_GEC_settlement_lists,'sum_shouru'));
         $this->data                         = $data;
-        $this->lists                        = $new_GEC_lists;
+        $this->lists                        = $new_GEC_settlement_lists;
+        $this->uid                          = $user_id;
+        $this->kmid                         = $kpi_more_id;
+
         $this->display('kpi_new_GEC');
     }
 

@@ -4751,7 +4751,7 @@ function get_new_GEC($startTime,$endTime,$user_id=0){
     return $lists;
 }
 
-//
+//新增客户KPI信息
 function get_kpi_new_GEC_data($target,$finish){
     $complete                           = $target ? ((round($finish/$target,4)<1 ? round($finish/$target,4) : 1)*100).'%' : '100%';
     $data                               = array();
@@ -4759,6 +4759,23 @@ function get_kpi_new_GEC_data($target,$finish){
     $data['finish']                     = $finish;
     $data['complete']                   = $complete;
     return $data;
+}
+
+//新增客户结算信息
+function get_new_GEC_settlement($lists,$startTime,$endTime){
+    foreach ($lists as $k=>$v){
+        $where                                  = array();
+        $where['b.audit_status']                = 1;
+        $where['l.req_type']                    = 801;
+        $where['l.audit_time']                  = array('between', "$startTime,$endTime");
+        $where['o.customer']                    = $v['company_name'];
+        $field                                  = 'o.op_id,o.project,o.group_id,o.customer,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+        $settlement_lists                       = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+        $lists[$k]['op_num']                    = count($settlement_lists);
+        $lists[$k]['sum_shouru']                = array_sum(array_column($settlement_lists,'shouru')) ? array_sum(array_column($settlement_lists,'shouru')) : 0;
+        $lists[$k]['settlement_lists']          = $settlement_lists;
+    }
+    return $lists;
 }
 
 
