@@ -102,18 +102,19 @@ class CustomerController extends BaseController {
     public function GEC(){
         $this->title('政企客户管理');
 
-		$db = M('customer_gec');
-		$keywords     = I('keywords');
-		$type         = I('type');
-		$cm           = I('cm');
-		$address      = I('address');
-		$province     = I('province');
-		$city         = I('city');
-		$county       = I('county');
-		$level        = I('level');
-		$qianli       = I('qianli');
+		$db                 = M('customer_gec');
+		$keywords           = I('keywords');
+		$type               = I('type');
+		$cm                 = I('cm');
+		$address            = I('address');
+		$province           = I('province');
+		$city               = I('city');
+		$county             = I('county');
+		$level              = I('level');
+		$qianli             = I('qianli');
+		$create             = I('create');
 
-		$where = array();
+		$where              = array();
 		$where['status']	= 0;
 		if($keywords)    $where['company_name'] = array('like','%'.$keywords.'%');
 		if($type)        $where['type'] = $type;
@@ -124,6 +125,7 @@ class CustomerController extends BaseController {
 		if($county)      $where['county'] = array('like','%'.$county.'%');
 		if($level)       $where['level'] = array('like','%'.$level.'%');
 		if($qianli)      $where['qianli'] = array('like','%'.$qianli.'%');
+		if ($create)     $where['create_user_name'] = array('like','%'.$create.'%');
 
 		if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,14,28,30,45,47))){
 
@@ -149,30 +151,29 @@ class CustomerController extends BaseController {
     }
 
     public function op(){
+		$db                         = M('customer_gec');
+		$PinYin                     = new Pinyin();
+		$id                         = M('op')->where(array('customer'=>array('like','%散客%')))->Getfield('id',true);
 
-		$db = M('customer_gec');
-		$PinYin = new Pinyin();
-		$id = M('op')->where(array('customer'=>array('like','%散客%')))->Getfield('id',true);
+		$where                      = array();
+		$where['customer']          = array('neq','NULL');
+		$where['id']                = array('not in',implode(',',$id));
+		$where['customer']          = array('neq',' ');
 
-		$where = array();
-		$where['customer'] = array('neq','NULL');
-		$where['id'] = array('not in',implode(',',$id));
-		$where['customer'] = array('neq',' ');
-
-		$i = 0;
-		$list = M('op')->field('customer,create_user,create_user_name,create_time')->where($where)->group('customer')->select();
+		$i                          = 0;
+		$list                       = M('op')->field('customer,create_user,create_user_name,create_time')->where($where)->group('customer')->select();
 		foreach($list as $v){
-			$company_name = iconv("utf-8","gb2312",trim($v['customer']));
-			$data = array();
-			$data['company_name'] = $v['customer'];
-			$data['cm_id'] = $v['create_user'];
-			$data['cm_name'] = $v['create_user_name'];
-			$data['cm_time'] = $v['create_time'];
-			$data['create_time'] = $v['create_time'];
-			$data['pinyin'] = strtolower($PinYin->getFirstPY($company_name));
+			$company_name           = iconv("utf-8","gb2312",trim($v['customer']));
+			$data                   = array();
+			$data['company_name']   = $v['customer'];
+			$data['cm_id']          = $v['create_user'];
+			$data['cm_name']        = $v['create_user_name'];
+			$data['cm_time']        = $v['create_time'];
+			$data['create_time']    = $v['create_time'];
+			$data['pinyin']         = strtolower($PinYin->getFirstPY($company_name));
 			if(!M('customer_gec')->where(array('company_name'=>$v['customer'],'cm_id'=>$v['create_user']))->find()){
-				$aaa = M('customer_gec')->add($data);
-				if($aaa) $i++;
+				$res                = M('customer_gec')->add($data);
+				if($res) $i++;
 			}
 		}
 
@@ -326,7 +327,6 @@ class CustomerController extends BaseController {
 	// @@@NODE-3###GEC_transfer###交接客户###
 	public function GEC_transfer(){
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
-
 			$referer = I('referer');
 			$fm      = I('fm');
 			$fmid    = I('fmid');

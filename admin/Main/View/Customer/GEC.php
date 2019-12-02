@@ -40,13 +40,14 @@
                                         <th class="sorting" data="province">所在地</th>
                                         <th>项目记录</th>
                                         <th>项目数</th>
-                                        <th class="sorting" data="level">级别</th>
+                                        <!--<th class="sorting" data="level">级别</th>
                                         <th class="sorting" data="qianli">开发潜力</th>
-                                        <!-- <th class="sorting" data="contacts_address">通讯地址</th> 
+                                        <th class="sorting" data="contacts_address">通讯地址</th>
                                         <th>结算记录</th>
                                         <th>结算次数</th>
                                         -->
-                                        <th class="sorting" data="cm_name">维护人</th>
+                                        <th class="sorting" data="create_user_id">招募人</th>
+                                        <th class="sorting" data="cm_id">维护人</th>
                                         <if condition="rolemenu(array('Customer/GEC_edit'))">
                                         <th width="50" class="taskOptions">维护</th>
                                         </if>
@@ -68,8 +69,9 @@
                                         <!-- <td><div class="tdbox_long">{$row.contacts_address}</div></td> -->
                                         <td>{$row.hezuo}</td>
                                         <td>{$row.hezuocishu}</td>
-                                        <td>{$row.level}</td>
-                                        <td>{$row.qianli}</td>
+                                        <!--<td>{$row.level}</td>
+                                        <td>{$row.qianli}</td>-->
+                                        <td>{$row.create_user_name}</td>
                                         <td>{$row.cm_name}</td>
                                         <if condition="rolemenu(array('Customer/GEC_edit'))">
                                         <td class="taskOptions">
@@ -105,11 +107,11 @@
                 <input type="hidden" name="c" value="Customer">
                 <input type="hidden" name="a" value="GEC">
                 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <input type="text" class="form-control" name="keywords" placeholder="关键字">
                 </div>
                 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     
                     <select  class="form-control"  name="type">
                         <option value="">客户类型</option>
@@ -123,7 +125,7 @@
                     </select> 
                 </div>
 				
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     
                     <select  class="form-control"  name="level">
                         <option value="">级别</option>
@@ -134,8 +136,7 @@
                     </select> 
                 </div>
                 
-                <div class="form-group col-md-3">
-                    
+                <div class="form-group col-md-4">
                     <select  class="form-control"  name="qianli">
                         <option value="">开发潜力</option>
                         <option value="无太大潜力">无太大潜力</option>
@@ -145,20 +146,23 @@
                     </select> 
                 </div>
                 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <input type="text" class="form-control" name="cm" placeholder="维护人">
                 </div>
+
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="create" placeholder="招募人">
+                </div>
                 
-                
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                 	<input type="text" class="form-control" name="province" placeholder="省份">
                 </div>
                 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                 	<input type="text" class="form-control" name="city" placeholder="城市">
                 </div>
                 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <input type="text" class="form-control" name="county" placeholder="区县">
                 </div>
                 
