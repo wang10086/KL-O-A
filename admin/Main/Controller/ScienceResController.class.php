@@ -13,7 +13,7 @@ class ScienceResController extends BaseController {
     protected $_pagedesc_  = '录入、修改、删除科普资源数据';
      
     // @@@NODE-3###res###科普资源列表###
-    public function res () {
+    public function res() {
         $this->title('科普资源');
 		$pin          = I('pin',0);
 		$key          = I('key');
@@ -40,7 +40,8 @@ class ScienceResController extends BaseController {
                 P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
 				P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
-        $this->pin      = $pin;
+        $this->pin          = $pin;
+        $this->unReadIds    = get_unread_req_ids(P::UNREAD_CAS_RES);
         $this->display('res');
     
     }

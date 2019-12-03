@@ -45,7 +45,6 @@
                                         	<th class="sorting" data="peer_price">同行价</th>
                                             -->
                                             <th class="sorting" data="">录入时间</th>
-                                         
                                         	<th>审批状态</th>
                                             <if condition="rolemenu(array('ScienceRes/addres'))">
                                             <th width="60" class="taskOptions">编辑</th>
@@ -56,7 +55,7 @@
                                         </tr>
                                         <foreach name="lists" item="row">                      
                                         <tr>
-                                            <td><a href="{:U('ScienceRes/res_view', array('id'=>$row['id']))}">{$row.title}</a></td>
+                                            <td><?php if (in_array($row['id'],$unReadIds)){ echo "<span class='red'>*</span>"; } ?><a href="{:U('ScienceRes/res_view', array('id'=>$row['id']))}">{$row.title}</a></td>
                                             <td><?php echo $reskind[$row['kind']]; ?></td>
                                             <td>{$row.diqu}</td>
                                             <!--

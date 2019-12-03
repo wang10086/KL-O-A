@@ -115,7 +115,7 @@ class CustomerController extends BaseController {
 		$create             = I('create');
 
         $map                = array();
-		if(C('RBAC_SUPER_ADMIN')==session('username') || in_array(session('roleid'),array(10,14,28,30,45))){
+		if(C('RBAC_SUPER_ADMIN')==session('username') || in_array(session('roleid'),array(10,14,28,30,45,60))){
 
 		}else{
             $where          = array();
@@ -150,7 +150,7 @@ class CustomerController extends BaseController {
 		    $lists[$k]['hide_mobile']= hide_mobile($v['contacts_phone']);
 		}
 		$this->lists                = $lists;
-		$this->msg_gec_ids          = $this->get_msg_GEC_ids();
+		$this->msg_gec_ids          = get_unread_req_ids(P::UNREAD_GEC_TRANSFER);
 
 		$this->display('GEC');
     }
@@ -318,15 +318,6 @@ class CustomerController extends BaseController {
             $data['read_type']      = 1;
             M('unread')->where($where)->save($data);
         }
-    }
-
-    //获取待交接的客户信息
-    private function get_msg_GEC_ids(){
-        $where                      = array();
-        $where['read_type']         = 0;
-        $where['type']              = P::UNREAD_GEC_TRANSFER;
-        $ids                        = M('unread')->where($where)->getField('req_id',true);
-        return $ids;
     }
 
 	// @@@NODE-3###GEC_transfer###交接客户###

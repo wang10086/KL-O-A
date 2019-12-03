@@ -5691,3 +5691,20 @@ function hide_mobile($mobile){
     return $hide_mobile;
 }
 
+//获取获取未读的数据ID
+function get_unread_req_ids($type){
+    $db                         = M('unread');
+    $where                      = array();
+    $where['read_type']         = 0;
+    $where['type']              = $type;
+    $lists                      = $db->where($where)->select();
+    $ids                        = array();
+    foreach ($lists as $k=>$v){
+        $userids                = explode(',',$v['userids']);
+        if (in_array(session('userid'),$userids)){
+            $ids[]              = $v['req_id'];
+        }
+    }
+    $ids                        = array_unique(array_filter($ids));
+    return $ids;
+}
