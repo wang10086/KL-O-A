@@ -203,6 +203,7 @@ class SalaryModel extends Model
         $sum_profit                             = array_sum(array_column($lists,'maoli'));  //当季度结算毛利总额
 
         //提成金额 = 季度目标系数 * 工资岗位薪酬 (100%内提取5%; 100%-150%=>20%; 大于150%=>25%)
+        if (in_array($user['id'],array(44,45,123,113))){ $salary += 800; } //44=>许世伟 , 45=>赵鹏 , 113=>郑志江 , 123=>王爱 , 局人才额外800
         $target                                 = $salary*$coefficient;     //目标值 = 季度目标系数 * 工资岗位薪酬
         $royalty                                = 0;
         if ($sum_profit < $target){
