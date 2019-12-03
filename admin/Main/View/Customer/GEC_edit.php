@@ -158,7 +158,7 @@
 
                                         <div class="form-group col-md-4">
                                             <label>维护人 <font color="#999">(选择匹配到的信息)</font>：</label>
-                                            <input type="text" class="form-control" name="info[cm_name]" id="cm_name" value="{$gec['transfer']?$gec['cm_name']:session('nickname')}" <?php if (!in_array(cookie('userid'),$transfer_uid)){ echo "readonly"; } ?>>
+                                            <input type="text" class="form-control" name="info[cm_name]" id="cm_name" value="{$gec['transfer']?$gec['cm_name']:session('nickname')}" <?php if (!in_array(cookie('userid'),array(1,11))){ echo "readonly"; } ?>>
                                             <input type="hidden" name="info[cm_id]" value="{$gec['transfer']?$gec['cm_id']:session('userid')}" id="cm_id">
                                         </div>
                                         

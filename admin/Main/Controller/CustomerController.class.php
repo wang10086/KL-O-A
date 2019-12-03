@@ -217,7 +217,7 @@ class CustomerController extends BaseController {
 
 				if($gec_id){
 					$u                  = $db->find($gec_id);
-					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
+					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(session('userid'),C('GEC_TRANSFER_UID'))){
 						$isok           = $db->data($info)->where(array('id'=>$gec_id))->save();
 					}else{
 						$this->error('您没有权限修改该用户信息' . $db->getError());
@@ -334,6 +334,10 @@ class CustomerController extends BaseController {
 			$toid    = I('toid');
 			$gec     = I('gec');
 
+            if (!in_array(session('userid'),C('GEC_TRANSFER_UID'))){
+                $this->error('您无权交接该客户');
+            }
+
 			if(!$toid){
 				$user = M('account')->where(array('nickname'=>$to))->find();
 				$toid = $user['id'];
@@ -388,6 +392,7 @@ class CustomerController extends BaseController {
                 $this->display('Index:public_audit');
             }
             if ($id){
+                $list                   = $db->where(array('id'=>$id))->find();
                 if (!$info['cm_id'] || !$info['cm_name']){
                     $this->msg          = '接收人员信息输入错误';
                     $this->display('Index:public_audit');
@@ -396,6 +401,12 @@ class CustomerController extends BaseController {
                     if ($res){
                         $this->msg      = '交接成功';
                         $this->upd_GEC_transfer_msg($id); //修改客户交接提示信息
+                        //保存操作记录
+                        $record             = array();
+                        $record['qaqc_id']  = $id;
+                        $record['explain']  = '交接客户: '.$list['cm_name'].' -> '.$info['cm_name'];
+                        $record['type']     = P::RECORD_GEC; //客户管理操作记录
+                        record($record);
                     }else{
                         $this->msg      = '交接失败';
                     }
