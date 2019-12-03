@@ -58,7 +58,8 @@
                                         }
                                     }
                                 ?>
-                                <?php if ($prveyear < date('Y')-1){ ?>
+                               <!-- --><?php /*if ($prveyear < date('Y')-1){ */?>
+                                <?php if ($prveyear < date('Y')){ ?>
                                     <a href="{:U('Rbac/kpi_data',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
@@ -75,7 +76,8 @@
                                         echo '<a href="'.U('Rbac/kpi_data',array('year'=>$year,'half_year'=>1,'uid'=>$uid)).'" class="btn btn-default" style="padding:8px 18px;">上半年</a>'.'<a href="'.U('Rbac/kpi_data',array('year'=>$year,'half_year'=>2,'uid'=>$uid)).'" class="btn btn-info" style="padding:8px 18px;">下半年</a>';
                                     }
                                 ?>
-                                <?php if ($prveyear < date('Y')-1){ ?>
+                               <!-- --><?php /*if ($prveyear < date('Y')-1){ */?>
+                                <?php if ($prveyear < date('Y')){ ?>
                                     <a href="{:U('Rbac/kpi_data',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
@@ -125,7 +127,7 @@
                                             .set-kpi-select{display: inline-block; width: 13rem; float: right}
                                             .btn-group{margin-top: 0px;}
                                         </style>
-                                        <?php if ($year == date('Y')){ ?>
+                                        <?php /*if ($year == date('Y')){ */?>
                                             <div class="form-group set-kpi-select">
                                                 <div class=" col-md-12">
                                                     <select class="form-control" name="cycle" id="cycle" onchange="change_view($(this).val())">
@@ -136,7 +138,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                        <?php } ?>
+                                        <?php /*} */?>
 
                                         <div class="box-body table-responsive no-padding">
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
