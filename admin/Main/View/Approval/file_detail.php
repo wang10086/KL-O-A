@@ -55,7 +55,7 @@
                                         <div class="form-group col-md-4 viwe">拟稿人：{$list.create_user_name}</div>
                                         <div class="form-group col-md-4 viwe">文件类型：<?php echo $list['type'] == 1 ? '新编' : '修改'; ?></div>
 
-                                        <?php if (cookie('userid') == $list['create_user']){ ?>
+                                        <?php if (in_array(cookie('userid'),array($list['create_user'],1))){ ?>
                                         <div class="form-group col-md-4 viwe">已审核人：{$audited_users.str_users}</div>
                                         <div class="form-group col-md-4 viwe">待审核人：{$audit_users.str_users}</div>
                                         <?php } ?>

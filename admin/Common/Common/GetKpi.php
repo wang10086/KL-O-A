@@ -3148,7 +3148,21 @@ function get_res_op_satisfaction($lists,$type,$dimension){
                 $v['ok_time']               = $ok_time;
                 $ok_list[]                  = $v;
                 $budget_list[$k]['is_ok']   = 1;
+                $v['is_ok']                 = 1;
                 $ok_num++;
+            }
+
+            if ((($v['dep_time'] -$v['confirm_time']) < 666*24*3600) && !$v['is_ok']){ //出团前4天紧急成团的团
+                $ok_time                        = $v['confirm_time'] + (1*24*3600); //提交成团确认时间
+                $budget_list[$k]['ok_time']     = $ok_time;
+                $budget_list[$k]['type']        = $title;
+                if ($v['req_time'] <= $ok_time){ //$v['req_time'] 提交时间
+                    $v['ok_time']               = $ok_time;
+                    $ok_list[]                  = $v;
+                    $budget_list[$k]['is_ok']   = 1;
+                    $v['is_ok']                 = 1;
+                    $ok_num++;
+                }
             }
         }
         $data                               = array();
@@ -3177,7 +3191,7 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
         if ($sale_uid) $where['o.create_user']  = $sale_uid;
         if ($jd_uid) $where['l.req_uid']        = $jd_uid;
-        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time,c.dep_time,c.ret_time'; //获取所有该周期预算的团
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time,c.dep_time,c.ret_time,c.confirm_time'; //获取所有该周期预算的团
         $op_budget_list                         = M()->table('__OP_BUDGET__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=b.op_id','left')->where($where)->select();
         return $op_budget_list;
     }

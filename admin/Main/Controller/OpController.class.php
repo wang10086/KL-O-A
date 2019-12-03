@@ -2742,7 +2742,6 @@ class OpController extends BaseController {
 			$info['user_name']		= cookie('nickname');
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
-			$info['confirm_time']	= time();
 
             if (!$info['group_id']) $this->error('团号填写有误');
             if (!$info['dep_time'] || $info['dep_time']==0) $this->error('出团时间填写有误');
@@ -2768,7 +2767,8 @@ class OpController extends BaseController {
                     $res = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
                 }
 			}else{
-				$res = M('op_team_confirm')->add($info);
+                $info['confirm_time']	= time();
+                $res = M('op_team_confirm')->add($info);
 			}
 
 			if ($res) {
