@@ -64,7 +64,7 @@
                                         <td><a href="{:U('Customer/GEC_viwe',array('id'=>$row['id']))}" title="详情">{$row.company_name}</a></td>
                                         <td>{$row.type}</td>
                                         <td>{$row.contacts}</td>
-                                        <td><?php echo in_array(cookie('userid'),array(11,12,32,38,$row['cm_id'])) ? $row['contacts_phone'] : $row['hide_mobile']; ?></td>
+                                        <td><?php echo (in_array(cookie('userid'),C('GEC_TRANSFER_UID')) || cookie('userid')== $row['cm_id']) ? $row['contacts_phone'] : $row['hide_mobile']; ?></td>
                                         <td>{$row.province} {$row.city} {$row.county}</td>
                                         <!-- <td><div class="tdbox_long">{$row.contacts_address}</div></td> -->
                                         <td>{$row.hezuo}</td>

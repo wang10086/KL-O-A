@@ -114,30 +114,35 @@ class CustomerController extends BaseController {
 		$qianli             = I('qianli');
 		$create             = I('create');
 
-		$where              = array();
-		$where['status']	= 0;
-		if($keywords)    $where['company_name'] = array('like','%'.$keywords.'%');
-		if($type)        $where['type'] = $type;
-		if($address)     $where['contacts_address'] = array('like','%'.$address.'%');
-		if($cm)          $where['cm_name'] = array('like','%'.$cm.'%');
-		if($province)    $where['province'] = array('like','%'.$province.'%');
-		if($city)        $where['city'] = array('like','%'.$city.'%');
-		if($county)      $where['county'] = array('like','%'.$county.'%');
-		if($level)       $where['level'] = array('like','%'.$level.'%');
-		if($qianli)      $where['qianli'] = array('like','%'.$qianli.'%');
-		if ($create)     $where['create_user_name'] = array('like','%'.$create.'%');
-
-		if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,14,28,30,45,47))){
+        $map                = array();
+		if(C('RBAC_SUPER_ADMIN')==session('username') || in_array(session('roleid'),array(10,14,28,30,45))){
 
 		}else{
-			$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
+            $where          = array();
+            $where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
+			$where['create_user_id'] = session('userid');
+            $where['_logic']= 'or';
+            $map['_complex']= $where;
 		}
+
+        $map['status']	    = 0;
+        if($keywords)    $map['company_name'] = array('like','%'.$keywords.'%');
+        if($type)        $map['type'] = $type;
+        if($address)     $map['contacts_address'] = array('like','%'.$address.'%');
+        if($cm)          $map['cm_name'] = array('like','%'.$cm.'%');
+        if($province)    $map['province'] = array('like','%'.$province.'%');
+        if($city)        $map['city'] = array('like','%'.$city.'%');
+        if($county)      $map['county'] = array('like','%'.$county.'%');
+        if($level)       $map['level'] = array('like','%'.$level.'%');
+        if($qianli)      $map['qianli'] = array('like','%'.$qianli.'%');
+        if ($create)     $map['create_user_name'] = array('like','%'.$create.'%');
+
 		//分页
-		$pagecount = $db->where($where)->count();
+		$pagecount = $db->where($map)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
 
-        $lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
+        $lists = $db->where($map)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
 		foreach($lists as $k=>$v){
 			$hz = M('op')->where(array('customer'=>$v['company_name'],'audit_status'=>1))->order('create_time DESC')->find();
 			$lists[$k]['hezuo'] = $hz['create_time'] ? '<a href="'.U('Op/index',array('cus'=>$v['company_name'])).'">'.date('Y-m-d',$hz['create_time']).'</a>' : '无结算记录';
