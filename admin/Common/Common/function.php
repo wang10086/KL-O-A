@@ -3495,7 +3495,7 @@ function updatekpi($month,$user){
                         $new_GEC_lists          = get_new_GEC($startTime,$v['end_date'],$v['user_id']); //获取某个时间段内新增加的客户信息
                         $data                   = get_kpi_new_GEC_data($v['target'],count($new_GEC_lists));
 
-                        $complete               = $data['complete'];
+                        $complete               = $data['finish'];
                         $url                    = U('Kpi/public_kpi_new_GEC',array('st'=>$startTime,'et'=>$v['end_date'],'uid'=>$v['user_id'],'kmid'=>$v['id']));
                     }
 
