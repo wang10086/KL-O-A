@@ -1081,7 +1081,7 @@ function get_public_record($id,$type,$field='qaqc_id'){
     $where              = array();
     $where['type']      = $type;
     $where[$field]      = $id;
-    $lists              = $db->where($where)->select();
+    $lists              = $db->where($where)->order('id desc')->select();
     return $lists;
 }
 

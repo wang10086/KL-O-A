@@ -1349,7 +1349,7 @@ class RbacController extends BaseController {
 
         $this->title('编辑指标');
 
-        $db = M('posts');
+        $db         = M('posts');
 
         if(isset($_POST['dosubmit'])){
 
@@ -1375,6 +1375,18 @@ class RbacController extends BaseController {
             if($id) $this->row  = $db->find($id);
             $this->department   = M('salary_department')->getField('id,department',true);
             $this->display('addpost');
+        }
+    }
+
+    //删除岗位信息
+    public function delpost(){
+        $db             = M('posts');
+        $id             = I('id');
+        $res            = $db->where(array('id'=>$id))->delete();
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除数据失败');
         }
     }
 

@@ -40,6 +40,9 @@
                                         <if condition="rolemenu(array('Rbac/rolequto'))">
                                         <th width="60" class="taskOptions">考核</th>
                                         </if>
+                                        <if condition="rolemenu(array('Rbac/delpost'))">
+                                        <th width="60" class="taskOptions">删除</th>
+                                        </if>
                                     </tr>
                                     <foreach name="datalist" item="row">
                                         <tr>
@@ -55,6 +58,11 @@
                                             <if condition="rolemenu(array('Rbac/rolequto'))">
                                             <td class="taskOptions">
                                             <a href="{:U('Rbac/rolequto',array('postid'=>$row['id']))}" title="KPI考核指标"  class="btn btn-success btn-smsm"><i class="fa fa-check"></i></a>
+                                            </td>
+                                            </if>
+                                            <if condition="rolemenu(array('Rbac/delpost'))">
+                                            <td class="taskOptions">
+                                                <a href="javascript:;" onclick="ConfirmDel(`{:U('Rbac/delpost',array('id'=>$row['id']))}`,'请先在人员管理中确认该岗位无人员后再删除此岗位,确定删除此岗位吗?')"  title="删除"  class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
                                             </td>
                                             </if>
                                         </tr>
