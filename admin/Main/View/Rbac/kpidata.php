@@ -34,7 +34,8 @@
                                     }
                                 }
                                 ?>
-                                <?php if ($prveyear < date('Y')-1){ ?>
+                                <?php /*if ($prveyear < date('Y')-1){ */?>
+                                <?php if ($prveyear < date('Y')){ ?>
                                 <a href="{:U('Rbac/kpi_data',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
