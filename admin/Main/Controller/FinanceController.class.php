@@ -554,6 +554,11 @@ class FinanceController extends BaseController {
 				if($audit){
 					M('audit_log')->data(array('dst_status'=>0))->where(array('id'=>$audit['id']))->save();
 				}else{
+                    $record                 = array();
+                    $record['op_id']        = $op_id;
+                    $record['optype']       = 8;
+                    $record['explain']      = '提交预算审核';
+                    op_record($record);
 					$this->request_audit(P::REQ_TYPE_BUDGET, $ifok['id']);		
 				}
 				$this->success('已提交申请等待审批！');
