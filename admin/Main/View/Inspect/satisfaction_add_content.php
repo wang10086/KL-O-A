@@ -42,7 +42,7 @@
     </div>
 </form>
 
-<script type="text/javascript" src="__HTML__/js/satisfaction.js?v=1.1"></script>
+<script type="text/javascript" src="__HTML__/js/satisfaction.js?v=1.2"></script>
 <script type="text/javascript">
     $('#submit-btn').hide();
     var user_keywords   = <?php echo $userkey; ?>;
