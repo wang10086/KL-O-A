@@ -88,8 +88,10 @@
 				return false;
 			},
 			cancelVal:'取消',
-			cancel: function () {
-			}
+			cancel: function () {},
+            close: function () {
+                window.location.reload();
+            }
 		});	
 	}
 	</script>

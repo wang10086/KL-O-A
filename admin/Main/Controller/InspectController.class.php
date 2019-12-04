@@ -1332,7 +1332,6 @@ class InspectController extends BaseController{
                 }else{
                     $res            = $db->add($info);
                 }
-
                 echo '<script>window.top.location.reload();</script>';
             }
         }
@@ -1347,6 +1346,7 @@ class InspectController extends BaseController{
             if (!$data['account_id']){
                 $this->msg          = '人员信息输入错误';
                 $this->display('Index:public_audit');
+                die;
             }
             if ($id){
                 $res                = $db->where(array('id'=>$id))->save($data);
