@@ -765,8 +765,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[DD]" value="交接及问题处理等4个维度">'+
-                                '<label>交接及问题处理等4个维度：</label>'+
+                                '<input type="hidden" name="data[DD]" value="交接及问题处理">'+
+                                '<label>交接及问题处理：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
