@@ -42,11 +42,13 @@
                                         <tr role="row" class="orders" >
                                         	<th class="sorting" data="name">供方名称</th>
                                             <th class="sorting" data="kind">类型</th>
-                                            <th class="sorting" data="country">国家</th>
+                                            <!--<th class="sorting" data="country">国家</th>
                                             <th class="sorting" data="prov">省份</th>
-                                        	<th class="sorting" data="city">城市</th>
+                                        	<th class="sorting" data="city">城市</th>-->
+                                        	<th class="sorting" data="prov">区域</th>
                                             <th class="sorting" data="input_time">录入时间</th>
                                        		<th class="sorting" data="input_uname">录入人</th>
+                                            <th class="sorting" data="type">供方等级</th>
                                         	<th>审批状态</th>
                                             <if condition="rolemenu(array('SupplierRes/addres'))">
                                             <th width="60" class="taskOptions">编辑</th>
@@ -59,11 +61,13 @@
                                         <tr>
                                             <td><a href="{:U('SupplierRes/res_view', array('id'=>$row['id']))}">{$row.name}</a></td>
                                             <td><?php echo $reskind[$row['kind']]; ?></td>
-                                            <td>{$row.country}</td>
+                                            <!--<td>{$row.country}</td>
                                             <td>{$row.prov}</td>
-                                            <td>{$row.city}</td>
+                                            <td>{$row.city}</td>-->
+                                            <td><?php echo $row['country'].'-'.$row['prov'].'-'.$row['city'] ?></td>
                                             <td><if condition="$row['input_time']">{$row.input_time|date='Y-m-d H:i:s',###}</if></td>
                                             <td>{$row.input_uname}</td>
+                                            <td>{$types[$row['type']]}</td>
                                             <?php 
                                             if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
                                                 $show  = '<td>等待审批</td>';	

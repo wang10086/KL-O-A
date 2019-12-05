@@ -39,6 +39,11 @@ class SupplierResController extends BaseController {
             P::AUDIT_STATUS_NOT_AUDIT   => '待审批',
             P::AUDIT_STATUS_NOT_PASS    => '未通过',
         );
+        $this->types = array(
+            1                           => '普通供方',
+            2                           => '<span class="blue">合格供方</span>',
+            3                           => '<span class="green">集中采购方</span>'
+        );
         $this->pin                      = $pin;
         $this->display('res');
     
