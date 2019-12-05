@@ -30,22 +30,18 @@
                                     <div class="content">
                                 		
                                         
-                                        <div class="form-group col-md-8 viwe">
+                                        <div class="form-group col-md-12 viwe">
                                             <p>供方名称：{$row.name}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>供方类型：{$reskind[$row[kind]]}</p>
                                         </div>
-                                        
-                                        
+
                                         <div class="form-group col-md-4 viwe">
-                                            <p>所在国家：{$row.country}</p>
+                                            <p>所在省市：<?php echo $row['country'].'-'.$row['prov'].'-'.$row['city'] ?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>所在省份：{$row.prov}</p>
-                                        </div>
-                                        <div class="form-group col-md-4 viwe">
-                                            <p>所在城市：{$row.city}</p>
+                                            <p>供方级别：{$types[$row['type']]}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
