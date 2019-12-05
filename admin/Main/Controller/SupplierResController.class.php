@@ -59,30 +59,6 @@ class SupplierResController extends BaseController {
         $row                                = M('supplier')->find($id);
 
 		//$where                              = array('type' => P::RES_TYPE_SUPPLIER);
-		/*if($row){ //不用审核
-			$where                          = array();
-			$where['req_type']              = P::REQ_TYPE_SUPPLIER_RES_NEW;
-			$where['req_id']                = $id;
-			$audit                          = M('audit_log')->where($where)->find();
-			if($audit['dst_status']==0){
-				$show                       = '未审批';
-				$show_user                  = '未审批';
-				$show_time                  = '等待审批';
-			}else if($audit['dst_status']==1){
-				$show                       = '已通过';
-				$show_user                  = $audit['audit_uname'];
-				$show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
-			}else if($audit['dst_status']==2){
-				$show                       = '未通过';
-				$show_user                  = $audit['audit_uname'];
-				$show_time                  = date('Y-m-d H:i:s',$audit['audit_time']);
-			}
-			$row['showstatus']              = $show;
-			$row['show_user']               = $show_user;
-			$row['show_time']               = $show_time;
-		}else{
-			$this->error('产品模板不存在' . $db->getError());	
-		}*/
 		$this->row                          = $row;
 		
         $this->status                       = array(
