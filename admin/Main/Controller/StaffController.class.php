@@ -55,10 +55,6 @@ class StaffController extends Controller{
             $holiday        = get_holidays();
             $time           = NOW_TIME - 24*3600;
             $num            = M('staff')->where(array('IP'=>$ip,'send_time'=>array('gt',$time)))->count();
-            //P($ip);
-           // P($hour,false);
-           // P($day,false);
-           // P($holiday);
 
             if (!$title || !$content){ $this->error('标题或内容不能为空'); }
             if ($num >= 5){ $this->error('24小时内发送数量已超过允许最大值'); }
