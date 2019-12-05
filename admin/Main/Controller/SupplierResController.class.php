@@ -22,7 +22,7 @@ class SupplierResController extends BaseController {
 		
 		$where                          = array();
 		$where['1']                     = priv_where(P::REQ_TYPE_SUPPLIER_RES_V);
-        //if ($pin)  $where['']           = '';
+        if ($pin)  $where['type']       = $pin;
 		if ($key)  $where['name']       = array('like','%'.$key.'%');
 		if ($type) $where['kind']       = $type;
 		if ($city) $where['city']       = array('like','%'.$city.'%');
@@ -122,7 +122,7 @@ class SupplierResController extends BaseController {
             $info['tel']                = trim($info['tel']);
             $info['desc']               = stripslashes($_POST['content']);
 
-            if (!$info['name'])         $this->error('供方名称不能为空!');      
+            if (!$info['name'])         $this->error('供方名称不能为空!');
             if (!$info['country'])      $this->error('供方国家不能为空!');
             if (!$info['kind'])         $this->error('供方分类不能为空!');
             if (!$info['prov'])         $this->error('供方省份不能为空!');

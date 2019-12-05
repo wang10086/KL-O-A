@@ -22,7 +22,7 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <form method="post" action="{:U('SupplierRes/addres')}" name="myform" id="myform">
+                            <form method="post" action="{:U('SupplierRes/addres')}" name="myform" id="myform" onsubmit="return submitBefore()">
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
@@ -41,7 +41,7 @@
                                     <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
                                     <!-- text input -->
                                     
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-8">
                                         <label>供方名称</label>
                                         <input type="text" name="info[name]" id="title" value="{$row.name}"  class="form-control" required />
                                     </div>
@@ -57,7 +57,7 @@
                                     
                                     <div class="form-group col-md-4">
                                         <label>国家</label>
-                                        <input type="text" name="info[country]" id="country"   value="{$row.country}" class="form-control" />
+                                        <input type="text" name="info[country]" id="country"   value="{$row.country}" class="form-control" required />
                                     </div>
                                     
                                     <div class="form-group col-md-4">
@@ -77,8 +77,15 @@
                                         <label>联系电话</label>
                                         <input type="text" name="info[tel]" id="tel" value="{$row.tel}"  class="form-control" required />
                                     </div>
-                                    
-                                    
+
+                                    <div class="form-group col-md-4">
+                                        <label>供方级别</label>
+                                        <select name="info[type]" class="form-control" <?php if (!rolemenu(array('SupplierRes/edit_res_type'))){ echo "disabled"; } ?>>
+                                            <option value="1" <?php if ($row['type']==1) echo "selected"; ?>>普通供方</option>
+                                            <option value="2" <?php if ($row['type']==2) echo "selected"; ?>>合格供方</option>
+                                            <option value="3" <?php if ($row['type']==3) echo "selected"; ?>>集中采购方</option>
+                                        </select>
+                                    </div>
                                     
                                     <div class="form-group col-md-12">
                                         <label>介绍</label>
@@ -181,6 +188,10 @@
         $('#' + fid).empty().remove();
         $('input[rel=' + fid +']').remove();
 	}
+
+    function submitBefore() {
+        $("select[name='info[type]']").attr('disabled',false);
+    }
 
 </script>	
             

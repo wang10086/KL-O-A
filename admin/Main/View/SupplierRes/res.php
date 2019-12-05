@@ -24,14 +24,18 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
+                                        <if condition="rolemenu(array('SupplierRes/addres'))">
                                          <a href="{:U('SupplierRes/addres')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建资源</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
 
                                     <div class="btn-group" id="catfont" style="padding-bottom:5px;">
                                         <a href="{:U('SupplierRes/res',array('pin'=>0))}" class="btn <?php if(!$pin){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">全部供方</a>
-                                        <a href="{:U('SupplierRes/res',array('pin'=>1))}" class="btn <?php if($pin == 1){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">合格供方</a>
+                                        <a href="{:U('SupplierRes/res',array('pin'=>1))}" class="btn <?php if($pin == 1){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">供方</a>
+                                        <a href="{:U('SupplierRes/res',array('pin'=>2))}" class="btn <?php if($pin == 2){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">合格供方</a>
+                                        <a href="{:U('SupplierRes/res',array('pin'=>3))}" class="btn <?php if($pin == 3){ echo "btn-info"; }else{ echo 'btn-default'; } ?>" style="padding:8px 18px;">集中采购方</a>
                                     </div>
 
                                 	<table class="table table-bordered dataTable fontmini" id="tablelist">
