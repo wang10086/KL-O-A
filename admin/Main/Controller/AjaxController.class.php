@@ -1869,5 +1869,13 @@ class AjaxController extends Controller {
         $data['msg']                = $msg;
         $this->ajaxReturn($data);
     }
+
+    //
+    public function check_audit_file(){
+        $id                         = I('id');
+        
+
+        $this->ajaxReturn($id);
+    }
 }
 
