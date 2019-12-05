@@ -2556,9 +2556,9 @@ function updatekpi($month,$user){
                         }
 
 
-                        //日常所有工作及时性--采购经理
+                        //集中采购执行率-采购主管
                         if($v['quota_id']==85){
-                            $sum = user_work_record($user,$month,100);
+                            /*$sum = user_work_record($user,$month,100);
                             if($sum>3){
                                 $complete	= 0;
                             }else{
@@ -2566,7 +2566,10 @@ function updatekpi($month,$user){
                                 $zongfen 	= 100-($sum*10);
                                 $complete	= $zongfen>0 ? $zongfen : 0;
                             }
-                            $url            = '';
+                            $url            = '';*/
+
+                            $complete       = "测试";
+                            $url            = U('Material/public_focus_buy',array('kmid'=>$v['id']));
                         }
 
                         //数据前端后端对接--市场PHP

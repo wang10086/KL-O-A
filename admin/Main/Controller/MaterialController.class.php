@@ -897,6 +897,82 @@ class MaterialController extends BaseController {
 		$this->rolelist = $bumen;
 		$this->display('asset_out_record');
 	}
-	
-	
+
+    //集中采购执行率-采购主管 KPI
+    public function public_focus_buy(){
+        $kpi_more_id                        = I('kmid');
+        $kpi_list                           = M('kpi_more')->where(array('id'=>$kpi_more_id))->find();
+        $this->title($kpi_list['quota_title']);
+        $uid                                = $kpi_list['user_id'];
+        $startTime                          = $kpi_list['start_date'];
+        $endTime                            = $kpi_list['end_date'];
+        $lists                              = get_timely(4);
+
+
+        //$this->list                         = $lists;
+        $this->display('focus_buy');
+    }
+
+    //集中采购比率指标
+    public function focus_buy_list(){
+        $this->title('集中采购执行率考核指标');
+        $lists                              = get_timely(4);
+
+        $this->lists                        = $lists;
+        $this->display();
+    }
+
+    //编辑集中采购率考核指标
+    public function focus_list_edit(){
+        $id                                 = I('id',0);
+        $db                                 = M('quota');
+        $id                                 = I('id','');
+        if ($id){
+            $list                           = $db->find($id);
+            $list['title']                  = htmlspecialchars_decode($list['title']);
+            $list['content']                = htmlspecialchars_decode($list['content']);
+            $list['rules']                  = htmlspecialchars_decode($list['rules']);
+            $this->list                     = $list;
+        }
+        $this->display();
+    }
+
+    //删除
+    public function focus_list_del(){
+        $id                                 = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $res                                = timely_quota_del($id);
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+
+    public function public_save(){
+        $savetype                           = I('savetype');
+        if (isset($_POST['dosubmint']) && $savetype){
+            if ($savetype == 1){ //保存集中采购率考核指标
+                $db                         = M('quota');
+                $id                         = I('id');
+                $info                       = I('info');
+                $info['title']              = htmlspecialchars(trim($info['title']));
+                $info['content']            = htmlspecialchars(trim($info['content']));
+                $info['rules']              = htmlspecialchars(trim($info['rules']));
+                $info['type']               = 4; //4=>集中采购执行率指标(采购主管)
+                if (!$info['title'])        $this->error('指标标题不能为空');
+
+                if ($id){
+                    $where                  = array();
+                    $where['id']            = $id;
+                    $res                    = $db->where($where)->save($info);
+                }else{
+                    $res                    = $db->add($info);
+                }
+                echo '<script>window.top.location.reload();</script>';
+            }
+        }
+    }
+
+
 }
