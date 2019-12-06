@@ -150,7 +150,10 @@ class StaffController extends Controller{
             $token              = I('token');
             $arr_ip             = C('ARR_IP');
             $ip                 = get_client_ip();
-            if (in_array($ip,$arr_ip)){
+            $day                = date('Y-m-d');
+            $hour               = date('H');
+            $holiday            = get_holidays();
+            if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(12,13,14,15,16,17))))){
                 if ($token == $_SESSION['token']){
                     $info           = array();
                     $info['pid']    = $id;
