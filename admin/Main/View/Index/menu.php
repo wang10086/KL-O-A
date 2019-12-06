@@ -224,8 +224,23 @@
                                 </li>
                                 </if>
 
-                                <if condition="rolemenu(array('SupplierRes/chart'))">
+                                <!--<if condition="rolemenu(array('SupplierRes/chart'))">
                                     <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart"></i> 资源统计</a></li>
+                                </if>-->
+
+                                <if condition="rolemenu(array('SupplierRes/chart'))">
+                                    <li class="treeview {:on('SupplierRes')}">
+                                        <a href=""><i class="fa  fa-cubes"></i> 物资采购</a>
+                                        <ul class="treeview-menu">
+                                            <if condition="rolemenu(array('SupplierRes/chart'))">
+                                                <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-angle-right"></i> 资源统计</a></li>
+                                            </if>
+                                            <if condition="rolemenu(array('SupplierRes/public_focus_buy','SupplierRes/'))">
+                                                <!--<li class="{:on('ScienceRes/res')} {:on('ScienceRes/res_view')}"><a href="{:U('ScienceRes/res')}"><i class="fa fa-angle-right"></i> 科普资源管理</a></li>-->
+                                                <li class="{:on('SupplierRes/public_focus_buy')} {:on('SupplierRes/focus_buy_list')}"><a href="{:U('SupplierRes/public_focus_buy')}"><i class="fa fa-angle-right"></i> 集中采购执行率</a></li>
+                                            </if>
+                                        </ul>
+                                    </li>
                                 </if>
 
                                 <if condition="rolemenu(array('ScienceRes/province'))">
@@ -358,9 +373,6 @@
                                 <if condition="rolemenu(array('Material/kind'))">
                                 	<li class="{:on('Material/addkind')} {:on('Material/kind')}"><a href="{:U('Material/kind')}"><i class="fa fa-angle-right"></i> 物资类型</a></li>
                                 </if>
-
-                                <li class="{:on('Material/public_focus_buy')} {:on('Material/focus_buy_list')}"><a href="{:U('Material/public_focus_buy')}"><i class="fa fa-angle-right"></i> 集中采购执行率</a></li>
-
                             </ul>
                         </li>
                         </if>
