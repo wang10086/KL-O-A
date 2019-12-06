@@ -462,7 +462,7 @@
             lock:true,
             title: user_name+yearMonth+'月带团补助详情',
             width:1000,
-            height:600,
+            height:500,
             okVal: '提交',
             fixed: true,
             ok: function () {

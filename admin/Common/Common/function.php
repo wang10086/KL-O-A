@@ -2568,8 +2568,9 @@ function updatekpi($month,$user){
                             }
                             $url            = '';*/
 
+                            $monon          = substr($v['month'],4,2);
                             $complete       = "测试";
-                            $url            = U('Material/public_focus_buy',array('kmid'=>$v['id']));
+                            $url            = U('Material/public_focus_buy',array('year'=>$v['year'],'month'=>$monon));
                         }
 
                         //数据前端后端对接--市场PHP

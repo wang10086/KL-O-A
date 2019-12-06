@@ -359,6 +359,8 @@
                                 	<li class="{:on('Material/addkind')} {:on('Material/kind')}"><a href="{:U('Material/kind')}"><i class="fa fa-angle-right"></i> 物资类型</a></li>
                                 </if>
 
+                                <li class="{:on('Material/public_focus_buy')} {:on('Material/focus_buy_list')}"><a href="{:U('Material/public_focus_buy')}"><i class="fa fa-angle-right"></i> 集中采购执行率</a></li>
+
                             </ul>
                         </li>
                         </if>

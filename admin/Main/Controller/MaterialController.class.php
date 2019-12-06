@@ -900,16 +900,18 @@ class MaterialController extends BaseController {
 
     //集中采购执行率-采购主管 KPI
     public function public_focus_buy(){
-        $kpi_more_id                        = I('kmid');
-        $kpi_list                           = M('kpi_more')->where(array('id'=>$kpi_more_id))->find();
-        $this->title($kpi_list['quota_title']);
-        $uid                                = $kpi_list['user_id'];
-        $startTime                          = $kpi_list['start_date'];
-        $endTime                            = $kpi_list['end_date'];
+        $this->title('集中采购执行率');
+        $year                               = I('year',date('Y'));
+        $month                              = I('month',date('m'));
+        $month                              = strlen($month) < 2 ? str_pad($month,2,'0',STR_PAD_LEFT) : $month;
+        $yearMonth                          = $year.$month;
+        $cycle                              = get_cycle($yearMonth);
+
         $lists                              = get_timely(4);
 
-
-        //$this->list                         = $lists;
+        $this->lists                        = $lists;
+        $this->year                         = $year;
+        $this->month                        = $month;
         $this->display('focus_buy');
     }
 
