@@ -188,7 +188,13 @@
                                         </div><br/><br/><br/>
                                         <h5 style="color:#000000;">&nbsp;&nbsp;&nbsp;&nbsp;其他人员提成（计调、研发、资源提成或手动录入带团补助）：<?PHP echo sprintf("%.2f",$bonus_list['bonus']);?>（元）</h5><br/>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>带团补助（课时费）：<?PHP echo sprintf("%.2f",$wages_list['Subsidy']);?></p>
+                                            <p>带团补助（课时费）：
+                                                <?php if ((int)$wages_list['Subsidy']){ ?>
+                                                    <a href="javascript:;" onclick="show_guide_pay()"><?PHP echo sprintf("%.2f",$wages_list['Subsidy']);?></a>
+                                                <?php }else{ ?>
+                                                    <?PHP echo sprintf("%.2f",$wages_list['Subsidy']);?>
+                                                <?php } ?>
+                                            </p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>住房补助：<?PHP echo sprintf("%.2f",$wages_list['housing_subsidy']);?> </p>
@@ -445,5 +451,29 @@
   </div>
 </div>
 
+<script type="text/javascript">
+    const account_id = {$wages_list.account_id};
+    const yearMonth  = {$wages_list.datetime};
+    const user_name  = "{$wages_list.user_name}";
+    function show_guide_pay() {
+        let url = '/index.php?m=Main&c=Salary&a=public_guide_pay_detail&uid='+account_id+'&ym='+yearMonth;
+        console.log(url);
+        art.dialog.open(url,{
+            lock:true,
+            title: user_name+yearMonth+'月带团补助详情',
+            width:1000,
+            height:600,
+            okVal: '提交',
+            fixed: true,
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {
+            }
+        });
+    }
+</script>
             
 <include file="Index:footer2" />

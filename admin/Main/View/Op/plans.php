@@ -334,7 +334,7 @@
         //检查客户信息是否完善
         function check_customer(customer){
             if (!customer){
-                art_show_msg('客户单位不能为空',2); return false;
+                art_show_msg('客户单位不能为空',3); return false;
             }else{
                 $.ajax({
                     type: 'POST',
@@ -342,7 +342,7 @@
                     data:{customer:customer},
                     success:function (data) {
                         if (data.stu == 0){
-                            art_show_msg(data.msg,3);
+                            art_show_msg(data.msg,4);
                             $('#lrpd').hide();
                             $('#noSubmitDiv').show();
                             return false;

@@ -1271,4 +1271,26 @@ class SalaryController extends BaseController {
         $this->royalty                          = $royalty;
         $this->display();
     }
+
+    //带团补助详情
+    public function public_guide_pay_detail(){
+        $uid                                    = I('uid');
+        $yearMonth                              = I('ym');
+        if ($uid && $yearMonth){
+            $cycle                              = get_cycle($yearMonth);
+            $guide_id                           = M('account')->where(array('id'=>$uid))->getField('guide_id');
+            if ($guide_id){
+                $where                          = array();
+                $where['p.guide_id']              = $guide_id;
+                $where['p.status']                = 2; //已完成
+                $where['p.sure_time']             = array('between',array($cycle['begintime'],$cycle['endtime']));
+                $lists                          = M()->table('__GUIDE_PAY__ as p')->join('__OP__ as o on o.op_id = p.op_id','left')->where($where)->field('p.*,o.group_id,o.project')->select();
+            }
+            $this->lists                        = $lists ? $lists : '';
+            $this->display('guide_pay_detail');
+        }else{
+            $this->error('参数错误');
+        }
+    }
+
 }
