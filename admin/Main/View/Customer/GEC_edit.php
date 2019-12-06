@@ -152,14 +152,14 @@
 
                                         <div class="form-group col-md-4">
                                             <label>招募人：</label>
-                                            <input type="text" class="form-control" name="info[create_user_name]" value="{$gec['create_user_name']?$gec['create_user_name']:session('nickname')}" readonly>
-                                            <input type="hidden" name="info[create_user_id]" value="{$gec['create_user_id']?$gec['create_user_id']:session('userid')}">
+                                            <input type="text" class="form-control" name="info[create_user_name]" value="{$gec['id']?$gec['create_user_name']:session('nickname')}" readonly>
+                                            <input type="hidden" name="info[create_user_id]" value="{$gec['id']?$gec['create_user_id']:session('userid')}">
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>维护人 <font color="#999">(选择匹配到的信息)</font>：</label>
-                                            <input type="text" class="form-control" name="info[cm_name]" id="cm_name" value="{$gec['transfer']?$gec['cm_name']:session('nickname')}" <?php if (!in_array(cookie('userid'),array(1,11))){ echo "readonly"; } ?>>
-                                            <input type="hidden" name="info[cm_id]" value="{$gec['transfer']?$gec['cm_id']:session('userid')}" id="cm_id">
+                                            <input type="text" class="form-control" name="info[cm_name]" id="cm_name" value="{$gec['id']?$gec['cm_name']:session('nickname')}" <?php if (!in_array(cookie('userid'),array(1,11))){ echo "readonly"; } ?>>
+                                            <input type="hidden" name="info[cm_id]" value="{$gec['id']?$gec['cm_id']:session('userid')}" id="cm_id">
                                         </div>
                                         
                                         <div class="form-group col-md-12">
