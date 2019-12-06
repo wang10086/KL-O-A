@@ -108,7 +108,8 @@
 
                                     <div class="form-group box-float-12 mt20" style="width:100%; text-align:center;">
                                         <button type="button" onclick="submit_audit_form()" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                                        <button type="button" onclick="ConfirmSub('sureSubmit','请确认本批次所有文件(包含附件)已审核完毕,提交后将无法修改审核信息!')" class="btn btn-danger btn-lg" id="lrpd">提交</button>
+                                        <!--<button type="button" onclick="ConfirmSub('sureSubmit','请确认本批次所有文件(包含附件)已审核完毕,提交后将无法修改审核信息!')" class="btn btn-danger btn-lg" id="lrpd">提交</button>-->
+                                        <button type="button" onclick="check_audit({$file_list.id})" class="btn btn-danger btn-lg" id="lrpd">提交</button>
                                     </div>
                                 <?php } ?>
 
@@ -175,6 +176,26 @@
             cancel: function () {
             }
         });
+    }
+
+    function check_audit(id) {
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/check_audit_file')}",
+            data: {id:id},
+            success:function (data) {
+                if (data.num ==1){
+                    ConfirmSub('sureSubmit','请确认本批次所有文件(包含附件)已审核完毕,提交后将无法修改审核信息!')
+                } else{
+                    art_show_msg(data.msg,4);
+                    return false;
+                }
+            },
+            error:function () {
+                alert('error');
+                return false;
+            }
+        })
     }
 
     //打印文件审核记录
