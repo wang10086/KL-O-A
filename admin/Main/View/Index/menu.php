@@ -228,15 +228,14 @@
                                     <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart"></i> 资源统计</a></li>
                                 </if>-->
 
-                                <if condition="rolemenu(array('SupplierRes/chart'))">
+                                <if condition="rolemenu(array('SupplierRes/chart','SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del'))">
                                     <li class="treeview {:on('SupplierRes')}">
-                                        <a href=""><i class="fa  fa-cubes"></i> 物资采购</a>
+                                        <a href=""><i class="fa  fa-cubes"></i> 集中采购</a>
                                         <ul class="treeview-menu">
                                             <if condition="rolemenu(array('SupplierRes/chart'))">
                                                 <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-angle-right"></i> 资源统计</a></li>
                                             </if>
-                                            <if condition="rolemenu(array('SupplierRes/public_focus_buy','SupplierRes/'))">
-                                                <!--<li class="{:on('ScienceRes/res')} {:on('ScienceRes/res_view')}"><a href="{:U('ScienceRes/res')}"><i class="fa fa-angle-right"></i> 科普资源管理</a></li>-->
+                                            <if condition="rolemenu(array('SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del'))">
                                                 <li class="{:on('SupplierRes/public_focus_buy')} {:on('SupplierRes/focus_buy_list')}"><a href="{:U('SupplierRes/public_focus_buy')}"><i class="fa fa-angle-right"></i> 集中采购执行率</a></li>
                                             </if>
                                         </ul>
