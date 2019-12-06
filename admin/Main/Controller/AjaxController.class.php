@@ -1870,12 +1870,28 @@ class AjaxController extends Controller {
         $this->ajaxReturn($data);
     }
 
-    //
+    //文件审核检查是否提交审核内容
     public function check_audit_file(){
-        $id                         = I('id');
-        
-
-        $this->ajaxReturn($id);
+        $fid                        = I('id');
+        $data                       = array();
+        if ($fid){
+            $record_db              = M('approval_record');
+            $where                  = array();
+            $where['file_id']       = $fid;
+            $where['create_user']   = session('userid');
+            $record                 = $record_db->where($where)->select();
+            if ($record){
+                $data['num']        = 1;
+                $data['msg']        = '已完成审核';
+            }else{
+                $data['num']        = 2;
+                $data['msg']        = '请先保存您的审核意见，如果无意见请直接填写“同意”';
+            }
+        }else{
+            $data['num']            = 2;
+            $data['msg']            = '获取数据错误,请联系系统管理员';
+        }
+        $this->ajaxReturn($data);
     }
 }
 
