@@ -2570,7 +2570,7 @@ function updatekpi($month,$user){
 
                             $monon          = substr($v['month'],4,2);
                             $complete       = "测试";
-                            $url            = U('Material/public_focus_buy',array('year'=>$v['year'],'month'=>$monon));
+                            $url            = U('SupplierRes/public_focus_buy',array('year'=>$v['year'],'month'=>$monon));
                         }
 
                         //数据前端后端对接--市场PHP
