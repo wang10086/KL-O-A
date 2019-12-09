@@ -2715,20 +2715,20 @@ class OpController extends BaseController {
                 $this->save_add_group($opid,$resid,$group); //保存拼团信息
                 //如果是内部地接, 生成一个新地接团
                 if ($op['in_dijie'] == 1 && !$op['dijie_opid'] && $op['kind'] != 87) { //87=>单进院所不生成地接团
-                    $mod                            = D('Op');
-                    $new_op_id                      = $mod -> create_dejie_op($opid , $info ,$op);
+                    $mod                = D('Op');
+                    $new_op_id          = $mod -> create_dejie_op($opid , $info ,$op);
                 }
 
-                $infos                              = array();
-                $infos['dijie_opid']                = $new_op_id ? $new_op_id : '';
-                $infos['group_id']	                = $info['group_id'];
-                $infos['status']		            = 1;
+                $infos                  = array();
+                $infos['dijie_opid']    = $new_op_id ? $new_op_id : '';
+                $infos['group_id']	    = $info['group_id'];
+                $infos['status']	    = 1;
                 M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
-                $record                             = array();
-                $record['op_id']                    = $opid;
-                $record['optype']                   = 4;
-                $record['explain']                  = '成团确认';
+                $record                 = array();
+                $record['op_id']        = $opid;
+                $record['optype']       = 4;
+                $record['explain']      = '成团确认';
                 op_record($record);
                 $this->success('保存成功！');
             }else{
@@ -2736,17 +2736,17 @@ class OpController extends BaseController {
             }
 		}else{
 
-            $this->op		    = $op;
-            $this->kinds	    = M('project_kind')->getField('id,name', true);
-            $this->guide_kind   = M('guidekind')->getField('id,name',true);
+            $this->op		        = $op;
+            $this->kinds	        = M('project_kind')->getField('id,name', true);
+            $this->guide_kind       = M('guidekind')->getField('id,name',true);
             //获取职能类型
-            $priceKind          = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
-            $this->price_kind   = $priceKind;
-            $this->fields       = C('GUI_FIELDS');
-            $jiesuan            = M('op_settlement')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //结算审批通过
-            $this->jiesuan      = $jiesuan;
-            $resource           = M('op_res')->where(array('op_id'=>$opid))->find();
-            $this->resource     = $resource; //资源需求单
+            $priceKind              = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
+            $this->price_kind       = $priceKind;
+            $this->fields           = C('GUI_FIELDS');
+            $jiesuan                = M('op_settlement')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //结算审批通过
+            $this->jiesuan          = $jiesuan;
+            $resource               = M('op_res')->where(array('op_id'=>$opid))->find();
+            $this->resource         = $resource; //资源需求单
             if ($resource) {
                 $this->rad          = 1;
                 $this->task_fields  = explode(',',$resource['task_field']);
@@ -2755,7 +2755,7 @@ class OpController extends BaseController {
             }
 
             //辅导员/教师、专家
-            $guide_price        = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
+            $guide_price            = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id'=>$opid,'p.op_id'=>$opid))->select();
             foreach ($guide_price as $k=>$v){
                 //职务信息
                 foreach ($this->guide_kind as $key=>$value){
@@ -2771,58 +2771,58 @@ class OpController extends BaseController {
                     }
                 }
             }
-            $this->guide_price  = $guide_price;
+            $this->guide_price      = $guide_price;
 
             //项目跟进时提出的需求信息
-            $this->guide_need   = M('op_guide_price')->where(array('op_id'=>$opid))->select();
+            $this->guide_need       = M('op_guide_price')->where(array('op_id'=>$opid))->select();
 
             //人员名单关键字
-            $this->userkey      = get_username();
+            $this->userkey          = get_username();
             //科普资源关键字
-            $this->scienceRes   = getScienceRes();
-            $this->province     = get_pid_citys(0);
+            $this->scienceRes       = getScienceRes();
+            $this->province         = get_pid_citys(0);
 
             //人员列表
-            $stu_list       = M('op_member')->where(array('op_id'=>$opid))->select();
-            $this->stu_list = $stu_list;
-			$this->confirm 	= $confirm;
-            $this->upd_num  = $confirm['upd_num'];
-            $this->op_kind  = $op['kind'];
-            $this->act_need = C('ACT_NEED');
-            $this->task_field = C('LES_FIELD');
-            $this->apply_to = C('APPLY_TO');
-            $this->design   = M('op_design')->where(array('op_id'=>$opid))->find();    //委托设计工作交接单
-            $work_plan      = M('op_work_plans')->where(array('op_id'=>$opid))->find();//业务实施计划单
-            $this->work_plan= $work_plan;
-            $this->additive = explode(',',$work_plan['additive']);
+            $stu_list               = M('op_member')->where(array('op_id'=>$opid))->select();
+            $this->stu_list         = $stu_list;
+			$this->confirm 	        = $confirm;
+            $this->upd_num          = $confirm['upd_num'];
+            $this->op_kind          = $op['kind'];
+            $this->act_need         = C('ACT_NEED');
+            $this->task_field       = C('LES_FIELD');
+            $this->apply_to         = C('APPLY_TO');
+            $this->design           = M('op_design')->where(array('op_id'=>$opid))->find();    //委托设计工作交接单
+            $work_plan              = M('op_work_plans')->where(array('op_id'=>$opid))->find();//业务实施计划单
+            $this->work_plan        = $work_plan;
+            $this->additive         = explode(',',$work_plan['additive']);
             $this->plan_between_time = $work_plan['begin_time']?date('Y-m-d',$work_plan['begin_time']).' - '.date('Y-m-d',$work_plan['end_time']):'';
-            $this->plan_lists = M('op_work_plan_lists')->where(array('plan_id'=>$work_plan['id']))->select();
+            $this->plan_lists       = M('op_work_plan_lists')->where(array('plan_id'=>$work_plan['id']))->select();
 
-            $this->user_info= M()->table('__OP__ as o')
+            $this->user_info        = M()->table('__OP__ as o')
                 ->field('a.*,d.department,o.create_user_name')
                 ->join('__ACCOUNT__ as a on a.id = o.create_user')
                 ->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid')
                 ->where(array('o.op_id'=>$opid))
                 ->find();
-            $this->output_info = array(
+            $this->output_info      = array(
                 '1'=>'出片打样',
                 '2'=>'喷绘',
                 '3'=>'只提供电子文件'
             );
-            $this->audit_status = array (
+            $this->audit_status     = array (
                 P::AUDIT_STATUS_NOT_AUDIT  => '<span class="yellow">未审核</span>',
                 P::AUDIT_STATUS_PASS       => '<span class="green">审核通过</span>',
                 P::AUDIT_STATUS_NOT_PASS   => '<span class="red">未通过</span>',
             );
-            $this->additive = explode(',',$work_plan['additive']);
-            $additive_con   = array(
+            $this->additive         = explode(',',$work_plan['additive']);
+            $additive_con           = array(
                 '1'         => '行程或方案',
                 '2'         => '需解决大交通的《人员信息表》',
                 '3'         => '其他'
             );
-            $this->additive_con = $additive_con;
-            $this->businessDep  = C('DIJIE_NAME');
-            $this->groups       = M('op_group')->where(array('op_id'=>$opid))->select();
+            $this->additive_con     = $additive_con;
+            $this->businessDep      = C('DIJIE_NAME');
+            $this->groups           = M('op_group')->where(array('op_id'=>$opid))->select();
 
 			$this->display('confirm');
 		}
