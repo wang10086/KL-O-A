@@ -14,223 +14,221 @@
     })
 </script>
 
-<!--业务实施需求单 (一)-->
-    <form method="post" action="<?php echo U('Op/public_save'); ?>" id="res_need_table" class="hideAll" onsubmit="return resSubmitBefore(1)">
-    <?php if ($resource['audit_status'] != 1){ ?>
-    <input type="hidden" name="dosubmint" value="1">
-    <input type="hidden" name="opid" value="{$op.op_id}">
-    <input type="hidden" name="savetype" value="11">
-    <input type="hidden" name="info[ini_user_id]" value="{:session('userid')}" readonly>
-    <input type="hidden" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
-        <div class="row">
-            <!-- right column -->
-            <div class="form-group col-md-12">
-                <div class="content">
-                    <div class="form-group col-md-4">
-                        <label>需求部门：</label><input type="text" name="info[department]" value="<?php echo $resource['department']?$resource['department']:$user_info['department']; ?>" class="form-control" />
+<?php if ($resource['audit_status'] != 1){ ?>
+    <?php if ($op_kind == 60){ ?>
+        <!--业务实施需求单 (一) 课后一小时专用表-->
+        <form method="post" action="<?php echo U('Op/public_save'); ?>" id="after_lession" class="hideAll">
+            <input type="hidden" name="dosubmint" value="1">
+            <input type="hidden" name="opid" value="{$op.op_id}">
+            <input type="hidden" name="savetype" value="11">
+            <input type="hidden" name="info[ini_user_id]" value="{:session('userid')}" readonly>
+            <input type="hidden" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
+            <div class="row">
+                <!-- right column -->
+                <div class="form-group col-md-12">
+                    <div class="content">
+                        <div class="form-group col-md-12">
+                            <label>学校名称：</label><input type="text" name="info[client]" value="<?php echo $resource['client']?$resource['client']:$op['customer'] ?>" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>上课地点：</label><input type="text" name="info[addr]" value="<?php echo $resource['addr']?$resource['addr']:$confirm['address']; ?>" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>课程周期：</label><input type="text" name="info[use_time]" value="<?php echo $resource['use_time']; ?>" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>上课时间：</label><input type="text" name="info[lession_time]" value="{$resource['lession_time']}" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>课程名称：</label><input type="text" name="info[lession_name]" value="{$resource['lession_name']}" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>面向年级：</label><input type="text" name="info[lession_grade]" value="{$resource['lession_grade']}" class="form-control" />
+                        </div>
+
+                        <!--<div class="form-group col-md-4">
+                            <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$men['nickname']}" id="exe_u_name" />
+                            <input type="hidden" name="info[exe_user_id]" id="exe_u_id"  value="{$men['id']}" />
+                        </div>-->
+
+                        <div class="form-group col-md-4">
+                            <label>填表人：</label><input type="text" name="info[service_name]" value="{$op['sale_user']}" class="form-control" readonly />
+                        </div>
+
+                        <div class="form-group col-md-12" id="is_handson">
+                            <label>动手实践：</label>
+                            <span class="checkboxs_400"><input type="radio" name="info[handson]" <?php if($resource['handson']==1){ echo 'checked';} ?>  value="1">&nbsp; 是<span id="handson">，费用标准：<input type="text" name="info[lession_price]" value="{$resource['lession_price']}" style="border: none; border-bottom: solid 1px;"></span></span>&#12288;&#12288;
+                            <span class="checkboxs_255"><input type="radio" name="info[handson]" <?php if($resource['handson']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label>如有更多需求,请具体描述：</label><textarea class="form-control"  name="info[lession_special_need]">{$resource['lession_special_need']}</textarea>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
+                            <input type="text" name="info[audit_user_name]" value="{$resource['audit_user_name']}" class="form-control" placeholder="审核人员" id="lession_audit_user_name" required />
+                            <input type="hidden" name="info[audit_user_id]" value="{$resource['audit_user_id']}" class="form-control" id="lession_audit_user_id" />
+                        </div>
+
                     </div>
 
-                    <div class="form-group col-md-4">
-                        <label>客户单位：</label><input type="text" name="info[client]" value="<?php echo $resource['client']?$resource['client']:$op['customer'] ?>" class="form-control" />
+                    <div style="width:100%; text-align:center;">
+                        <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('after_lession','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
+                        <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(2)">保存</a>
                     </div>
+                </div>
+            </div>
+        </form>
+    <?php }else{ ?>
+        <!--业务实施需求单 (二)-->
+        <form method="post" action="<?php echo U('Op/public_save'); ?>" id="res_need_table" class="hideAll" onsubmit="return resSubmitBefore(1)">
+            <input type="hidden" name="dosubmint" value="1">
+            <input type="hidden" name="opid" value="{$op.op_id}">
+            <input type="hidden" name="savetype" value="11">
+            <input type="hidden" name="info[ini_user_id]" value="{:session('userid')}" readonly>
+            <input type="hidden" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
+            <div class="row">
+                <!-- right column -->
+                <div class="form-group col-md-12">
+                    <div class="content">
+                        <div class="form-group col-md-4">
+                            <label>需求部门：</label><input type="text" name="info[department]" value="<?php echo $resource['department']?$resource['department']:$user_info['department']; ?>" class="form-control" />
+                        </div>
 
-                    <div class="form-group col-md-4">
-                        <label>业务人员：</label><input type="text" name="info[service_name]" value="{$op['sale_user']}" class="form-control" readonly />
-                    </div>
+                        <div class="form-group col-md-4">
+                            <label>客户单位：</label><input type="text" name="info[client]" value="<?php echo $resource['client']?$resource['client']:$op['customer'] ?>" class="form-control" />
+                        </div>
 
-                    <div class="form-group col-md-4">
-                        <label>实施对象：</label><input type="text" name="info[imp_obj]" value="<?php echo $resource['imp_obj']?$resource['imp_obj']:$apply_to[$op['apply_to']] ; ?>" class="form-control" />
-                    </div>
+                        <div class="form-group col-md-4">
+                            <label>业务人员：</label><input type="text" name="info[service_name]" value="{$op['sale_user']}" class="form-control" readonly />
+                        </div>
 
-                    <div class="form-group col-md-4">
-                        <label>活动人数：</label><input type="text" name="info[number]" value="{$resource['number']}" class="form-control" />
-                    </div>
+                        <div class="form-group col-md-4">
+                            <label>实施对象：</label><input type="text" name="info[imp_obj]" value="<?php echo $resource['imp_obj']?$resource['imp_obj']:$apply_to[$op['apply_to']] ; ?>" class="form-control" />
+                        </div>
 
-                    <div class="form-group col-md-4">
-                        <label>实施时间：</label><input type="text" name="info[in_time]" value="<?php echo $resource['in_time']?date('Y-m-d H:i',$resource['in_time']): ''; ?>" class="form-control inputdatetime" />
-                    </div>
+                        <div class="form-group col-md-4">
+                            <label>活动人数：</label><input type="text" name="info[number]" value="{$resource['number']}" class="form-control" />
+                        </div>
 
-                    <div class="form-group col-md-4">
-                        <label>活动时长（天）：</label><input type="text" name="info[use_time]" value="<?php echo $resource['use_time']?$resource['use_time']:$confirm['days'] ; ?>" class="form-control" />
-                    </div>
+                        <div class="form-group col-md-4">
+                            <label>实施时间：</label><input type="text" name="info[in_time]" value="<?php echo $resource['in_time']?date('Y-m-d H:i',$resource['in_time']): ''; ?>" class="form-control inputdatetime" />
+                        </div>
 
-                    <div class="form-group col-md-4">
-                        <label>活动省份</label>
-                        <select class="form-control" name="info[province]">
-                            <foreach name="province" key="k" item="v">
-                                <option value="{$k}" <?php if ($resource['province'] == $k){ echo "selected"; } ?>>{$v}</option>
+                        <div class="form-group col-md-4">
+                            <label>活动时长（天）：</label><input type="text" name="info[use_time]" value="<?php echo $resource['use_time']?$resource['use_time']:$confirm['days'] ; ?>" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>活动省份</label>
+                            <select class="form-control" name="info[province]">
+                                <foreach name="province" key="k" item="v">
+                                    <option value="{$k}" <?php if ($resource['province'] == $k){ echo "selected"; } ?>>{$v}</option>
+                                </foreach>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>活动地点：</label><input type="text" name="info[addr]" value="<?php echo $resource['addr']?$resource['addr']:$confirm['address']; ?>" class="form-control" />
+                        </div>
+
+                        <!--<div class="form-group col-md-4">
+                            <label>接收人员aaa：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$men['nickname']}" id="exe_u_name" required />
+                            <input type="hidden" name="info[exe_user_id]" id="exe_u_id"  value="{$men['id']}" />
+                        </div>-->
+
+                        <div class="form-group col-md-12">
+                            <h2 class="res_need_h2">院所、场馆、场地</h2>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label>活动需求：</label>
+                            <foreach name="act_need" key="k" item="v">
+                                <span class="checkboxs_100"><input type="checkbox" name="act_need[]" <?php if(in_array($v,$act_needs)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
                             </foreach>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group col-md-4">
-                        <label>活动地点：</label><input type="text" name="info[addr]" value="<?php echo $resource['addr']?$resource['addr']:$confirm['address']; ?>" class="form-control" />
-                    </div>
+                        </div>
 
-                    <!--<div class="form-group col-md-4">
-                        <label>接收人员aaa：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$men['nickname']}" id="exe_u_name" required />
-                        <input type="hidden" name="info[exe_user_id]" id="exe_u_id"  value="{$men['id']}" />
-                    </div>-->
+                        <div class="form-group col-md-12">
+                            <label>资源需求：</label><input type="text" name="info[res_need]" value="{$resource['res_need']}" id="cas_res" class="form-control" />
+                            <input type="hidden" name="info[cas_res_id]" id="cas_res_id" value="{$resource['cas_res_id']}">
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <h2 class="res_need_h2">院所、场馆、场地</h2>
-                    </div>
+                        <div class="form-group col-md-12">
+                            <label>具体需求描述：</label><textarea class="form-control" value="{$resource['res_special_need']}"  name="info[res_special_need]">{$resource['res_special_need']}</textarea>
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <label>活动需求：</label>
-                        <foreach name="act_need" key="k" item="v">
-                        <span class="checkboxs_100"><input type="checkbox" name="act_need[]" <?php if(in_array($v,$act_needs)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
-                        </foreach>
-                    </div>
+                        <div class="form-group col-md-12">
+                            <h2 class="res_need_h2" >课程与活动</h2>
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <label>资源需求：</label><input type="text" name="info[res_need]" value="{$resource['res_need']}" id="cas_res" class="form-control" />
-                        <input type="hidden" name="info[cas_res_id]" id="cas_res_id" value="{$resource['cas_res_id']}">
-                    </div>
+                        <div class="form-group col-md-6">
+                            <label>课程活动名称：</label><input type="text" name="info[les_name]" value="{$resource['les_name']}" class="form-control" />
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <label>具体需求描述：</label><textarea class="form-control" value="{$resource['res_special_need']}"  name="info[res_special_need]">{$resource['res_special_need']}</textarea>
-                    </div>
+                        <div class="form-group col-md-6">
+                            <label>学科（如动物、植物、微生物、天文、地质等）：</label><input type="text" name="info[subject]" value="{$resource['subject']}" class="form-control" />
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <h2 class="res_need_h2" >课程与活动</h2>
-                    </div>
+                        <div class="form-group col-md-12">
+                            <label>具体需求描述（课程描述、是否有动手活动及预算；集合时间、集合地点等）：</label><textarea class="form-control"  name="info[les_special_need]">{$resource['les_special_need']}</textarea>
+                        </div>
 
-                    <div class="form-group col-md-6">
-                        <label>课程活动名称：</label><input type="text" name="info[les_name]" value="{$resource['les_name']}" class="form-control" />
-                    </div>
+                        <div class="form-group col-md-12">
+                            <h2 class="res_need_h2" >小课题</h2>
+                        </div>
 
-                    <div class="form-group col-md-6">
-                        <label>学科（如动物、植物、微生物、天文、地质等）：</label><input type="text" name="info[subject]" value="{$resource['subject']}" class="form-control" />
-                    </div>
+                        <div class="form-group col-md-12">
+                            <div>小课题领域</div>
+                            <foreach name="task_field" key="k" item="v">
+                                <span class="checkboxs_255"><input type="checkbox" name="task_field[]" <?php if(in_array($v,$task_fields)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
+                            </foreach>
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <label>具体需求描述（课程描述、是否有动手活动及预算；集合时间、集合地点等）：</label><textarea class="form-control"  name="info[les_special_need]">{$resource['les_special_need']}</textarea>
-                    </div>
+                        <div class="form-group col-md-12">
+                            <div>资源方性质 :</div>
+                            <span class="checkboxs_255"><input type="radio" name="info[task_type]" <?php if($resource['task_type']==1){ echo 'checked';} ?>  value="1">&nbsp; 中科院院内</span>&#12288;&#12288;
+                            <span class="checkboxs_255"><input type="radio" name="info[task_type]" <?php if($resource['task_type']==2){ echo 'checked';} ?>  value="2">&nbsp; 中科院院外</span>&#12288;&#12288;
+                            <span class="checkboxs_255"><input type="radio" name="info[task_type]" <?php if($resource['task_type']==3){ echo 'checked';} ?>  value="3">&nbsp; 均可</span>&#12288;&#12288;
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <h2 class="res_need_h2" >小课题</h2>
-                    </div>
+                        <div class="form-group col-md-12" id="is_custom">
+                            <label>是否指定资源方：</label>
+                            <span class="checkboxs_400"><input type="radio" name="info[custom]" <?php if($resource['custom']==1){ echo 'checked';} ?>  value="1">&nbsp; 是<span id="custom">，资源方名称：<input type="text" name="info[res_name]" value="{$resource['res_name']}" style="border: none; border-bottom: solid 1px;"></span></span>&#12288;&#12288;
+                            <span class="checkboxs_255"><input type="radio" name="info[custom]" <?php if($resource['custom']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <div>小课题领域</div>
-                        <foreach name="task_field" key="k" item="v">
-                            <span class="checkboxs_255"><input type="checkbox" name="task_field[]" <?php if(in_array($v,$task_fields)){ echo 'checked';} ?>  value="{$v}">&nbsp; {$v}</span>&#12288;&#12288;
-                        </foreach>
-                    </div>
+                        <div class="form-group col-md-12">
+                            <label>具体需求描述（课题周期、是否参赛、预算价格等）：</label><textarea class="form-control"  name="info[task_special_need]">{$resource['task_special_need']}</textarea>
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <div>资源方性质 :</div>
-                        <span class="checkboxs_255"><input type="radio" name="info[task_type]" <?php if($resource['task_type']==1){ echo 'checked';} ?>  value="1">&nbsp; 中科院院内</span>&#12288;&#12288;
-                        <span class="checkboxs_255"><input type="radio" name="info[task_type]" <?php if($resource['task_type']==2){ echo 'checked';} ?>  value="2">&nbsp; 中科院院外</span>&#12288;&#12288;
-                        <span class="checkboxs_255"><input type="radio" name="info[task_type]" <?php if($resource['task_type']==3){ echo 'checked';} ?>  value="3">&nbsp; 均可</span>&#12288;&#12288;
+                        <div class="form-group col-md-12">
+                            <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
+                            <input type="text" name="info[audit_user_name]" value="{$resource['audit_user_name']}" class="form-control" placeholder="审核人员" id="res_audit_user_name" required />
+                            <input type="hidden" name="info[audit_user_id]" value="{$resource['audit_user_id']}" class="form-control" id="res_audit_user_id" />
+                        </div>
                     </div>
 
-                    <div class="form-group col-md-12" id="is_custom">
-                        <label>是否指定资源方：</label>
-                        <span class="checkboxs_400"><input type="radio" name="info[custom]" <?php if($resource['custom']==1){ echo 'checked';} ?>  value="1">&nbsp; 是<span id="custom">，资源方名称：<input type="text" name="info[res_name]" value="{$resource['res_name']}" style="border: none; border-bottom: solid 1px;"></span></span>&#12288;&#12288;
-                        <span class="checkboxs_255"><input type="radio" name="info[custom]" <?php if($resource['custom']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
+                    <div style="width:100%; text-align:center;">
+                        <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(1)">保存</a>
+                        <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('res_need_table','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
                     </div>
-
-                    <div class="form-group col-md-12">
-                        <label>具体需求描述（课题周期、是否参赛、预算价格等）：</label><textarea class="form-control"  name="info[task_special_need]">{$resource['task_special_need']}</textarea>
-                    </div>
-
-                    <div class="form-group col-md-12">
-                        <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
-                        <input type="text" name="info[audit_user_name]" value="{$resource['audit_user_name']}" class="form-control" placeholder="审核人员" id="res_audit_user_name" required />
-                        <input type="hidden" name="info[audit_user_id]" value="{$resource['audit_user_id']}" class="form-control" id="res_audit_user_id" />
-                    </div>
-                </div>
-
-                <div style="width:100%; text-align:center;">
-                    <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(1)">保存</a>
-                    <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('res_need_table','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
-                </div>
-            </div><!--/.col (right) -->
-        </div>
-    <?php }else{ ?>
-        <include file="op_res_nfeedback" />
-    <?php } ?>
-    </form>
-
-<!--业务实施需求单 (二)-->
-<form method="post" action="<?php echo U('Op/public_save'); ?>" id="after_lession" class="hideAll">
-    <?php if ($resource['audit_status'] != 1){ ?>
-    <input type="hidden" name="dosubmint" value="1">
-    <input type="hidden" name="opid" value="{$op.op_id}">
-    <input type="hidden" name="savetype" value="11">
-    <input type="hidden" name="info[ini_user_id]" value="{:session('userid')}" readonly>
-    <input type="hidden" name="info[ini_user_name]" value="{:session('nickname')}" readonly>
-    <div class="row">
-        <!-- right column -->
-        <div class="form-group col-md-12">
-            <div class="content">
-                <div class="form-group col-md-12">
-                    <label>学校名称：</label><input type="text" name="info[client]" value="<?php echo $resource['client']?$resource['client']:$op['customer'] ?>" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>上课地点：</label><input type="text" name="info[addr]" value="<?php echo $resource['addr']?$resource['addr']:$confirm['address']; ?>" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>课程周期：</label><input type="text" name="info[use_time]" value="<?php echo $resource['use_time']; ?>" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>上课时间：</label><input type="text" name="info[lession_time]" value="{$resource['lession_time']}" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>课程名称：</label><input type="text" name="info[lession_name]" value="{$resource['lession_name']}" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>面向年级：</label><input type="text" name="info[lession_grade]" value="{$resource['lession_grade']}" class="form-control" />
-                </div>
-
-                <!--<div class="form-group col-md-4">
-                    <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$men['nickname']}" id="exe_u_name" />
-                    <input type="hidden" name="info[exe_user_id]" id="exe_u_id"  value="{$men['id']}" />
-                </div>-->
-
-                <div class="form-group col-md-4">
-                    <label>填表人：</label><input type="text" name="info[service_name]" value="{$op['sale_user']}" class="form-control" readonly />
-                </div>
-
-                <div class="form-group col-md-12" id="is_handson">
-                    <label>动手实践：</label>
-                    <span class="checkboxs_400"><input type="radio" name="info[handson]" <?php if($resource['handson']==1){ echo 'checked';} ?>  value="1">&nbsp; 是<span id="handson">，费用标准：<input type="text" name="info[lession_price]" value="{$resource['lession_price']}" style="border: none; border-bottom: solid 1px;"></span></span>&#12288;&#12288;
-                    <span class="checkboxs_255"><input type="radio" name="info[handson]" <?php if($resource['handson']==0){ echo 'checked';} ?>  value="0">&nbsp; 否</span>&#12288;&#12288;
-                </div>
-
-                <div class="form-group col-md-12">
-                    <label>如有更多需求,请具体描述：</label><textarea class="form-control"  name="info[lession_special_need]">{$resource['lession_special_need']}</textarea>
-                </div>
-
-                <div class="form-group col-md-12">
-                    <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
-                    <input type="text" name="info[audit_user_name]" value="{$resource['audit_user_name']}" class="form-control" placeholder="审核人员" id="lession_audit_user_name" required />
-                    <input type="hidden" name="info[audit_user_id]" value="{$resource['audit_user_id']}" class="form-control" id="lession_audit_user_id" />
-                </div>
-
+                </div><!--/.col (right) -->
             </div>
-
-            <div style="width:100%; text-align:center;">
-                <!--<a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('after_lession','<?php /*echo U('Op/public_save'); */?>');">保存</a>-->
-                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(2)">保存</a>
-            </div>
-        </div>
-    </div>
-    <?php }else{ ?>
-        <include file="op_res_nfeedback" />
+        </form>
     <?php } ?>
-</form>
+<?php }else{ ?>
+    <include file="op_res_nfeedback" />
+<?php } ?>
 
 <!--委托设计工作交接单 设计部-->
-<form method="post" action="<?php echo U('Op/public_save'); ?>" id="design" class="hideAll">
-    <?php if ($design['audit_status'] != 1){ ?>
+<?php if ($design['audit_status'] != 1){ ?>
+    <form method="post" action="<?php echo U('Op/public_save'); ?>" id="design" class="hideAll">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="opid" value="{$op.op_id}">
         <input type="hidden" name="savetype" value="16">
@@ -313,91 +311,92 @@
                 </div>
             </div>
         </div>
-    <?php }else{ ?>
-        <include file="op_res_design" />
-    <?php } ?>
-</form>
+    </form>
+<?php }else{ ?>
+    <include file="op_res_design" />
+<?php } ?>
+
 
 <!--业务实施计划单 计调部-->
-<form method="post" action="<?php echo U('Op/public_save'); ?>" id="work_plan" class="hideAll" onsubmit="" >
-    <?php if ($work_plan['audit_status'] != 1){ ?>
-    <input type="hidden" name="dosubmint" value="1">
-    <input type="hidden" name="opid" value="{$op.op_id}">
-    <input type="hidden" name="savetype" value="19">
-    <div class="row">
-        <!-- right column -->
-        <div class="form-group col-md-12">
-            <div class="content">
+<?php if ($work_plan['audit_status'] != 1){ ?>
+    <form method="post" action="<?php echo U('Op/public_save'); ?>" id="work_plan" class="hideAll" onsubmit="" >
+        <input type="hidden" name="dosubmint" value="1">
+        <input type="hidden" name="opid" value="{$op.op_id}">
+        <input type="hidden" name="savetype" value="19">
+        <div class="row">
+            <!-- right column -->
+            <div class="form-group col-md-12">
+                <div class="content">
 
-                <div class="form-group col-md-4">
-                    <label>业务单位：</label><input type="text" value="{$user_info.department}" class="form-control" />
-                    <input type="hidden" name="info[departmentid]" value="{$user_info.departmentid}">
+                    <div class="form-group col-md-4">
+                        <label>业务单位：</label><input type="text" value="{$user_info.department}" class="form-control" />
+                        <input type="hidden" name="info[departmentid]" value="{$user_info.departmentid}">
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>实施时间：</label><input type="text" name="between_time" value="{$plan_between_time}" class="form-control between_day" />
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>业务名称：</label><input type="text" name="info[project]" value="<?php echo $work_plan['project']?$work_plan['project']:$op['project']; ?>" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>销售人员：</label><input type="text" name="info[sale_user]" value="<?php echo $work_plan['sale_user']?$work_plan['sale_user']:$op['sale_user']; ?>" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>人数：</label><input type="text" name="info[num]" value="{$work_plan['num']}" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>向顾客报价：</label><input type="text" name="info[price]" value="{$work_plan['price']}" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>估计毛利：</label><input type="text" name="info[maoli]" value="{$work_plan['maoli']}" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$work_plan['exe_user_name']}" id="do_user_name" required />
+                        <input type="hidden" name="info[exe_user_id]" id="do_user_id"  value="{$work_plan['exe_user_id']}" />
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>填表人：</label><input type="text" name="info[ini_user_name]" value="<?php echo $work_plan['ini_user_name']?$work_plan['ini_user_name']:session('nickname'); ?>" class="form-control" readonly />
+                        <input type="hidden" name="info[ini_user_id]" value="<?php echo $work_plan['ini_user_id']?$work_plan['ini_user_id']:session('userid'); ?>" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>后附：</label>
+                        <span><input type="checkbox" name="additive[]" <?php if(in_array(1,$additive)){ echo 'checked';} ?>  value="1">&nbsp; 行程或方案</span>&#12288;&#12288;
+                        <span class="ml50"><input type="checkbox" name="additive[]" <?php if(in_array(2,$additive)){ echo 'checked';} ?>  value="2">&nbsp; 需解决大交通的《人员信息表》</span>
+                        <span class="ml50"><input type="checkbox" name="additive[]" <?php if(in_array(3,$additive)){ echo 'checked';} ?>  value="3">&nbsp; 其他</span>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <h2 class="tcs_need_h2">业务实施需计调操作具体内容：</h2>
+
+                        <include file="work_plans_edit" />
+
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
+                        <input type="text" name="info[audit_user_name]" value="{$work_plan['audit_user_name']}" class="form-control" placeholder="审核人员" id="plans_audit_user_name" required />
+                        <input type="hidden" name="info[audit_user_id]" value="{$work_plan['audit_user_id']}" class="form-control" id="plans_audit_user_id" />
+                    </div>
                 </div>
 
-                <div class="form-group col-md-4">
-                    <label>实施时间：</label><input type="text" name="between_time" value="{$plan_between_time}" class="form-control between_day" />
+                <div style="width:100%; text-align:center;">
+                    <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(4)">保存</a>
                 </div>
-
-                <div class="form-group col-md-4">
-                    <label>业务名称：</label><input type="text" name="info[project]" value="<?php echo $work_plan['project']?$work_plan['project']:$op['project']; ?>" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>销售人员：</label><input type="text" name="info[sale_user]" value="<?php echo $work_plan['sale_user']?$work_plan['sale_user']:$op['sale_user']; ?>" class="form-control" readonly />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>人数：</label><input type="text" name="info[num]" value="{$work_plan['num']}" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>向顾客报价：</label><input type="text" name="info[price]" value="{$work_plan['price']}" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>估计毛利：</label><input type="text" name="info[maoli]" value="{$work_plan['maoli']}" class="form-control" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$work_plan['exe_user_name']}" id="do_user_name" required />
-                    <input type="hidden" name="info[exe_user_id]" id="do_user_id"  value="{$work_plan['exe_user_id']}" />
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>填表人：</label><input type="text" name="info[ini_user_name]" value="<?php echo $work_plan['ini_user_name']?$work_plan['ini_user_name']:session('nickname'); ?>" class="form-control" readonly />
-                    <input type="hidden" name="info[ini_user_id]" value="<?php echo $work_plan['ini_user_id']?$work_plan['ini_user_id']:session('userid'); ?>" class="form-control" readonly />
-                </div>
-
-                <div class="form-group col-md-12">
-                    <label>后附：</label>
-                    <span><input type="checkbox" name="additive[]" <?php if(in_array(1,$additive)){ echo 'checked';} ?>  value="1">&nbsp; 行程或方案</span>&#12288;&#12288;
-                    <span class="ml50"><input type="checkbox" name="additive[]" <?php if(in_array(2,$additive)){ echo 'checked';} ?>  value="2">&nbsp; 需解决大交通的《人员信息表》</span>
-                    <span class="ml50"><input type="checkbox" name="additive[]" <?php if(in_array(3,$additive)){ echo 'checked';} ?>  value="3">&nbsp; 其他</span>
-                </div>
-
-                <div class="form-group col-md-12">
-                    <h2 class="tcs_need_h2">业务实施需计调操作具体内容：</h2>
-
-                    <include file="work_plans_edit" />
-
-                </div>
-
-                <div class="form-group col-md-12">
-                    <label>提示：</label><p class="red">请填写接收部门负责人(接收部门负责人审核通过后该需求单才能到达相关执行人员手中)。</p>
-                    <input type="text" name="info[audit_user_name]" value="{$work_plan['audit_user_name']}" class="form-control" placeholder="审核人员" id="plans_audit_user_name" required />
-                    <input type="hidden" name="info[audit_user_id]" value="{$work_plan['audit_user_id']}" class="form-control" id="plans_audit_user_id" />
-                </div>
-            </div>
-
-            <div style="width:100%; text-align:center;">
-                <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:saveResForm(4)">保存</a>
             </div>
         </div>
-    </div>
-    <?php }else{ ?>
-        <include file="op_res_work_plan" />
-    <?php } ?>
-</form>
+    </form>
+<?php }else{ ?>
+    <include file="op_res_work_plan" />
+<?php } ?>
 
 <script type="text/javascript">
     var keywords = <?php echo $userkey; ?>;

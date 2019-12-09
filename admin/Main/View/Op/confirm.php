@@ -95,9 +95,13 @@
                                         </div>
                                         <div class="form-group col-md-12 ml-12" id="res_type" style="margin-top: -30px;">
                                             <h2 class="tcs_need_h2">资源需求单类型：</h2>
-                                            <input type="radio" name="res_type" value="1"> &nbsp;业务实施需求单 &#12288;
-                                            <input type="radio" name="res_type" value="2"> &nbsp;委托设计工作交接单 &#12288;
-                                            <input type="radio" name="res_type" value="3"> &nbsp;业务实施计划单
+                                            <?php if ($op['kind'] == 87){ ?> <!--单进院所只显示"业务实施计划单"-->
+                                                <input type="radio" name="res_type" value="3" checked> &nbsp;业务实施计划单
+                                            <?php }else{ ?>
+                                                <input type="radio" name="res_type" value="1"> &nbsp;业务实施需求单 &#12288;
+                                                <input type="radio" name="res_type" value="2"> &nbsp;委托设计工作交接单 &#12288;
+                                                <input type="radio" name="res_type" value="3"> &nbsp;业务实施计划单
+                                            <?php } ?>
                                         </div>
 
                                         <include file="op_res_need" />
@@ -135,11 +139,15 @@
        // get_gpk();
 
         if (resource || design || work_plan){
-            if (op_kind == 60){
+            if (op_kind == 60){ //科学课程
                 $('#res-need-or-not').html('');
                 $('#after_lession').show();
                 $('#res_need_table').html('');
-            }else{
+            }else if (op_kind == 87){ //单进院所
+                $('#res-need-or-not').html('');
+                $('#after_lession').html('');
+                $('#work_plan').show();
+            } else{
                 $('#res-need-or-not').html('');
                 $('#after_lession').html('');
                 $('#res_need_table').show();
@@ -514,30 +522,12 @@
         setTimeout("history.go(0)",1000);
     }
 
-    //打印
-    /*function print_part(){
-        var op_kind = <?php echo $op_kind; ?>;
-        var viewid  = $('#print_part_id').val();
-        alert(viewid);
-        if (op_kind == 60){
-            document.body.innerHTML=document.getElementById('after_lession').innerHTML;
-        }else{
-            document.body.innerHTML=document.getElementById('res_need_table').innerHTML;
-        }
-        window.print();
-    }*/
-
-    function print_part(){
-        var viewid  = $('#print_part_id').val();
+    function print_part(id){
+        var viewid  = id ? id : $('#print_part_id').val();
+        $('#'+id).css({"width":"90%"});
         document.body.innerHTML=document.getElementById(viewid).innerHTML;
         window.print();
     }
-
-    function print_design(){
-        document.body.innerHTML=document.getElementById('design').innerHTML;
-        window.print();
-    }
-
 </script>
      
 

@@ -76,8 +76,7 @@
                     </div>
 
                     <div class="content no-print">
-                        <!--<button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> 打印</button>-->
-                        <button class="btn btn-default" onclick="print_part();"><i class="fa fa-print"></i> 打印</button>
+                        <button class="btn btn-default" onclick="print_part('after_lession');"><i class="fa fa-print"></i> 打印</button>
                     </div>
                 </div>
             </div><!--/.col (right) -->
@@ -226,8 +225,7 @@
                     </div>
 
                     <div class="content no-print">
-                        <!--<button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> 打印</button>-->
-                        <button class="btn btn-default" onclick="print_part();"><i class="fa fa-print"></i> 打印</button>
+                        <button class="btn btn-default" onclick="print_part('res_need_table');"><i class="fa fa-print"></i> 打印</button>
                     </div>
                 </div>
             </div><!--/.col (right) -->
