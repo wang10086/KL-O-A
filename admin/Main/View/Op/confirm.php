@@ -54,7 +54,7 @@
                                     <h3 class="box-title">实际成团确认</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-									<?php if(!$confirm || !$upd_num || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){ ?>
+									<?php if(!$jiesuan && (!$confirm || !$upd_num || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username'))){ ?>
                                     <include file="confirm_edit" />
                                     <?php }else{ ?>
                                     <include file="confirm_read" />	
