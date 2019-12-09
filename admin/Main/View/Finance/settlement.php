@@ -54,7 +54,7 @@
                                     <h3 class="box-title">项目结算</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <?php if($is_zutuan == 1){ ?>
+                                    <?php if($is_zutuan == 1 && $op['kind'] != 87){ ?> <!--87=>排除单进院所,单进院所暂时未生成地接团-->
                                         <?php if (($dijie_shouru && !in_array($audit['dst_status'],array(1,3))) || session('userid')==11){ ?>
                                             <include file="settlement_edit" />
                                         <?php }else{ ?>

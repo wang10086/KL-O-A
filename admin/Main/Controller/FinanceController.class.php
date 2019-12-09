@@ -107,7 +107,8 @@ class FinanceController extends BaseController {
         $this->is_dijie       = $is_dijie?$is_dijie:0;
         $is_zutuan            = $op['in_dijie'];
         $this->is_zutuan      = $is_zutuan;
-        if ($is_zutuan == 1){
+
+        if ($is_zutuan == 1 && $op['kind'] != 87){ //87=>排除单进院所,单进院所暂时未生成地接团
             $dijie_shouru     = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_BUDGET);
             $op_types         = array_column($costacc,'type');
 
@@ -128,6 +129,7 @@ class FinanceController extends BaseController {
                 $costacc[]          = $arr;
             }
         }
+
         $this->dijie_shouru         = $dijie_shouru?$dijie_shouru:0;
         $this->costacc              = $costacc;
         $this->type                 = C('JIEKUAN_TYPE'); //回款方式
