@@ -2698,115 +2698,37 @@ class OpController extends BaseController {
 			if($confirm){
                 if($upd_num == 1){
                     if (in_array(cookie('userid'),array(1,11))){
-                        $res = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                        $res            = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
                     }else{
                         $this->error('您已经修改过一次了,不能反复修改!');
                     }
                 }else{
                     $info['upd_num']    = 1;    //用来判断修改次数
-                    $res = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                    $res                = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
                 }
 			}else{
-                $info['confirm_time']	= time();
-                $res = M('op_team_confirm')->add($info);
+                $info['confirm_time']   = time();
+                $res                    = M('op_team_confirm')->add($info);
 			}
 
 			if ($res) {
                 $this->save_add_group($opid,$resid,$group); //保存拼团信息
                 //如果是内部地接, 生成一个新地接团
-                if ($op['in_dijie'] == 1 && !$op['dijie_opid']) {
-                    $new_op             = array();
-                    $project            = '【地接团】'.$op['project'];
-                    $new_op['project']  = str_replace('【发起团】','',$project);
-                    $new_op['op_id']    = opid();
-                    $gtime              = $info['dep_time']?$info['dep_time']:time();
-                    $groupid            = $op['dijie_name'].date('Ymd',$gtime);
-                    //团号信息
-                    $count_groupids     = M('op')->where(array('group_id'=>array('like','%'.$groupid.'%')))->count();
-                    $new_op['group_id'] = $count_groupids?$groupid.'-1'.$count_groupids:$groupid;
-
-                    $new_op['number']       = $op['number'];
-                    $new_op['departure']    = $op['departure'];
-                    $new_op['days']         = $op['days'];
-                    $new_op['destination']  = $op['destination'];
-                    $new_op['create_time']  = NOW_TIME;
-                    $new_op['status']       = 1; //已成团
-                    $new_op['context']      = '地接项目';
-                    $new_op['audit_status'] = 1; //默认审核通过
-                    $new_op['create_user']  = C('DIJIE_CREATE_USER')[$op['dijie_name']];
-                    $new_op['create_user_name'] = M('account')->where(array('id'=>$new_op['create_user']))->getField('nickname');
-                    $new_op['kind']         = $op['kind'] == 83 ? 84 :$op['kind']; //83=>组团研学旅行,84=>地接研学旅行
-                    $new_op['sale_user']    = $new_op['create_user_name'];
-                    $group                  = M('op')->where(array('op_id'=>$opid))->getField('group_id');
-                    $group                  = strtoupper(substr($group,0,4));
-                    $arr_group              = array('JQXN','JQXW','JWYW');
-                    if (in_array($group,$arr_group)){
-                        $new_op['customer'] = '北京总部';
-                    }else{
-                        $new_op['customer'] = C('DIJIE_NAME')[$group];
-                    }
-                    $new_op['op_create_date'] = date('Y-m-d',time());
-                    $new_op['op_create_user'] = M()->table('__ACCOUNT__ as a')->join('left join __ROLE__ as r on r.id = a.roleid')->where(array('a.id'=>$new_op['create_user']))->getField('r.role_name');
-                    $new_op['apply_to']       = $op['apply_to'];
-                    $new_op['type']           = 1; //1=>已成团, (所有的费用带入系统预算)
-
-                    //地接成团确认
-                    $dijie_confirm            = array();
-                    $dijie_confirm['op_id']   = $new_op['op_id'];
-                    $dijie_confirm['group_id']= $new_op['group_id'];
-                    $dijie_confirm['dep_time']= $info['dep_time'];
-                    $dijie_confirm['ret_time']= $info['ret_time'];
-                    $dijie_confirm['num_adult']     = $info['num_adult'];
-                    $dijie_confirm['num_children']  = $info['num_children'];
-                    $dijie_confirm['days']          = $info['days'];
-                    $dijie_confirm['user_id']       = $new_op['create_user'];
-                    $dijie_confirm['user_name']     = $new_op['user_name'];
-                    $dijie_confirm['confirm_time']  = NOW_TIME;
-                    $opres = M('op')->add($new_op);
-
-                    if ($opres) {
-                        M('op_team_confirm')->add($dijie_confirm);
-                        $data           = array();
-                        $data['hesuan'] = $new_op['create_user'];
-                        $data['line']   = $new_op['create_user'];
-                        $auth           = M('op_auth')->where(array('op_id'=>$new_op['op_id']))->find();
-
-                        if($auth){
-                            M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
-                        }else{
-                            $data['op_id'] = $new_op['op_id'];
-                            M('op_auth')->add($data);
-                        }
-
-                        //系统消息提醒
-                        $uid     = cookie('userid');
-                        $title   = '您有来自【'.$op['project'].'】的地接团，请及时跟进!';
-                        $content = '项目名称：'.$new_op['project'].'；团号：'.$new_op['group_id'].'；请及时跟进！"';
-                        $url     = U('Op/plans_follow',array('opid'=>$new_op['op_id']));
-                        $user    = '['.$new_op['create_user'].']';
-                        $roleid  = '';
-                        send_msg($uid,$title,$content,$url,$user,$roleid);
-
-                        $record                 = array();
-                        $record['op_id']        = $new_op['op_id'];
-                        $record['optype']       = 4;
-                        $record['explain']      = '创建地接项目并成团';
-                        op_record($record);
-                    }
+                if ($op['in_dijie'] == 1 && !$op['dijie_opid'] && $op['kind'] != 87) { //87=>单进院所不生成地接团
+                    $mod                            = D('Op');
+                    $new_op_id                      = $mod -> create_dejie_op($opid , $info ,$op);
                 }
 
-                $infos = array();
-                if ($new_op['op_id']){
-                    $infos['dijie_opid']= $new_op['op_id'];
-                }
-                $infos['group_id']	    = $info['group_id'];
-                $infos['status']		= 1;
+                $infos                              = array();
+                $infos['dijie_opid']                = $new_op_id ? $new_op_id : '';
+                $infos['group_id']	                = $info['group_id'];
+                $infos['status']		            = 1;
                 M('op')->data($infos)->where(array('op_id'=>$opid))->save();
 
-                $record                 = array();
-                $record['op_id']        = $opid;
-                $record['optype']       = 4;
-                $record['explain']      = '成团确认';
+                $record                             = array();
+                $record['op_id']                    = $opid;
+                $record['optype']                   = 4;
+                $record['explain']                  = '成团确认';
                 op_record($record);
                 $this->success('保存成功！');
             }else{
