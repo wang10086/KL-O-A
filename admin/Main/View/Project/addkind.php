@@ -52,7 +52,17 @@
                                             <label>标识字符<small>（名称大写首字母）</small></label>
                                             <input type="text" name="info[code]" value="{$row.code}" class="form-control" required />
                                         </div>
+
+                                        <div class="form-group col-md-6">
+                                            <p>内部地接结算毛利比（组团：地接）</p>
+                                            <input class="input_ratio" type="text" name="info[group_gross_profit_ratio]" value="{$row.group_gross_profit_ratio}" placeholder="组团方占比：6">
+                                            <span style="width: 2%">：</span>
+                                            <input class="input_ratio" type="text" name="info[land_gross_profit_ratio]" value="{$row.land_gross_profit_ratio}" placeholder="地接方占比：4">
+                                        </div>
+
+                                        <div class="form-group col-md-6">&emsp;</div>
                                         
+                                        <div class="form-group col-md-12"></div>
                                         <div class="form-group col-md-12">
                                         	<button type="submit" class="btn btn-success">保存</button>
                                         </div>
@@ -73,9 +83,9 @@
 
 <script type="text/javascript"> 
 
-	$().ready(function(e) {
+	/*$().ready(function(e) {
 		$('#myform').validate();
-	});
+	});*/
 </script>	
             
 <include file="Index:footer2" />

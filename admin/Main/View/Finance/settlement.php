@@ -33,7 +33,7 @@
                                             	<td colspan="3">项目名称：{$op.project}</td>
                                             </tr>
                                             <tr>
-                                            	<td width="33.33%">项目类型：<?php echo $kinds[$op['kind']]; ?></td>
+                                            	<td width="33.33%">项目类型：{$kinds.name}</td>
                                                 <td width="33.33%">预计人数：{$op.number}人</td>
                                                 <td width="33.33%">预计出团日期：{$op.departure}</td>
                                             </tr>

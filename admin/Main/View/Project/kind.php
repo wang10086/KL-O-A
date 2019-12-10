@@ -31,6 +31,7 @@
                                         <tr role="row" class="orders" >
                                             <th width="60">ID</th>
                                             <th>名称</th>
+                                            <th width="100">内部地接结算毛利比（组团：地接）</th>
                                             <th width="100">标识字符</th>
                                             <th width="100">级别</th>
                                             <th width="60" class="taskOptions">编辑</th>
@@ -40,6 +41,7 @@
                                             <tr>
                                                 <td>{$row.id}</td>
                                                 <td>{:tree_pad($row['level'])} {$row.name} <a class="pull-right" href="{:U('Project/addkind',array('pid'=>$row['id']))}"><i class="fa fa-plus"></i> 子分类</a>&nbsp; </td>
+                                                <td>{$row.group_gross_profit_ratio}：{$row.land_gross_profit_ratio}</td>
                                                 <td>{$row.code}</td>
                                                 <td>{$row.level}</td>
                                                 <td class="taskOptions">

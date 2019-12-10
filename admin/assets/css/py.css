@@ -4241,3 +4241,11 @@ th{outline: none;}
 #fileAuditBox .record_detail_box{ border-bottom: 1px solid #505457; }
 #fileAuditBox .record_detail_title{ border-bottom: 1px solid #dedede; }
 
+.line-gray{border-top:2px solid #cccccc;}
+.line-warning{border-top:2px solid #f39c12;}
+.line-success{border-top:2px solid #00a65a;}
+.line-primary{border-top:2px solid #3c8dbc;}
+.line-info{border-top:2px solid #00c0ef;}
+.input_ratio{height: 34px; width: 47%; padding: 6px 12px; font-size: 14px; line-height: 1.428571429; color: #555; vertical-align: middle; background-color: #fff; border: 1px solid #ccc;}
+
+

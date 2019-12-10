@@ -206,7 +206,7 @@
 </form>
 
     
-     <div class="content"  style="border-top:2px solid #f39c12; padding-bottom:20px;">
+     <div class="content line-warning"  style="padding-bottom:20px;">
         <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
             <tr>
                 <td width="33.33%">审批状态：{$op.showstatus}</td>

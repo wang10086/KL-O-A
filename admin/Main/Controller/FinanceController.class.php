@@ -680,8 +680,8 @@ class FinanceController extends BaseController {
         $this->business_depts	= C('BUSINESS_DEPT');
         $this->subject_fields	= C('SUBJECT_FIELD');
         $this->ages 			= C('AGE_LIST');
-        $this->kinds			=  M('project_kind')->getField('id,name', true);
-        //$this->cost_type        = C('COST_TYPE');
+        //$this->kinds			=  M('project_kind')->getField('id,name', true);
+        $this->kinds			=  M('project_kind')->where(array('id'=>$op['kind']))->find();
         $this->is_zutuan        = $is_zutuan;
         $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
         $this->op_cost_type     = $op_cost_type;
