@@ -3218,78 +3218,6 @@ class OpController extends BaseController {
         }
     }
 
-    //对研发经理评价(每月评分一次)
-    /*public function satisfaction(){
-        $account_name                   = trim(I('uname'));
-        $input_username                 = trim(I('input_name'));
-        $monthly                        = I('month');
-        $has_rd                         = $this->has_research_and_development();    //查询评分人所在的部门是否有研发
-        $db                             = M('satisfaction');
-        $where                          = array();
-        $user_ids                       = array(1,11,12,32,38);   //乔,王,杨,秦 id
-        $where['type']                  = 1; //评价研发
-        if (in_array(cookie('userid'),$user_ids)){
-            if ($account_name) $where['account_name'] = array('like','%'.$account_name.'%');
-        }else{
-            $where['account_id']        = cookie('userid');
-        }
-        if ($monthly) $where['monthly'] = $monthly;
-
-        $pagecount                      = $db->where($where)->count();
-        $page                           = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $lists                          = $db->where($where)->limit($page->firstRow.','.$page->listRows)->order($this->orders('create_time'))->select();
-        $this->lists                    = $lists;
-        $this->has_rd                   = $has_rd;
-        $this->display();
-    }
-
-    //增加评分信息
-    public function satisfaction_add(){
-        if (isset($_POST['dosubmint']) && $_POST['dosubmint']){
-            $db                         = M('satisfaction');
-            $info                       = I('info');
-            $info['has_rd']             = I('has_rd');
-            $info['content']            = trim(I('content'));
-            $info['monthly']            = trim(I('monthly'));
-            $info['input_userid']       = cookie('userid');
-            $info['input_username']     = cookie('nickname');
-            $info['create_time']        = NOW_TIME;
-            $info['type']               = 1; //对研发评分
-            $where                      = array();
-            $where['input_userid']      = $info['input_userid'];
-            $where['monthly']           = $info['monthly'];
-            $list                       = $db->where($where)->find();
-            if ($list){
-                $this->error('您已经完成当月的评分',U('Op/satisfaction'));
-            }else{
-                $res                    = $db->add($info);
-                if ($res){
-                    $this->success('数据保存成功',U('Op/satisfaction'));
-                }else{
-                    $this->error('数据保存失败');
-                }
-            }
-        }else{
-            $has_rd                     = $this->has_research_and_development();    //查询评分人所在的部门是否有研发
-            $this->has_rd               = $has_rd;
-            $this->display();
-        }
-    }
-
-    //详情页
-    public function satisfaction_detail(){
-        $has_rd                         = $this->has_research_and_development();    //查询评分人所在的部门是否有研发
-        $id                             = trim(I('id'));
-        $db                             = M('satisfaction');
-        $list                           = $db->where(array('id'=>$id))->find();
-
-        $this->has_rd                   = $has_rd;
-        $this->list                     = $list;
-        $this->display();
-    }*/
-
     private function has_research_and_development(){
         $user_id                        = session('userid');
         $has_rd_departments             = array('6');       //有自己研发的部门 6=>京区业务中心
@@ -3301,8 +3229,6 @@ class OpController extends BaseController {
         }
         return $has_rd;
     }
-
-
 
     //获取满意度二维码
     public function qrcode(){
