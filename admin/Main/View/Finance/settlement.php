@@ -47,8 +47,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                         	
-                            <?php if($budget['audit_status']==1){ ?>
-                            
+                            <?php if($budget['audit_status']==1 || (!$budget && $settlement['audit_status']==1)){ ?>
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">项目结算</h3>

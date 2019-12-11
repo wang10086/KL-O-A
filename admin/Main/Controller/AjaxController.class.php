@@ -1938,7 +1938,8 @@ class AjaxController extends Controller {
             if ($opres) {
                 $this->save_op_confirm($group_opid,$new_op); //地接成团确认
                 $this->save_op_auth($new_op); //保存op_auth
-                $this->save_dijie_op_settlement($group_opid,$new_op,$land_data['maoli']); //保存地接团结算信息
+                $sett_id                    = $this->save_dijie_op_settlement($group_opid,$new_op,$land_data['maoli']); //保存地接团结算信息
+                save_settlement_audit_log($sett_id);
 
                 //系统消息提醒
                 $uid     = cookie('userid');
@@ -2010,10 +2011,12 @@ class AjaxController extends Controller {
         $data['create_time']        = NOW_TIME;
         $list                       = $settlement_db->where(array('op_id'=>$land_op['op_id']))->find();
         if (!$list){
-            $settlement_db->add($data);
+            $sett_id                = $settlement_db->add($data);
         }else{
             $settlement_db->where(array('op_id'=>$land_op['op_id']))->save($data);
+            $sett_id                = $list['id'];
         }
+        return $sett_id;
     }
 
     private function save_op_auth($op){

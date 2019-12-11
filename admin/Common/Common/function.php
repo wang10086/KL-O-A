@@ -5709,3 +5709,21 @@ function create_dj_project($project){
     $new_str                    = str_replace('【发起团】','',$str);
     return $new_str;
 }
+
+/**
+ * 保存结算审核信息
+ * @param $settlementid op_settlement表id
+ */
+function save_settlement_audit_log($settlementid){
+    $audit_log_db                   = M('audit_log');
+    $data                           = array();
+    $data['req_type']               = 801;
+    $data['req_id']                 = $settlementid;
+    $data['req_table']              = 'op_settlement';
+    $data['req_uname']              = '系统自动生成';
+    $data['req_time']               = NOW_TIME;
+    $data['audit_uname']            = '系统自动生成';
+    $data['audit_time']             = NOW_TIME;
+    $data['dst_status']             = 1;
+    $audit_log_db -> add($data);
+}
