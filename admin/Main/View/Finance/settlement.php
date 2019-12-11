@@ -267,7 +267,37 @@
         $('input[name="djop[maoli]"]').val(land_maoli)
     }
 
-	function appcost(){
+    //自动保存相关地接团(单进院所 + 内部地接)
+    function save_dijie() {
+	    //let arr                      = new Array();
+	    let obj                      = {};
+        let group_opid               = {$op.op_id};
+        obj.op_id                    = {$dijie_op_data ? $dijie_op_data[op_id] : 0};
+        obj.group_id                 = "{$dijie_op_data ? $dijie_op_data[group_id] : 0}";
+        obj.project                  = "{$dijie_op_data ? $dijie_op_data[project] : 0}";
+        obj.maoli                    = $('input[name="djop[maoli]"]').val();
+        obj.create_user_name         = $('#djop_create_user_name').val();
+        obj.create_user_id           = $('#djop_create_user_id').val();
+        //arr.push(obj)
+        if (!obj.create_user_name || !obj.create_user_id){
+            art_show_msg('地接团实施负责人填写错误',3); return false;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/save_settlement_dijie_op')}",
+            data: {group_opid:group_opid,data:obj},
+            success: function () {
+                //alert('yes');
+                //console.log(data);
+            },
+            error:function () {
+                console.log("it's wrong");
+            }
+        })
+    }
+
+	/*function appcost(){
 		if (confirm("您确认要提交审批吗？审批后您将无法修改预算？")){
 			var renshu   = parseInt($('#renshu').val());        //人数
 			var shouru   = parseInt($('#shouru').val());        //收入
@@ -280,7 +310,7 @@
 		}else{
 			return false;
 		}
-	}
+	}*/
 
 	//提交结算前检查
     function check_settlement_submit() {
@@ -322,10 +352,12 @@
 
     //检查最低毛利率
     function checkGrossRate() {
-        var opid        = {$op['op_id']};
-        var maolilv     = $('#maolilv').val();
-        var untraffic_maolilv = $('#untraffic_maolilv').val(); //不含大交通毛利率
+        let opid        = {$op['op_id']};
+        let maolilv     = $('#maolilv').val();
+        let untraffic_maolilv = $('#untraffic_maolilv').val(); //不含大交通毛利率
         if (!maolilv) { art_show_msg('毛利率不能为空',3); return false; }
+        let kind                = {$op.kind};
+        let in_dijie            = {$op.in_dijie};
 
         $.ajax({
             type : 'POST',
@@ -333,10 +365,12 @@
             data : {opid:opid, maolilv:untraffic_maolilv},
             success : function(data){
                 if (data.stu == 1){
-                     $('#appsubmint').submit();
+                    if (kind == 87 && in_dijie == 1){ save_dijie(); } //单进院所 + 内部地接
+                    $('#appsubmint').submit();
                 }else if(data.stu == 2){
                     if (confirm(data.msg)){ //未达到规定毛利率
-                         $('#appsubmint').submit();
+                        if (kind == 87 && in_dijie == 1){ save_dijie(); } //单进院所 + 内部地接
+                        $('#appsubmint').submit();
                     }else{
                         return false;
                     }

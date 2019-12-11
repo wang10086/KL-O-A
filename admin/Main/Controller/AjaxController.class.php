@@ -1893,5 +1893,141 @@ class AjaxController extends Controller {
         }
         $this->ajaxReturn($data);
     }
+
+    //保存单进院所结算地接团
+    public function save_settlement_dijie_op(){
+        $group_opid                         = I('group_opid');
+        $land_data                          = I('data');
+        $op_db                              = M('op');
+        $op                                 = $op_db->where(array('op_id'=>$group_opid))->find(); //发起团
+
+        if (!$op['dijie_opid']){
+            $data                           = array();
+            $data['dijie_opid']             = $land_data['op_id'];
+            $op_db->where(array('op_id'=>$group_opid))->save($data);
+
+            $new_op                         = array();
+            $new_op['project']              = trim($land_data['project']);
+            $new_op['op_id']                = $land_data['op_id'];
+            $new_op['departure']            = $op['departure'];
+            $new_op['group_id']             = $land_data['group_id'];
+            $new_op['number']               = $op['number'];
+            $new_op['days']                 = $op['days'];
+            $new_op['destination']          = $op['destination'];
+            $new_op['create_time']          = NOW_TIME;
+            $new_op['status']               = 1; //已成团
+            $new_op['context']              = '地接项目';
+            $new_op['audit_status']         = 1; //默认审核通过
+            $new_op['create_user']          = $land_data['create_user_id'];
+            $new_op['create_user_name']     = $land_data['create_user_name'];
+            $new_op['kind']                 = $op['kind'] == 83 ? 84 :$op['kind']; //83=>组团研学旅行,84=>地接研学旅行
+            $new_op['sale_user']            = $new_op['create_user_name'];
+            $group                          = strtoupper(substr($op['group_id'],0,4));
+            $arr_group                      = array('JQXN','JQXW','JWYW');
+            if (in_array($group,$arr_group)){
+                $new_op['customer']         = '北京总部'; //客户单位
+            }else{
+                $new_op['customer']         = C('DIJIE_NAME')[$group];
+            }
+            $new_op['op_create_date']       = date('Y-m-d',time());
+            $new_op['op_create_user']       = M()->table('__ACCOUNT__ as a')->join('left join __ROLE__ as r on r.id = a.roleid')->where(array('a.id'=>$new_op['create_user']))->getField('r.role_name');
+            $new_op['apply_to']             = $op['apply_to'];
+            $new_op['type']                 = 1; //1=>已成团, (所有的费用带入系统预算)
+            $opres                          = M('op')->add($new_op);
+
+            if ($opres) {
+                $this->save_op_confirm($group_opid,$new_op); //地接成团确认
+                $this->save_op_auth($new_op); //保存op_auth
+                $this->save_dijie_op_settlement($group_opid,$new_op,$land_data['maoli']); //保存地接团结算信息
+
+                //系统消息提醒
+                $uid     = cookie('userid');
+                $title   = '您有来自【'.session("nickname").'】结算后自动生成的地接团!';
+                $content = '项目名称：'.$new_op['project'].'；团号：'.$new_op['group_id'].'！"';
+                $url     = U('Op/plans_follow',array('opid'=>$new_op['op_id']));
+                $user    = '['.$new_op['create_user'].']';
+                $roleid  = '';
+                send_msg($uid,$title,$content,$url,$user,$roleid);
+
+                $record                     = array();
+                $record['op_id']            = $new_op['op_id'];
+                $record['optype']           = 4;
+                $record['explain']          = '创建地接项目并成团';
+                op_record($record);
+            }
+        }
+    }
+
+    /**
+     * 保存成团确认信息
+     * @param $group_opid
+     * @param $new_op
+     */
+    private function save_op_confirm($group_opid,$new_op){
+        $confirm_db                     = M('op_team_confirm');
+        $info                           = $confirm_db->where(array('op_id'=>$group_opid))->find();
+        $data                           = array();
+        $data['op_id']                  = $new_op['op_id'];
+        $data['group_id']               = $new_op['group_id'];
+        $data['dep_time']               = $info['dep_time'];
+        $data['ret_time']               = $info['ret_time'];
+        $data['num_adult']              = $info['num_adult'];
+        $data['num_children']           = $info['num_children'];
+        $data['days']                   = $info['days'];
+        $data['user_id']                = $new_op['create_user'];
+        $data['user_name']              = $new_op['user_name'];
+        $data['confirm_time']           = NOW_TIME;
+        $list                           = $confirm_db->where(array('op_id'=>$new_op['op_id']))->find();
+        if (!$list){
+            $confirm_db->add($data);
+        }else{
+            $confirm_db->where(array('op_id'=>$new_op['op_id']))->save($data);
+        }
+    }
+
+    /**
+     * 保存地接团结算信息
+     * @param $group_opid //组团项目opid
+     * @param $land_opid //地接项目信息
+     * @param $maoli //地接毛利
+     */
+    private function save_dijie_op_settlement($group_opid , $land_op , $maoli=0){
+        $settlement_db              = M('op_settlement');
+        $group_settlement_list      = $settlement_db->where(array('op_id'=>$group_opid))->find();
+        $data                       = array();
+        $data['name']               = $land_op['project'];
+        $data['op_id']              = $land_op['op_id'];
+        $data['renshu']             = $group_settlement_list['renshu'];
+        $data['shouru']             = 0 ; //收入为0,否则会重复记入统计
+        $data['maoli']              = $maoli;
+        $data['false_maoli']        = 0;
+        $data['maolilv']            = $group_settlement_list['maolilv'];
+
+        $data['renjunmaoli']        = $group_settlement_list['renjunmaoli'];
+        $data['untraffic_maolilv']  = $group_settlement_list['untraffic_maolilv'];
+        $data['audit']              = 1;
+        $data['audit_status']       = 1;
+        $data['create_time']        = NOW_TIME;
+        $list                       = $settlement_db->where(array('op_id'=>$land_op['op_id']))->find();
+        if (!$list){
+            $settlement_db->add($data);
+        }else{
+            $settlement_db->where(array('op_id'=>$land_op['op_id']))->save($data);
+        }
+    }
+
+    private function save_op_auth($op){
+        $data                       = array();
+        $data['hesuan']             = $op['create_user'];
+        $data['line']               = $op['create_user'];
+        $auth                       = M('op_auth')->where(array('op_id'=>$op['op_id']))->find();
+
+        if($auth){
+            M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+        }else{
+            $data['op_id']          = $op['op_id'];
+            M('op_auth')->add($data);
+        }
+    }
 }
 
