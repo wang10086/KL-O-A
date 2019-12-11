@@ -2667,6 +2667,7 @@ class OpController extends BaseController {
 			$add_group              = I('add_group',0); //拼团
             $group                  = I('group');
             $resid                  = I('resid','');
+            $num                    = 0;
 
             if($add_group == 1 && !$group){ $this->error('拼团信息填写有误'); }
 			//判断团号是否可用
@@ -2693,25 +2694,29 @@ class OpController extends BaseController {
             $op_info                = array();
             $op_info['type']        = 1; //已成团
             $op_info['add_group']   = $add_group; //拼团
-            M('op')->where(array('op_id'=>$opid))->save($op_info);
+            $op_res                 = M('op')->where(array('op_id'=>$opid))->save($op_info);
+            if ($op_res) $num++;
             //判断是否已经确认
 			if($confirm){
                 if($upd_num == 1){
                     if (in_array(cookie('userid'),array(1,11))){
                         $res            = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                        if ($res) $num++;
                     }else{
                         $this->error('您已经修改过一次了,不能反复修改!');
                     }
                 }else{
                     $info['upd_num']    = 1;    //用来判断修改次数
                     $res                = M('op_team_confirm')->data($info)->where(array('op_id'=>$opid))->save();
+                    if ($res) $num++;
                 }
 			}else{
                 $info['confirm_time']   = time();
                 $res                    = M('op_team_confirm')->add($info);
+                if ($res) $num++;
 			}
 
-			if ($res) {
+			if ($num) {
                 $this->save_add_group($opid,$resid,$group); //保存拼团信息
                 //如果是内部地接, 生成一个新地接团
                 if ($op['in_dijie'] == 1 && !$op['dijie_opid'] && $op['kind'] != 87) { //87=>单进院所不生成地接团

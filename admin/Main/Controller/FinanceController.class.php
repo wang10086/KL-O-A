@@ -692,7 +692,25 @@ class FinanceController extends BaseController {
         $this->guide            = M()->table('__GUIDE_PAY__ as p')->field('g.name as title,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id=g.id')->where(array('p.op_id'=>$opid,'p.status'=>2))->select();
         $this->businessDep      = C('DIJIE_NAME');
         $this->groups           = M('op_group')->where(array('op_id'=>$opid))->select(); //拼团信息
+        $this->userkey          = get_username(); //人员名单关键字
+        if ($op['kind']==87 && $op['in_dijie'] ==1) {  //单进院所 + 地接团
+            $this->dijie_op_data= $this->get_dijie_op_data($op);
+        }
         $this->display('settlement');
+    }
+
+    //获取地接团信息
+    private function get_dijie_op_data($op){
+        $dep_time               = M('op_team_confirm')->where(array('op_id'=>$op['op_id']))->getField('dep_time'); //出团时间
+        $dijie_opid             = $op['dijie_opid'];
+        $dijie_op               = $dijie_opid ? M('op')->where(array('op_id'=>$dijie_opid))->find() : '';
+        $dijie_settlement       = $dijie_opid ? M('op_settlement')->where(array('op_id'=>$dijie_opid))->find() : '';
+        $data                   = $dijie_op ? $dijie_op : array();
+        $data['group_id']       = $data['group_id'] ? $data['group_id'] : get_group_id($op['dijie_name'],$dep_time);
+        $data['op_id']          = $data['op_id'] ? $data['op_id'] : opid();
+        $data['project']        = $data['project'] ? $data['project'] : create_dj_project($op['project']);
+        $data['maoli']          = $dijie_settlement ? $dijie_settlement['maoli'] : 0;
+        return $data;
     }
 	
 	

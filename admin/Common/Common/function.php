@@ -5698,3 +5698,14 @@ function get_unread_req_ids($type){
     $ids                        = array_unique(array_filter($ids));
     return $ids;
 }
+
+/**
+ * 生成地接团项目名称
+ * @param $project 发起团项目名称
+ * @return string
+ */
+function create_dj_project($project){
+    $str                        = '【地接团】'.$project;
+    $new_str                    = str_replace('【发起团】','',$str);
+    return $new_str;
+}

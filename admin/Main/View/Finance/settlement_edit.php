@@ -268,7 +268,11 @@
         <div style="width:100%;float:left;">
             <div class="form-group col-md-4">
                 <label>毛利：</label>
-                <input type="text" name="info[maoli]" id="maoli" class="form-control" value="{$settlement.maoli}" />
+                <?php if ($op['kind']==87 && $op['in_dijie'] ==1){ ?> <!--单进院所 + 地接团-->
+                    <input type="text" name="info[false_maoli]" id="maoli" class="form-control" value="{$settlement.false_maoli}" />
+                <?php }else{ ?>
+                    <input type="text" name="info[maoli]" id="maoli" class="form-control" value="{$settlement.maoli}" />
+                <?php } ?>
             </div>
 
             <div class="form-group col-md-4">
@@ -283,99 +287,54 @@
         </div>
     </div>
 
-    <div class="form-group col-md-12 box-title" style="margin:20px 0 10px 0;">内部地接核算（组团毛利：地接毛利 = {$kinds.group_gross_profit_ratio}：{$kinds.land_gross_profit_ratio}）</div>
-    <div class="content line-gray">
-        <div class="form-group col-md-3">
-            <label>发起团号：</label>
-            <input type="text" name="" class="form-control" value="{$op.group_id}" />
-        </div>
+    <?php if ($op['kind']==87 && $op['in_dijie'] ==1){ ?> <!--单进院所 + 地接团-->
+        <div class="form-group col-md-12 box-title" style="margin:20px 0 10px 0;">内部地接核算（组团毛利：地接毛利 = {$kinds.group_gross_profit_ratio}：{$kinds.land_gross_profit_ratio}）</div>
+        <div class="content line-gray">
+            <div class="form-group col-md-3">
+                <label>发起团号：</label>
+                <input type="text" name="" class="form-control" value="{$op.group_id}" readonly />
+            </div>
 
-        <div class="form-group col-md-3">
-            <label>发起项目名称：</label>
-            <input type="text" name="" class="form-control" value="{$op.project}" />
-        </div>
+            <div class="form-group col-md-3">
+                <label>发起项目名称：</label>
+                <input type="text" name="" class="form-control" value="{$op.project}" readonly />
+            </div>
 
-        <div class="form-group col-md-3">
-            <label>毛利：</label>
-            <input type="text" name="" class="form-control" value="{$settlement.maoli}" />
-        </div>
+            <div class="form-group col-md-3">
+                <label>毛利：</label>
+                <input type="text" name="info[maoli]" class="form-control" value="{$settlement.maoli}" />
+            </div>
 
-        <div class="form-group col-md-3">
-            <label>创建者：</label>
-            <input type="text" name="" class="form-control" value="{$op.create_user_name}" readonly />
-        </div>
+            <div class="form-group col-md-3">
+                <label>创建者：</label>
+                <input type="text" name="" class="form-control" value="{$op.create_user_name}" readonly />
+            </div>
 
-        <div class="form-group col-md-3">
-            <label>地接团号：</label>
-            <input type="text" name="" class="form-control" value="" />
-        </div>
+            <div class="form-group col-md-3">
+                <label>地接团号：</label>
+                <input type="text" name="djop[group_id]" class="form-control" value="{$dijie_op_data['group_id']}" readonly />
+            </div>
 
-        <div class="form-group col-md-3">
-            <label>地接项目名称：</label>
-            <input type="text" name="" class="form-control" value="" />
-        </div>
+            <div class="form-group col-md-3">
+                <label>地接项目名称：</label>
+                <input type="text" name="djop[project]" class="form-control" value="{$dijie_op_data['project']}" readonly />
+            </div>
 
-        <div class="form-group col-md-3">
-            <label>毛利：</label>
-            <input type="text" name="" class="form-control" value="" />
-        </div>
+            <div class="form-group col-md-3">
+                <label>毛利：</label>
+                <input type="text" name="djop[maoli]" class="form-control" value="{$dijie_op_data['maoli']}" />
+            </div>
 
-        <div class="form-group col-md-3">
-            <label>实施负责人：</label>
-            <input type="text" name="" class="form-control" value="" />
-        </div>
-    </div>
-
-    <?php if ($op['add_group']==1){ ?> <!--内部分摊数据-->
-        <div class="form-group col-md-12 box-title" style="margin:20px 0 10px 0;">内部分摊数据</div>
-        <div class="content line-gray" id="add_group_box">
-            <div class="form-group col-md-12">
-                <div id="addGroupContent" class="addGroupContent ">
-                    <div class="userlist form-title" id="">
-                        <div class="unitbox" style="width:80px">员工姓名</div>
-                        <div class="unitbox" style="width:15%">所属部门</div>
-                        <div class="unitbox" style="width:10%">实际人数</div>
-                        <div class="unitbox" style="width:10%">收入</div>
-                        <div class="unitbox" style="width:10%">毛利</div>
-                        <!--<div class="unitbox" style="width:10%">毛利率</div>
-                        <div class="unitbox" style="width:10%">人均毛利</div>-->
-                        <div class="unitbox" style="width:20%">备注</div>
-                    </div>
-                    <div id="group_val">1</div>
-                    <?php if($groups){ ?>
-                        <foreach name="groups" key="k" item="v">
-                            <script>{++$k}; var n = parseInt($('#group_val').text());n++;$('#group_val').text(n);</script>
-                            <div class="userlist no-border group-content" id="group_con_{$k}">
-                                <span class="title">{$k}</span>
-                                <input type="hidden" name="resid[]" value="{$v['id']}">
-                                <input type="hidden" name="group[{$k}][id]" value="{$v.id}">
-                                <input type="text" class="form-control" style="width:80px" name="group[{$k}][username]" id="name_{$k}" value="{$v.username}" readonly>
-                                <input type="hidden"  class="form-control" name="group[{$k}][userid]" id="uid_{$k}" value="{$v.userid}">
-                                <select class="form-control" style="width:15%" name="group[{$k}][code]">
-                                    <foreach name="businessDep" key="key" item="value">
-                                        <option value="{$key}" <?php if ($v['code']==$key){ echo "selected"; } ?>>{$value}</option>
-                                    </foreach>
-                                </select>
-                                <input type="text" class="form-control" style="width:10%" name="group[{$k}][num]" value="{$v.num}">
-                                <input type="text" class="form-control group-shouru" style="width:10%" name="group[{$k}][shouru]" value="{$v.shouru}" onblur="get_group_maoli($(this).val(),{$k})">
-                                <input type="text" class="form-control" style="width:10%" name="group[{$k}][maoli]" value="{$v.maoli}" id="group_maoli_{$k}">
-                                <!--<input type="text" class="form-control" style="width:10%" name="group[{$k}][maolilv]" value="{$v.maolilv}">
-                                <input type="text" class="form-control" style="width:10%" name="group[{$k}][renjunmaoli]" value="{$v.renjunmaoli}">-->
-                                <input type="text" class="form-control" style="width:20%" name="group[{$k}][jd_remark]" value="<?php echo $v['jd_remark'] ? $v['jd_remark'] : $v['remark']; ?>">
-                            </div>
-                        </foreach>
-
-                        <div class="sumUserList">
-                            <div class="unitbox" style="width: 80px">&nbsp;</div>
-                            <div class="unitbox" style="width: 15%;">&nbsp;</div>
-                            <div class="unitbox" style="width: 10%;">&nbsp;</div>
-                            <div class="unitbox" style="width: 10%;" id="groupShouruSum"></div>
-                            <div class="unitbox" style="width: 20%">&nbsp;</div>
-                        </div>
-                    <?php } ?>
-                </div>
+            <div class="form-group col-md-3">
+                <label>实施负责人：</label>
+                <input type="text" name="djop[create_user_name]" id="djop_create_user_name" class="form-control" value="{$dijie_op_data['create_user_name']}" />
+                <input type="hidden" name="djop[create_user_id]" id="djop_create_user_id" value="{$dijie_op_data['create_user']}" />
             </div>
         </div>
+    <?php } ?>
+
+    <?php if ($op['add_group']==1){ ?> <!--内部拼团数据-->
+        <include file="settlement_op_group" />
     <?php } ?>
 
     <div class="line-warning" style="margin-top:20px; padding-bottom:20px;">
