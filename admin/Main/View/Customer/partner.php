@@ -40,6 +40,10 @@
                                         <th class="sorting" data="money">保证金</th>
                                         <th class="sorting" data="end_date">协议期限</th>
                                         <th class="taskOptions" data="cm_name">维护人</th>
+                                        <th class="taskOptions" data="audit_stu">审核状态</th>
+                                        <if condition="rolemenu(array('Customer/change_cm'))">
+                                            <th width="50" class="taskOptions">交接</th>
+                                        </if>
                                         <if condition="rolemenu(array('Customer/partner_edit'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
@@ -47,6 +51,11 @@
                                         <th width="50" class="taskOptions">删除</th>
                                         </if>
                                     </tr>
+                                    <!--
+                                    <?php if (rolemenu(array('Customer/change_cm')) && $partner['id']){ ?>
+                                            <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change()" title="交接维护人" class="">交接维护人</span>
+                                        <?php } ?>
+                                    -->
                                     <foreach name="lists" item="row"> 
                                     <tr>
                                         <td>{$row.id}</td>
@@ -59,22 +68,26 @@
                                         <td>{$row.money}</td>
                                         <td>{$row.start_date|date="Y-m-d",###} - <?php if (time() > $row['end_date']){ echo "<span class='red'>".date('Y-m-d',$row['end_date'])."</span>"; }else{ echo date('Y-m-d',$row['end_date']); } ?> </td>
                                         <td class="taskOptions">{$row.cm_name}</td>
+                                        <td class="taskOptions">{$audit_stu[$row[audit_stu]]}</td>
+                                        <if condition="rolemenu(array('Customer/change_cm'))">
+                                            <td width="50" class="taskOptions">
+                                                <a href="javascript:;" onclick="open_change({$row.id})"  title="交接维护人" class="btn btn-warning btn-smsm"><i class="fa fa-refresh"></i></a>
+                                            </td>
+                                        </if>
                                         <if condition="rolemenu(array('Customer/partner_edit'))">
                                         <td class="taskOptions">
-                                            <if condition="$row['audit_stu'] neq 2">
+                                            <?php if (($row['audit_stu'] != 2 && $row['create_user_id'] == cookie('userid')) || rolemenu(array('Customer/audit_partner'))){ ?>
                                                 <a href="{:U('Customer/partner_edit',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                <else />
+                                            <?php }else{ ?>
                                                 <button href="javascript:;" title="编辑" class="btn btn-disable btn-smsm"><i class="fa fa-pencil"></i></button>
-                                            </if>
+                                            <?php } ?>
                                         </td>
                                         </if>
-                                        <if condition="rolemenu(array('Customer/delgec'))">
-                                        <td class="taskOptions">
-                                        <button onclick="javascript:ConfirmDel('{:U('Customer/del_partner',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                       
-                                        </td>
+                                        <if condition="rolemenu(array('Customer/del_partner'))">
+                                            <td class="taskOptions">
+                                                <button onclick="javascript:ConfirmDel('{:U('Customer/del_partner',array('id'=>$row['id']))}')" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></button>
+                                            </td>
                                         </if>
-                                       
                                     </tr>
                                     </foreach>					
                                 </table>
@@ -115,6 +128,29 @@
                 
                 </form>
             </div>
+
+<script type="text/javascript">
+    //交接维护人
+    function open_change (id) {
+        let url = '/index.php?m=Main&c=Customer&a=change_cm&id='+id;
+        art.dialog.open(url, {
+            lock:true,
+            id: 'change',
+            title: '交接维护人',
+            width:600,
+            height:300,
+            okValue: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                //location.reload();
+                return false;
+            },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+</script>
             
             
 			<include file="Index:footer2" />

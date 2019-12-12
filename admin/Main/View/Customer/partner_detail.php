@@ -19,7 +19,7 @@
                                   
                             
                             
-                            <div class="box box-warning">
+                            <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人资料</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">审核状态：{$audit_stu[$partner['audit_stu']]} &emsp;
@@ -133,7 +133,7 @@
                             </div><!-- /.box -->
 
                             
-       						<div class="box box-warning">
+       						<div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">合作保证金</h3>
                                 </div><!-- /.box-header -->
@@ -145,16 +145,20 @@
                                                 <tr role="row">
                                                 	<th>开始时间</th>
                                                     <th>结束时间</th>
-                                                    <th>保证金</th>
+                                                    <th>金额</th>
+                                                    <th>金额类型</th>
+                                                    <th>录入时间</th>
                                                     <th>备注</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <foreach name="deposit" item="v">
                                                 <tr>
-                                                    <td>{$v.start_date|date='Y-m-d',###}</td>
-                                                    <td>{$v.end_date|date='Y-m-d',###}</td>
+                                                    <td><?php echo $v['start_date'] ? date('Y-m-d',$v['start_date']) : ''; ?></td>
+                                                    <td><?php echo $v['end_date'] ? date('Y-m-d',$v['end_date']) : ''; ?></td>
                                                     <td>{$v.money}</td>
+                                                    <td>{$cost_type[$v['type']]}</td>
+                                                    <td><?php echo $v['input_time'] ? date('Y-m-d',$v['input_time']) : ''; ?></td>
                                                     <td>{$v.remark}</td>
                                                 </tr>
                                                 </foreach>
@@ -166,8 +170,8 @@
                                 </div>
                             </div>
 
-                            <?php if (in_array(session('userid'),array(1,11)) && $partner['audit_stu']==1){ ?>
-                                <div class="box box-warning">
+                            <?php if (rolemenu(array('Customer/audit_partner')) && $partner['audit_stu']==1){ ?>
+                                <div class="box box-success">
                                     <div class="box-header">
                                         <h3 class="box-title">审核城市合伙人</h3>
                                     </div><!-- /.box-header -->

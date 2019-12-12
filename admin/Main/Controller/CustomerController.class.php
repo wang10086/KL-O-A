@@ -594,6 +594,14 @@ class CustomerController extends BaseController {
             $lists[$k]['money']     = $money;
         }
 
+        $audit_stu                  = array(
+            '-1'                    => "<span class='red'>审核未通过</span>",
+            '0'                     => "<span class='yellow'>未提交审核</span>",
+            '1'                     => "<span class='primary'>待审核</span>",
+            '2'                     => "<span class='green'>审核通过</span>"
+        );
+
+        $this->audit_stu            = $audit_stu;
         $this->lists                = $lists;
         $this->citys                = $citys_db->getField('id,name',true);
         $this->title('城市合伙人');
@@ -789,6 +797,7 @@ class CustomerController extends BaseController {
             '2'                     => "<span class='green'>审核通过</span>"
         );
 
+        $this->cost_type            = C('PARTNER_COST_TYPE');
         $this->audit_stu            = $audit_stu;
         $this->level                = array(1=>'省级',2=>'市级',3=>'县/区级');
         $this->agreement            = array(0=>"<span class='red'>未签订协议</span>",1=>"<span class='green'>已签订协议</span>");

@@ -314,7 +314,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <if condition="rolemenu(array('Customer/partner'))">
-                                    <li class="{:on('Customer/partner')}"><a href="{:U('Customer/partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
+                                    <li class="{:on('Customer/partner')} {:on('Customer/partner_edit')} {:on('Customer/public_partner_map')} {:on('Customer/partner_detail')}"><a href="{:U('Customer/partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
                                 </if>
 
                             	<if condition="rolemenu(array('Customer/o2o'))">

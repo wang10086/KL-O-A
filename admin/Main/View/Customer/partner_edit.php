@@ -20,13 +20,13 @@
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
-                            <div class="box box-warning">
+                            <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人管理</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        <?php if (rolemenu(array('Customer/change_cm')) && $partner['id']){ ?>
+                                        <?php /*if (rolemenu(array('Customer/change_cm')) && $partner['id']){ */?><!--
                                             <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change()" title="交接维护人" class="">交接维护人</span>
-                                        <?php } ?>
+                                        --><?php /*} */?>
                                     </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -220,8 +220,9 @@
                                     </div>
                                     
                                     <div style="width:100%; text-align:center; padding-bottom:40px;">
-                                        <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存test</button>-->
+                                        <?php if ($partner['audit_stu'] != 1){ ?>
                                         <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存数据</a>
+                                        <?php } ?>
                                         <?php if ($partner['id'] && in_array($partner['audit_stu'],array(0,-1))){ ?>
                                             <a  href="javascript:;" class="btn btn-danger btn-lg" onClick="javascript:ConfirmSub('audit_form','确定提交审核吗？');">申请审核</a>
                                         <?php } ?>
@@ -496,25 +497,5 @@
             }
         });
 
-    }
-
-    //交接维护人
-    function open_change () {
-        art.dialog.open('<?php echo U('Customer/change_cm',array('id'=>$partner['id'])) ?>', {
-            lock:true,
-            id: 'change',
-            title: '交接维护人',
-            width:600,
-            height:300,
-            okValue: '提交',
-            ok: function () {
-                this.iframe.contentWindow.gosubmint();
-                //location.reload();
-                return false;
-            },
-            cancelValue:'取消',
-            cancel: function () {
-            }
-        });
     }
 </script>
