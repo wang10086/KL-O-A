@@ -16,7 +16,7 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box box-success">
+                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">

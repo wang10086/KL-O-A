@@ -1,50 +1,3 @@
-<!--<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
-  <title>ECharts China Map</title>
-  <style>
-    body {
-        background:#fafafa;
-    }
-    .box {
-        position:relative;
-        width:800px;
-        margin:0 auto;
-        padding-top:60px;
-    }
-    #china-map {
-        width:760px;
-        height:660px;
-        margin:auto;
-    }
-    #back {
-        position:absolute;
-        top:10px;
-        left:0;
-        cursor:pointer;
-    }
-    .hidden {
-        display:none;
-    }
-  </style>
-  <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
-  <script type="text/javascript" src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts.min.js"></script>
-  <script type="text/javascript" src="./js/map/china.js"></script>
-</head>
-
-<body>
-    <div class="box">
-        <button id="back" class="hidden">返回全国</button>
-        <div id="china-map"></div>
-    </div>
-
-    </body>
-
-</html>-->
-
 <include file="Index:header2" />
 <script src="__HTML__/echarts-china-map/js/map/echarts-all-3.js"></script>
 <script src="__HTML__/echarts-china-map/js/map/china.js"></script>
@@ -64,7 +17,7 @@
     <section class="content">
         <div class="row">
             <div class="col-xs-12">
-                <div class="box box-success">
+                <div class="box box-warning">
                     <div class="box-header">
                         <h3 class="box-title">{$_action_}</h3>
                         <div class="box-tools pull-right"></div>

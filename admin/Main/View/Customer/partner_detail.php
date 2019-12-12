@@ -19,7 +19,7 @@
                                   
                             
                             
-                            <div class="box box-success">
+                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人资料</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">审核状态：{$audit_stu[$partner['audit_stu']]} &emsp;
@@ -133,7 +133,7 @@
                             </div><!-- /.box -->
 
                             
-       						<div class="box box-success">
+       						<div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">合作保证金</h3>
                                 </div><!-- /.box-header -->
@@ -171,7 +171,7 @@
                             </div>
 
                             <?php if (rolemenu(array('Customer/audit_partner')) && $partner['audit_stu']==1){ ?>
-                                <div class="box box-success">
+                                <div class="box box-warning">
                                     <div class="box-header">
                                         <h3 class="box-title">审核城市合伙人</h3>
                                     </div><!-- /.box-header -->

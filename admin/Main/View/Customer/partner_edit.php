@@ -21,7 +21,7 @@
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
-                            <div class="box box-success">
+                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人管理</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
