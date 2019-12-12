@@ -224,7 +224,6 @@
                                     </div>
                                     
                                     <div style="width:100%; text-align:center; padding-bottom:40px;">
-                                        <input type="submit" value="aa">
                                         <?php if ($partner['audit_stu'] != 1){ ?>
                                         <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存数据</a>
                                         <?php } ?>
