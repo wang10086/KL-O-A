@@ -203,6 +203,8 @@
                                 </div>
                             <?php } ?>
 
+                            <include file="Index:public_record" />
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                     </form>

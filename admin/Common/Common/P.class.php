@@ -123,6 +123,7 @@ final class P {
     //公共操作记录类型
     const RECORD_QAQC               = 1;    //品控巡检操作记录
     const RECORD_GEC                = 2;    //客户管理操作记录
+    const RECORD_PARTNER            = 3;    //城市合伙人操作记录
 
 }
 

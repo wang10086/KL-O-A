@@ -680,9 +680,11 @@ class CustomerController extends BaseController {
                 $info['create_user_name']   = session('nickname');
 
                 if ($partner_id){
+                    $record_msg             = '编辑城市合伙人';
                     $info['audit_stu']      = ($info['audit_stu'] == 2 && rolemenu(array('Customer/audit_partner'))) ? $info['audit_stu'] : 0; //审核通过 && 有审核权限
                     $res                    = $partner_db->where(array('id'=>$partner_id))->save($info);
                 }else{
+                    $record_msg             = '添加城市合伙人';
                     $info['audit_stu']      = 0; //未审核
                     $info['create_time']    = NOW_TIME;
                     $res                    = $partner_db->add($info);
@@ -716,6 +718,13 @@ class CustomerController extends BaseController {
 
                         $msg['num']             = $num;
                         $msg['msg']             = '保存成功';
+
+                        //保存操作记录
+                        $record             = array();
+                        $record['qaqc_id']  = $partner_id;
+                        $record['explain']  = $record_msg;
+                        $record['type']     = P::RECORD_PARTNER; //城市合伙人操作记录
+                        record($record);
                     }
                 }else{
                     $msg['num']                 = 0;
@@ -743,6 +752,13 @@ class CustomerController extends BaseController {
                         $roleid  = '';
                         send_msg($uid,$title,$content,$url,$user,$roleid);
 
+                        //保存操作记录
+                        $record             = array();
+                        $record['qaqc_id']  = $partner_id;
+                        $record['explain']  = '申请审核城市合伙人';
+                        $record['type']     = P::RECORD_PARTNER; //城市合伙人操作记录
+                        record($record);
+
                         $this->success('提交审核成功',U('Customer/partner'));
                     }else{
                         $this->error('提交审核失败');
@@ -761,6 +777,14 @@ class CustomerController extends BaseController {
 
                 $res                            = $db->where(array('id'=>$id))->save($info);
                 if ($res){
+                    //保存操作记录
+                    $result                     = $info['audit_stu'] == 2 ? '审核通过' : '审核不通过';
+                    $record                     = array();
+                    $record['qaqc_id']          = $id;
+                    $record['explain']          = '审核城市合伙人,审核结果：'.$result;
+                    $record['type']             = P::RECORD_PARTNER; //城市合伙人操作记录
+                    record($record);
+
                     $this->success('审核成功');
                 }else{
                     $this->error('数据保存失败');
@@ -779,6 +803,12 @@ class CustomerController extends BaseController {
             $res                    = $partner_db->where(array('id'=>$id))->save($data);
         }
         if ($res){
+            //保存操作记录
+            $record                     = array();
+            $record['qaqc_id']          = $id;
+            $record['explain']          = '删除城市合伙人';
+            $record['type']             = P::RECORD_PARTNER; //城市合伙人操作记录
+            record($record);
             $this->success('删除成功');
         }else{
             $this->error('删除失败');
@@ -804,6 +834,7 @@ class CustomerController extends BaseController {
         $this->partner              = $partner_list;
         $this->deposit              = $deposit_list;
         $this->city                 = $city;
+        $this->record               = get_public_record($id,P::RECORD_PARTNER);
         $this->display();
     }
 
@@ -879,14 +910,20 @@ class CustomerController extends BaseController {
     //交接城市合伙人维护人
     public function change_cm(){
         $db                         = M('customer_partner');
+        $id                         = I('id');
+        $list                       = $db->where(array('id'=>$id))->find();
         if (isset($_POST['dosubmit'])){
             $id                     = I('id');
             $info                   = I('info');
             $res                    = $db->where(array('id'=>$id))->save($info);
+            //保存操作记录
+            $record                 = array();
+            $record['qaqc_id']      = $id;
+            $record['explain']      = '交接城市合伙人：'.$list['cm_name'].'->'.$info['cm_name'];
+            $record['type']         = P::RECORD_PARTNER; //城市合伙人操作记录
+            record($record);
             echo '<script>window.top.location.reload();</script>';
         }else{
-            $id                     = I('id');
-            $list                   = $db->where(array('id'=>$id))->find();
             $this->list             = $list;
             $this->userkey          = get_username();
             $this->display();
