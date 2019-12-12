@@ -16,6 +16,7 @@
                 <input type="hidden" name="dosubmint" value="1">
                 <input type="hidden" name="savetype" value="1">
                 <input type="hidden" name="partner_id" value="{$partner.id}">
+                <input type="hidden" name="info[audit_stu]" value="{$partner[audit_stu]?$partner[audit_stu]:0}">
                 <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                     <div class="row">
                          <!-- right column -->
@@ -24,6 +25,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">合伙人管理</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <if condition="$partner['id']">
+                                            <span class="mr20">审核状态：{$audit_stu[$partner['audit_stu']]}</span>
+                                        </if>
                                         <?php /*if (rolemenu(array('Customer/change_cm')) && $partner['id']){ */?><!--
                                             <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change()" title="交接维护人" class="">交接维护人</span>
                                         --><?php /*} */?>
@@ -220,6 +224,7 @@
                                     </div>
                                     
                                     <div style="width:100%; text-align:center; padding-bottom:40px;">
+                                        <input type="submit" value="aa">
                                         <?php if ($partner['audit_stu'] != 1){ ?>
                                         <a  href="javascript:;" class="btn btn-info btn-lg" onClick="javascript:save('myform','<?php echo U('Customer/public_save'); ?>');">保存数据</a>
                                         <?php } ?>
