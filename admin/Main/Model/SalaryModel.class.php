@@ -481,7 +481,7 @@ class SalaryModel extends Model
         $quarter_time                           = getQuarterlyCicle($p_year,$p_month);          //获取该季度周期,方便业务提成(结算)取值
         $op_settlement_list                     = $this->get_quarter_settlement_list($quarter_time);   //获取该季度所有的结算团
 
-        $partner_money                          = $this->get_partner_money($userinfo['id'],$quarter_time['begin_time'],$quarter_time['end_time']); //城市合伙人保证金
+        $partner_money                          = $this->get_partner_money($userinfo,$quarter_time['begin_time'],$quarter_time['end_time']); //城市合伙人保证金
         $quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter,$partner_money);    //销售季度目标 完成 提成
         return $quarter_royalty_data;
     }
@@ -493,7 +493,11 @@ class SalaryModel extends Model
      * @param $endTime
      * @return int
      */
-    private function get_partner_money($uid,$beginTime,$endTime){
+    private function get_partner_money($userinfo,$beginTime,$endTime){
+        $uid                                    = $userinfo['id'];
+        $yw_position_ids                        = M('position')->where(array('code'=>array('like',"S%")))->getField('id',true); //所有业务岗ID
+        if (!in_array($userinfo['position_id'],$yw_position_ids)){ return 0; } //业务岗才有城市合伙人保证金提成
+
         $where                                  = array();
         $where['p.sale_id']                     = $uid; //销售id
         $where['p.cm_id']                       = array('neq',$uid); //维护人不能等于销售本人
@@ -503,10 +507,10 @@ class SalaryModel extends Model
         $field                                  = 'p.id,p.name,p.sale_id,p.sale_name,p.cm_id,p.cm_name,p.create_user_id,p.create_user_name,d.money,d.input_time,d.remark';
         $where['d.input_time']                  = array('between',array($beginTime,$endTime));
         $lists                                  = M()->table('__CUSTOMER_PARTNER__ as p')
-            ->join('__CUSTOMER_DEPOSIT__ as d on d.partner_id = p.id','left')
-            ->where($where)
-            ->field($field)
-            ->select();
+                                                ->join('__CUSTOMER_DEPOSIT__ as d on d.partner_id = p.id','left')
+                                                ->where($where)
+                                                ->field($field)
+                                                ->select();
         $sum                                    = $lists ? array_sum(array_column($lists,'money')) : 0;
         return $sum;
     }
