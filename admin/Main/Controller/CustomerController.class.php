@@ -629,6 +629,7 @@ class CustomerController extends BaseController {
         $this->userkey              = $userkey;
         $this->provinces            = $default_province;
         $this->citys                = $arr_citys;
+        $this->cost_type            = C('PARTNER_COST_TYPE');
         $this->display();
     }
 
@@ -683,12 +684,14 @@ class CustomerController extends BaseController {
                             $data['money']      = trim($v['money']);
                             $data['start_date'] = strtotime($v['start_date']);
                             $data['end_date']   = strtotime($v['end_date']);
+                            $data['type']       = $v['type'];
                             $data['remark']     = trim($v['remark']);
                             if ($resid && $resid[$k]['id']){
                                 $result         = $deposit_db->where(array('id'=>$resid[$k]['id']))->save($data);
                                 $delid[]        = $resid[$k]['id'];
                                 if ($result) $num++;
                             }else{
+                                $data['input_time'] = NOW_TIME;
                                 $result         = $deposit_db->add($data);
                                 $delid[]        = $result;
                                 if ($result) $num++;

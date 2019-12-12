@@ -186,9 +186,10 @@
                                         <div class="content" style="padding-top:0px;">
                                             <div id="deposit">
                                                 <div class="userlist">
-                                                    <div class="unitbox">保证金（元/年）</div>
+                                                    <div class="unitbox">费用（元/年）</div>
                                                     <div class="unitbox">开始时间</div>
                                                     <div class="unitbox">结束时间</div>
+                                                    <div class="unitbox">费用类型</div>
                                                     <div class="unitbox longinput">备注</div>
                                                 </div>
 
@@ -199,6 +200,11 @@
                                                         <input type="text" class="form-control" name="deposit_data[888{$k}][money]" value="{$v.money}">
                                                         <input type="text" class="form-control inputdate_a" name="deposit_data[888{$k}][start_date]" value="<?php echo $v['start_date']?date('Y-m-d',$v['start_date']):''; ?>">
                                                         <input type="text" class="form-control inputdate_a" name="deposit_data[888{$k}][end_date]" value="<?php echo $v['end_date']?date('Y-m-d',$v['end_date']):''; ?>">
+                                                        <select class="form-control" name="deposit_data[888{$k}][type]">
+                                                            <foreach name="cost_type" key="key" item="value">
+                                                                <option value="{$key}" <?php if ($v['type'] == $key) echo "selected"; ?>>{$value}</option>
+                                                            </foreach>
+                                                        </select>
                                                         <input type="text" class="form-control longinput" name="deposit_data[888{$k}][remark]" value="{$v.remark}">
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('deposit_id_b_{$k}')">删除</a>
                                                     </div>
@@ -207,7 +213,6 @@
                                             <div id="deposit_val" style="display: none">1</div>
                                             <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
                                                 <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_deposit()"><i class="fa fa-fw fa-plus"></i> 新增预算项</a>
-
                                             </div>
                                             <div class="form-group">&nbsp;</div>
                                         </div>
@@ -440,6 +445,9 @@
             '<input type="text" class="form-control" name="deposit_data['+i+'][money]">' +
             '<input type="text"  class="form-control inputdate_a" name="deposit_data['+i+'][start_date]"  value="">' +
             '<input type="text" class="form-control inputdate_a" name="deposit_data['+i+'][end_date]" value="">' +
+            '<select class="form-control" name="deposit_data['+i+'][type]">' +
+            '<foreach name="cost_type" key="key" item="value"><option value="{$key}">{$value}</option></foreach>' +
+            '</select>'+
             '<input type="text" class="form-control longinput" name="deposit_data['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'deposit_'+i+'\')">删除</a></div>';
         $('#deposit').append(html);
