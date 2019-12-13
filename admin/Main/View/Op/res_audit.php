@@ -228,8 +228,13 @@
 
     }
 
-    function print_design(){
+    /*function print_design(){
         document.body.innerHTML=document.getElementById('design').innerHTML;
+        window.print();
+    }*/
+
+    function print_part(id){
+        document.body.innerHTML=document.getElementById(id).innerHTML;
         window.print();
     }
 </script>

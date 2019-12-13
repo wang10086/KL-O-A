@@ -20,7 +20,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$onmoon}</h3>
                                     <div class="box-tools pull-right">
-                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);"><i class="fa fa-search"></i> 搜索</a>
+                                    	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',700,160);autocomp('uname','uid');"><i class="fa fa-search"></i> 搜索</a>
                                          <a href="{:U('Chart/finance',array('month'=>$moon['prevmonth'],'dept'=>$dept))}" class="btn btn-danger btn-sm"><i class="fa fa-arrow-left"></i> {$moon.prevmonth}</a>
                                          <a href="{:U('Chart/finance',array('month'=>$moon['nextmonth'],'dept'=>$dept))}" class="btn btn-danger btn-sm">{$moon.nextmonth} <i class="fa fa-arrow-right"></i></a>
                                          <if condition="rolemenu(array('Export/chart_finance'))">
@@ -42,9 +42,9 @@
                                     <tr role="row" class="orders" >
                                         <th>团号</th>
                                         <th>线路名称</th>
-                                        <th>实际人数</th>
+                                        <th>实际人数(人)</th>
                                         <th>目的地</th>
-                                        <th>天数</th>
+                                        <th>天数(天)</th>
                                         <!--<th>人数</th>-->
                                         <th>结算收入</th>
                                         <th>结算毛利</th>
@@ -71,15 +71,15 @@
                                     <tr>
                                         <td>{$row.group_id}</td>
                                         <td>{$row.name}</td>
-                                        <td>{$row.renshu}人</td>
+                                        <td>{$row.renshu}</td>
                                         <td>{$row.destination}</td>
-                                        <td>{$row.days}天</td>
+                                        <td>{$row.days}</td>
                                         <!-- <td>{$row.number}人</td>-->
                                         <td>{$row.shouru}</td>
                                         <td>{$row.maoli}</td>
                                         <!-- <td>{$row.shuihou}</td> -->
                                         <td>{$row.create_user_name}</td>
-                                        <td>{$row.audit_time|date='Y-m-d',###}</td>
+                                        <td><?php echo $row['audit_time'] ? date('Y-m-d',$row['audit_time']) : ''; ?></td>
                                     </tr>
                                     </foreach>
                                 </table>
@@ -121,11 +121,17 @@
                 </div>
                 
                 <div class="form-group col-md-6">
-                    <input type="text" class="form-control" name="xs" placeholder="销售人员">
+                    <input type="text" class="form-control" name="xs" id="uname" placeholder="销售人员">
+                    <input type="hidden" name="uid" id="uid">
                 </div>
-               
-                
                 </form>
             </div>
+
+<script type="text/javascript">
+    function autocomp(username,userid){
+        let userkey = <?php echo $userkey; ?>;
+        autocomplete_id(username,userid,userkey);
+    }
+</script>
 
 <include file="Index:footer2" />

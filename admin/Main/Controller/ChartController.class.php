@@ -234,36 +234,44 @@ class ChartController extends BaseController {
         $uid        = I('uid',0);
 
         //获取团队相关数据
-        $where = array();
-        $where['roleid'] = array('in',$postmore[$dept]);
-        $where['status'] = array('eq',0);
-        $users = M('account')->where($where)->select();
-        $ulist = array();
+        $where              = array();
+        $where['roleid']    = array('in',$postmore[$dept]);
+        $where['status']    = array('eq',0);
+        $users              = M('account')->where($where)->select();
+        $ulist              = array();
         foreach($users as $k=>$v){
-            $ulist[] = $v['id'];
+            $ulist[]        = $v['id'];
         }
 
 
-        $yue   = I('month');
-        $moon  = month_phase($yue);
+        $yue                    = I('month');
+        $moon                   = month_phase($yue);
 
-        $where = array();
+        $where                  = array();
         $where['b.audit_status'] = 1;
         $where['l.req_type']	= 801;
         if($st && $et){
-            $where['l.audit_time'] = array('between',array(strtotime($st),strtotime($et)));
-            $this->onmoon    = $st.'至'.$et.'结算报表';
+            $startTime          = strtotime($st);
+            $endTime            = strtotime($et);
+            $where['l.audit_time'] = array('between',array($startTime,$endTime));
+            $this->onmoon       = $st.'至'.$et.'结算报表';
         }else if($st){
-            $where['l.audit_time'] = array('gt',strtotime($st));
-            $this->onmoon    = $st.'之后结算报表';
+            $startTime          = strtotime($st);
+            $endTime            = NOW_TIME;
+            $where['l.audit_time'] = array('gt',$startTime);
+            $this->onmoon       = $st.'之后结算报表';
         }else if($et){
-            $where['l.audit_time'] = array('lt',strtotime($et));
-            $this->onmoon    = $et.'之前结算报表';
+            $startTime          = 0;
+            $endTime            = strtotime($et);
+            $where['l.audit_time'] = array('lt',$endTime);
+            $this->onmoon       = $et.'之前结算报表';
         }else if($yue){
-            $where['l.audit_time'] = array('between',array($moon['start'],$moon['end']));
-            $this->onmoon    = date('Y年m月份',$moon['start']).'结算报表';
+            $startTime          = $moon['start'];
+            $endTime            = $moon['end'];
+            $where['l.audit_time'] = array('between',array($startTime,$endTime));
+            $this->onmoon       = date('Y年m月份',$moon['start']).'结算报表';
         }else{
-            $this->onmoon    = '结算报表';
+            $this->onmoon       = '结算报表';
         }
         if($xs)   $where['o.create_user_name']	= array('like','%'.$xs.'%');
         if($dept) $where['o.create_user']		= array('in',implode(',',$ulist));
@@ -283,27 +291,31 @@ class ChartController extends BaseController {
         $kpi_sum['renshu']  = array_sum(array_column($kpi_sum_list,'renshu'));
         $kpi_sum['shouru']  = array_sum(array_column($kpi_sum_list,'shouru'));
         $kpi_sum['maoli']   = array_sum(array_column($kpi_sum_list,'maoli'));
+        if ($uid && $startTime && $endTime){
+            $partner_list   = get_partner_list($uid,$startTime,$endTime); //获取城市合伙人列表
+        }
 
         //获取月份的开始结束时间戳
         $this->post		= $post;
         $this->dept		= $dept;
         $this->month	= I('month');
         $this->moon		= $yue ? $moon : month_phase(date('Ymd'));
-        $this->datalist	= $datalist;
+        $this->datalist	= $partner_list ? array_merge((array)$partner_list,(array)$datalist) : $datalist;
         $this->kpi_total= I('kpi_total');
         $this->kpi_sum  = $kpi_sum;
         $this->uid      = $uid;
+        $this->userkey  = get_username();
+        //P($datalist);
 
-
-        $url = array();
+        $url                      = array();
         if($st)     $url['st']    = $st;
         if($et)     $url['et']    = $et;
         if($xs)     $url['xs']    = $xs;
         if($dept)   $url['dept']  = $dept;
         if($yue)    $url['month'] = $yue;
 
-        $this->url = $url;
-        $this->exporturl = U('Export/chart_finance',$url);
+        $this->url                = $url;
+        $this->exporturl          = U('Export/chart_finance',$url);
 
         $this->display('finance');
 

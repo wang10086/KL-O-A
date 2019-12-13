@@ -3944,6 +3944,24 @@ function get_partner_money($userinfo,$beginTime,$endTime){
     return $sum;
 }
 
+//获取城市合伙人列表
+function get_partner_list($uid,$beginTime,$endTime){
+    $where                                  = array();
+    $where['p.sale_id']                     = $uid; //销售id
+    $where['p.cm_id']                       = array('neq',$uid); //维护人不能等于销售本人
+    $where['p.audit_stu']                   = 2; //2=>审核通过
+    $where['p.del_stu']                     = array('neq',-1); //-1=>删除
+    $where['d.type']                        = 1; //保证金
+    $field                                  = 'p.id,p.name,p.sale_id,p.sale_name,p.cm_id,p.cm_name,d.money as maoli,d.input_time,d.remark';
+    $where['d.input_time']                  = array('between',array($beginTime,$endTime));
+    $lists                                  = M()->table('__CUSTOMER_PARTNER__ as p')
+        ->join('__CUSTOMER_DEPOSIT__ as d on d.partner_id = p.id','left')
+        ->where($where)
+        ->field($field)
+        ->select();
+    return $lists;
+}
+
 //获取所有业务岗职位id
 function get_business_position_ids(){
     $ids                                    = M('position')->where(array('code'=>array('like',"S%")))->getField('id',true);

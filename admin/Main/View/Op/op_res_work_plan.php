@@ -71,7 +71,6 @@
                 </div>
 
                 <div class="content no-print">
-                    <!--<button class="btn btn-default" onclick="print_design();"><i class="fa fa-print"></i> 打印</button>-->
                     <button class="btn btn-default" onclick="print_part('work_plan');"><i class="fa fa-print"></i> 打印</button>
                 </div>
             </div>
