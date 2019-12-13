@@ -45,10 +45,8 @@
                                         <th>实际人数(人)</th>
                                         <th>目的地</th>
                                         <th>天数(天)</th>
-                                        <!--<th>人数</th>-->
                                         <th>结算收入</th>
                                         <th>结算毛利</th>
-                                        <!-- <th>税后毛利</th> -->
                                         <th>销售人员</th>
                                         <th>结算时间</th>
                                     </tr>
@@ -59,10 +57,8 @@
                                             <td>{$kpi_sum.renshu}人</td>
                                             <td></td>
                                             <td></td>
-                                            <!-- <td></td>-->
                                             <td>{$kpi_sum.shouru}</td>
                                             <td>{$kpi_sum.maoli}</td>
-                                            <!-- <td></td> -->
                                             <td></td>
                                             <td></td>
                                         </tr>
@@ -74,10 +70,8 @@
                                         <td>{$row.renshu}</td>
                                         <td>{$row.destination}</td>
                                         <td>{$row.days}</td>
-                                        <!-- <td>{$row.number}人</td>-->
                                         <td>{$row.shouru}</td>
                                         <td>{$row.maoli}</td>
-                                        <!-- <td>{$row.shuihou}</td> -->
                                         <td>{$row.create_user_name}</td>
                                         <td><?php echo $row['audit_time'] ? date('Y-m-d',$row['audit_time']) : ''; ?></td>
                                     </tr>

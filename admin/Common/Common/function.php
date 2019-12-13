@@ -1608,14 +1608,14 @@ function up_file_level($fid){
  function pdca_auditor($id){
 	$role_id    = $id;
 	$auditor    = M('auth')->where("role_id = '$role_id'")->getField('pdca_auth');
-	$user = M('account')->find($auditor);
+	$user       = get_userinfo($auditor);
 	return $user['nickname'];
 }
 
 //获取用户姓名
 function username($userid){
 	if($userid){
-		$user = M('account')->find($userid);
+		$user = get_userinfo($userid);
 		return $user['nickname'];
 	}else{
         return '';
@@ -1779,7 +1779,7 @@ function addpdca($user,$month){
 		$pdca = M('pdca')->where(array('tab_user_id'=>$user,'month'=>$month))->find();
 
 		//获取用户信息
-		$us   = M('account')->find($user);
+		$us   = get_userinfo($user);
 		if(!$pdca){
 			//获取上级评分人信息
 			$pfr  = M('auth')->where(array('role_id'=>$us['roleid']))->find();
@@ -1981,7 +1981,7 @@ function updatekpi($month,$user){
                         //上个季度的结果引用到下个季度
                         $complete                           = get_prev_quarter_kpi_result($v);
                     }else{*/
-                        //获取月度累计毛利额
+                        //获取月度累计毛利额(结算毛利 + 城市合伙人押金)
                         if($v['quota_id']==1){
                             $newBeginTime                   =get_year_settlement_start_time($v['year']);
                             $where = array();
@@ -1990,15 +1990,18 @@ function updatekpi($month,$user){
                             $where['l.req_type']			= 801;
                             //$where['l.audit_time']			= array('between',array($v['start_date'],$v['end_date']));
                             $where['l.audit_time']			= array('between',array($newBeginTime,$v['end_date']));
-                            $complete = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
-                            $complete = $complete ? $complete : 0;
-                            $username = M('account')->where(array('id'=>$v['user_id']))->getField('nickname');
-                            $url      = U('Chart/finance',array('xs'=>$username,'st'=>date('Ymd',$newBeginTime),'et'=>date('Ymd',$v['end_date']),'kpi_total'=>1));
+                            $settlement_money               = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+                            $userinfo                       = get_userinfo($v['user_id']);
+                            $partner_money                  = get_partner_money($userinfo,$newBeginTime,$v['end_date']);
+                            $sum                            = $settlement_money + $partner_money;
+                            $complete                       = $sum ? $sum : 0;
+                            $username                       = $userinfo['nickname'];
+                            $url                            = U('Chart/finance',array('xs'=>$username,'st'=>date('Ymd',$newBeginTime),'et'=>date('Ymd',$v['end_date']),'kpi_total'=>1,'uid'=>$v['user_id']));
                         }
 
                         //获取累计毛利率
                         if($v['quota_id']==2){
-                            $where = array();
+                            $where                          = array();
                             $where['b.audit_status']		= 1;
                             $where['o.create_user']			= $user;
                             $where['l.req_type']			= 801;
@@ -3879,7 +3882,7 @@ function personal_income($userid,$time,$yearTime){
 	$where['a.req_type']		= 801;
 	$where['o.add_group']       = array('neq',1);
 
-	$userinfo                   = M('account')->where(array('id'=>$userid))->find();
+	$userinfo                   = get_userinfo($userid);
 	if($time == 0){
 		$where['a.audit_time']	= array('between',$yearTime);
 		$partner_money          = get_partner_money($userinfo,$yearTime[0],$yearTime[1]); //城市合伙人保证金
@@ -3960,6 +3963,11 @@ function get_partner_list($uid,$beginTime,$endTime){
         ->field($field)
         ->select();
     return $lists;
+}
+
+function get_userinfo($uid){
+    $list                                   = $uid ? M('account')->where(array('id'=>$uid))->find() :'';
+    return $list;
 }
 
 //获取所有业务岗职位id

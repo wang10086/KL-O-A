@@ -280,20 +280,18 @@ class ChartController extends BaseController {
         $count              = count($counts);
         $page               = new Page($count, P::PAGE_SIZE);
         $this->pages        = $page->show();
-
         $datalist           = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('l.audit_time DESC')->select();
-        foreach($datalist as $k=>$v){
-            $datalist[$k]['shuihou'] = $v['maoli'] -  sprintf("%.2f", ($v['maoli']*0.06));
+
+        if ($uid && $startTime && $endTime){
+            $partner_list   = get_partner_list($uid,$startTime,$endTime); //获取城市合伙人列表
+            $partner_money  = array_sum(array_column($partner_list,'maoli'));
         }
 
         $kpi_sum_list       = $db->table('__OP_SETTLEMENT__ as b')->group('o.op_id')->field('b.*,o.project,o.group_id,o.number,o.customer,o.create_user_name,o.destination,o.days,o.remark,l.audit_time')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->select();
         $kpi_sum            = array();
         $kpi_sum['renshu']  = array_sum(array_column($kpi_sum_list,'renshu'));
         $kpi_sum['shouru']  = array_sum(array_column($kpi_sum_list,'shouru'));
-        $kpi_sum['maoli']   = array_sum(array_column($kpi_sum_list,'maoli'));
-        if ($uid && $startTime && $endTime){
-            $partner_list   = get_partner_list($uid,$startTime,$endTime); //获取城市合伙人列表
-        }
+        $kpi_sum['maoli']   = array_sum(array_column($kpi_sum_list,'maoli')) + $partner_money;
 
         //获取月份的开始结束时间戳
         $this->post		= $post;
@@ -305,7 +303,6 @@ class ChartController extends BaseController {
         $this->kpi_sum  = $kpi_sum;
         $this->uid      = $uid;
         $this->userkey  = get_username();
-        //P($datalist);
 
         $url                      = array();
         if($st)     $url['st']    = $st;
