@@ -69,11 +69,19 @@
                                                 <!--<td>{$row.rolename}</td>-->
                                                 <td>{$row.department}</td>
                                                 <td>{$row.zsr}</td>
-                                                <td>{$row.zml}<?php echo $row['year_partner_money'] ? "(其中城市合伙人<br />保证金：$row[year_partner_money])" : ''; ?></td>
+                                                <?php if ($row['year_partner_money']){ ?>
+                                                    <td class="red" onclick="art_left_show_msg('累计毛利额：'+{$row.zml}+'<br>'+'其中城市合伙人保证金：'+{$row.year_partner_money})">{$row.zml}</td>
+                                                <?php }else{ ?>
+                                                    <td>{$row.zml}</td>
+                                                <?php } ?>
                                                 <td>{$row.mll}</td>
                                                 <?php if ($year == date("Y")){ ?>
                                                 <td>{$row.ysr}</td>
-                                                <td>{$row.yml}<?php echo $row['month_partner_money'] ? "(其中城市合伙人<br />保证金：$row[month_partner_money])" : ''; ?></td>
+                                                    <?php if ($row['month_partner_money']){ ?>
+                                                        <td class="red" onclick="art_left_show_msg('累计毛利额：'+{$row.yml}+'<br>'+'其中城市合伙人保证金：'+{$row.month_partner_money})">{$row.yml}</td>
+                                                    <?php }else{ ?>
+                                                        <td>{$row.zml}</td>
+                                                    <?php } ?>
                                                 <td>{$row.yll}</td>
                                                 <?php } ?>
                                             </tr>

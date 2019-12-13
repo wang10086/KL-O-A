@@ -488,6 +488,18 @@ function art_show_msg(msg,time) {
 	});
 }
 
+function art_left_show_msg(msg,time) {
+    art.dialog({
+        title: '提示',
+        width:400,
+        height:100,
+        fixed: true,
+        time: time,
+        lock:true,
+        content: '<span style="width:100%; font-size:18px;">'+msg+'</span>',
+
+    });
+}
 
 function show_notice(id){
 	art.dialog.open('index.php?m=Main&c=Message&a=noticeinfo&id='+id,{
