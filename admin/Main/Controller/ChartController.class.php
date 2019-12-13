@@ -231,6 +231,7 @@ class ChartController extends BaseController {
         $et    		= I('et',0);
         $xs    		= I('xs');
         $dept  		= I('dept',0);
+        $uid        = I('uid',0);
 
         //获取团队相关数据
         $where = array();
@@ -291,6 +292,7 @@ class ChartController extends BaseController {
         $this->datalist	= $datalist;
         $this->kpi_total= I('kpi_total');
         $this->kpi_sum  = $kpi_sum;
+        $this->uid      = $uid;
 
 
         $url = array();
@@ -531,9 +533,9 @@ class ChartController extends BaseController {
         $dep    = M('salary_department')->getField('id,department',true);
 
         //查询所有业务人员信息
-        $where = array();
+        $where                      = array();
         $where['status']			= 0;
-        $arr_position_ids           = array(1,5,6,7,8,9,10);
+        $arr_position_ids           = get_business_position_ids(); //所有业务岗ID
 
         $field = array();
         $field[] =  'id as create_user';
@@ -554,12 +556,14 @@ class ChartController extends BaseController {
             $lists[$k]['zsr'] = $all['zsr'];
             $lists[$k]['zml'] = $all['zml'];
             $lists[$k]['mll'] = $all['mll'];
+            $lists[$k]['year_partner_money'] = $all['partner_money'];
 
             //查询当月总收入'
             $mon = personal_income($v['create_user'],1,$yearTime);
             $lists[$k]['ysr'] = $mon['zsr'];
             $lists[$k]['yml'] = $mon['zml'];
             $lists[$k]['yll'] = $mon['mll'];
+            $lists[$k]['month_partner_money'] = $mon['partner_money'];
 
         }
 
@@ -664,12 +668,14 @@ class ChartController extends BaseController {
             $lists[$k]['zsr'] = $all['zsr'];
             $lists[$k]['zml'] = $all['zml'];
             $lists[$k]['mll'] = $all['mll'];
+            $lists[$k]['year_partner_money'] = $all['partner_money'];
 
             //查询当月总收入
             $mon = personal_income($v['create_user'],1,$yearTime);
             $lists[$k]['ysr'] = $mon['zsr'];
             $lists[$k]['yml'] = $mon['zml'];
             $lists[$k]['yll'] = $mon['mll'];
+            $lists[$k]['month_partner_money'] = $mon['partner_money'];
         }
 
         $this->deptname = $department['department'];

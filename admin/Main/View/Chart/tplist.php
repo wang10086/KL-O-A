@@ -68,11 +68,11 @@
                                                 <td><a href="{:U('Chart/tpmore',array('dept'=>$row['rid'],'year'=>$year))}">{$row.rolename}</a></td>
                                                 <td>{$row.fzr}</td>
                                                 <td>{$row.zsr}</td>
-                                                <td>{$row.zml}</td>
+                                                <td>{$row.zml}<?php echo $row['year_partner_money'] ? " (其中城市合伙人<br />保证金：$row[year_partner_money])" : ''; ?></td>
                                                 <td>{$row.mll}</td>
                                                 <?php if ($year == date("Y")){ ?>
                                                 <td>{$row.ysr}</td>
-                                                <td>{$row.yml}</td>
+                                                <td>{$row.yml}<?php echo $row['month_partner_money'] ? "(其中城市合伙人<br />保证金：$row[month_partner_money])" : ''; ?></td>
                                                 <td>{$row.yll}</td>
                                                 <?php } ?>
                                             </tr>

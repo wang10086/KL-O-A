@@ -52,7 +52,7 @@
                                                 <th>姓名</th>
                                                 <th >所在部门</th>
                                                 <th  class="orderth">累计收入(元)</th>
-                                                <th  class="orderth">累计毛利(元)</th>
+                                                <th  class="orderth" style="max-width: 50px">累计毛利(元)</th>
                                                 <th  class="orderth">累计毛利率(%)</th>
                                                 <?php if ($year == date("Y")){ ?>
                                                 <th  class="orderth">当月收入(元)</th>
@@ -65,19 +65,19 @@
                                             <foreach name="lists" item="row" key="k">                      
                                             <tr>
                                             	<td class="orderNo"></td>
-                                                <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name'],'st'=>($year-1).'-12-26'))}">{$row.create_user_name}</a></td>
+                                                <td><a href="{:U('Chart/finance',array('xs'=>$row['create_user_name'],'uid'=>$row['create_user'],'st'=>($year-1).'-12-26'))}">{$row.create_user_name}</a></td>
                                                 <!--<td>{$row.rolename}</td>-->
                                                 <td>{$row.department}</td>
                                                 <td>{$row.zsr}</td>
-                                                <td>{$row.zml}</td>
+                                                <td>{$row.zml}<?php echo $row['year_partner_money'] ? "(其中城市合伙人<br />保证金：$row[year_partner_money])" : ''; ?></td>
                                                 <td>{$row.mll}</td>
                                                 <?php if ($year == date("Y")){ ?>
                                                 <td>{$row.ysr}</td>
-                                                <td>{$row.yml}</td>
+                                                <td>{$row.yml}<?php echo $row['month_partner_money'] ? "(其中城市合伙人<br />保证金：$row[month_partner_money])" : ''; ?></td>
                                                 <td>{$row.yll}</td>
                                                 <?php } ?>
                                             </tr>
-                                            </foreach>	
+                                            </foreach>
                                         </tbody>	
                                         
                                     </table>

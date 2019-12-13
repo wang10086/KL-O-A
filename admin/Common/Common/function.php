@@ -3804,8 +3804,7 @@ function get_cycle($yearmonth,$day=26){
 }
 
 //统计部门数据
-function tplist($department,$times){
-
+function tplist($department,$times=array()){
 	$db	                            = M('op');
     $users                          = M('account')->where(array('departmentid'=>$department['id']))->getField('id',true);
     $num                            = count($users);    //获取部门人数
@@ -3829,17 +3828,20 @@ function tplist($department,$times){
 	$lists                          = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->order('zsr DESC')->find();
 
 	$lists['mll']			        = $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';
+	$department_partner_money       = get_department_partner_money($users,$times[0],$times[1]); //年度部门城市合伙人保证金
 
 	$lists['zsr'] 			        = $lists['zsr'] ? $lists['zsr'] : '0.00';
-	$lists['zml'] 			        = $lists['zml'] ? $lists['zml'] : '0.00';
+	$lists['zml'] 			        = $lists['zml'] ? $lists['zml'] : '0.00'; //团总毛利(不含城市合伙人保证金)
 	$lists['rjzsr']			        = sprintf("%.2f",$lists['zsr']/$num);
 	$lists['rjzml']			        = sprintf("%.2f",$lists['zml']/$num);
 	$lists['rjmll']			        = $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
-
+    $lists['zml'] 			        = ($lists['zml'] + $department_partner_money) ? ($lists['zml'] + $department_partner_money) : '0.00'; //重新定义总毛利(包含城市合伙人保证金)
+    $lists['year_partner_money']    = $department_partner_money;
 
 	//查询月度
 	$month = twentyfive();
-	$where = array();
+    $month_department_partner_money = get_department_partner_money($users,$month[0],$month[1]); //当月部门城市合伙人保证金
+    $where = array();
 	$where['b.audit_status']	    = 1;
 	$where['a.id']				    = array('in',implode(',',$users));
 	$where['l.req_type']		    = 801;
@@ -3859,6 +3861,8 @@ function tplist($department,$times){
 	$users['rjyll']		            = sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);
 	//$users['num']		            = $num;
 	$users['rid']		            = $department['id'];
+    $users['yml']                   = ($users['yml'] + $month_department_partner_money) ? ($users['yml'] + $month_department_partner_money) : '0.00'; //重新定义月度毛利
+    $users['month_partner_money']   = $month_department_partner_money;
 
 	return array_merge($lists, $users);
 }
@@ -3866,37 +3870,85 @@ function tplist($department,$times){
 
 //获取某时间段个人业绩
 function personal_income($userid,$time,$yearTime){
-
-	$month = twentyfive();
+	$month                      = twentyfive();
 
 	//查询月度
-	$where = array();
+	$where                      = array();
 	$where['b.audit_status']	= 1;
 	$where['o.create_user']		= $userid;
 	$where['a.req_type']		= 801;
 	$where['o.add_group']       = array('neq',1);
 
+	$userinfo                   = M('account')->where(array('id'=>$userid))->find();
 	if($time == 0){
-		$where['a.audit_time']		= array('between',$yearTime);
+		$where['a.audit_time']	= array('between',$yearTime);
+		$partner_money          = get_partner_money($userinfo,$yearTime[0],$yearTime[1]); //城市合伙人保证金
 	}else{
-		$where['a.audit_time']		= array('between',$month);
+		$where['a.audit_time']  = array('between',$month);
+        $partner_money          = get_partner_money($userinfo,$month[0],$month[1]); ////城市合伙人保证金
 	}
 
-	$field = array();
-	$field[] =  'sum(b.shouru) as zsr';
-	$field[] =  'sum(b.maoli) as zml';
-	$field[] =  '(sum(b.maoli)/sum(b.shouru)) as mll';
-	$users = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->find();
+	$field                      = array();
+	$field[]                    =  'sum(b.shouru) as zsr';
+	$field[]                    =  'sum(b.maoli) as zml';
+	$field[]                    =  '(sum(b.maoli)/sum(b.shouru)) as mll';
+	$users                      = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as a on a.req_id = b.id','LEFT')->where($where)->find();
 
-	$lists = array();
-	$lists['zsr'] 		=  $users['zsr'] ? $users['zsr'] : '0.00';
-	$lists['zml'] 		=  $users['zml'] ? $users['zml'] : '0.00';
-	$lists['mll'] 		=  $users['zml']>0 ? sprintf("%.4f",$users['mll'])*100 : '0.00';
+	$lists                      = array();
+	$lists['zsr'] 		        =  $users['zsr'] ? $users['zsr'] : '0.00';
+	$lists['zml'] 		        =  ($users['zml'] + $partner_money) ? ($users['zml'] + $partner_money) : '0.00'; //城市合伙人保证金记入总毛利 , 不计入总收入
+	$lists['mll'] 		        =  $users['zml']>0 ? sprintf("%.4f",$users['mll'])*100 : '0.00';
+	$lists['partner_money']     = $partner_money;
 
 	return $lists;
 }
 
+//获取部门的城市合伙人保证金
+function get_department_partner_money($uids,$beginTime,$endTime){
+    $users                          = M('account')->where(array('id'=>array('in',$uids)))->select();
+    $sum                            = 0;
+    foreach ($users as $k=>$v){
+        $sum += get_partner_money($v,$beginTime,$endTime);
+    }
+    return $sum;
+}
 
+/**
+ * 城市合伙人保证金 = 本周期内录入的“保证金” + 审核通过 + （销售人员是业务 && 销售人员 ！= 维护人员）
+ * @param $uid
+ * @param $beginTime
+ * @param $endTime
+ * @return int
+ * 使用范围 业绩排行 + 薪资模块 + KPi
+ */
+function get_partner_money($userinfo,$beginTime,$endTime){
+    $uid                                    = $userinfo['id'];
+    $yw_position_ids                        = get_business_position_ids(); //所有业务岗ID
+
+    if (!in_array($userinfo['position_id'],$yw_position_ids)){ return 0; } //业务岗才有城市合伙人保证金提成
+
+    $where                                  = array();
+    $where['p.sale_id']                     = $uid; //销售id
+    $where['p.cm_id']                       = array('neq',$uid); //维护人不能等于销售本人
+    $where['p.audit_stu']                   = 2; //2=>审核通过
+    $where['p.del_stu']                     = array('neq',-1); //-1=>删除
+    $where['d.type']                        = 1; //保证金
+    $field                                  = 'p.id,p.name,p.sale_id,p.sale_name,p.cm_id,p.cm_name,p.create_user_id,p.create_user_name,d.money,d.input_time,d.remark';
+    $where['d.input_time']                  = array('between',array($beginTime,$endTime));
+    $lists                                  = M()->table('__CUSTOMER_PARTNER__ as p')
+        ->join('__CUSTOMER_DEPOSIT__ as d on d.partner_id = p.id','left')
+        ->where($where)
+        ->field($field)
+        ->select();
+    $sum                                    = $lists ? array_sum(array_column($lists,'money')) : 0;
+    return $sum;
+}
+
+//获取所有业务岗职位id
+function get_business_position_ids(){
+    $ids                                    = M('position')->where(array('code'=>array('like',"S%")))->getField('id',true);
+    return $ids;
+}
 
 //统计大业务部数据
 function business_dept_data($roleid,$times){
