@@ -3833,12 +3833,14 @@ function tplist($department,$times=array()){
 	$lists['mll']			        = $lists['zml']>0 ?  sprintf("%.2f",$lists['mll']*100) : '0.00';
 	$department_partner_money       = get_department_partner_money($users,$times[0],$times[1]); //年度部门城市合伙人保证金
 
+    $year_zml_partner               = $lists['zml'] + $department_partner_money;
 	$lists['zsr'] 			        = $lists['zsr'] ? $lists['zsr'] : '0.00';
 	$lists['zml'] 			        = $lists['zml'] ? $lists['zml'] : '0.00'; //团总毛利(不含城市合伙人保证金)
 	$lists['rjzsr']			        = sprintf("%.2f",$lists['zsr']/$num);
 	$lists['rjzml']			        = sprintf("%.2f",$lists['zml']/$num);
+	$lists['rjzml_partner']         = $department_partner_money ? sprintf("%.2f",$year_zml_partner/$num) : ''; //人均毛利,包含城市合伙人押金
 	$lists['rjmll']			        = $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
-    $lists['zml'] 			        = ($lists['zml'] + $department_partner_money) ? ($lists['zml'] + $department_partner_money) : '0.00'; //重新定义总毛利(包含城市合伙人保证金)
+    $lists['zml'] 			        = $year_zml_partner ? $year_zml_partner : '0.00'; //重新定义总毛利(包含城市合伙人保证金)
     $lists['year_partner_money']    = $department_partner_money;
 
 	//查询月度
@@ -3856,15 +3858,17 @@ function tplist($department,$times=array()){
 	$field[]                        =  '(sum(b.maoli)/sum(b.shouru)) as yll';
 	$users                          = $db->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user','LEFT')->where($where)->find();
 
+	$month_zml_partner              = $users['yml'] + $month_department_partner_money;
 	$users['ysr'] 		            = $users['ysr'] ? $users['ysr'] : '0.00';
 	$users['yml'] 		            = $users['yml'] ? $users['yml'] : '0.00';
 	$users['yll'] 		            = $users['yml']>0 ? sprintf("%.4f",$users['yll'])*100 : '0.00';
 	$users['rjysr']		            = sprintf("%.2f",$users['ysr']/$num);
 	$users['rjyml']		            = sprintf("%.2f",$users['yml']/$num);
+	$users['rjyml_partner']         = $month_department_partner_money ? sprintf("%.2f",$month_zml_partner/$num) : '';
 	$users['rjyll']		            = sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);
 	//$users['num']		            = $num;
 	$users['rid']		            = $department['id'];
-    $users['yml']                   = ($users['yml'] + $month_department_partner_money) ? ($users['yml'] + $month_department_partner_money) : '0.00'; //重新定义月度毛利
+    $users['yml']                   = $month_zml_partner ? $month_zml_partner : '0.00'; //重新定义月度毛利
     $users['month_partner_money']   = $month_department_partner_money;
 
 	return array_merge($lists, $users);

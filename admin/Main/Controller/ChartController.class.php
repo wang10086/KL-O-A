@@ -637,7 +637,9 @@ class ChartController extends BaseController {
             $lists[$k]['sumMonth']  = $userInfo[$yearMonth]['sumMonth'];
             $lists[$k]['sumYear']   = $userInfo['sumYear'];
         }
+       // P($lists);
 
+        //die('ChartController  641');
         $this->lists    = $lists;
         $this->year 	= $year;
         $this->prveyear	= $year-1;
