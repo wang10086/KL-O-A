@@ -67,7 +67,7 @@
                                             <tr>
                                                 <td class="taskOptions">{$k+1}</td>
                                                 <td class="taskOptions">{$v.title}</td>
-                                                <td class="taskOptions" style="max-width: 150px;">{$v.content}</td>
+                                                <td class="taskOptions" style="max-width: 150px;"><!--{$v.content}--></td>
                                                 <td class="taskOptions">{$v.sum_num}</td>
                                                 <td class="taskOptions">{$v.ok_num}</td>
                                                 <td class="taskOptions">{$v.average}</td>
