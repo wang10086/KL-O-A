@@ -4793,62 +4793,34 @@ function get_new_GEC_settlement($lists,$startTime,$endTime){
     return $lists;
 }
 
-//计调部物资采购主管KPI
-function get_material_buy_data($startTime,$endTime,$title=''){
+/**
+ * 计调部物资采购主管KPI
+ * @param $startTime
+ * @param $endTime
+ * @param string $quota
+ * @return array
+ */
+function get_material_buy_data($startTime,$endTime,$quota=''){
     //获取所有在北京地区实施的项目中集中采购物资金额与所有物资采购金额的比率(以结算的团数据为准)
     $op_settlement_list                     = get_settlement_list($startTime,$endTime,0,0,'北京'); //获取本周期所有在北京实施,并且结算的团
     $opids                                  = array_column($op_settlement_list,'op_id');
     $material_settlement_lists              = get_settlement_costacc_lists($opids,1); //获取所有的物资结算清单
     $supplier_data                          = get_supplier_data(3);
     $supplier_ids                           = array_column($supplier_data,'id');
-    $focus_buy_avg                          = get_focus_buy_avg($material_settlement_lists,$supplier_ids);
-
-
+    $focus_buy_avg_data                     = get_focus_buy_avg_data($material_settlement_lists,$supplier_ids);
+    //$focus_buy_avg_data['all_opids']        = $opids;
+    $focus_buy_avg_data['all_num']          = count($opids);
+    $focus_buy_avg_data['quota_id']         = $quota['id'];
+    $focus_buy_avg_data['title']            = $quota['title'];
+    return $focus_buy_avg_data;
 }
 
 /**
- *  [9] => Array
-(
-[id] => 124133
-[op_id] => 201909290003
-[title] => 白醋
-[unitcost] => 5.000
-[amount] => 4
-[total] => 20.000
-[remark] =>
-[type] => 1
-[status] => 2
-[del_status] => 0
-[product_id] => 0
-[cwremark] =>
-[supplier_id] => 580
-[supplier_name] => 北京合力科创科技发展有限公司
-)
-
-[10] => Array
-(
-[id] => 124134
-[op_id] => 201909290003
-[title] => 盐
-[unitcost] => 3.000
-[amount] => 4
-[total] => 12.000
-[remark] =>
-[type] => 1
-[status] => 2
-[del_status] => 0
-[product_id] => 0
-[cwremark] =>
-[supplier_id] => 580
-[supplier_name] => 北京合力科创科技发展有限公司
-)
- */
-/**
+ * 获取物资集中采购率数据
  * @param $settlement_lists
  * @param $supplier_ids
  */
-//
-function get_focus_buy_avg($settlement_lists,$supplier_ids){
+function get_focus_buy_avg_data($settlement_lists,$supplier_ids){
     $sum                                    = 0; //总金额
     $focus_buy_sum                          = 0; //集中采购金额
     $opids                                  = array(); //全部opid
@@ -4856,9 +4828,20 @@ function get_focus_buy_avg($settlement_lists,$supplier_ids){
     foreach ($settlement_lists as $k=>$v){
         $sum                                += $v['total'];
         if (!in_array($v['op_id'],$opids)){ $opids[] = $v['op_id']; }
-        if (in_array()){}
+        if (in_array($v['supplier_id'],$supplier_ids)){
+            $focus_buy_sum                  += $v['total'];
+            if (!in_array($v['op_id'],$focus_buy_opids)){ $focus_buy_opids[] = $v['op_id']; }
+        }
     }
-
+    $data                                   = array();
+    $data['sum']                            = $sum;
+    $data['focus_buy_sum']                  = $focus_buy_sum;
+    //$data['opids']                          = $opids;
+    //$data['focus_buy_opids']                = $focus_buy_opids;
+    $data['num']                            = count($opids); //所有结算包含物资的团
+    $data['focus_buy_num']                  = count($focus_buy_opids); //使用集中采购供方的团
+    $data['focus_buy_average']              = $sum ? (round($focus_buy_sum/$sum,4)*100).'%' : '100%';
+    return $data;
 }
 
 /**

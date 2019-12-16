@@ -1,38 +1,55 @@
-<include file="Index:header_art" />
+<include file="Index:header2" />
 
-	<script type="text/javascript">
-	window.gosubmint= function(){
-		$('#gosub').submit();
-	} 
-	</script>
-    
-    <div class="box-body art_box-body">
-        <form method="post" action="{:U('Kpi/editpdca')}" name="myform" id="gosub">
-        <input type="hidden" name="dosubmint" value="1">
-        <input type="hidden" name="editid" value="{$row.id}">
-        <div class="fromlist fromlistbrbr">
-            <div class="formtexts">
-            	<h4>{$list.title}</h4>
-               <!-- <span class="fr">指标值：{$row.quota_value}</span>
-				<span class="fr">考核周期：{$row.cycle}</span>-->
-            </div>
-        </div>
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>集中采购执行率</h1>
+                    <ol class="breadcrumb">
+                        <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-gift"></i> 数据统计</a></li>
+                        <li class="active">{$_action_}</li>
+                    </ol>
+                </section>
 
-        <div class="fromlist nobor">
-            <div class="fromtitle">指标内容：</div> 
-            <div class="formtexts">{$list.content}</div>
-        </div>
-        
-        <div class="fromlist">
-            <div class="fromtitle">衡量方法：</div>
-            <div class="formtexts">{$list.rules}</div>
-        </div>
-        
-        </form>
-        
-                             
-    </div>                  
-    
-    <include file="Index:footer" />
-        
-       
+                <!-- Main content -->
+                <section class="content">
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">{$_action_}</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+
+                                    <include file="focus_buy_detail_nave" />
+
+                                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                        <tr role="row" class="orders" >
+                                            <th class="taskOptions" width="60">序号</th>
+                                            <th class="taskOptions">团号</th>
+                                            <th class="taskOptions">项目名称</th>
+                                            <th class="taskOptions"></th>
+                                            <th class="taskOptions"></th>
+                                        </tr>
+                                        <foreach name="lists" key="k" item="v">
+                                            <tr>
+                                                <td class="taskOptions">{$k+1}</td>
+                                                <td class="taskOptions"><?php echo $v['group_id'] ? $v['group_id'] : "<font class='#999'>未成团</font>"; ?></td>
+                                                <td class="taskOptions" style="max-width: 150px;"><a href="{:U('Op/plans_follow',array('opid'=>$v['op_id']))}">{$v.project}</a></td>
+                                                <td class="taskOptions">{$v.create_user_name}</td>
+                                                <td class="taskOptions"><?php echo $v['is_ok']?'<span class="green">正常</span>':'<span class="red">超时</span>'; ?></td>
+                                            </tr>
+                                        </foreach>
+                                    </table>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+
+                        </div><!-- /.col -->
+                    </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+
+<include file="Index:footer2" />

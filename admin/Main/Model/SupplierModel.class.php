@@ -301,36 +301,9 @@ class SupplierModel extends Model{
     //获取采购主管集中采购执行率 KPI 数据
     public function get_focus_buy_data($startTime,$endTime){
         $lists                              = get_timely(4);
-        $material_buy_data                  = get_material_buy_data($startTime,$endTime,$lists[0]['title']); //北京地区物资采购
-
-        /*
-         * Array
-            (
-                [0] => Array
-                    (
-                        [id] => 17
-                        [title] => 北京地区物资采购
-                        [content] => 指所有在北京地区实施的项目中的物资采购
-                        [rules] => 指所有在北京地区实施的项目中集中采购物资金额与所有物资采购金额的比率
-                        [view] =>
-                        [status] => 0
-                        [type] => 4
-                    )
-
-            )
-         * */
-        /**
-         * $costacc_data                   = get_costacc_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content'],$uid); //报价及时性
-        $budget_data                    = get_budget_data($startTime,$endTime,$timely[1]['title'],$timely['1']['content'],$uid); //预算及时性
-        $settlement_data                = get_settlement_data($startTime,$endTime,$timely[2]['title'],$timely['2']['content'],$uid); //结算及时性
-        $reimbursement_data             = get_reimbursement_data($startTime,$endTime,$timely[3]['title'],$timely['3']['content'],$uid);
-
-        $data[]                         = $costacc_data;
-        $data[]                         = $budget_data;
-        $data[]                         = $settlement_data;
-        $data[]                         = $reimbursement_data;
+        $material_buy_data                  = get_material_buy_data($startTime,$endTime,$lists[0]); //北京地区物资采购
+        $data[]                             = $material_buy_data;
         return $data;
-         */
     }
 
 }
