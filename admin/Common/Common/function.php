@@ -3839,7 +3839,7 @@ function tplist($department,$times=array()){
 	$lists['rjzsr']			        = sprintf("%.2f",$lists['zsr']/$num);
 	$lists['rjzml']			        = sprintf("%.2f",$lists['zml']/$num);
 	$lists['rjzml_partner']         = $department_partner_money ? sprintf("%.2f",$year_zml_partner/$num) : ''; //人均毛利,包含城市合伙人押金
-	$lists['rjmll']			        = $lists['zml'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
+	$lists['rjmll']			        = (int)$lists['rjzsr'] ? sprintf("%.2f",($lists['rjzml']/$lists['rjzsr'])*100) : '0.00';
     $lists['zml'] 			        = $year_zml_partner ? $year_zml_partner : '0.00'; //重新定义总毛利(包含城市合伙人保证金)
     $lists['year_partner_money']    = $department_partner_money;
 
@@ -3865,7 +3865,7 @@ function tplist($department,$times=array()){
 	$users['rjysr']		            = sprintf("%.2f",$users['ysr']/$num);
 	$users['rjyml']		            = sprintf("%.2f",$users['yml']/$num);
 	$users['rjyml_partner']         = $month_department_partner_money ? sprintf("%.2f",$month_zml_partner/$num) : '';
-	$users['rjyll']		            = sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100);
+	$users['rjyll']		            = (int)$users['rjysr'] ? sprintf("%.2f",($users['rjyml']/$users['rjysr'])*100) : '0.00';
 	//$users['num']		            = $num;
 	$users['rid']		            = $department['id'];
     $users['yml']                   = $month_zml_partner ? $month_zml_partner : '0.00'; //重新定义月度毛利

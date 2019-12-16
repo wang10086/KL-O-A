@@ -79,7 +79,7 @@
                                                 <?php if ($row['rjzml_partner']){ ?>
                                                     <td class="red" onclick="art_left_show_msg('包含城市合伙人人均毛利：'+{$row.rjzml_partner}+'<br>'+'不包含城市合伙人人均毛利：'+{$row.rjzml})">{$row.rjzml_partner}</td>
                                                 <?php }else{ ?>
-                                                    <td>{$row.zml}</td>
+                                                    <td>{$row.rjzml}</td>
                                                 <?php } ?>
                                                 <td>{$row.rjmll}</td>
                                                 <?php if ($year == date("Y")){ ?>
@@ -88,7 +88,7 @@
                                                     <?php if ($row['rjyml_partner']){ ?>
                                                         <td class="red" onclick="art_left_show_msg('包含城市合伙人人均毛利：'+{$row.rjyml_partner}+'<br>'+'不包含城市合伙人人均毛利：'+{$row.rjyml})">{$row.rjyml_partner}</td>
                                                     <?php }else{ ?>
-                                                        <td>{$row.zml}</td>
+                                                        <td>{$row.rjyml}</td>
                                                     <?php } ?>
                                                 <td>{$row.rjyll}</td>
                                                 <?php } ?>
