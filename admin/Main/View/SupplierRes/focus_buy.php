@@ -66,7 +66,7 @@
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
                                                 <td class="taskOptions">{$k+1}</td>
-                                                <td class="taskOptions">{$v.title}</td>
+                                                <td class="taskOptions"><a href="javascript:;" onclick="detail({$v.id})">{$v.title}</a></td>
                                                 <td class="taskOptions" style="max-width: 150px;"><!--{$v.content}--></td>
                                                 <td class="taskOptions">{$v.sum_num}</td>
                                                 <td class="taskOptions">{$v.ok_num}</td>
@@ -96,5 +96,19 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
+
+<script type="text/javascript">
+    //查看考核指标详情
+    function detail(id) {
+        art.dialog.open('index.php?m=Main&c=SupplierRes&a=public_focus_buy_detail&id='+id,{
+            lock:true,
+            title: '集中采购执行率',
+            width:800,
+            height:400,
+            fixed: true,
+
+        });
+    }
+</script>
 
 <include file="Index:footer2" />

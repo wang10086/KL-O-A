@@ -308,6 +308,7 @@ class SupplierResController extends BaseController {
     //集中采购执行率-采购主管 KPI
     public function public_focus_buy(){
         $this->title('集中采购执行率');
+        $mod                                = D('Supplier');
         $year                               = I('year',date('Y'));
         $month                              = I('month',date('m'));
         $month                              = strlen($month) < 2 ? str_pad($month,2,'0',STR_PAD_LEFT) : $month;
@@ -315,11 +316,24 @@ class SupplierResController extends BaseController {
         $cycle                              = get_cycle($yearMonth);
 
         $lists                              = get_timely(4);
+        $data                               = $mod->get_focus_buy_data($cycle['begintime'],$cycle['endtime']);
+        //P($cycle);
+
 
         $this->lists                        = $lists;
         $this->year                         = $year;
         $this->month                        = $month;
         $this->display('focus_buy');
+    }
+
+    //集中采购执行率指标详情
+    public function public_focus_buy_detail(){
+        $id                                 = I('id');
+        $db                                 = M('quota');
+        $list                               = $db->find($id);
+       
+        $this->list                         = $list;
+        $this->display('focus_buy_detail');
     }
 
     //集中采购比率指标

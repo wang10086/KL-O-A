@@ -2886,16 +2886,18 @@ function get_yw_department(){
      * @param $end_time
      * @param $sale_uid 销售id
      * @param int $jd_uid 计调id
+     * @param $addr 实施地点
      * @return mixed
      */
-    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0){
+    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0,$addr=''){
         $where                                  = array();
         $where['b.audit_status']                = 1;
         $where['l.req_type']                    = 801;
         $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
         if ($sale_uid) $where['o.create_user']  = $sale_uid;
         if ($jd_uid) $where['l.req_uid']        = $jd_uid;
-        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+        if ($addr) $where['o.destination']      = array('like', $addr.'%');
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
         $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         return $op_settlement_list;
     }
@@ -4791,4 +4793,100 @@ function get_new_GEC_settlement($lists,$startTime,$endTime){
     return $lists;
 }
 
+//计调部物资采购主管KPI
+function get_material_buy_data($startTime,$endTime,$title=''){
+    //获取所有在北京地区实施的项目中集中采购物资金额与所有物资采购金额的比率(以结算的团数据为准)
+    $op_settlement_list                     = get_settlement_list($startTime,$endTime,0,0,'北京'); //获取本周期所有在北京实施,并且结算的团
+    $opids                                  = array_column($op_settlement_list,'op_id');
+    $material_settlement_lists              = get_settlement_costacc_lists($opids,1); //获取所有的物资结算清单
+    $supplier_data                          = get_supplier_data(3);
+    $supplier_ids                           = array_column($supplier_data,'id');
+    $focus_buy_avg                          = get_focus_buy_avg($material_settlement_lists,$supplier_ids);
 
+
+}
+
+/**
+ *  [9] => Array
+(
+[id] => 124133
+[op_id] => 201909290003
+[title] => 白醋
+[unitcost] => 5.000
+[amount] => 4
+[total] => 20.000
+[remark] =>
+[type] => 1
+[status] => 2
+[del_status] => 0
+[product_id] => 0
+[cwremark] =>
+[supplier_id] => 580
+[supplier_name] => 北京合力科创科技发展有限公司
+)
+
+[10] => Array
+(
+[id] => 124134
+[op_id] => 201909290003
+[title] => 盐
+[unitcost] => 3.000
+[amount] => 4
+[total] => 12.000
+[remark] =>
+[type] => 1
+[status] => 2
+[del_status] => 0
+[product_id] => 0
+[cwremark] =>
+[supplier_id] => 580
+[supplier_name] => 北京合力科创科技发展有限公司
+)
+ */
+/**
+ * @param $settlement_lists
+ * @param $supplier_ids
+ */
+//
+function get_focus_buy_avg($settlement_lists,$supplier_ids){
+    $sum                                    = 0; //总金额
+    $focus_buy_sum                          = 0; //集中采购金额
+    $opids                                  = array(); //全部opid
+    $focus_buy_opids                        = array(); //集中采购项目opid
+    foreach ($settlement_lists as $k=>$v){
+        $sum                                += $v['total'];
+        if (!in_array($v['op_id'],$opids)){ $opids[] = $v['op_id']; }
+        if (in_array()){}
+    }
+
+}
+
+/**
+ * 获取所有的结算清单
+ * @param $opids
+ * @param $type 1=>物资,2=>专家辅导员,3=>合格供方,5=>产品模块,6=>研究所台站,7=>旅游车队,8=>酒店,9=>地接社,10=>餐厅,11=>景点,12=>票务,13=>内部地接,4=>其他',
+ * @return array
+ */
+function get_settlement_costacc_lists($opids,$type=0){
+    $db                                     = M('op_costacc');
+    $where                                  = array();
+    $where['status']                        = 2; //结算
+    $where['op_id']                         = array('in',$opids);
+    if ($type) $where['type']               = $type;
+    $lists                                  = $db->where($where)->select();
+    return $lists;
+}
+
+/**
+ * 获取供方信息
+ * @param $type 1=>一般供方 , 2=>合格供方 , 3=>集中采购方
+ * @return mixed
+ */
+function get_supplier_data($type){
+    $db                                     = M('supplier');
+    $where                                  = array();
+    $where['audit_status']                  = 1; //审核通过
+    if ($type) $where['type']               = $type;
+    $lists                                  = $db->where($where)->select();
+    return $lists;
+}
