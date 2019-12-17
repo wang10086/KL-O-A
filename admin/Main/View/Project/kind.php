@@ -49,7 +49,7 @@
                                                 </td>
 
                                                 <td class="taskOptions">
-                                                <button onClick="javascript:ConfirmDel('{:U('Project/delkind',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                <button onClick="javascript:ConfirmDel('{:U('Project/delkind',array('id'=>$row['id']))}','数据删除后可能会影响计调预结算和数据统计,请谨慎操作!')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                                 </td>
                                             </tr>
                                         </foreach>

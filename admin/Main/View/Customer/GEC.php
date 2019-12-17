@@ -48,6 +48,7 @@
                                         -->
                                         <th class="sorting" data="create_user_id">招募人</th>
                                         <th class="sorting" data="cm_id">维护人</th>
+                                        <th class="sorting" data="create_time">录入时间</th>
                                         <if condition="rolemenu(array('Customer/GEC_edit'))">
                                         <th width="50" class="taskOptions">维护</th>
                                         </if>
@@ -73,6 +74,7 @@
                                         <td>{$row.qianli}</td>-->
                                         <td>{$row.create_user_name}</td>
                                         <td>{$row.cm_name}</td>
+                                        <td>{$row.create_time|date="Y-m-d",###}</td>
                                         <if condition="rolemenu(array('Customer/GEC_edit'))">
                                         <td class="taskOptions">
                                         <a href="{:U('Customer/GEC_edit',array('id'=>$row['id']))}" title="维护" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
