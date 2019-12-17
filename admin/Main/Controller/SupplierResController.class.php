@@ -289,11 +289,11 @@ class SupplierResController extends BaseController {
         }
 
         //分页
-        $p                              = I('p',1);
-        $pagecount                      = count($data);
-        $page                           = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $data                           = arr_page($data,$p,20);
+        $p                      = I('p',1);
+        $pagecount              = count($data);
+        $page                   = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages            = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $data                   = arr_page($data,$p,20);
 
         $this->data             = $data;
         $this->supplierKind     = $supplierKind;
@@ -310,15 +310,16 @@ class SupplierResController extends BaseController {
         $this->title('集中采购执行率');
         $mod                                = D('Supplier');
         $year                               = I('year',date('Y'));
-        $month                              = I('month',date('m'));
-        $month                              = strlen($month) < 2 ? str_pad($month,2,'0',STR_PAD_LEFT) : $month;
-        $yearMonth                          = $year.$month;
-        $cycle                              = get_cycle($yearMonth);
-        $data                               = $mod->get_focus_buy_data($cycle['begintime'],$cycle['endtime']);
+        $quarter                            = I('quarter') ? I('quarter') : get_quarter(date('m'));
+        $cycle                              = get_quarter_cycle_time($year,$quarter);
+
+        $data                               = $mod->get_focus_buy_data($cycle['begin_time'],$cycle['end_time']);
+        $sum_data                           = $mod->get_sum_gocus_buy_data($data);
 
         $this->lists                        = $data;
+        $this->sum_data                     = $sum_data;
         $this->year                         = $year;
-        $this->month                        = $month;
+        $this->quarter                      = $quarter;
         $this->display('focus_buy');
     }
 
@@ -336,13 +337,40 @@ class SupplierResController extends BaseController {
     public function public_focus_buy_detail(){
         $this->title('集中采购详情');
         $year                               = I('year');
-        $month                              = I('month');
+        $quarter                            = I('quarter');
         $pin                                = I('pin',0);
         $nave_lists                         = get_timely(4);
+        $cycle                              = get_quarter_cycle_time($year,$quarter);
+        $mod                                = D('Supplier');
+        $data                               = $mod->get_focus_buy_data($cycle['begin_time'],$cycle['end_time']);
+        $opids                              = $data[$pin]['opids'];
 
+        //分页
+        $pagecount                          = count($opids);
+        $page                               = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages                        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $field                              = 'op_id,group_id,project,create_user,create_user_name,customer';
+        $lists                              = M('op')->where(array('op_id'=>array('in',$opids)))->field($field)->limit($page->firstRow,$page->listRows)->select();
+
+        $supplier_data                      = get_supplier_data(3);
+        $supplier_ids                       = array_column($supplier_data,'id');
+        foreach ($lists as $k=>$v){
+            $arr_opid                       = array();
+            $arr_opid[]                     = $v['op_id'];
+            $material_settlement_lists      = get_settlement_costacc_lists($arr_opid,1); //获取所有的物资结算清单
+            $num                            = 0;
+            foreach ($material_settlement_lists as $vv){
+                if (in_array($vv['supplier_id'],$supplier_ids)){
+                    $num++;
+                }
+            }
+            $lists[$k]['focus_buy']         = $num ? "<span class='green'>集中采购</span>" : "<span class='red'>非集中采购</span>";
+        }
+
+        $this->lists                        = $lists;
         $this->nave_lists                   = $nave_lists;
         $this->year                         = $year;
-        $this->month                        = $month;
+        $this->quarter                      = $quarter;
         $this->pin                          = $pin;
         $this->display("focus_buy_detail");
     }

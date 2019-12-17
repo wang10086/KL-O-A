@@ -143,7 +143,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label>是否转交给维护人</label>
+                                            <label>是否转交给其他维护人</label>
                                             <div class="form-group" id="transfer">
                                                 <input type="radio" name="info[transfer]" value="1"  <?php if($gec['transfer']==1 || !$gec){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
                                                 <input type="radio" name="info[transfer]" value="2"  <?php if($gec['transfer']==2){ echo 'checked';} ?>> &#8194;需要

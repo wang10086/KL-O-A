@@ -4809,7 +4809,7 @@ function get_material_buy_data($startTime,$endTime,$quota=''){
     $supplier_ids                           = array_column($supplier_data,'id');
     $focus_buy_avg_data                     = get_focus_buy_avg_data($material_settlement_lists,$supplier_ids);
     //$focus_buy_avg_data['all_opids']        = $opids;
-    $focus_buy_avg_data['all_num']          = count($opids);
+    //$focus_buy_avg_data['all_num']          = count($opids);
     $focus_buy_avg_data['quota_id']         = $quota['id'];
     $focus_buy_avg_data['title']            = $quota['title'];
     return $focus_buy_avg_data;
@@ -4836,8 +4836,8 @@ function get_focus_buy_avg_data($settlement_lists,$supplier_ids){
     $data                                   = array();
     $data['sum']                            = $sum;
     $data['focus_buy_sum']                  = $focus_buy_sum;
-    //$data['opids']                          = $opids;
-    //$data['focus_buy_opids']                = $focus_buy_opids;
+    $data['opids']                          = $opids;
+    $data['focus_buy_opids']                = $focus_buy_opids;
     $data['num']                            = count($opids); //所有结算包含物资的团
     $data['focus_buy_num']                  = count($focus_buy_opids); //使用集中采购供方的团
     $data['focus_buy_average']              = $sum ? (round($focus_buy_sum/$sum,4)*100).'%' : '100%';

@@ -306,4 +306,16 @@ class SupplierModel extends Model{
         return $data;
     }
 
+//获取采购主管集中采购执行率 KPI 数据 总合计
+    public function get_sum_gocus_buy_data($list){
+        $data                               = array();
+        $data['sum']                        = array_sum(array_column($list,'sum'));
+        $data['focus_buy_sum']              = array_sum(array_column($list,'focus_buy_sum'));
+        $data['num']                        = array_sum(array_column($list,'num'));
+        $data['focus_buy_num']              = array_sum(array_column($list,'focus_buy_num'));
+        $data['focus_buy_average']          = $data['sum'] ? (round($data['focus_buy_sum']/$data['sum'],4)*100).'%' : '100%';
+        return $data;
+    }
+
+
 }

@@ -2561,19 +2561,14 @@ function updatekpi($month,$user){
 
                         //集中采购执行率-采购主管
                         if($v['quota_id']==85){
-                            /*$sum = user_work_record($user,$month,100);
-                            if($sum>3){
-                                $complete	= 0;
-                            }else{
-                                //汇总扣分数
-                                $zongfen 	= 100-($sum*10);
-                                $complete	= $zongfen>0 ? $zongfen : 0;
-                            }
-                            $url            = '';*/
-
                             $monon          = substr($v['month'],4,2);
-                            $complete       = "测试";
-                            $url            = U('SupplierRes/public_focus_buy',array('year'=>$v['year'],'month'=>$monon));
+                            $mod            = D('Supplier');
+                            $quarter        = get_quarter($monon);
+                            //$cycle          = get_quarter_cycle_time($v['year'],$quarter);
+                            $data           = $mod->get_focus_buy_data($v['start_date'],$v['end_date']);
+                            $sum_data       = $mod->get_sum_gocus_buy_data($data);
+                            $complete       = $sum_data['focus_buy_average'];
+                            $url            = U('SupplierRes/public_focus_buy',array('year'=>$v['year'],'quarter'=>$quarter));
                         }
 
                         //数据前端后端对接--市场PHP
