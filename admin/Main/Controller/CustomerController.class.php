@@ -115,7 +115,7 @@ class CustomerController extends BaseController {
 		$create             = I('create');
 
         $map                = array();
-		if(C('RBAC_SUPER_ADMIN')==session('username') || in_array(session('roleid'),array(10,14,28,30,45,60))){
+		if(C('RBAC_SUPER_ADMIN')==session('username') || in_array(session('roleid'),array(10,14,28,30,45,54,60))){
 
 		}else{
             $where          = array();
