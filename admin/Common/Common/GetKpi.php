@@ -2796,24 +2796,24 @@ function get_yw_department(){
         $data[0]['year']                = 0;
         switch ($month){
             case in_array($month,array('01','02')): //寒假
-                $data[1]['title']       = ($year+1).'年寒假';
-                $data[1]['year']        = ($year+1).'-1';
-                $data[2]['title']       = ($year+1).'年春季';
-                $data[2]['year']        = ($year+1).'-2';
-                $data[3]['title']       = $year.'年暑假';
-                $data[3]['year']        = $year.'-3';
-                $data[4]['title']       = $year.'年秋季';
-                $data[4]['year']        = $year.'-4';
+                $data[1]['title']       = $year.'年暑假';
+                $data[1]['year']        = $year.'-3';
+                $data[2]['title']       = $year.'年秋季';
+                $data[2]['year']        = $year.'-4';
+                $data[3]['title']       = ($year+1).'年寒假';
+                $data[3]['year']        = ($year+1).'-1';
+                $data[4]['title']       = ($year+1).'年春季';
+                $data[4]['year']        = ($year+1).'-2';
                 break;
             case in_array($month,array('03','04','05','06')): //春季
-                $data[1]['title']       = ($year+1).'年寒假';
-                $data[1]['year']        = ($year+1).'-1';
-                $data[2]['title']       = ($year+1).'年春季';
-                $data[2]['year']        = ($year+1).'-2';
-                $data[3]['title']       = ($year+1).'年暑假';
-                $data[3]['year']        = ($year+1).'-3';
-                $data[4]['title']       = $year.'年秋季';
-                $data[4]['year']        = $year.'-4';
+                $data[1]['title']       = $year.'年秋季';
+                $data[1]['year']        = $year.'-4';
+                $data[2]['title']       = ($year+1).'年寒假';
+                $data[2]['year']        = ($year+1).'-1';
+                $data[3]['title']       = ($year+1).'年春季';
+                $data[3]['year']        = ($year+1).'-2';
+                $data[4]['title']       = ($year+1).'年暑假';
+                $data[4]['year']        = ($year+1).'-3';
                 break;
             case in_array($month,array('07','08')): //暑假
                 $data[1]['title']       = ($year+1).'年寒假';
@@ -2826,14 +2826,14 @@ function get_yw_department(){
                 $data[4]['year']        = ($year+1).'-4';
                 break;
             case in_array($month,array('09','10','11','12')): //秋季
-                $data[1]['title']       = ($year+2).'年寒假';
-                $data[1]['year']        = ($year+2).'-1';
-                $data[2]['title']       = ($year+1).'年春季';
+                $data[1]['title']       = ($year+1).'年春季';
                 $data[1]['year']        = ($year+1).'-2';
-                $data[3]['title']       = ($year+1).'年暑假';
-                $data[1]['year']        = ($year+1).'-3';
-                $data[4]['title']       = ($year+1).'年秋季';
-                $data[1]['year']        = ($year+1).'-4';
+                $data[2]['title']       = ($year+1).'年暑假';
+                $data[2]['year']        = ($year+1).'-3';
+                $data[3]['title']       = ($year+1).'年秋季';
+                $data[3]['year']        = ($year+1).'-4';
+                $data[4]['title']       = ($year+2).'年寒假';
+                $data[4]['year']        = ($year+2).'-1';
                 break;
         }
         return $data;

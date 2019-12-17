@@ -436,4 +436,16 @@ class SupplierResController extends BaseController {
         }
     }
 
+    //集中采购成本降低统计
+    public function public_cost_save(){
+        $this->title('集中采购成本降低统计');
+        $year                               = I('year',date('Y'));
+        $groups                             = get_little_title($year);
+
+        $this->groups                       = $groups;
+        $this->year                         = $year;
+        $this->prveyear                     = $year-1;
+        $this->display('cost_save');
+    }
+
 }

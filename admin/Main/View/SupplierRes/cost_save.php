@@ -19,7 +19,7 @@
 
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                 <?php if($prveyear>2017){ ?>
-                                    <a href="{:U('SupplierRes/public_focus_buy',array('year'=>$prveyear,'quarter'=>$quarter))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                    <a href="javascript:;" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
                                     for($i=1;$i<5;$i++){
@@ -27,14 +27,14 @@
                                         $par['year']    = $year;
                                         $par['quarter'] = $i;
                                         if($quarter==$i){
-                                            echo '<a href="'.U('SupplierRes/public_focus_buy',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
+                                            echo '<a href="javascript:;" class="btn btn-info" style="padding:8px 18px;">'.$groups[$i]['title'].'</a>';
                                         }else{
-                                            echo '<a href="'.U('SupplierRes/public_focus_buy',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
+                                            echo '<a href="javascript:;" class="btn btn-default" style="padding:8px 18px;">'.$groups[$i]['title'].'</a>';
                                         }
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('SupplierRes/public_focus_buy',array('year'=>$nextyear,'quarter'=>$quarter))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="javascript:;" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 
@@ -42,9 +42,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <if condition="rolemenu(array('SupplierRes/focus_buy_list'))">
+                                        <!--<if condition="rolemenu(array('SupplierRes/focus_buy_list'))">
                                             <a href="{:U('SupplierRes/focus_buy_list')}" class="btn btn-info btn-sm">考核指标管理</a>
-                                        </if>
+                                        </if>-->
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -54,13 +54,12 @@
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions" width="60">序号</th>
-                                            <th class="taskOptions">集中采购事项</th>
-                                            <th class="taskOptions">项目数</th>
-                                            <th class="taskOptions">集中采购项目数</th>
-                                            <th class="taskOptions">结算金额</th>
-                                            <th class="taskOptions">集中采购结算金额</th>
-                                            <th width="80" class="taskOptions">采购比率</th>
-                                            <!--<th width="100" class="taskOptions">备注</th>-->
+                                            <th class="taskOptions">集中采购方</th>
+                                            <th class="taskOptions">计价规则</th>
+                                            <th class="taskOptions">计价单位</th>
+                                            <th class="taskOptions">集采差价</th>
+                                            <th class="taskOptions">基准单价</th>
+                                            <th width="80" class="taskOptions">集采成本降低率</th>
                                             <th width="100" class="taskOptions">详情</th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
@@ -77,7 +76,7 @@
                                                 </td>
                                             </tr>
                                         </foreach>
-                                        <tr class="black">
+                                        <!--<tr class="black">
                                             <td class="taskOptions" colspan="2">合计</td>
                                             <td class="taskOptions">{$sum_data.num}</td>
                                             <td class="taskOptions">{$sum_data.focus_buy_num}</td>
@@ -87,7 +86,7 @@
                                             <td class="taskOptions">
                                                 <a href="{:U('SupplierRes/public_focus_buy_detail',array('year'=>$year,'quarter'=>$quarter,'pin'=>0))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                             </td>
-                                        </tr>
+                                        </tr>-->
                                     </table>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
