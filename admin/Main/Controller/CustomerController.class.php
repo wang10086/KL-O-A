@@ -221,6 +221,8 @@ class CustomerController extends BaseController {
                 if (!$info['city'])     { $this->error('所在城市不能为空'); }
 
 				if($gec_id){
+                    $list               = $db->where(array('company_name'=>$info['company_name'],'id'=>array('neq',$gec_id)))->find();
+                    if ($list) $this->error('该客户信息已存在,请更改客户名称');
 					$u                  = $db->find($gec_id);
 					if($u['cm_id']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(session('userid'),C('GEC_TRANSFER_UID'))){
 						$isok           = $db->data($info)->where(array('id'=>$gec_id))->save();
@@ -237,6 +239,8 @@ class CustomerController extends BaseController {
                         }
                     }
 				}else{
+			        $list               = $db->where(array('company_name'=>$info['company_name']))->find();
+			        if ($list) $this->error('该客户信息已存在,请勿重复录入');
 					$info['create_time']= time();
 					$isok               = $db->add($info);
 					$gec_id             = $isok;
