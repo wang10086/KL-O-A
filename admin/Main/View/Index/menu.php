@@ -238,7 +238,10 @@
                                             <if condition="rolemenu(array('SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del'))">
                                                 <li class="{:on('SupplierRes/public_focus_buy')} {:on('SupplierRes/focus_buy_list')}"><a href="{:U('SupplierRes/public_focus_buy')}"><i class="fa fa-angle-right"></i> 集中采购执行率</a></li>
                                             </if>
-                                                <li class="{:on('SupplierRes/public_cost_save')} {:on('SupplierRes/')}"><a href="{:U('SupplierRes/public_cost_save')}"><i class="fa fa-angle-right"></i> 集中采购成本降低统计</a></li>
+                                                <li class="{:on('SupplierRes/public_cost_save')} {:on('SupplierRes/')}"><a href="{:U('SupplierRes/public_cost_save')}"><i class="fa fa-angle-right"></i> 集中采购管理</a></li>
+                                            <!--<if condition="rolemenu(array('SupplierRes/focusBuyIndex','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del'))">
+                                                <li class="{:on('SupplierRes/focusBuyIndex')} {:on('SupplierRes/')}"><a href="{:U('SupplierRes/focusBuyIndex')}"><i class="fa fa-angle-right"></i> 集中采购管理</a></li>
+                                            </if>-->
                                         </ul>
                                     </li>
                                 </if>

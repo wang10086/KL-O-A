@@ -411,6 +411,31 @@ class SupplierResController extends BaseController {
         }
     }
 
+    //集中采购成本管理
+    public function public_cost_save(){
+        $this->title('集中采购管理');
+        $db                                 = M('focus_buy');
+        $year                               = I('year',date('Y'));
+        $type                               = I('type') ? I('type') : $year.'-1';
+        $lists                              = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->field('f.*,s.name as supplier_name')->where(array('f.cycle'=>$type))->select();
+        $this->lists                        = $lists;
+        $this->type                         = $type;
+        $this->year                         = $year;
+        $this->prveyear                     = $year-1;
+        $this->nextyear                     = $year+1;
+        $this->display('cost_save');
+    }
+
+    //添加集中采购内容
+    public function cost_save_add(){
+        $this->title('添加集中采购内容');
+        $supplier_data                      = get_supplier_data(3); //所有的集中采购方
+        $quota                              = get_timely(4); //考核指标
+        $this->quota                        = $quota;
+        $this->supplier_data                = $supplier_data;
+        $this->display();
+    }
+
     public function public_save(){
         $savetype                           = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){
@@ -433,19 +458,38 @@ class SupplierResController extends BaseController {
                 }
                 echo '<script>window.top.location.reload();</script>';
             }
+
+            if ($savetype == 2){ //保存集中采购内容
+                $id                         = I('id');
+                $db                         = M('focus_buy');
+                $info                       = I('info');
+                $remark                     = htmlspecialchars(I('remark'));
+                $info['type']               = trim($info['type']);
+                $info['unit']               = trim($info['unit']);
+                $info['unitcost']           = trim($info['unitcost']);
+                $info['remark']             = $remark;
+                if ($id){
+                    $res                    = $db->where(array('id'=>$id))->save($info);
+                }else{
+                    $info['input_uid']      = session('userid');
+                    $info['input_uname']    = session('nickname');
+                    $info['input_time']     = NOW_TIME;
+                    $info['audit_status']   = 0;
+                    $res                    = $db->add($info);
+                }
+                if ($res){
+                    $this->success('保存成功',U('SupplierRes/public_cost_save'));
+                }else{
+                    $this->error('保存失败');
+                }
+            }
         }
     }
 
-    //集中采购成本降低统计
-    public function public_cost_save(){
-        $this->title('集中采购成本降低统计');
-        $year                               = I('year',date('Y'));
-        $groups                             = get_little_title($year);
-
-        $this->groups                       = $groups;
-        $this->year                         = $year;
-        $this->prveyear                     = $year-1;
-        $this->display('cost_save');
-    }
+    /*//集中采购管理
+    public function focusBuyIndex(){
+        $this->title('集中采购管理');
+        $this->display();
+    }*/
 
 }
