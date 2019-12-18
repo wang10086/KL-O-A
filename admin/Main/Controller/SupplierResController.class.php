@@ -414,7 +414,6 @@ class SupplierResController extends BaseController {
     //集中采购成本管理
     public function public_cost_save(){
         $this->title('集中采购管理');
-        $db                                 = M('focus_buy');
         $year                               = I('year',date('Y'));
         $type                               = I('type') ? I('type') : $year.'-1';
         $lists                              = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->field('f.*,s.name as supplier_name')->where(array('f.cycle'=>$type))->select();
@@ -429,8 +428,13 @@ class SupplierResController extends BaseController {
     //添加集中采购内容
     public function cost_save_add(){
         $this->title('添加集中采购内容');
+        $id                                 = I('id');
+        $db                                 = M('focus_buy');
         $supplier_data                      = get_supplier_data(3); //所有的集中采购方
         $quota                              = get_timely(4); //考核指标
+        $list                               = $id ? $db->find($id) : '';
+
+        $this->list                         = $list;
         $this->quota                        = $quota;
         $this->supplier_data                = $supplier_data;
         $this->display();

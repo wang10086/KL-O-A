@@ -34,17 +34,37 @@
                                     </div>-->
                                 </div>
 
+                                <!--
+
+                                [id] => 3
+    [supplier_id] => 1076
+    [quota_id] => 17
+    [year] => 2020
+    [cycle] => 2020-3
+    [type] => type
+    [rule] => rule
+    [unit] => unit
+    [unitcost] => 0.00
+    [business_unitcost] => 0.00
+    [remark] => &lt;p&gt;啊速度发发生&lt;/p&gt;
+
+    [input_uid] => 1
+    [input_uname] => 系统管理员
+    [input_time] => 1576661400
+    [audit_status] => 0
+                                -->
+
                                 <div class="box-body">
                                     <input type="hidden" name="dosubmint" value="1" />
                                     <input type="hidden" name="savetype" value="2">
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                    <if condition="$row"><input type="hidden" name="id" value="{$row.id}" /></if>
+                                    <if condition="$list"><input type="hidden" name="id" value="{$list.id}" /></if>
 
                                     <div class="form-group col-md-8">
                                         <label>集中采购方名称</label>
                                         <select class="form-control" name="info[supplier_id]" required>
                                             <foreach name="supplier_data" item="v">
-                                                <option value="{$v.id}">{$v.name}</option>
+                                                <option value="{$v.id}" <?php if ($v['id']==$list['supplier_id']) echo "selected"; ?>>{$v.name}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -54,7 +74,7 @@
                                         <select class="form-control" name="info[quota_id]" required>
                                             <option value="" selected disabled>==请选择==</option>
                                             <foreach name="quota" item="v">
-                                                <option value="{$v.id}">{$v.title}</option>
+                                                <option value="{$v.id}" <?php if ($v['id']==$list['quota_id']) echo "selected"; ?>>{$v.title}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -63,7 +83,7 @@
                                         <label>集采年份</label>
                                         <select class="form-control" name="info[year]" onchange="set_type($(this).val())">
                                             <?php $year = date('Y'); for ($i=$year-1; $i <= $year+2; $i++){ ?>
-                                                <option value="{$i}">{$i}年</option>
+                                                <option value="{$i}" <?php if ($i==$list['year']) echo "selected"; ?>>{$i}年</option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -71,34 +91,37 @@
                                     <div class="form-group col-md-4">
                                         <label>业务季</label>
                                         <select  class="form-control"  name="info[cycle]" id="cycle" required>
-                                            <option value="">请先选择使用年份</option>
+                                            <option value="{$list['year'].'-1'}" <?php if ($list['cycle'] == $year.'-1') echo "selected"; ?>>{$year}年寒假</option>
+                                            <option value="{$list['year'].'-2'}" <?php if ($list['cycle'] == $year.'-2') echo "selected"; ?>>{$year}年春季</option>
+                                            <option value="{$list['year'].'-3'}" <?php if ($list['cycle'] == $year.'-3') echo "selected"; ?>>{$year}年暑假</option>
+                                            <option value="{$list['year'].'-4'}" <?php if ($list['cycle'] == $year.'-4') echo "selected"; ?>>{$year}年秋季</option>
                                         </select>
                                     </div>
                                     
                                     <div class="form-group col-md-4">
                                         <label>所属分类</label>
-                                        <input type="text" name="info[type]" value="{$row.type}" class="form-control" required />
+                                        <input type="text" name="info[type]" value="{$list.type}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label>计价规则</label>
-                                        <input type="text" name="info[rule]" value="{$row.rule}" class="form-control" required />
+                                        <input type="text" name="info[rule]" value="{$list.rule}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label>计价单位</label>
-                                        <input type="text" name="info[unit]" value="{$row.unit}"  class="form-control" required />
+                                        <input type="text" name="info[unit]" value="{$list.unit}"  class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label>集中采购单价</label>
-                                        <input type="text" name="info[unitcost]" value="{$row.unitcost}"  class="form-control" required />
+                                        <input type="text" name="info[unitcost]" value="{$list.unitcost}"  class="form-control" required />
                                     </div>
                                     
                                     <div class="form-group col-md-12">
                                         <label>备注</label>
                                         <?php 
-                                             echo editor('remark',$row['desc']);
+                                             echo editor('remark',$list['remark']);
                                              ?>
                                     </div>
 
@@ -120,11 +143,13 @@
 
 <script type="text/javascript">
     $(function () {
+        let id  = <?php echo $list['id'] ? $list['id'] : 0; ?>;
         let year = $('select[ name="info[year]"]').val();
-        set_type(year);
+        if (!id){ set_type(year); }
     })
 
     function set_type(year) {
+        let  cycle = <?php echo $list['cycle'] ? $list['cycle'] : 0; ?>;
         if (!year){ art_show_msg('年份信息有误'); return false; }
         var html = '';
         html += '<option value="">==请选择==</option>';

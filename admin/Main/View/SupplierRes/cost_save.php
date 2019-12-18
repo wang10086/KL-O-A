@@ -49,12 +49,12 @@
                                             <th class="taskOptions">集采差价</th>
                                             <th class="taskOptions">基准单价</th>
                                             <th class="taskOptions">集采成本降低率</th>
-                                            <th width="80" class="taskOptions">详情</th>
+                                            <th width="60" class="taskOptions">详情</th>
                                             <!--<if condition="rolemenu(array('SupplierRes/cost_save_add'))">-->
-                                            <th width="80" class="taskOptions">编辑</th>
+                                            <th width="60" class="taskOptions">编辑</th>
                                             <!--</if>-->
-                                            <th width="80" class="taskOptions">录入基准单价</th>
-                                            <th width="80" class="taskOptions">删除</th>
+                                            <th width="60" class="taskOptions">录入基准单价</th>
+                                            <th width="60" class="taskOptions">删除</th>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
@@ -69,7 +69,7 @@
                                                     <a href="javascript:;" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
                                                 <td class="taskOptions">
-                                                    <a href="javascript:;" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                    <a href="{:U('SupplierRes/cost_save_add',array('id'=>$v['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                                 <td class="taskOptions">
                                                     <a href="javascript:;" title="录入基准单价" class="btn btn-info btn-smsm"><i class="fa fa-money"></i></a>
