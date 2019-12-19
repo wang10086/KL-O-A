@@ -512,6 +512,19 @@ class SupplierResController extends BaseController {
         }
     }
 
+    //录入市场价格
+    public function cost_save_price(){
+        $id                                 = I('id');
+        $list                               = M()->table('__FOCUS_BUY__ as f')
+                                            ->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')
+                                            ->field('f.*,s.name as supplier_name')
+                                            ->where(array('f.id'=>$id))
+                                            ->find();
+        $list['cycle_stu']                  = $this->get_cost_save_cycle($list['cycle']);
+        $this->list                         = $list;
+        $this->display();
+    }
+
     public function public_save(){
         $savetype                           = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){
@@ -591,6 +604,22 @@ class SupplierResController extends BaseController {
                     record($record);
                 }
                 $this->success('提交审核成功');
+            }
+
+            if ($savetype == 4){ //保存市场价格
+                $id                         = 4;
+                $info                       = I('info');
+                $db                         = M('focus_buy');
+                $res                        = $db->where(array('id'=>$id))->save($info);
+                if ($res){
+                    //保存操作记录
+                    $record                 = array();
+                    $record['qaqc_id']      = $id;
+                    $record['explain']      = "填写市场基准价：".$info['business_unitcost'];
+                    $record['type']         = P::RECORD_FOCUS_BUY; //集中采购记录
+                    record($record);
+                }
+                echo '<script>window.top.location.reload();</script>';
             }
         }
     }

@@ -77,9 +77,11 @@
                                                         <?php } ?>
                                                     </td>
                                                 </if>
-                                                <td class="taskOptions">
-                                                    <a href="javascript:;" title="录入市场基准单价" class="btn btn-info btn-smsm"><i class="fa fa-money"></i></a>
-                                                </td>
+                                                <if condition="rolemenu(array('SupplierRes/cost_save_price'))">
+                                                    <td class="taskOptions">
+                                                        <a href="javascript:;" onclick="set_cost_save_price({$v.id})" title="录入市场基准单价" class="btn btn-info btn-smsm"><i class="fa fa-money"></i></a>
+                                                    </td>
+                                                </if>
                                                 <if condition="rolemenu(array('SupplierRes/cost_save_del'))">
                                                     <td class="taskOptions">
                                                         <a href="javascript:ConfirmDel(`{:U('SupplierRes/cost_save_del',array('id'=>$v['id']))}`)" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
@@ -99,13 +101,21 @@
 
 <script type="text/javascript">
     //查看考核指标详情
-    function detail(id) {
-        art.dialog.open('index.php?m=Main&c=SupplierRes&a=public_focus_buy_info&id='+id,{
+    function set_cost_save_price(id) {
+        art.dialog.open('index.php?m=Main&c=SupplierRes&a=cost_save_price&id='+id,{
             lock:true,
-            title: '集中采购执行率',
+            title: '录入市场基准单价',
             width:800,
             height:400,
             fixed: true,
+            okVal: '提交',
+            ok:function () {
+                this.iframe.contentWindow.gosubmint();
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {
+            }
 
         });
     }
