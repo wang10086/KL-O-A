@@ -84,6 +84,7 @@ final class P {
 	const REQ_TYPE_GOODS_OUT          = 505;  // 物资出库
 	const REQ_TYPE_GOODS_PURCHASE     = 506;  // 物资采购
 	const REQ_TYPE_PRICE              = 600;  // 价格申请
+    const REQ_TYPE_FOCUS_BUY          = 601;  // 集中采购数据审核
 	const REQ_TYPE_FEES               = 700;  // 费用申请
 	const REQ_TYPE_BUDGET             = 800;  // 项目预算申请
 	const REQ_TYPE_SETTLEMENT         = 801;  // 项目结算申请
@@ -124,6 +125,7 @@ final class P {
     const RECORD_QAQC               = 1;    //品控巡检操作记录
     const RECORD_GEC                = 2;    //客户管理操作记录
     const RECORD_PARTNER            = 3;    //城市合伙人操作记录
+    const RECORD_FOCUS_BUY          = 4;    //保存集中采购操作记录
 
 }
 

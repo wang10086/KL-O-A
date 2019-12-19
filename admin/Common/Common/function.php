@@ -5804,3 +5804,13 @@ function save_settlement_audit_log($settlementid){
     $data['dst_status']             = 1;
     $audit_log_db -> add($data);
 }
+
+//获取申请审核记录
+function get_audit_log_record($req_type,$req_id){
+    $db                     = M('audit_log');
+    $where                  = array();
+    $where['req_type']      = $req_type;
+    $where['req_id']        = $req_id;
+    $list                   = $db->where($where)->find();
+    return $list;
+}

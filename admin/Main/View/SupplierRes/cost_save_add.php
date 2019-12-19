@@ -22,7 +22,6 @@
                          <!-- right column -->
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <form method="post" action="{:U('SupplierRes/public_save')}" name="myform" id="myform" onsubmit="return submitBefore()">
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
@@ -33,29 +32,10 @@
                                         <p>1、</p>
                                     </div>-->
                                 </div>
-
-                                <!--
-
-                                [id] => 3
-    [supplier_id] => 1076
-    [quota_id] => 17
-    [year] => 2020
-    [cycle] => 2020-3
-    [type] => type
-    [rule] => rule
-    [unit] => unit
-    [unitcost] => 0.00
-    [business_unitcost] => 0.00
-    [remark] => &lt;p&gt;啊速度发发生&lt;/p&gt;
-    [input_uid] => 1
-    [input_uname] => 系统管理员
-    [input_time] => 1576661400
-    [audit_status] => 0
-                                -->
-
                                 <div class="box-body">
+                                    <form method="post" action="{:U('SupplierRes/public_save')}" name="myform" id="myform">
                                     <input type="hidden" name="dosubmint" value="1" />
-                                    <input type="hidden" name="savetype" value="2">
+                                    <input type="hidden" name="savetype" value="2" />
                                     <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
                                     <if condition="$list"><input type="hidden" name="id" value="{$list.id}" /></if>
 
@@ -90,10 +70,10 @@
                                     <div class="form-group col-md-4">
                                         <label>业务季</label>
                                         <select  class="form-control"  name="info[cycle]" id="cycle" required>
-                                            <option value="<?php echo $list['year'].'-1'; ?>" <?php if ($list['cycle'] == $year.'-1') echo "selected"; ?>>{$year}年寒假</option>
-                                            <option value="<?php echo $list['year'].'-2'; ?>" <?php if ($list['cycle'] == $year.'-2') echo "selected"; ?>>{$year}年春季</option>
-                                            <option value="<?php echo $list['year'].'-3'; ?>" <?php if ($list['cycle'] == $year.'-3') echo "selected"; ?>>{$year}年暑假</option>
-                                            <option value="<?php echo $list['year'].'-4'; ?>" <?php if ($list['cycle'] == $year.'-4') echo "selected"; ?>>{$year}年秋季</option>
+                                            <option value="<?php echo $list['year'].'-1'; ?>" <?php if ($list['cycle'] == $list['year'].'-1') echo "selected"; ?>>{$list['year']}年寒假</option>
+                                            <option value="<?php echo $list['year'].'-2'; ?>" <?php if ($list['cycle'] == $list['year'].'-2') echo "selected"; ?>>{$list['year']}年春季</option>
+                                            <option value="<?php echo $list['year'].'-3'; ?>" <?php if ($list['cycle'] == $list['year'].'-3') echo "selected"; ?>>{$list['year']}年暑假</option>
+                                            <option value="<?php echo $list['year'].'-4'; ?>" <?php if ($list['cycle'] == $list['year'].'-4') echo "selected"; ?>>{$list['year']}年秋季</option>
                                         </select>
                                     </div>
                                     
@@ -126,11 +106,19 @@
 
                                     <div class="form-group">&nbsp;</div>
                                 </div><!-- /.box-body -->
+                                </form>
                             </div><!-- /.box -->
-                            <div id="formsbtn">
-                            	<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                            </div>
+                            <form method="post" action="{:U('SupplierRes/public_save')}" name="subform" id="subform" >
+                                <input type="hidden" name="dosubmint" value="1" />
+                                <input type="hidden" name="savetype" value="3" />
+                                <input type="hidden" name="id" value="{$list.id}" />
                             </form>
+                            <div id="formsbtn">
+                                <button type="button" onclick="submitBefore()" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                <?php if ($list){ ?>
+                                <button type="button" onclick="ConfirmSub('subform','确定提交审核吗?')" class="btn btn-danger btn-lg" id="lrpd">提交审核</button>
+                                <?php } ?>
+                            </div>
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
@@ -160,6 +148,7 @@
     }
 
     function submitBefore() {
+        console.log('aaaa');
         let supplier_id     = $('select[name="info[supplier_id]"]').val(); //集中采购方名称
         let quota_id        = $('select[name="info[quota_id]"]').val(); //集中采购内容
         let year            = $('select[name="info[year]"]').val(); //集采年份

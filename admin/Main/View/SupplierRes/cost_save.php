@@ -51,9 +51,9 @@
                                             <th class="taskOptions">基准单价</th>
                                             <th class="taskOptions">集采成本降低率</th>
                                             <th width="60" class="taskOptions">详情</th>
-                                            <!--<if condition="rolemenu(array('SupplierRes/cost_save_add'))">-->
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_add'))">
                                             <th width="60" class="taskOptions">编辑</th>
-                                            <!--</if>-->
+                                            </if>
                                             <th width="60" class="taskOptions">录入市场单价</th>
                                             <th width="60" class="taskOptions">删除</th>
                                         </tr>
@@ -70,15 +70,21 @@
                                                 <td class="taskOptions">
                                                     <a href="{:U('SupplierRes/cost_save_detail',array('id'=>$v['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
-                                                <td class="taskOptions">
-                                                    <a href="{:U('SupplierRes/cost_save_add',array('id'=>$v['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                </td>
+                                                <if condition="rolemenu(array('SupplierRes/cost_save_add'))">
+                                                    <td class="taskOptions">
+                                                        <?php if ($v['audit_status'] != 1 || in_array(cookie('userid'),array(1,11,32,38))){ ?>
+                                                            <a href="{:U('SupplierRes/cost_save_add',array('id'=>$v['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                        <?php } ?>
+                                                    </td>
+                                                </if>
                                                 <td class="taskOptions">
                                                     <a href="javascript:;" title="录入市场基准单价" class="btn btn-info btn-smsm"><i class="fa fa-money"></i></a>
                                                 </td>
-                                                <td class="taskOptions">
-                                                    <a href="javascript:;" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
-                                                </td>
+                                                <if condition="rolemenu(array('SupplierRes/cost_save_del'))">
+                                                    <td class="taskOptions">
+                                                        <a href="javascript:ConfirmDel(`{:U('SupplierRes/cost_save_del',array('id'=>$v['id']))}`)" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
+                                                    </td>'
+                                                </if>
                                             </tr>
                                         </foreach>
                                     </table>

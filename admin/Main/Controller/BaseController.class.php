@@ -483,6 +483,17 @@ class BaseController extends Controller {
 
         }
 
+        //审核集中采购
+        if ($row['req_type'] == P::REQ_TYPE_FOCUS_BUY){
+            $audit_status_msg       = $dst_status == 1 ? '审核通过' : '审核不通过';
+            //保存操作记录
+            $record                 = array();
+            $record['qaqc_id']      = $row['req_id'];
+            $record['explain']      = '审核集中采购记录,审核结果：'.$audit_status_msg;
+            $record['type']         = P::RECORD_FOCUS_BUY;
+            record($record);
+        }
+
         return M('audit_log')->where('id='.$id)->save($data);
     }
 

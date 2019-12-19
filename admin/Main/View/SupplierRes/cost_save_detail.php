@@ -6,7 +6,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <span class="green">集中采购</span> - <span style="color:#333333">{$list.title}</span>
+                        <span class="green">集中采购</span> - <span style="color:#333333">{$list.quota_title}</span>
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
@@ -29,7 +29,7 @@
                                 	
                                     <div class="content">
                                         <div class="form-group col-md-4 viwe">
-                                            <p>采购事项：{$list.title}</p>
+                                            <p>采购事项：{$list.quota_title}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
                                             <p>供方名称：{$list.supplier_name}</p>
@@ -44,7 +44,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>业务季：{$list.}</p>
+                                            <p>业务季：{$list.cycle_stu}</p>
                                         </div>
                                         
                                         <div class="form-group col-md-4 viwe">
@@ -64,13 +64,13 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>审批状态：{$row.showstatus}</p>
+                                            <p>审批状态：{$audit_status[$list['audit_status']]}</p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>审批人：{$row.show_user}</p>
+                                            <p>审批人：<?php echo $audit_log['audit_uname'] ? $audit_log['audit_uname'] : '<font color="#999">暂未审核</font>' ?></p>
                                         </div>
                                         <div class="form-group col-md-4 viwe">
-                                            <p>审批时间：{$row.show_time}</p>
+                                            <p>审批时间：<?php echo $audit_log['audit_time'] ? date('Y-m-d H:i:s',$audit_log['audit_time']):'<font color="#999">暂未审核</font>'; ?></p>
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -80,6 +80,9 @@
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
+
+                            <!--操作记录-->
+                            <include file="Index:public_record" />
                             
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->

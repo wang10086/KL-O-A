@@ -442,15 +442,74 @@ class SupplierResController extends BaseController {
         $this->display();
     }
 
-    //
+    //详情
     public function cost_save_detail(){
         $this->title('集中采购详情');
         $id                                 = I('id',0);
-        $list                               = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->join('__QUOTA__ as q on q.id = f.quota_id')->field('f.*,s.name as supplier_name,q.title')->where(array('f.id'=>$id))->find();
+        $list                               = M()->table('__FOCUS_BUY__ as f')
+                                            ->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')
+                                            ->field('f.*,s.name as supplier_name')
+                                            ->where(array('f.id'=>$id))
+                                            ->find();
         $list['remark']                     = html_entity_decode($list['remark']);
+        $list['cycle_stu']                  = $this->get_cost_save_cycle($list['cycle']);
 
+        $this->audit_log                    = get_audit_log_record(P::REQ_TYPE_FOCUS_BUY,$id);
+        $this->audit_status                 = $this->get_audit_status();
+        $this->record                       = get_public_record($id,P::RECORD_FOCUS_BUY);
         $this->list                         = $list;
         $this->display();
+    }
+
+    private function get_cost_save_cycle($cycle){
+        $year                               = substr($cycle, 0 , 4);
+        $type                               = substr($cycle,-1);
+        switch ($type){
+            case 1:
+                $stu                        = '寒假';
+                break;
+            case 2:
+                $stu                        = '春季';
+                break;
+            case 3:
+                $stu                        = '暑假';
+                break;
+            case 4:
+                $stu                        = '秋季';
+                break;
+        }
+        $cycle_stu                          = $year.'年'.$stu;
+        return $cycle_stu;
+    }
+
+    private function get_audit_status(){
+        $stu                                = array(
+            '0'                             =>"未提交审核",
+            '1'                             =>"<span class='green'>审核通过</span>",
+            '2'                             =>"<span class='red'>审核不通过</span>",
+            '3'                             =>"<span class='yellow'>已提交,待审核</span>"
+
+        );
+        return $stu;
+    }
+
+    //删除
+    public function cost_save_del(){
+        $id                                 = I('id');
+        if (!$id){ $this->error('获取数据失败'); }
+        $db                                 = M('focus_buy');
+        $res                                = $db->where(array('id'=>$id))->delete();
+        if ($res){
+            //保存操作记录
+            $record                         = array();
+            $record['qaqc_id']              = $id;
+            $record['explain']              = "删除集中采购数据";
+            $record['type']                 = P::RECORD_FOCUS_BUY; //集中采购记录
+            record($record);
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
     }
 
     public function public_save(){
@@ -481,32 +540,61 @@ class SupplierResController extends BaseController {
                 $db                         = M('focus_buy');
                 $info                       = I('info');
                 $remark                     = stripslashes(I('remark'));
+                $info['quota_title']        = M('quota')->where(array('id'=>$info['quota_id']))->getField('title');
                 $info['type']               = trim($info['type']);
                 $info['unit']               = trim($info['unit']);
                 $info['unitcost']           = trim($info['unitcost']);
                 $info['remark']             = $remark;
                 if ($id){
+                    $record_msg             = '编辑集中采购内容';
                     $res                    = $db->where(array('id'=>$id))->save($info);
+                    $fb_id                  = $id;
                 }else{
                     $info['input_uid']      = session('userid');
                     $info['input_uname']    = session('nickname');
                     $info['input_time']     = NOW_TIME;
                     $info['audit_status']   = 0;
                     $res                    = $db->add($info);
+                    $fb_id                  = $res;
+                    $record_msg             = '新增集中采购内容';
                 }
                 if ($res){
-                    $this->success('保存成功',U('SupplierRes/public_cost_save'));
+                    //保存操作记录
+                    $record                 = array();
+                    $record['qaqc_id']      = $fb_id;
+                    $record['explain']      = $record_msg;
+                    $record['type']         = P::RECORD_FOCUS_BUY; //集中采购记录
+                    record($record);
+                    $this->success('保存成功',U('SupplierRes/public_cost_save',array('year'=>$info['year'],'type'=>$info['cycle'])));
                 }else{
                     $this->error('保存失败');
                 }
             }
+
+            if ($savetype == 3){ //保存提交审核
+                $id                         = I('id');
+                if (!$id){ $this->error('数据错误'); }
+                $audit_record               = get_audit_log_record(P::REQ_TYPE_FOCUS_BUY,$id); //判断是否重复申请
+                if ($audit_record){ $this->error('您已提交过申请,无需重复申请'); }
+
+                $this->request_audit(P::REQ_TYPE_FOCUS_BUY, $id);
+                $db                         = M('focus_buy');
+                $data                       = array();
+                $data['audit_status']       = 3; //已提交审核
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    //保存操作记录
+                    $record                 = array();
+                    $record['qaqc_id']      = $id;
+                    $record['explain']      = "申请审核";
+                    $record['type']         = P::RECORD_FOCUS_BUY; //集中采购记录
+                    record($record);
+                }
+                $this->success('提交审核成功');
+            }
         }
     }
 
-    /*//集中采购管理
-    public function focusBuyIndex(){
-        $this->title('集中采购管理');
-        $this->display();
-    }*/
+
 
 }
