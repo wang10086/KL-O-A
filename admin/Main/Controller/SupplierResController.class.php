@@ -416,7 +416,8 @@ class SupplierResController extends BaseController {
         $this->title('集中采购管理');
         $year                               = I('year',date('Y'));
         $type                               = I('type') ? I('type') : $year.'-1';
-        $lists                              = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->field('f.*,s.name as supplier_name')->where(array('f.cycle'=>$type))->select();
+        $lists                              = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->join('__QUOTA__ as q on q.id = f.quota_id')->field('f.*,s.name as supplier_name,q.title')->where(array('f.cycle'=>$type))->select();
+
         $this->lists                        = $lists;
         $this->type                         = $type;
         $this->year                         = $year;
@@ -433,10 +434,22 @@ class SupplierResController extends BaseController {
         $supplier_data                      = get_supplier_data(3); //所有的集中采购方
         $quota                              = get_timely(4); //考核指标
         $list                               = $id ? $db->find($id) : '';
+        if ($list) $list['remark']          = html_entity_decode($list['remark']);
 
         $this->list                         = $list;
         $this->quota                        = $quota;
         $this->supplier_data                = $supplier_data;
+        $this->display();
+    }
+
+    //
+    public function cost_save_detail(){
+        $this->title('集中采购详情');
+        $id                                 = I('id',0);
+        $list                               = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->join('__QUOTA__ as q on q.id = f.quota_id')->field('f.*,s.name as supplier_name,q.title')->where(array('f.id'=>$id))->find();
+        $list['remark']                     = html_entity_decode($list['remark']);
+
+        $this->list                         = $list;
         $this->display();
     }
 
@@ -447,9 +460,9 @@ class SupplierResController extends BaseController {
                 $db                         = M('quota');
                 $id                         = I('id');
                 $info                       = I('info');
-                $info['title']              = htmlspecialchars(trim($info['title']));
-                $info['content']            = htmlspecialchars(trim($info['content']));
-                $info['rules']              = htmlspecialchars(trim($info['rules']));
+                $info['title']              = stripslashes(trim($info['title']));
+                $info['content']            = stripslashes(trim($info['content']));
+                $info['rules']              = stripslashes(trim($info['rules']));
                 $info['type']               = 4; //4=>集中采购执行率指标(采购主管)
                 if (!$info['title'])        $this->error('指标标题不能为空');
 
@@ -467,7 +480,7 @@ class SupplierResController extends BaseController {
                 $id                         = I('id');
                 $db                         = M('focus_buy');
                 $info                       = I('info');
-                $remark                     = htmlspecialchars(I('remark'));
+                $remark                     = stripslashes(I('remark'));
                 $info['type']               = trim($info['type']);
                 $info['unit']               = trim($info['unit']);
                 $info['unitcost']           = trim($info['unitcost']);

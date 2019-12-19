@@ -47,7 +47,6 @@
     [unitcost] => 0.00
     [business_unitcost] => 0.00
     [remark] => &lt;p&gt;啊速度发发生&lt;/p&gt;
-
     [input_uid] => 1
     [input_uname] => 系统管理员
     [input_time] => 1576661400
@@ -91,25 +90,25 @@
                                     <div class="form-group col-md-4">
                                         <label>业务季</label>
                                         <select  class="form-control"  name="info[cycle]" id="cycle" required>
-                                            <option value="{$list['year'].'-1'}" <?php if ($list['cycle'] == $year.'-1') echo "selected"; ?>>{$year}年寒假</option>
-                                            <option value="{$list['year'].'-2'}" <?php if ($list['cycle'] == $year.'-2') echo "selected"; ?>>{$year}年春季</option>
-                                            <option value="{$list['year'].'-3'}" <?php if ($list['cycle'] == $year.'-3') echo "selected"; ?>>{$year}年暑假</option>
-                                            <option value="{$list['year'].'-4'}" <?php if ($list['cycle'] == $year.'-4') echo "selected"; ?>>{$year}年秋季</option>
+                                            <option value="<?php echo $list['year'].'-1'; ?>" <?php if ($list['cycle'] == $year.'-1') echo "selected"; ?>>{$year}年寒假</option>
+                                            <option value="<?php echo $list['year'].'-2'; ?>" <?php if ($list['cycle'] == $year.'-2') echo "selected"; ?>>{$year}年春季</option>
+                                            <option value="<?php echo $list['year'].'-3'; ?>" <?php if ($list['cycle'] == $year.'-3') echo "selected"; ?>>{$year}年暑假</option>
+                                            <option value="<?php echo $list['year'].'-4'; ?>" <?php if ($list['cycle'] == $year.'-4') echo "selected"; ?>>{$year}年秋季</option>
                                         </select>
                                     </div>
                                     
                                     <div class="form-group col-md-4">
-                                        <label>所属分类</label>
+                                        <label>所属分类</label><font color="#999">（例如：科技节物资）</font>
                                         <input type="text" name="info[type]" value="{$list.type}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>计价规则</label>
+                                        <label>计价规则</label><font color="#999">（例如：按批次计价）</font>
                                         <input type="text" name="info[rule]" value="{$list.rule}" class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>计价单位</label>
+                                        <label>计价单位</label><font color="#999">（例如：元/套）</font>
                                         <input type="text" name="info[unit]" value="{$list.unit}"  class="form-control" required />
                                     </div>
 
