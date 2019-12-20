@@ -66,7 +66,7 @@
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    
+
                                     <div class="form-group col-md-4">
                                         <label>业务季</label>
                                         <select  class="form-control"  name="info[cycle]" id="cycle" required>
@@ -76,9 +76,9 @@
                                             <option value="<?php echo $list['year'].'-4'; ?>" <?php if ($list['cycle'] == $list['year'].'-4') echo "selected"; ?>>{$list['year']}年秋季</option>
                                         </select>
                                     </div>
-                                    
+
                                     <div class="form-group col-md-4">
-                                        <label>所属分类</label><font color="#999">（例如：科技节物资）</font>
+                                        <label>采购类型</label><font color="#999">（例如：科技节物资）</font>
                                         <input type="text" name="info[type]" value="{$list.type}" class="form-control" required />
                                     </div>
 
@@ -96,10 +96,10 @@
                                         <label>集中采购单价</label>
                                         <input type="text" name="info[unitcost]" value="{$list.unitcost}"  class="form-control" required />
                                     </div>
-                                    
+
                                     <div class="form-group col-md-12">
                                         <label>备注</label>
-                                        <?php 
+                                        <?php
                                              echo editor('remark',$list['remark']);
                                              ?>
                                     </div>
@@ -122,7 +122,7 @@
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
-                
+
             </aside><!-- /.right-side -->
 
   </div>
@@ -168,5 +168,5 @@
         $('#myform').submit();
     }
 </script>
-            
+
 <include file="Index:footer2" />
