@@ -47,15 +47,21 @@
                                             <th class="taskOptions">集中采购方</th>
                                             <th class="taskOptions">计价规则</th>
                                             <th class="taskOptions">计价单位</th>
-                                            <th class="taskOptions">集采差价</th>
+                                            <th class="taskOptions">集采单价</th>
                                             <th class="taskOptions">基准单价</th>
                                             <th class="taskOptions">集采成本降低率</th>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_detail'))">
                                             <th width="60" class="taskOptions">详情</th>
+                                            </if>
                                             <if condition="rolemenu(array('SupplierRes/cost_save_add'))">
                                             <th width="60" class="taskOptions">编辑</th>
                                             </if>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_price'))">
                                             <th width="60" class="taskOptions">录入市场单价</th>
+                                            </if>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_del'))">
                                             <th width="60" class="taskOptions">删除</th>
+                                            </if>
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
@@ -64,12 +70,14 @@
                                                 <td class="taskOptions"><a href="{:U('SupplierRes/res_view',array('id'=>$v['supplier_id']))}">{$v.supplier_name}</a></td>
                                                 <td class="taskOptions" style="max-width: 150px;">{$v.rule}</td>
                                                 <td class="taskOptions">{$v.unit}</td>
-                                                <td class="taskOptions">{$v.}</td>
+                                                <td class="taskOptions">{$v.unitcost}</td>
                                                 <td class="taskOptions">{$v.business_unitcost}</td>
                                                 <td class="taskOptions">{$v.average}</td>
-                                                <td class="taskOptions">
-                                                    <a href="{:U('SupplierRes/cost_save_detail',array('id'=>$v['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
-                                                </td>
+                                                <if condition="rolemenu(array('SupplierRes/cost_save_detail'))">
+                                                    <td class="taskOptions">
+                                                        <a href="{:U('SupplierRes/cost_save_detail',array('id'=>$v['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    </td>
+                                                </if>
                                                 <if condition="rolemenu(array('SupplierRes/cost_save_add'))">
                                                     <td class="taskOptions">
                                                         <?php if ($v['audit_status'] != 1 || in_array(cookie('userid'),array(1,11,32,38))){ ?>
@@ -85,10 +93,24 @@
                                                 <if condition="rolemenu(array('SupplierRes/cost_save_del'))">
                                                     <td class="taskOptions">
                                                         <a href="javascript:ConfirmDel(`{:U('SupplierRes/cost_save_del',array('id'=>$v['id']))}`)" title="删除" class="btn btn-danger btn-smsm"><i class="fa fa-times"></i></a>
-                                                    </td>'
+                                                    </td>
                                                 </if>
                                             </tr>
                                         </foreach>
+                                        <tr class="black">
+                                            <td class="taskOptions">合计</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{$sum_data.unitcost}</td>
+                                            <td>{$sum_data.business_unitcost}</td>
+                                            <td>{$sum_data.average}</td>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_detail'))"><td></td></if>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_add'))"><td></td></if>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_price'))"><td></td></if>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save_del'))"><td></td></if>
+                                        </tr>
                                     </table>
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->

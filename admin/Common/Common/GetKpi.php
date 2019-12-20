@@ -1434,6 +1434,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
                 $op_list[$key]['contract_confirm_time'] = $list['confirm_time'];
                 $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
             }elseif (!$list && $list2){
+                $op_list[$key]['contract_confirm_time'] = $list2['confirm_time'];
                 $op_list[$key]['contract_stu'] = "<span class='yellow'>合同超时，已返回</span>";
             }else{
                 $op_list[$key]['contract_stu'] = "<span class='red'>无合同</span>";
@@ -4871,5 +4872,28 @@ function get_supplier_data($type){
     $where['audit_status']                  = 1; //审核通过
     if ($type) $where['type']               = $type;
     $lists                                  = $db->where($where)->select();
+    return $lists;
+}
+
+//集中采购成本降低率
+function get_cost_save_average($lists){
+    $unitcost_sum                           = 0; //集采成本
+    $business_unitcost_sum                  = 0;
+    foreach ($lists as $v){
+        $unitcost_sum                       += $v['unitcost'];
+        $business_unitcost_sum              += $v['business_unitcost'];
+    }
+    $data                                   = array();
+    $data['unitcost']                       = $unitcost_sum;
+    $data['business_unitcost']              = $business_unitcost_sum;
+    $data['average']                        = $business_unitcost_sum ? (round(($business_unitcost_sum - $unitcost_sum)/$business_unitcost_sum,4)*100).'%' : '0%';
+    return $data;
+}
+
+function get_cost_save_lists($type){
+    $lists                                  = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->join('__QUOTA__ as q on q.id = f.quota_id')->field('f.*,s.name as supplier_name,q.title')->where(array('f.cycle'=>$type))->select();
+    foreach ($lists as $k=>$v){
+        $lists[$k]['average']               = $v['business_unitcost'] > 0 ? (round(($v['business_unitcost']-$v['unitcost'])/$v['business_unitcost'],4)*100).'%' : "<font color='#999'>请先录入市场价</font>";
+    }
     return $lists;
 }

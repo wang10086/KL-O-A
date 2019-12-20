@@ -61,7 +61,7 @@
                                     <div class="form-group col-md-4">
                                         <label>集采年份</label>
                                         <select class="form-control" name="info[year]" onchange="set_type($(this).val())">
-                                            <?php $year = date('Y'); for ($i=$year-1; $i <= $year+2; $i++){ ?>
+                                            <?php $year = date('Y'); for ($i=$year; $i <= $year+2; $i++){ ?>
                                                 <option value="{$i}" <?php if ($i==$list['year']) echo "selected"; ?>>{$i}年</option>
                                             <?php } ?>
                                         </select>

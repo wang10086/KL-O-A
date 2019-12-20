@@ -179,7 +179,7 @@
                                 </if>
 
 
-                                <if condition="rolemenu(array('SupplierRes/res','SupplierRes/addres','SupplierRes/reskind'))">
+                                <if condition="rolemenu(array('SupplierRes/res','SupplierRes/addres','SupplierRes/reskind','GuideRes/res','SupplierRes/chart','SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/cost_save','SupplierRes/cost_save_detail','SupplierRes/cost_save_add','SupplierRes/cost_save_price'))">
                                 <li class="treeview  {:on('SupplierRes')}">
                                     <a href=""><i class="fa fa-plane"></i> 供方管理</a>
                                     <ul class="treeview-menu">
@@ -228,7 +228,7 @@
                                     <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart"></i> 资源统计</a></li>
                                 </if>-->
 
-                                <if condition="rolemenu(array('SupplierRes/chart','SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del','SupplierRes/public_cost_save'))">
+                                <if condition="rolemenu(array('SupplierRes/chart','SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del','SupplierRes/cost_save','SupplierRes/cost_save_detail','SupplierRes/cost_save_add','SupplierRes/cost_save_price','SupplierRes/cost_save_del','ScienceRes/province'))">
                                     <li class="treeview {:on('SupplierRes')}">
                                         <a href=""><i class="fa  fa-cubes"></i> 集中采购</a>
                                         <ul class="treeview-menu">
@@ -238,7 +238,9 @@
                                             <if condition="rolemenu(array('SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del'))">
                                                 <li class="{:on('SupplierRes/public_focus_buy')} {:on('SupplierRes/focus_buy_list')}"><a href="{:U('SupplierRes/public_focus_buy')}"><i class="fa fa-angle-right"></i> 集中采购执行率</a></li>
                                             </if>
+                                            <if condition="rolemenu(array('SupplierRes/cost_save','SupplierRes/cost_save_detail','SupplierRes/cost_save_add','SupplierRes/cost_save_price','SupplierRes/cost_save_del'))">
                                                 <li class="{:on('SupplierRes/public_cost_save')} {:on('SupplierRes/')}"><a href="{:U('SupplierRes/public_cost_save')}"><i class="fa fa-angle-right"></i> 集中采购管理</a></li>
+                                            </if>
                                         </ul>
                                     </li>
                                 </if>

@@ -415,9 +415,12 @@ class SupplierResController extends BaseController {
     public function public_cost_save(){
         $this->title('集中采购管理');
         $year                               = I('year',date('Y'));
-        $type                               = I('type') ? I('type') : $year.'-1';
-        $lists                              = M()->table('__FOCUS_BUY__ as f')->join('__SUPPLIER__ as s on s.id=f.supplier_id','left')->join('__QUOTA__ as q on q.id = f.quota_id')->field('f.*,s.name as supplier_name,q.title')->where(array('f.cycle'=>$type))->select();
+        $yearMonth                          = $year.date('m');
+        $type                               = I('type') ? I('type') : get_cost_save_type($yearMonth);
 
+        $lists                              = get_cost_save_lists($type);
+        $sum_data                           = get_cost_save_average($lists);
+        $this->sum_data                     = $sum_data;
         $this->lists                        = $lists;
         $this->type                         = $type;
         $this->year                         = $year;
@@ -607,7 +610,7 @@ class SupplierResController extends BaseController {
             }
 
             if ($savetype == 4){ //保存市场价格
-                $id                         = 4;
+                $id                         = I('id');
                 $info                       = I('info');
                 $db                         = M('focus_buy');
                 $res                        = $db->where(array('id'=>$id))->save($info);
