@@ -279,11 +279,16 @@ class ExportController extends BaseController {
             $data['F109'] = $settlement['shouru'];  //合计报价
             $data['K109'] = $settlement['maoli'];  //合计毛利润
             $model = 'admin/assets/xls/jiesuan_100.xls';
-        }else if($j>100) {
+        }else if($j>100 && $j<=150) {
             $data['B159'] = $settlement['budget'];  //合计成本价格
             $data['F159'] = $settlement['shouru'];  //合计报价
             $data['K159'] = $settlement['maoli'];  //合计毛利润
             $model        = 'admin/assets/xls/jiesuan_150.xls';
+        }else if($j>150) {
+            $data['B259'] = $settlement['budget'];  //合计成本价格
+            $data['F259'] = $settlement['shouru'];  //合计报价
+            $data['K259'] = $settlement['maoli'];  //合计毛利润
+            $model        = 'admin/assets/xls/jiesuan_250.xls';
         }
         model_exportexcel($data,$filename,$model);
 
