@@ -80,7 +80,7 @@
                                                     <?php if ($row['month_partner_money']){ ?>
                                                         <td class="red" onclick="art_left_show_msg('累计毛利额：'+{$row.yml}+'<br>'+'其中城市合伙人保证金：'+{$row.month_partner_money})">{$row.yml}</td>
                                                     <?php }else{ ?>
-                                                        <td>{$row.zml}</td>
+                                                        <td>{$row.yml}</td>
                                                     <?php } ?>
                                                 <td>{$row.yll}</td>
                                                 <?php } ?>
