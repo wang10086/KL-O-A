@@ -106,20 +106,23 @@ class OpController extends BaseController {
 
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
             $db                         = M('op');
-            $op_cost_db                 = M('op_cost');
-            $op_guide_db                = M('op_guide');
-            $op_member_db               = M('op_member');
-            $op_supplier_db             = M('op_supplier');
+            $mod                        = D('Op');
+            //$op_cost_db                 = M('op_cost');
+            //$op_guide_db                = M('op_guide');
+            //$op_member_db               = M('op_member');
+            //$op_supplier_db             = M('op_supplier');
 
             $info                       = I('info');
             $expert                     = I('expert');
-            $guide                      = I('guide');
-            $member                     = I('member');
-            $cost                       = I('cost');
-            $supplier                   = I('supplier');
-            $wuzi                       = I('wuzi');
+            //$guide                      = I('guide');
+            //$member                     = I('member');
+            //$cost                       = I('cost');
+            //$supplier                   = I('supplier');
+            //$wuzi                       = I('wuzi');
             $province                   = I('province');
             $addr                       = I('addr');
+            //$costacc                    = I('costacc'); //标准模块
+            //$arr_product                = C('ARR_PRODUCT');
             $info['op_create_user']     = cookie('rolename');
             if ($info['in_dijie'] == 1) {
                 $info['project']        = '【发起团】'.$info['project'];
@@ -128,11 +131,11 @@ class OpController extends BaseController {
             $exe_user_id                = I('exe_user_id');
             $customer                   = $this->get_customerlist();
             if (!in_array($info['customer'],$customer)){ $this->error('客户单位填写错误' . $db->getError()); }
-            if (!$info['line_id']) { $this->error('行程方案不能为空'); }
+            //if (in_array($info['kind'] , $arr_product) && !$costacc){ $this->error('产品模块不能为空'); }
+            //if (!in_array($info['kind'] , $arr_product) && !$info['line_id']) { $this->error('行程方案不能为空'); }
 
 			if($info){
                 $opid                   = opid();
-
                 $info['project']        = trim($info['project']);
                 $info['number']         = trim($info['number']);
                 $info['departure']      = trim($info['departure']);
@@ -164,6 +167,11 @@ class OpController extends BaseController {
                         M('op_auth')->add($data);
                     }
 
+                    //保存标准化模块
+                    //if ($costacc){ $mod -> save_create_op_product($opid,$costacc); }
+                    //创建工单
+                    if ($exe_user_id){ $mod->save_create_op_worder($addok , $info , $exe_user_id); }
+
 					$record             = array();
 					$record['op_id']    = $opid;
 					$record['optype']   = 1;
@@ -185,65 +193,6 @@ class OpController extends BaseController {
 						M('customer_gec')->add($data);
 					}
 					*/
-
-					//创建工单
-                    $id                 = $info['kind'];
-                    $pro_info           = M('project_kind')->where(array('id'=>$id) )->find();
-                    $pid                = $pro_info['pid'];
-                    $pro_name           = $pro_info['name'];
-                    $worder             = array();
-                    $worder['op_id']    = M("op")->where(array('id'=>$addok))->getField('op_id');
-                    $worder['worder_title']     = $info['project'];
-                    $worder['worder_content']   = $info['context'];
-                    $worder['worder_type']      = 100;
-                    $worder['status']           = 0;
-                    $worder['ini_user_id']      = cookie('userid');
-                    $worder['ini_user_name']    = cookie('name');
-                    $worder['ini_dept_id']      = cookie('roleid');
-                    $worder['ini_dept_name']    = cookie('rolename');
-                    $worder['create_time']      = NOW_TIME;
-                    $u_time                     = 5;    //默认5个工作日
-                    //计划完成时间 $u_time为工作日
-                    $worder['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
-
-                    if($exe_user_id){
-                        foreach ($exe_user_id as $k=>$v){
-                            if ($v==12){
-                                $worder['kpi_type'] = 1;    //公司研发
-                            }elseif ($v==26){
-                                $worder['kpi_type'] = 2;    //公司资源
-                            } elseif ($v==31){
-                                $worder['kpi_type'] = 3;    //京区校内研发
-                            }elseif ($v==174){
-                                $worder['kpi_type'] = 4;    //京区校内资源
-                            }
-                            $exe_user_info      = M('account')->field('nickname,roleid')->where(array('id'=>$v))->find();
-                            $exe_user_id        = $v;
-                            $exe_user_name      = $exe_user_info['nickname'];
-                            $exe_dept_id        = $exe_user_info['roleid'];
-                            $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
-                            $worder['exe_dept_id']      = $exe_dept_id;
-                            $worder['exe_dept_name']    = $exe_dept_name;
-                            $worder['exe_user_id']      = $exe_user_id;
-                            $worder['exe_user_name']    = $exe_user_name;
-                            $res = M('worder')->add($worder);
-                            if($res){
-                                //保存操作记录
-                                $record = array();
-                                $record['worder_id'] = $res;
-                                $record['type']     = 0;
-                                $record['explain']  = '立项/创建工单';
-                                worder_record($record);
-                                //发送系统消息
-                                $uid     = cookie('userid');
-                                $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
-                                $content = '该工单为项目工单，现已立项通过，前期需要研发、资源等相关部门的协助。项目名称：'.$worder['worder_title'].'；备注信息：'.$worder['worder_content'];
-                                $url     = U('worder/worder_info',array('id'=>$res));
-                                $user    = '['.$worder['exe_user_id'].']';
-                                send_msg($uid,$title,$content,$url,$user,'');
-                            }
-                        }
-                    }
 
 					$this->success('保存成功！',U('Op/plans_follow',array('opid'=>$opid)));
 				}else{
@@ -277,6 +226,7 @@ class OpController extends BaseController {
             $this->apply_to    = C('APPLY_TO');
             $this->dijie_names = C('DIJIE_NAME');
             $this->expert      = C('EXPERT');
+            //$this->arr_product = json_encode(C('ARR_PRODUCT')); //标准化模块的项目类型
 			$this->title('出团计划');
 			$this->display('plans');
 		}
@@ -1097,8 +1047,9 @@ class OpController extends BaseController {
             if($opid && $savetype==14 ){
                 $costacc    = I('costacc');
                 $resid      = I('resid');
+                $mod        = D('Op');
 
-                M('op_product')->where(array('op_id'=>$opid))->delete();
+                /*M('op_product')->where(array('op_id'=>$opid))->delete();
                 foreach ($costacc as $k=>$v){
                     $v['op_id']     = $opid;
                     $v['total']     = floatval($v['unitcost'])*intval($v['amount']);
@@ -1122,7 +1073,8 @@ class OpController extends BaseController {
                     $data['amount'] = $v['amount'];
                     $res = M('op_product')->add($data);
                     if ($res) $num++;
-                }
+                }*/
+                $num = $mod -> save_create_op_product($opid , $costacc , $resid , $num);
                 if ($num){
                     $record = array();
                     $record['op_id']   = $opid;
@@ -2083,7 +2035,7 @@ class OpController extends BaseController {
 		}
 	}
 
-	// @@@NODE-3###select_product###选择产品模板###
+	// @@@NODE-3###select_product###选择产品模块###
 	public function select_product(){
 
 		$key          = I('key');
@@ -2109,15 +2061,39 @@ class OpController extends BaseController {
 		$this->display('select_product');
 	}
 
-    // @@@NODE-3###select_product###选择产品模块###
+    // @@@NODE-3###public_select_standard_product###选择标准化产品###
+    public function public_select_standard_product(){
+        $db                             = M('producted');
+        $key                            = I('key');
+        $kind                           = I('kind');
+        $where                          = array();
+        $where['business_dept']         = $kind;
+        $where['audit_status']          = 1;
+        if ($key) $where['title']       = array('like' , '%'.$key.'%');
+
+        $pagecount                      = $db->where($where)->count();
+        $page                           = new Page($pagecount,25);
+        $this->pages                    = $pagecount>25 ? $page->show():'';
+        $lists                          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        foreach ($lists as $k =>$v){
+            $lists[$k]['apply_time_str']= get_apply_time_str($v['apply_year'],$v['apply_time']);
+        }
+
+        $this->kind                     = $kind;
+        $this->lists                    = $lists;
+        $this->display('select_standard_product');
+    }
+
+    // @@@NODE-3###select_module###选择产品模块###
     public function select_module(){
 
         $opid                           = I('opid');
+        $kind                           = I('kind');
         $key                            = I('key');
         $type                           = I('type');
         $subject_field                  = I('subject_field');
         $from                           = I('from');
-        $kind                           = M('op')->where(array('op_id'=>$opid))->getField('kind');
+        $kind                           = $opid ? M('op')->where(array('op_id'=>$opid))->getField('kind') : $kind;
 
         $db                             = M('product');
         $this->opid                     = $opid;
@@ -2160,6 +2136,7 @@ class OpController extends BaseController {
         $this->subject_fields           = C('SUBJECT_FIELD');
         $this->product_from             = C('PRODUCT_FROM');
         $this->ages                     = C('AGE_LIST');
+        $this->kind                     = $kind;
         $this->kindlist                 = M('project_kind')->select();
 
         $this->display('select_product_module');
@@ -2479,8 +2456,6 @@ class OpController extends BaseController {
 
 	}
 
-
-
 	// @@@NODE-3###revert_materials###归还物资###
 	public  function  revert_materials(){
 		$opid = I('opid');
@@ -2499,7 +2474,6 @@ class OpController extends BaseController {
 		$this->display('revert_materials');
 	}
 
-
 	// @@@NODE-3###select_material###调度物资###
 	public  function  select_material(){
 		//物料关键字
@@ -2508,8 +2482,6 @@ class OpController extends BaseController {
 		$this->material = M('material')->select();
 		$this->display('select_material');
 	}
-
-
 
 	public function public_checkname_ajax(){
 		$group_id = I('gid',0);
@@ -2522,8 +2494,6 @@ class OpController extends BaseController {
 			exit('1');
 		}
 	}
-
-
 
 	// @@@NODE-3###delpro###删除项目###
     public function delpro(){
@@ -2579,7 +2549,6 @@ class OpController extends BaseController {
 		}
     }
 
-
 	//排课
 	public function course(){
 		$op_id    = I('opid');
@@ -2610,7 +2579,6 @@ class OpController extends BaseController {
 		echo json_encode($data);
 	}
 
-
 	//排课详情
 	public function addcourse(){
 
@@ -2632,7 +2600,6 @@ class OpController extends BaseController {
 		}
 
 	}
-
 
 	//删除课程
 	public function delcourse(){
@@ -2855,7 +2822,6 @@ class OpController extends BaseController {
         }
     }
 
-
     // @@@NODE-3###change_op###项目交接###
     public function change_op(){
         if (isset($_POST['dosubmit'])) {
@@ -2936,7 +2902,6 @@ class OpController extends BaseController {
         $this->display();
     }
 
-
 	// @@@NODE-3###relpricelist###项目比价记录###
     public function relpricelist(){
         $this->title('项目比价记录');
@@ -2976,15 +2941,12 @@ class OpController extends BaseController {
 		$this->display('relpricelist');
     }
 
-
 	// @@@NODE-3###confirm###项目比价###
 	public  function relprice(){
 		$opid 			= I('opid');
 		$relid			= I('relid');
 		$type 			= I('type');
 		$op				= M('op')->where(array('op_id'=>$opid))->find();
-
-
 
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
 
@@ -3081,8 +3043,6 @@ class OpController extends BaseController {
 		}
 	}
 
-
-
 	// @@@NODE-3###delrel###删除项目比价###
     public function delrel(){
 
@@ -3094,8 +3054,6 @@ class OpController extends BaseController {
 		$this->success('删除成功！');
 
     }
-
-
 
 	// @@@NODE-3###evaluate###项目评价###
     public function evaluate(){
@@ -3139,7 +3097,6 @@ class OpController extends BaseController {
         $this->op           = $op;
         $this->display();
     }
-
 
     //修改辅导员需求信息
     public function edit_tcs_need(){

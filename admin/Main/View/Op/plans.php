@@ -17,8 +17,6 @@
                 <div class="row">
                      <!-- right column -->
                     <div class="col-md-12">
-
-
                         <div class="box box-warning">
                             <div class="box-header">
                                 <h3 class="box-title">项目计划</h3>
@@ -26,13 +24,29 @@
                             <div class="box-body">
                                 <div class="content">
 
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-8">
                                         <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" required />
                                     </div>
 
-                                    <div class="form-group col-md-4" style="clear: right;">
+                                    <div class="form-group col-md-4">
+                                        <label>项目类型：</label>
+                                        <select  class="form-control"  name="info[kind]" id="kind"  required>
+                                            <option value="" selected disabled>请选择项目类型</option>
+                                            <foreach name="kinds" item="v">
+                                                <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4" id="standard_box">
+                                        <p><label>是否标准化产品</label></p>
+                                        <input type="radio" name="info[standard]" value="1" > &#8194;标准化 &#12288;
+                                        <input type="radio" name="info[standard]" value="2" checked> &#8194;非标准化
+                                    </div>
+
+                                    <div class="form-group col-md-4" style="clear: right;" id="line_or_product">
                                         <label style="display: block">行程方案</label>
-                                        <input type="text" name="line_title" class="form-control" style="width: 75%; display: inline-block;">
+                                        <input type="text" name="line_title" class="form-control" style="width: 75%; display: inline-block;" readonly>
                                         <input type="hidden" name="info[line_id]">
                                         <span style="display: inline-block; width: 20%">
                                             <a  href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>
@@ -45,16 +59,6 @@
                                             <option value="" selected disabled>请选择适合人群</option>
                                             <foreach name="apply_to" key="k" item="v">
                                                 <option value="{$k}" <?php if ($row && ($k == $row['grade'])) echo ' selected'; ?> >{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <label>项目类型：</label>
-                                        <select  class="form-control"  name="info[kind]" id="kind"  required>
-                                            <option value="" selected disabled>请选择项目类型</option>
-                                            <foreach name="kinds" item="v">
-                                                <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.name}</option>
                                             </foreach>
                                         </select>
                                     </div>
@@ -153,6 +157,35 @@
                                         <input type="checkbox" name="exe_user_id[]" value="110"> &nbsp;研发(南京-李艳) &#12288;
                                         <input type="checkbox" name="exe_user_id[]" value="115"> &nbsp;资源(南京-桂小佩) &#12288;
                                     </div>
+
+                                    <!--<div id="productlist" style="display:block;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th width="100">模块</th>
+                                                <th width="80">类别</th>
+                                                <th width="120">科学领域</th>
+                                                <th width="80">来源</th>
+                                                <th width="120">适合年龄</th>
+                                                <th width="100">核算方式</th>
+                                                <th width="100">参考价</th>
+                                                <th width="20">&nbsp;</th>
+                                                <th width="50">数量</th>
+                                                <th width="100">参考费用</th>
+                                                <th width="80">删除</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="productTbody"></tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td align="left" colspan="11">
+                                                    <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectproduct(56)"><i class="fa fa-fw  fa-plus"></i> 选择产品模块</a>
+                                                    <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_product','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>-->
                                 </div>
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
@@ -183,6 +216,9 @@
         $(function () {
             $('#dijie_name').hide();
             $('#wonder_department').hide();
+            //$('#productlist').hide();
+            //str_product         = `{$arr_product}`;
+            //arr_product         = JSON.parse(str_product);
 
             var keywords = <?php echo $userkey; ?>;
             $(".userkeywords").autocomplete(keywords, {
@@ -199,6 +235,7 @@
             });
 
 
+            //是否发送工单
             $('#is_or_not_worder').find('ins').each(function (index,ele) {
                 $(this).click(function () {
                     var is_worder   = $(this).prev('input[name="need_worder_or_not"]').val();
@@ -211,8 +248,33 @@
                 })
             })
 
+            //是否标准化
+            $('#standard_box').find('ins').each(function () {
+                $(this).click(function () {
+                    var is_standard = $(this).prev('input[name="info[standard]"]').val();
+                    let html = ''
+                    if (is_standard == 1){ //标准化
+                        html = '<label style="display: block">标准化产品</label>' +
+                            '<input type="text" name="producted_title" class="form-control" style="width: 75%; display: inline-block;" readonly>' +
+                            '<input type="hidden" name="info[producted_id]">' +
+                            '<span style="display: inline-block; width: 20%; margin-left: 3px">' +
+                            '<a  href="javascript:;" class="btn btn-success btn-sm" onClick="select_standard_product()">获取产品</a>' +
+                            '</span>'
+                    }else{ //非标准化
+                        html = '<label style="display: block">行程方案</label>' +
+                            '<input type="text" name="line_title" class="form-control" style="width: 75%; display: inline-block;" readonly>' +
+                            '<input type="hidden" name="info[line_id]">' +
+                            '<span style="display: inline-block; width: 20%; margin-left: 3px">' +
+                            '<a  href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>' +
+                            '</span>'
+                    }
+                    $('#line_or_product').html(html)
+                })
+            })
+
         })
 
+        // 判断是否是内部地接
        function is_or_not_dijie(){
            var dj = $('#dijie').val();
            if (dj == 1){
@@ -234,44 +296,123 @@
            }
        }
 
-        /*function autocom(e) {
-            var keywords = <?php echo $linelist; ?>;
-
-            $("#lineName").autocomplete(keywords, {
-                matchContains: true,
-                highlightItem: false,
-                formatItem: function(row, i, max, term) {
-                    return '<span style=" display:none">'+row.pinyin+'</span>'+row.title;
-                },
-                formatResult: function(row) {
-                    return row.title;
-                }
-            }).result(function(event, item) {
-                $('#lineName').val(item.title);
-                $('#line_id').val(item.id);
-            });
-
-        }*/
+       //设置研学旅行项目类型(是否地接)
+       function set_yxlx_op_type(kind){
+           if (kind == 54 || kind == 84){
+               $('#dijie').children('option[value="2"]').attr('selected',true);
+               $('#dijie').attr('disabled',true);
+           }else if(kind == 83){
+               $('#dijie').children('option[value="1"]').attr('selected',true);
+               $('#dijie').attr('disabled',true);
+               $('#dijie_name').show();
+           }else {
+               $('#dijie').find('option[value="1"]').attr('selected',false);
+               $('#dijie').find('option[value="2"]').attr('selected',false);
+               $('#dijie').children('option:first-child').attr('selected',true).attr('disabled',true);
+               $('#dijie').removeAttr('disabled');
+           }
+       }
 
         $('#kind').on('change',function () {
             var kind    = $(this).val();
-            if (kind == 54 || kind == 84){
-                $('#dijie').children('option[value="2"]').attr('selected',true);
-                $('#dijie').attr('disabled',true);
-            }else if(kind == 83){
-                $('#dijie').children('option[value="1"]').attr('selected',true);
-                $('#dijie').attr('disabled',true);
-                $('#dijie_name').show();
-            }else {
-                $('#dijie').find('option[value="1"]').attr('selected',false);
-                $('#dijie').find('option[value="2"]').attr('selected',false);
-                $('#dijie').children('option:first-child').attr('selected',true).attr('disabled',true);
-                $('#dijie').removeAttr('disabled');
-            }
+            set_yxlx_op_type(kind) // 设置研学旅行项目类型(是否地接)
             is_or_not_dijie();
+            //line_or_product(kind); //根据项目类型判断显示行程方案或产品模块
         })
 
-        //重新选择模板
+        /*//根据项目类型判断显示行程方案或产品模块
+        function line_or_product(kind) {
+            let html
+
+            if (in_array(kind,arr_product)){
+                html = '<label style="display: block">产品模块</label>' +
+                    '<input type="text" name="" class="form-control" style="width: 75%; display: inline-block;" readonly>' +
+                    '<span style="margin-left: 4px; display: inline-block; width: 20%">' +
+                    '<a  href="javascript:;" class="btn btn-success btn-sm" onClick="selectproduct('+kind+')">选择模块</a>' +
+                    '</span>';
+            }else{
+                $('tbody').html('');
+                $('#productlist').hide();
+                html = '<label style="display: block">行程方案</label>' +
+                    '<input type="text" name="line_title" class="form-control" style="width: 75%; display: inline-block;">' +
+                    '<input type="hidden" name="info[line_id]">' +
+                    '<span style="margin-left: 4px; display: inline-block; width: 20%">' +
+                    '<a  href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>' +
+                    '</span>';
+            }
+            $('#line_or_product').html(html)
+        }*/
+
+        //选择产品模块
+        /*function selectproduct(kind) {
+            art.dialog.open("/index.php?m=Main&c=Op&a=select_module&kind="+kind,{
+                lock:true,
+                title: '选择产品模块',
+                width:1000,
+                height:500,
+                okValue: '提交',
+                fixed: true,
+                ok: function () {
+                    var origin = artDialog.open.origin;
+                    var product = this.iframe.contentWindow.gosubmint();
+                    var product_html = '';
+                    for (var j = 0; j < product.length; j++) {
+                        if (product[j].id) {
+                            var i = parseInt(Math.random()*100000)+j;
+                            var costacc = '<input type="hidden" name="costacc['+i+'][type]" value="5">' +
+                                '<input type="hidden" name="costacc['+i+'][title]" value="'+product[j].title+'">' +
+                                '<input type="hidden" name="costacc['+i+'][product_id]" value="'+product[j].id+'">';
+                            product_html += '<tr class="expense" id="product_'+i+'">' +
+                                '<td>'+costacc+ '<a href="javascript:;" onClick="open_product('+product[j].id+',\''+product[j].title+'\')">'+product[j].title+'</a></td>' +
+                                '<td>'+product[j].type+'</td>' +
+                                '<td>'+product[j].subject_fields+'</td>' +
+                                '<td>'+product[j].from+'</td>' +
+                                '<td>'+product[j].age+'</td>' +
+                                '<td>'+product[j].reckon_mode+'</td>' +
+                                '<td><input type="text" name="costacc['+i+'][unitcost]" placeholder="价格" value="'+product[j].sales_price+'" class="form-control min_input cost" readonly /></td>' +
+                                '<td><span>X</span></td>' +
+                                '<td><input type="text" name="costacc['+i+'][amount]" placeholder="数量" value="1" class="form-control min_input amount" /></td>' +
+                                '<td class="total">&yen;'+product[j].sales_price*1+'</td>' +
+                                '<td><a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'product_'+i+'\')">删除</a></td></tr>';
+                        };
+                    }
+                    $('#productlist').show();
+                    $('#nonetext').hide();
+                    $('#productlist').find('#productTbody').append(product_html);
+                    total();
+                },
+                cancelValue:'取消',
+                cancel: function () {
+                }
+            });
+        }*/
+
+        /*//更新价格与数量
+        function total(){
+            $('.expense').each(function(index, element) {
+                $(this).find('.cost').blur(function(){
+                    var cost = $(this).val();
+                    var amount = $(this).parent().parent().find('.amount').val();
+                    $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
+                    $(this).parent().parent().find('.cost_cost').val(cost);
+                    $(this).parent().parent().find('.totalval').val(accMul(cost,amount));
+                });
+                $(this).find('.amount').blur(function(){
+                    var amount = $(this).val();
+                    var cost = $(this).parent().parent().find('.cost').val();
+                    $(this).parent().parent().find('.total').html('&yen;'+accMul(cost,amount));
+                    $(this).parent().parent().find('.cost_amount').val(amount);
+                    $(this).parent().parent().find('.totalval').val(accMul(cost,amount));
+                });
+            });
+        }
+
+        //移除
+        function delbox(obj){
+            $('#'+obj).remove();
+        }*/
+
+        //选择行程线路
         function selectmodel() {
             art.dialog.open('<?php echo U('Op/select_product'); ?>',{
                 lock:true,
@@ -295,6 +436,32 @@
             });
         }
 
+        //标准化产品
+        function select_standard_product() {
+            let kind = $('#kind').val();
+            if (!kind){ art_show_msg('请先选择项目类型',3); return false; }
+            art.dialog.open('/index.php?m=Main&c=Op&a=public_select_standard_product&kind='+kind,{
+                lock:true,
+                title: '选择标准化产品',
+                width:1000,
+                height:500,
+                okVal: '提交',
+                fixed: true,
+                ok: function () {
+                    var origin          = artDialog.open.origin;
+                    var producted_data  = this.iframe.contentWindow.gosubmint();
+                    var title           = producted_data[0].title;
+                    var producted_id    = producted_data[0].id;
+                    $('input[name="producted_title"]').val(title);
+                    $('input[name="info[producted_id]"]').val(producted_id);
+
+                },
+                cancelValue:'取消',
+                cancel: function () {
+                }
+            });
+        }
+
         function save_form(id) {
             let project     = $('input[name="info[project]"]').val().trim();
             let line_id     = $('input[name="info[line_id]"]').val();
@@ -308,6 +475,7 @@
             let customer    = $('input[name="info[customer]"]').val();
             let in_dijie    = $('select[name="info[in_dijie]"]').val();
             let dijie_name  = $('select[name="info[dijie_name]"]').val();
+            let producted_id= $('input[name="info[producted_id]"]').val();
 
             let geclist     = <?php echo $geclist_str; ?>;
             let customer_num = 0;
@@ -316,9 +484,7 @@
             }
 
             if (!project)   { art_show_msg('项目名称不能为空',3); return false; }
-            if (!line_id)   { art_show_msg('线路选择有误',3); return false; }
             if (!apply_to)  { art_show_msg('适合人群不能为空',3); return false; }
-            if (!kind)      { art_show_msg('项目类型不能为空',3); return false; }
             if (!kind)      { art_show_msg('项目类型不能为空',3); return false; }
             if (!number)    { art_show_msg('预计人数不能为空',3); return false; }
             if (!departure) { art_show_msg('计划出团日期不能为空',3); return false; }
@@ -328,6 +494,7 @@
             if (!customer_num){ art_show_msg('客户单位填写错误',3); return false; }
             if (!in_dijie)  { art_show_msg('是否内部地接不能为空',3); return false; }
             if (in_dijie == 1 && !dijie_name){ art_show_msg('内部地接名称不能为空',3); return false; }
+            if (!line_id && !producted_id){ art_show_msg('线路或标准化产品不能为空',3); return false; }
             $('#'+id).submit();
         }
 

@@ -2852,6 +2852,28 @@ function get_yw_department(){
         return $data;
     }
 
+    function get_apply_time_str($apply_year,$apply_time){
+        if ($apply_time == 0){
+            $str                        = '全部';
+        }else{
+            switch ($apply_time){
+                case 1:
+                    $str                = $apply_year."年寒假";
+                    break;
+                case 2:
+                    $str                = $apply_year."年春季";
+                    break;
+                case 3:
+                    $str                = $apply_year."年暑假";
+                    break;
+                case 4:
+                    $str                = $apply_year."年秋季";
+                    break;
+            }
+        }
+        return $str;
+    }
+
     function get_files($ids){
         $db                             = M('attachment');
         $lists                          = $db->where(array('id'=>array('in',$ids)))->select();

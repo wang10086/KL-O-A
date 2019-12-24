@@ -1750,7 +1750,7 @@ class ProductController extends BaseController {
 
                 }else{
                     $info['audit_status']               = '-1';
-                    $info['input_uname']                = session('username');
+                    $info['input_uname']                = session('nickname');
                     $info['input_user']                 = session('userid');
                     $info['input_time']                 = NOW_TIME;
                     $producted_id                       = $db->add($info);

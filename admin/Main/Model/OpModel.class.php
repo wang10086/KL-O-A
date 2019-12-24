@@ -96,4 +96,95 @@ class OpModel extends Model{
 
         return $new_op['op_id'];
     }
+
+    //立项时保存标准化模块
+    public function save_create_op_product($opid , $costacc, $resid='', $num=0){
+        M('op_product')->where(array('op_id'=>$opid))->delete();
+        foreach ($costacc as $k=>$v){
+            $v['op_id']     = $opid;
+            $v['total']     = floatval($v['unitcost'])*intval($v['amount']);
+            $v['status']    = 0;    //核算
+
+            if($resid && $resid[$k]['id']){
+                $edits      = M('op_costacc')->data($v)->where(array('id'=>$resid[$k]['id']))->save();
+                $delid[]    = $resid[$k]['id'];
+                if ($edits) $num++;
+            }else{
+                $savein     = M('op_costacc')->add($v);
+                $delid[]    = $savein;
+                if($savein) $num++;
+            }
+            $del            = M('op_costacc')->where(array('op_id'=>$opid,'type'=>5,'status'=>0,'id'=>array('not in',$delid)))->delete();
+            if ($del) $num++;
+
+            $data           = array();
+            $data['op_id']  = $opid;
+            $data['product_id'] = $v['product_id'];
+            $data['amount'] = $v['amount'];
+            $res = M('op_product')->add($data);
+            if ($res) $num++;
+        }
+        return $num;
+    }
+
+    //立项市创建工单
+    public function save_create_op_worder($addok , $info , $exe_user_id){
+        $id                         = $info['kind'];
+        $pro_info                   = M('project_kind')->where(array('id'=>$id) )->find();
+        $pid                        = $pro_info['pid'];
+        $pro_name                   = $pro_info['name'];
+        $worder                     = array();
+        $worder['op_id']            = M("op")->where(array('id'=>$addok))->getField('op_id');
+        $worder['worder_title']     = $info['project'];
+        $worder['worder_content']   = $info['context'];
+        $worder['worder_type']      = 100;
+        $worder['status']           = 0;
+        $worder['ini_user_id']      = cookie('userid');
+        $worder['ini_user_name']    = cookie('name');
+        $worder['ini_dept_id']      = cookie('roleid');
+        $worder['ini_dept_name']    = cookie('rolename');
+        $worder['create_time']      = NOW_TIME;
+        $u_time                     = 5;    //默认5个工作日
+        //计划完成时间 $u_time为工作日
+        $worder['plan_complete_time']= strtotime(getAfterWorkDay($u_time));
+
+        if($exe_user_id){
+            foreach ($exe_user_id as $k=>$v){
+                if ($v==12){
+                    $worder['kpi_type'] = 1;    //公司研发
+                }elseif ($v==26){
+                    $worder['kpi_type'] = 2;    //公司资源
+                } elseif ($v==31){
+                    $worder['kpi_type'] = 3;    //京区校内研发
+                }elseif ($v==174){
+                    $worder['kpi_type'] = 4;    //京区校内资源
+                }
+                $exe_user_info      = M('account')->field('nickname,roleid')->where(array('id'=>$v))->find();
+                $exe_user_id        = $v;
+                $exe_user_name      = $exe_user_info['nickname'];
+                $exe_dept_id        = $exe_user_info['roleid'];
+                $exe_dept_name      = M('role')->where(array('id'=>$exe_dept_id))->getField('role_name');
+                $worder['exe_dept_id']      = $exe_dept_id;
+                $worder['exe_dept_name']    = $exe_dept_name;
+                $worder['exe_user_id']      = $exe_user_id;
+                $worder['exe_user_name']    = $exe_user_name;
+                $res = M('worder')->add($worder);
+                if($res){
+                    //保存操作记录
+                    $record = array();
+                    $record['worder_id'] = $res;
+                    $record['type']     = 0;
+                    $record['explain']  = '立项/创建工单';
+                    worder_record($record);
+                    //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.$worder['ini_dept_name'].'--'.$worder['ini_user_name'].']的工单待执行!';
+                    $content = '该工单为项目工单，现已立项通过，前期需要研发、资源等相关部门的协助。项目名称：'.$worder['worder_title'].'；备注信息：'.$worder['worder_content'];
+                    $url     = U('worder/worder_info',array('id'=>$res));
+                    $user    = '['.$worder['exe_user_id'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+                }
+            }
+        }
+    }
 }

@@ -497,8 +497,6 @@
         qrcode_js(url,100,100); //加载js二维码
     })
 
-
-
     //新增名单
 	function adduser(){
 		var i = parseInt($('#user_val').text())+1;
@@ -508,12 +506,7 @@
 		$('#user_val').html(i);
 		orderno();
 	}
-	
-	
-	
-	
-	
-	
+
 	//新增价格政策
 	function add_pretium(){
 		var i = parseInt($('#pretium_val').text())+1;
@@ -605,7 +598,7 @@
 		});	
 	}
 
-    //选择校园科技节产品
+    //选择产品模块
     function selectproduct() {
         art.dialog.open("<?php echo U('Op/select_module',array('opid'=>$opid)); ?>",{
             lock:true,
@@ -826,11 +819,7 @@
 			});
         });		
 	}
-	
-	
-	
-	
-	
+
 	artDialog.alert = function (content, status) {
 		return artDialog({
 			id: 'Alert',
