@@ -422,12 +422,18 @@
         $('#standardProduct').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
         });
+
+        $('#material').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
     }
 	
 	//移除
 	function delbox(obj){
 		$('#'+obj).remove();
-	}
+		orderno();
+        total();
+    }
 
     /*//选择产品模块
     function selectproduct(num) {
