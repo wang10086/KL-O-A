@@ -2,8 +2,41 @@
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
     <input type="hidden" name="savetype" value="10">
-    <div class="form-group col-md-4" >
+    <div class="form-group col-md-12" >
         <label>项目名称：</label><input type="text" name="info[project]"  value="{$op.project}" class="form-control" />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>项目类型：</label>
+        <select  class="form-control"  name="info[kind]" id="kind" required>
+            <foreach name="kinds" key="k" item="v">
+                <option value="{$k}" <?php if ($op && ($k == $op['kind'])) echo ' selected'; ?> >{$v}</option>
+            </foreach>
+        </select>
+    </div>
+
+    <div class="form-group col-md-4" id="standard_box">
+        <p><label>是否标准化产品</label></p>
+        <input type="radio" name="info[standard]" value="1" <?php echo $op['standard']==1 ? "checked" : ''; ?>> &#8194;标准化 &#12288;
+        <input type="radio" name="info[standard]" value="2" <?php echo $op['standard']==2 ? "checked" : ''; ?>> &#8194;非标准化
+    </div>
+
+    <div class="form-group col-md-4" style="clear: right;" id="line_or_product">
+        <?php if ($op['standard']==1){ ?>
+            <label style="display: block">标准化产品</label>
+            <input type="text" name="producted_title" class="form-control" value="{$producted_list.title}" style="width: 75%; display: inline-block;" readonly>
+            <input type="hidden" name="info[producted_id]" value="{$op.producted_id}">
+            <span style="display: inline-block; width: 20%">
+                <a href="javascript:;" class="btn btn-success btn-sm" onClick="select_standard_product()">获取产品</a>
+            </span>
+        <?php }else{ ?>
+            <label style="display: block">行程方案</label>
+            <input type="text" name="line_title" class="form-control" value="{$line_list.title}" style="width: 75%; display: inline-block;" readonly>
+            <input type="hidden" name="info[line_id]" value="{$op.line_id}">
+            <span style="display: inline-block; width: 20%">
+                <a href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>
+            </span>
+        <?php } ?>
     </div>
 
     <div class="form-group col-md-4">
@@ -13,15 +46,6 @@
             <foreach name="apply_to" key="k" item="v">
                 <option value="{$k}" <?php if ($op && ($k == $op['apply_to'])) echo ' selected'; ?> >{$v}</option>
             </foreach>
-        </select>
-    </div>
-
-    <div class="form-group col-md-4">
-        <label>项目类型：</label>
-        <select  class="form-control"  name="info[kind]" required>
-        <foreach name="kinds" key="k" item="v">
-            <option value="{$k}" <?php if ($op && ($k == $op['kind'])) echo ' selected'; ?> >{$v}</option>
-        </foreach>
         </select>
     </div>
 
@@ -41,22 +65,17 @@
         <label>目的地：</label><input type="text" name="info[destination]" value="{$op.destination}" class="form-control" />
     </div>
 
-    <div class="form-group col-md-4">
+    <!--<div class="form-group col-md-4">
         <label>业务部门：</label>
         <select  class="form-control" name="info[op_create_user]">
         <foreach name="rolelist" key="k" item="v">
-            <option value="{$v}" <?php if($v==$op['op_create_user']){ echo 'selected';} ?> >{$v}</option>
+            <option value="{$v}" <?php /*if($v==$op['op_create_user']){ echo 'selected';} */?> >{$v}</option>
         </foreach>
         </select>
-    </div>
+    </div>-->
 
     <div class="form-group col-md-4">
         <label>客户单位：</label>
-        <!--<select  name="info[customer]" class="form-control">
-            <foreach name="geclist"  item="v">
-                <option value="{$v.company_name}" <?php /*if($op['customer']==$v['company_name']){ echo 'selected';} */?> ><?php /*echo strtoupper(substr($v['pinyin'], 0, 1 )); */?> - {$v.company_name}</option>
-            </foreach>
-        </select>-->
         <input type="text" class="form-control" name="info[customer]" value="{$op.customer}" list="customer" />
         <datalist id="customer">
             <foreach name="geclist" item="v">
@@ -65,12 +84,6 @@
         </datalist>
     </div>
 
-    <!--<div class="form-group col-md-4">
-        <span class="lm_c_mr10">协助实施专家：</span>
-        <foreach name="expert" key="k" item="v">
-            <span class="lm_c_mr10"><input type="checkbox" name="expert[]" value="{$k}" <?php /*if (in_array($k,$op_expert)) echo "checked"; */?>> {$v}</span>
-        </foreach>
-    </div>-->
     <div class="form-group col-md-4" style="padding: 0">
         <div class="col-md-12"  style="padding-right: 0">
             <span class="lm_c">协助销售实施专家：</span>
@@ -102,7 +115,7 @@
             </div>
 
             <div class="form-group col-md-12" id="addti_btn">
-                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:public_save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="check_op_form:public_save('save_op_info','<?php echo U('Op/public_save'); ?>');">保存</a>
             </div>
         </div>
 
@@ -117,7 +130,7 @@
         </div>
 
         <div class="form-group col-md-12" id="addti_btn">
-            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:public_save('save_op_info','<?php echo U('Op/public_save'); ?>',{$op.op_id});">保存</a>
+            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:check_op_form('save_op_info','<?php echo U('Op/public_save'); ?>');">保存</a>
         </div>
     <?php } ?>
 </form>
@@ -148,6 +161,18 @@
         }else{
             $('#dijie_or_sale').html(sale);
         }
+    }
+
+    $('#kind').change(function () {
+        $('input[name="producted_title"]').val('');
+        $('input[name="info[producted_id]"]').val('');
+    })
+
+    function check_op_form(id, url){
+        let producted_id    = $('input[name="info[producted_id]"]').val();
+        let line_id         = $('input[name="info[line_id]"]').val();
+        if (!producted_id && !line_id){ art_show_msg("线路或标准化产品不能为空",3); return false; }
+        public_save(id,url);
     }
 
 </script>

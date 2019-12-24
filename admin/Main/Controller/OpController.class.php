@@ -427,12 +427,14 @@ class OpController extends BaseController {
 		$op['show_time']  = $show_time;
 		$op['show_reason']  = $show_reason;
 
-		if($op['line_id']){
-			$linetext   = M('product_line')->find($op['line_id']);
-			$this->linetext = '<h4>已选方案：<a href="'.U('Product/view_line',array('id'=>$linetext['id'])).'" target="_blank" id="travelcom">'.$linetext['title'].'</a><input type="hidden" name="line_id" value="'.$linetext['id'].'" ></h4>';
+		/*if($op['line_id']){
+			$linetext           = M('product_line')->find($op['line_id']);
+			$this->linetext     = '<h4>已选方案：<a href="'.U('Product/view_line',array('id'=>$linetext['id'])).'" target="_blank" id="travelcom">'.$linetext['title'].'</a><input type="hidden" name="line_id" value="'.$linetext['id'].'" ></h4>';
 		}else{
-			$this->linetext = '';
-		}
+			$this->linetext     = '';
+		}*/
+		$this->line_list        = $op['line_id'] ? M('product_line')->find($op['line_id']) : ''; //线路
+		$this->producted_list   = $op['producted_id'] ? M('producted')->find($op['producted_id']) : ''; //标准化产品
 
 		//自动生成团号
 		$roles = M('role')->where(array('role_name'=>$op['op_create_user']))->find();
@@ -446,12 +448,6 @@ class OpController extends BaseController {
 		}
 
         //项目类型
-        //线路1 , 课程 2 , 其他 3
-        //$kind       = $op['kind'];
-        //$line       = M('project_kind')->where("id ='1' or pid ='1'")->getField('id',true);
-        //$lessions   = M('project_kind')->where("id ='2' or pid ='2'")->getField('id',true);
-        //$cgly       = M('project_kind')->where("name like '%常规旅游%'")->getField('id',true); //从'其他'栏目中提取 '常规旅游'放入线路中
-        //$lines      = array_merge($line,$cgly);
         $fixed_lineids  = M('product_line')->where(array('type'=>2))->getField('id',true);    //固定线路
         if (in_array($line_id,$fixed_lineids)){
             $this->isFixedLine = 1;
@@ -839,6 +835,8 @@ class OpController extends BaseController {
                     $info['destination']    = trim($info['destination']);
                     $info['customer']       = trim($info['customer']);
                     $info['context']        = trim($info['context']);
+                    $info['line_id']        = $info['standard'] == 1 ? 0 : $info['line_id'];
+                    $info['producted_id']   = $info['standard'] == 2 ? 0 : $info['producted_id'];
 
                     //保存成团
                     $issave = M('op')->data($info)->where(array('op_id' => $opid))->save();
@@ -1043,7 +1041,7 @@ class OpController extends BaseController {
             }
 
 
-            //保存项目跟进保存产品模块需求
+            //保存项目跟进保存产品模块需求(14 can delete 20191224)
             if($opid && $savetype==14 ){
                 $costacc    = I('costacc');
                 $resid      = I('resid');
@@ -1923,8 +1921,8 @@ class OpController extends BaseController {
 		echo $num;
 	}
 
-	// @@@NODE-3###public_save_line###保存线路###
-    public function public_save_line(){
+	// @@@NODE-3###public_save_line###保存线路### (public_save_line can delete 20191224)
+   /* public function public_save_line(){
 
 		$opid       = I('opid');
 		$days       = I('days');
@@ -1948,61 +1946,6 @@ class OpController extends BaseController {
 			 if($savein) $num++;
 		}
 
-		/*
-		//剔除其他线路所带过来的物资
-		$where_del = array();
-		$where_del['line_id']   = array('gt',0);
-		$where_del['line_id']   = array('neq',$line_id);
-		$where_del['op_id']     = $opid;
-		$isdel = M('op_material')->where($where_del)->delete();
-		if($isdel) $num++;
-
-		//剔除其他线路所带过来的物资价格
-		$where_del['cost_type'] = 4;
-		$isdel = M('op_cost')->where($where_del)->delete();
-		if($isdel) $num++;
-
-		//将线路中所包含的模块物资清单转入项目中
-		$pdata = M('product_line_tpl')->where(array('line_id'=>$line_id,'type'=>1))->getField('pro_id',true);
-		$where = array();
-		$where['product_id'] = array('in',implode(',',$pdata));
-		$list = M('product_material')->where($where)->select();
-
-		//保存物资清单
-		foreach($list as $v){
-
-			//获取物资编号
-			$mid = M('material')->where(array('material'=>$v['material']))->getField('id');
-
-			$material = array();
-			$material['op_id']       = $opid;
-			$material['material']    = $v['material'];
-			$material['remarks']     = $v['remarks'];
-			$material['material_id'] = $mid;
-			$material['line_id']     = $line_id;
-
-			$cost = array();
-			$cost['op_id']       = $opid;
-			$cost['item']        = '物资费';
-			$cost['cost']        = $v['unitprice'];
-			$cost['amount']      = $v['amount'];
-			$cost['total']       = $v['unitprice']*$v['amount'];
-			$cost['cost_type']   = 4;
-			$cost['remark']      = $v['material'];
-			$cost['relevant_id'] = $mid;
-			$cost['line_id']     = $line_id;
-
-			//判断物资是否存在
-			if(!M('op_material')->where(array('material'=>$v['material'],'op_id'=>$opid))->find()){
-				$addmate = M('op_material')->add($material);
-				$cost['link_id'] = $addmate;
-				$addcost = M('op_cost')->add($cost);
-			}
-
-			if($addcost || $addmate) $num++;
-		}
-		*/
-
 		$record = array();
 		$record['op_id']   = $opid;
 		$record['optype']  = 3;
@@ -2010,10 +1953,10 @@ class OpController extends BaseController {
 		op_record($record);
 
 		echo $num;
-	}
+	}*/
 
-	// @@@NODE-3###public_ajax_line###获取线路日程###
-	public function public_ajax_line(){
+	// @@@NODE-3###public_ajax_line###获取线路日程### (public_ajax_line can delete 20191224)
+	/*public function public_ajax_line(){
 		$db = M('product_line_days');
 		$line_id = I('id');
 		$list = $db->where(array('line_id'=>$line_id))->select();
@@ -2023,7 +1966,7 @@ class OpController extends BaseController {
 			}
 		}
 
-	}
+	}*/
 
 	// @@@NODE-3###public_ajax_material###获取模块物资信息###
 	public function public_ajax_material(){

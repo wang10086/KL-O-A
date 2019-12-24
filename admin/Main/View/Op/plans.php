@@ -317,6 +317,8 @@
             var kind    = $(this).val();
             set_yxlx_op_type(kind) // 设置研学旅行项目类型(是否地接)
             is_or_not_dijie();
+            $('input[name="producted_title"]').val('');
+            $('input[name="info[producted_id]"]').val('');
             //line_or_product(kind); //根据项目类型判断显示行程方案或产品模块
         })
 
