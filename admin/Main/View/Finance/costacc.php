@@ -12,13 +12,13 @@
 
                 <!-- Main content -->
                 <section class="content">
-                
+
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
 
                             <include file="Op:op_navigate" />
-                             
+
                              <div class="box box-warning" style="margin-top:15px;">
                                 <div class="box-header">
                                     <h3 class="box-title">
@@ -28,7 +28,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                    	
+
                                         <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
                                         	<tr>
                                             	<td colspan="3">项目名称：{$op.project}</td>
@@ -44,27 +44,27 @@
                                                 <td width="33.33%">立项时间：{$op.op_create_date}</td>
                                             </tr>
                                         </table>
-                                    
+
                                     </div>
-                                    
+
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
+
                             <?php /*if($budget['audit']==0 && ($op['line_id'] || $productList)){ */?>
-                            <?php if($budget['audit']==0 && $op['standard'] != 1){ ?>
+                            <?php if(!$budget && $op['standard'] != 1){ ?>
                             	<include file="costacc_edit" />
                             <?php }else{ ?>
                             	<include file="costacc_read" />
                             <?php } ?>
-                        	
-                            
+
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
-                    
+
                 </section><!-- /.content -->
-                
+
             </aside><!-- /.right-side -->
-			
+
   </div>
 </div>
 
@@ -93,12 +93,12 @@
 			html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a>';
 			html += '<a href="javascript:;" class="btn btn-success btn-flat" id="cc_bijia_'+i+'" style="display:none;">比价</a>';
 			html += '</div>';
-		$('#costacc').append(html);	
+		$('#costacc').append(html);
 		$('#costacc_val').html(i);
 		orderno();
 		cost_total();
 	}
-	
+
 	//编号
 	function orderno(){
 		$('#mingdan').find('.title').each(function(index, element) {
@@ -109,16 +109,16 @@
         });
 		$('#costacc').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
-        });	
+        });
 	}
-	
+
 	//移除
 	function delbox(obj){
 		$('#'+obj).remove();
 		orderno();
 		cost_total();
 	}
-	
+
 	//更新成本核算
 	function cost_total(){
 		var costaccsum = 0;
@@ -134,22 +134,22 @@
 				var amount = $(this).val();
 				var cost = $(this).parent().find('.cost').val();
 				var ct = accMul(cost,amount);
-				$(this).parent().find('.totalval').val(ct.toFixed(2));	
+				$(this).parent().find('.totalval').val(ct.toFixed(2));
 				cost_total()
 			});
-        });	
-		$('.totalval').each(function(index, element) {
-            costaccsum += parseFloat($(this).val());	
         });
-		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));	
-		$('#costaccsumval').val(costaccsum.toFixed(2));	
+		$('.totalval').each(function(index, element) {
+            costaccsum += parseFloat($(this).val());
+        });
+		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));
+		$('#costaccsumval').val(costaccsum.toFixed(2));
 	}
-	
-	
+
+
 	function bijia(obj,tt){
 		var z = $(tt).val();
 		if(z == 7 || z == 8 || z == 9){
-			
+
 			var url = "{:U('Op/relpricelist')}"+"&opid={$op.op_id}&type="+z;
 			$('#'+obj).attr('href',url).attr('target','_blank');
 			$('#'+obj).show();
@@ -186,6 +186,6 @@
 	}
 </script>
 
-     
+
 
 
