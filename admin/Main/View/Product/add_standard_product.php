@@ -214,7 +214,7 @@
                                                         <input type="text" class="form-control material_name" id="0_material_name" name="material[0][material]" onblur="check_ptype()">
                                                         <input type="text" class="form-control longinput" name="material[0][spec]">
                                                         <input type="text" class="form-control cost" name="material[0][unitprice]" onblur="total()">
-                                                        <input type="text" class="form-control amount" name="material[0][amount]" onblur="total()">
+                                                        <input type="text" class="form-control amount" name="material[0][amount]" value="1" onblur="total()">
                                                         <input type="text" class="form-control total" name="material[0][total]">
                                                         <select class="form-control"  name="material[0][type]" onchange="check_material_type(0,$(this).val())">
                                                             <option value="">请选择</option>
@@ -244,7 +244,26 @@
                                     <h3 class="box-title">定价政策</h3>
                                 </div>
                                 <div class="box-body">
-                                    <div style="padding:25px;">暂无定价政策</div>
+                                    <div class="form-group col-md-4">
+                                        <label>成本价：</label>
+                                        <input type="text" name="info[]" id="cost_price" value="{$row.}"  class="form-control" readonly />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>建议最低报价：</label>
+                                        <input type="text" name="info[]" id="title" value="{$row.}"  class="form-control" required />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>建议最高报价：</label>
+                                        <input type="text" name="info[]" id="title" value="{$row.}"  class="form-control" required />
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <label>说明：</label><textarea class="form-control"  name="info[]" id="context"></textarea>
+                                        <span id="contextTip"></span>
+                                    </div>
+                                    <div class="form-group">&nbsp;</div>
                                 </div>
                             </div>
 
@@ -318,6 +337,7 @@
         autocomplete_id('auth_name','auth_id',key_words);
         check_hesuan(); //核算模式
         keywords(0);
+        total();
 
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
@@ -433,8 +453,8 @@
 	//移除
 	function delbox(obj){
 		$('#'+obj).remove();
-		orderno();
-        total();
+        hesuan();
+        orderno();
     }
 
     /*//选择产品模块
@@ -497,28 +517,28 @@
     //更新价格与数量
     function total(){
         $('.materialLists').each(function(index, element) {
-            var hesuan_sum = 0;
             $(this).find('.cost').blur(function(){
                 var cost = $(this).val();
                 var amount = $(this).parent().find('.amount').val();
                 $(this).parent().find('.total').val(accMul(cost,amount));
-
-                $('.total').each(function(index, element) {
-                    hesuan_sum += parseFloat($(this).val());
-                    $('#produce_price').val(hesuan_sum);
-                });
+                total();
             });
             $(this).find('.amount').blur(function(){
                 var amount = $(this).val();
                 var cost = $(this).parent().find('.cost').val();
                 $(this).parent().find('.total').val(accMul(cost,amount));
-
-                $('.total').each(function(index, element) {
-                    hesuan_sum += parseFloat($(this).val());
-                    $('#produce_price').val(hesuan_sum);
-                });
+                total();
             });
+            hesuan();
+        });
+    }
 
+    function hesuan(){
+        let hesuan_sum = 0;
+        $('.total').each(function(index, element) {
+            hesuan_sum += parseFloat($(this).val());
+            $('#produce_price').val(hesuan_sum);
+            $('#cost_price').val(hesuan_sum); // 成本价
         });
     }
 
@@ -618,7 +638,7 @@
             '<input type="text" class="form-control material_name" id="'+i+'_material_name" name="material['+i+'][material]">' +
             '<input type="text" class="form-control longinput" name="material['+i+'][spec]" value="">' +
             '<input type="text" class="form-control cost" name="material['+i+'][unitprice]" onblur="total()">' +
-            '<input type="text" class="form-control amount" name="material['+i+'][amount]" onblur="total()">' +
+            '<input type="text" class="form-control amount" name="material['+i+'][amount]" value="1" onblur="total()">' +
             '<input type="text" class="form-control total" name="material['+i+'][total]">' +
             '<select class="form-control"  name="material['+i+'][type]" onchange="check_material_type('+i+',$(this).val())">' +
             '<option value="">请选择</option>' +
@@ -638,6 +658,7 @@
         $('#material_val').html(i);
         orderno();
         keywords(i);
+        total();
     }
 
     //关键字联想
