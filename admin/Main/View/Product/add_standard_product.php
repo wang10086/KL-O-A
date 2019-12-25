@@ -246,21 +246,21 @@
                                 <div class="box-body">
                                     <div class="form-group col-md-4">
                                         <label>成本价：</label>
-                                        <input type="text" name="info[]" id="cost_price" value="{$row.}"  class="form-control" readonly />
+                                        <input type="text" name="" id="cost_price" value=""  class="form-control" readonly />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label>建议最低报价：</label>
-                                        <input type="text" name="info[]" id="title" value="{$row.}"  class="form-control" required />
+                                        <input type="text" name="info[costacc_min_price]" id="title" value="{$row.costacc_min_price}"  class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <label>建议最高报价：</label>
-                                        <input type="text" name="info[]" id="title" value="{$row.}"  class="form-control" required />
+                                        <input type="text" name="info[costacc_max_price]" id="title" value="{$row.costacc_max_price}"  class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <label>说明：</label><textarea class="form-control"  name="info[]" id="context"></textarea>
+                                        <label>说明：</label><textarea class="form-control"  name="info[costacc_price_remark]" id="context">{$row.costacc_price_remark}</textarea>
                                         <span id="contextTip"></span>
                                     </div>
                                     <div class="form-group">&nbsp;</div>
@@ -282,20 +282,20 @@
                                                     <th align="left" width="15%">操作</th>
                                                 </tr>
                                                 <foreach name="atts" item="v">
-                                                <tr id="aid_{$v.id}" valign="middle"> 
+                                                <tr id="aid_{$v.id}" valign="middle">
                                                     <td><input type="text" name="newname[{$v.id}]" value="{$v.filename}" class="form-control"  /></td>
                                                     <td>{:fsize($v['filesize'])}</td>
                                                     <td>
-                                                        <div class="progress sm"> 
+                                                        <div class="progress sm">
                                                             <div class="progress-bar progress-bar-aqua" rel="aid_{$v.id}"  role="progressbar" style="width: 100%;"  aria-valuemin="0" aria-valuemax="100">
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile('aid_{$v.id}');"><i class="fa fa-times"></i>删除</a>&nbsp;&nbsp;&nbsp;&nbsp; <a class="btn btn-success btn-xs " href="{$v.filepath}" onclick=""><i class="fa fa-download"></i>下载</a></td>
-                                                </tr>        
-                                                </foreach>  
+                                                </tr>
+                                                </foreach>
                                             </table>
-                                             
+
                                             <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px;"><i class="fa fa-upload"></i> 上传附件</a>
                                             <div id="container" style="display:none;">
                                                 <foreach name="atts" item="v">
@@ -322,7 +322,7 @@
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
-                
+
             </aside><!-- /.right-side -->
 
   </div>
@@ -330,7 +330,7 @@
 
 <include file="Index:footer2" />
 
-<script type="text/javascript"> 
+<script type="text/javascript">
 
 	$(document).ready(function() {
         var key_words        = {$userkey};
@@ -350,7 +350,7 @@
 			multipart_params: {
                  catid: 1
 			},
-			
+
 			filters : {
 				max_file_size : '50mb',
 				/*
@@ -370,15 +370,15 @@
 						var time = new Date();
 						var month = time.getMonth() +1;
 						if (month < 10) month = "0" + month;
-						
+
 						var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
 						$('#flist').append(
 								'<tr id="' + file.id + '"  valign="middle"><td>'
                                 + '<input type="text" name="nm_' + file.id + '" value="'+ file.name +'" class="form-control" />'
-								+ '</td> <td width="10%">' + plupload.formatSize(file.size) +'' 
-								+ '</td> <td width="30%">' 
-							    + '<div class="progress sm"> ' 
-	                            + '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">' 
+								+ '</td> <td width="10%">' + plupload.formatSize(file.size) +''
+								+ '</td> <td width="30%">'
+							    + '<div class="progress sm"> '
+	                            + '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">'
 	                            + '</div></div></td>'
 	                            + '<td width="15%"><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(\''+ file.id +'\');"><i class="fa fa-times"></i>删除</a></td></tr>'
 	                        );
@@ -386,7 +386,7 @@
 					});
 
 					uploader.start();
-					
+
 				},
 
 				FileUploaded: function(up, file, res) {
@@ -449,7 +449,7 @@
             $(this).text(parseInt(index)+1);
         });
     }
-	
+
 	//移除
 	function delbox(obj){
 		$('#'+obj).remove();
@@ -742,7 +742,7 @@
         });
     }
 
-</script>	
-     
+</script>
+
 
 

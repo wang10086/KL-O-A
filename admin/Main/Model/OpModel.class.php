@@ -129,9 +129,11 @@ class OpModel extends Model{
 
     //立项时保存成本核算(标准化产品)
     public function save_create_op_costacc($opid , $producted_id){
-
+        $producted_db                   = M('producted');
         $db                             = M('producted_material');
         $op_costacc_db                  = M('op_costacc');
+        $op_costacc_res_db              = M('op_costacc_res');
+        $producted_list                 = $producted_db->where(array('id'=>$producted_id))->find();
         $lists                          = $db->where(array('producted_id'=>$producted_id))->select();
         foreach ($lists as $k=>$v){
             $data                       = array();
@@ -147,6 +149,22 @@ class OpModel extends Model{
             $data['supplier_name']      = $v['channel'];
             $op_costacc_db->add($data);
         }
+
+        $data                           = array();
+        $data['op_id']                  = $opid;
+        $data['costacc']                = $producted_list['sales_price'];
+        $data['costacc_min_price']      = $producted_list['costacc_min_price'];
+        $data['costacc_max_price']      = $producted_list['costacc_max_price'];
+        $data['input_user_id']          = session('userid');
+        $data['input_user_name']        = session('nickname');
+        $data['create_time']            = NOW_TIME;
+        $op_costacc_res_db->add($data);
+
+        $opdata                         = array();
+        $opdata['costacc']              = $producted_list['sales_price'];
+        $opdata['costacc_min_price']    = $producted_list['costacc_min_price'];
+        $opdata['costacc_max_price']    = $producted_list['costacc_max_price'];
+        M('op')->where(array('op_id'=>$opid))->save($opdata);
     }
 
     //立项时创建工单

@@ -8,15 +8,15 @@ use Sys\Pinyin;
 
 // @@@NODE-2###Product###产品管理###
 class ProductController extends BaseController {
-    
+
     protected $_pagetitle_ = '产品模块管理';
     protected $_pagedesc_  = '';
-    
-	
+
+
     // @@@NODE-3###index###产品列表###
     public function index(){
         $this->title('产品模块列表');
-		
+
 		$key                                    = I('key');
 		$pro                                    = I('pro');
         $type                                   = I('type');
@@ -73,8 +73,8 @@ class ProductController extends BaseController {
 
 		$this->display('index');
     }
-	
-    
+
+
     // @@@NODE-3###del###删除产品模块###
     public function del(){
         $this->title('删除产品');
@@ -90,7 +90,7 @@ class ProductController extends BaseController {
             $this->success('删除成功');
         }
     }
-	
+
     // @@@NODE-3###add###添加产品###
     public function add() {
         $this->title('添加产品');
@@ -259,21 +259,21 @@ class ProductController extends BaseController {
             $this->display('add');
         }
     }
-    
+
     // @@@NODE-3###select_ages###模板选择适用年龄###
 	public function select_ages(){
     	$this->ages = C('AGE_LIST');
 		$this->display('select_ages');
 	}
-    
+
     // @@@NODE-3###select_kinds###模板选择适用项目类型###
 	public function select_kinds(){
     	$this->kinds  = get_project_kinds();
 		$this->display('select_kinds');
 	}
-    
-    
-	
+
+
+
     // @@@NODE-3###tpl###产品模板列表###
     public function tpl () {
     	$key          = I('key');
@@ -282,7 +282,7 @@ class ProductController extends BaseController {
 		$bus          = I('bus');
 		$sub          = I('sub');
 		$age          = I('age');
-		
+
 		$db = M('product_model');
 		$this->status = $status;
 		$where = array();
@@ -292,42 +292,42 @@ class ProductController extends BaseController {
 		if($bus)    $where['p.business_dept'] = $bus;
 		//if($sub)    $where['p.subject_field'] = $sub;
 		if($age)    $where['p.age'] = $age;
-		
+
 		$business_depts = M('project_kind')->getField('id,name');
         $page = new Page($db->table('__PRODUCT_MODEL__ as p')->where($where)->count(), P::PAGE_SIZE);
         $this->pages = $page->show();
 		$lists = $db->table('__PRODUCT_MODEL__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
 		foreach($lists as $k=>$v){
-			
-			$lists[$k]['dept'] = $business_depts[$v['business_dept']];	
+
+			$lists[$k]['dept'] = $business_depts[$v['business_dept']];
 		}
-		
+
 		$this->lists = $lists;
-		
+
 		$this->business_depts = M('project_kind')->getField('id,name');
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
 
 		$this->display('model');
     }
-    
+
     // @@@NODE-3###deltpl###删除产品模板###
     public function deltpl () {
-       
+
         $id = I('id', 0);
         if ($id) {
             M('product_model')->where("id=$id")->delete();
         }
-        
+
         $this->success('删除成功！');
     }
-    
+
     // @@@NODE-3###addtpl###添加或修改产品模板###
     public function addtpl() {
-        
+
     	$this->title('产品模板');
 		if (isset($_POST['dosubmit'])) {
-			 
+
              $info = I('info');
 			 $referer = I('referer');
 			 $business_dept = I('business_dept');
@@ -336,61 +336,61 @@ class ProductController extends BaseController {
 			 $info['business_dept'] = implode(',',$business_dept);
 			 $info['age'] = implode(',',$age);
              $id = I('id');
-             
+
              $aids = join(',', I('resfiles'));
-             
+
              $newname = I('newname', null);
-             
+
              if ($aids) {
                  $info['att_id'] = $aids;
              } else {
                  $info['att_id'] = '';
              }
-             
+
 			 //修改附件文件名
              $attdb = M('attachment');
              foreach ($newname as $k => $v) {
                  $attdb->where("id=$k")->setField('filename', $v);
              }
-			 
-			 
+
+
             if ($id) {
 				//修改
 				M('product_model')->where("id=$id")->data($info)->save();
 				if ($aids) {
 					$attdb->where("id in ($aids)")->setField(array('rel_id'=>$id,'catid'=>2));
 				}
-				
-				
-				
-				$this->success('修改成功！', $referer);   
+
+
+
+				$this->success('修改成功！', $referer);
 			} else {
-				 
+
 				//保存
 				$info['input_user'] = session('userid');
 				$info['input_uname'] = session('nickname');
 				$info['input_time']  = time();
-				
+
 				$rel_id = M('product_model')->add($info);
 				if ($aids) {
 					$attdb->where("id in ($aids)")->setField(array('rel_id'=>$rel_id,'catid'=>2));
 				}
-				
+
 				$this->request_audit(P::REQ_TYPE_PRODUCT_MODEL, $rel_id);
-				$this->success('保存成功！', $referer); 
+				$this->success('保存成功！', $referer);
 			}
 		} else {
             $id = I('id');
-             
+
 			$this->row = M('product_model')->find($id);
-			
+
 			if($this->row){
 				if ($this->row['att_id']) {
 				$this->atts = M('attachment')->where("catid=2 and id in (" . $this->row['att_id']. ")")->select();
 				} else {
 				$this->atts = false;
-				} 
-				
+				}
+
 				$depts = explode(',',$this->row['business_dept']);
 				$kinds = M('project_kind')->getField('id,name');
 				$deptlist = array();
@@ -398,7 +398,7 @@ class ProductController extends BaseController {
 					$deptlist[$k]['id'] = $v;
 					$deptlist[$k]['kind'] = $kinds[$v];
 				}
-				
+
 				$ages = explode(',',$this->row['age']);
 				$ageval = C('AGE_LIST');
 				$agelist = array();
@@ -409,27 +409,27 @@ class ProductController extends BaseController {
 
 				$this->deptlist = $deptlist;
 				$this->agelist  = $agelist;
-				
-				
+
+
 			}
-			
+
 			$this->subject_fields = C('SUBJECT_FIELD');
 			$this->projects       = M('project')->where(array('status'=>1))->select();
-				
+
 			$this->business_depts = M('project_kind')->getField('id,name');
 			$this->display('add_model');
 		}
     }
-    
+
     // @@@NODE-3###select_product###建模板时选择产品###
     public function select_product(){
-    	
+
 		$key                                    = I('key');
 		$status                                 = I('status','-1');
 		$pro                                    = I('pro');
 		$zj                                     = I('zj');
 		$age                                    = I('age');
-		
+
 		$db                                     = M('product');
 		$this->status                           = $status;
 		$where                                  = array();
@@ -439,7 +439,7 @@ class ProductController extends BaseController {
 		if($age)    $where['p.age']             = array('like','%'.$age.'%');
 		if($zj)     $where['p.input_uname']     = array('like','%'.$zj.'%');
         //$where['disting']                       = 0;
-		
+
 		$business_depts                         = C('BUSINESS_DEPT');
         $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
         $this->pages                            = $page->show();
@@ -451,11 +451,11 @@ class ProductController extends BaseController {
 			foreach($depts as $kk=>$vv){
 				$deptval[]                      = $kinds[$vv];
 			}
-			
+
 			$lists[$k]['dept']                  = implode(',',$deptval);
 		}
 		$this->lists                            = $lists;
-		
+
 		$this->ages                             = C('AGE_LIST');
 		$this->kinds                            = $kinds;
     	$this->display('select_product');
@@ -471,7 +471,7 @@ class ProductController extends BaseController {
 		$where['p.id']                          = $id;
 		$row                                    =  $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->find();
         if ($row['standard'] == 1){ $this->standard_product_detail($id); die;}
-		
+
 		if($row){
 			$where                              = array();
 			$where['req_type']                  = P::REQ_TYPE_PRODUCT_NEW;
@@ -501,7 +501,7 @@ class ProductController extends BaseController {
 				$deptlist[]                     = $kinds[$v];
 			}
 			$row['dept']                        = implode('，',$deptlist);
-			
+
 			$ages                               = explode(',',$row['age']);
 			$ageval                             = C('AGE_LIST');
 			$agelist                            = array();
@@ -509,7 +509,7 @@ class ProductController extends BaseController {
 				$agelist[]                      = $ageval[$v];
 			}
 			$row['ages']                        = implode('，',$agelist);
-			
+
 			//获取附件
 			if($row['att_id']){
 				$atts                           = M('attachment')->where("catid=1 and id in (" . $row['att_id']. ")")->select();
@@ -537,12 +537,12 @@ class ProductController extends BaseController {
 			$sp['id']                           = array('IN',$row['supplier']);
 			$this->supplier                     = M('cas_res')->where($sp)->select();
 			$this->reskind                      = M('reskind')->getField('id,name', true);
-			
+
 		}else{
-			$this->error('产品模块不存在' . $db->getError());	
+			$this->error('产品模块不存在' . $db->getError());
 		}
 
-		
+
 		$this->row                              = $row;
 		$this->material                         = M('product_material')->where(array('product_id'=>$id))->select();
         $this->modules                          = $modules;
@@ -554,24 +554,24 @@ class ProductController extends BaseController {
         $this->from                             = C('PRODUCT_FROM');
 
 		$this->display('pro_viwe');
-        
-    	
-        
+
+
+
     }
-	
-	
-	
-	
+
+
+
+
 	// @@@NODE-3###model_view###产品模板详情###
     public function model_view () {
         $this->title('产品模板详情');
         $db = M('product_model');
         $id = I('id', -1);
-		
+
 		$where = array();
 		$where['p.id'] = $id;
 		$row =  $db->table('__PRODUCT_MODEL__ as p')->field('p.*')->where($where)->find();
-		
+
 		if($row){
 			$where = array();
 			$where['req_type'] = P::REQ_TYPE_PRODUCT_MODEL;
@@ -593,26 +593,26 @@ class ProductController extends BaseController {
 			$row['showstatus'] = $show;
 			$row['show_user']  = $show_user;
 			$row['show_time']  = $show_time;
-			
-			
-			
-			
+
+
+
+
 			$depts = explode(',',$row['business_dept']);
 			$kinds = M('project_kind')->getField('id,name');
 			$deptlist = array();
 			foreach($depts as $k=>$v){
 				$deptlist[] = $kinds[$v];
 			}
-			$row['dept'] = implode('，',$deptlist);	
-			
+			$row['dept'] = implode('，',$deptlist);
+
 			$ages = explode(',',$row['age']);
 			$ageval = C('AGE_LIST');
 			$agelist = array();
 			foreach($ages as $k=>$v){
 				$agelist[] = $ageval[$v];
 			}
-			$row['ages'] = implode('，',$agelist);		
-			
+			$row['ages'] = implode('，',$agelist);
+
 			//获取附件
 			if($row['att_id']){
 				$this->atts = M('attachment')->where("catid=2 and id in (" . $row['att_id']. ")")->select();
@@ -620,34 +620,34 @@ class ProductController extends BaseController {
 				$this->atts = false;
 			}
 
-			
+
 		}else{
-			$this->error('产品模板不存在' . $db->getError());	
+			$this->error('产品模板不存在' . $db->getError());
 		}
-		
+
 		$this->row = $row;
 		$this->material = $material;
 		$this->business_depts = C('BUSINESS_DEPT');
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
-			 
+
 		$this->display('pro_viwe_model');
-        
-    	
-        
+
+
+
     }
-	
-	
-	
+
+
+
 	 // @@@NODE-3###delkind###删除线路分类###
     public function delkind(){
         $this->title('删除线路分类');
-        
+
         $db = M('product_kind');
         $id = I('id', -1);
-        
+
         $kinds = get_project_kinds();
-        
+
         $where = "id in ($id";
         $flag = 99;
         for ($i = 0; $i < count($kinds); $i++ ) {
@@ -665,32 +665,32 @@ class ProductController extends BaseController {
         $iddel = $db->where($where)->delete();
         $this->success('删除成功！', U('Product/kind'));
     }
-    
-    
+
+
     // @@@NODE-3###addkind###添加修改线路分类###
     public function addkind() {
         $this->title('添加/修改线路分类');
 
         $db = M('product_kind');
         $pid  = I('pid', 0);
-        
+
         $id = I('id',0);
         if ($pid <= 0) {
             $father = array();
             $father['level'] = 0;
             $father['id'] = 0;
             $father['name'] = '顶级分类';
-        
+
         } else {
             $father = $db->find($pid);
         }
-        
+
         $this->father = $father;
-        
+
         if(isset($_POST['dosubmit'])){
-        
+
             $info = I('info','');
-            	
+
             if(!$id){
                 $isadd = $db->add($info);
                 if($isadd) {
@@ -706,9 +706,9 @@ class ProductController extends BaseController {
                     $this->error('修改失败：' . $db->getError());
                 }
             }
-            	
+
         }else{
-        
+
             if (!$id) {
                 $this->row = false;
             } else {
@@ -720,29 +720,29 @@ class ProductController extends BaseController {
             $this->display('addkind');
         }
     }
-    
-    
+
+
     // @@@NODE-3###kind###线路分类列表###
     public function kind() {
         $this->title('线路分类列表');
-    
+
         $this->lists = get_product_kinds();
         $this->pages = '';
         $this->display('kind');
     }
-	
-	
-	
-	
+
+
+
+
 	// @@@NODE-3###line###线路行程###
     public function line(){
         $this->title('线路行程列表');
-		
+
 		$key          = I('key');
 		$status       = I('status','-1');
 		$kind         = I('kind','-1');
 		$mdd          = I('mdd');
-		
+
 		$db = M('product_line');
 		$this->status = $status;
 		$this->kind   = $kind;
@@ -751,20 +751,20 @@ class ProductController extends BaseController {
 		if($this->kind != '-1')   $where['kind'] = $this->kind;
 		if($key)    $where['title'] = array('like','%'.$key.'%');
 		if($mdd)    $where['dest']  = array('like','%'.$mdd.'%');
-		
-		
-		
+
+
+
         $page = new Page($db->where($where)->count(), P::PAGE_SIZE);
         $this->pages = $page->show();
 		$this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
 		$this->kindlist = M('project_kind')->select();
-		
+
 
 		$this->display('line');
     }
-	
-	
-	
+
+
+
 	// @@@NODE-3###del_line###删除线路###
     public function del_line(){
         $this->title('删除产品');
@@ -773,12 +773,12 @@ class ProductController extends BaseController {
 		M('product_line')->delete($id);
 		M('product_line_days')->where(array('line_id'=>$id))->delete();
 		M('product_line_tpl')->where(array('line_id'=>$id))->delete();
-		$this->success('删除成功！');	
+		$this->success('删除成功！');
     }
-    
- 	
-	
-	
+
+
+
+
 	// @@@NODE-3###add_line###新增线路###
     public function add_line() {
         $this->title('新增线路');
@@ -796,30 +796,30 @@ class ProductController extends BaseController {
 			 $newname   = I('newname', null);
              $cost      = I('cost');  //固定线路价格信息
              $carHotel  = I('carHotel');
-             
+
              if ($aids) {
                  $info['att_id'] = $aids;
              } else {
                  $info['att_id'] = '';
              }
-             
+
 			 //修改附件文件名
              $attdb = M('attachment');
              foreach ($newname as $k => $v) {
                  $attdb->where("id=$k")->setField('filename', $v);
              }
-			 
-			 
+
+
 			 $info['input_user'] = session('userid');
 			 $info['input_uname'] = session('nickname');
 			 $info['input_time']  = time();
 			 $line_id = M('product_line')->add($info);
 			 if($line_id){
-				 
+
 				 if ($aids) {
 					$attdb->where("id in ($aids)")->setField(array('rel_id'=>$line_id,'catid'=>3));
 				}
-				 
+
 				 $this->request_audit(P::REQ_TYPE_PRODUCT_LINE, $line_id);
 				 if($pro){
 				     foreach($pro as $v){
@@ -830,7 +830,7 @@ class ProductController extends BaseController {
 						 if(!M('product_line_tpl')->where($data)->find()){
 							 M('product_line_tpl')->add($data);
 						 }
-					 }		 
+					 }
 			     }
 				 if($pro_model){
 				     foreach($pro_model as $v){
@@ -841,7 +841,7 @@ class ProductController extends BaseController {
 						 if(!M('product_line_tpl')->where($data)->find()){
 							 M('product_line_tpl')->add($data);
 						 }
-					 }		 
+					 }
 			     }
 				 if($days){
 				     foreach($days as $v){
@@ -851,7 +851,7 @@ class ProductController extends BaseController {
 						 $data['content']  =  $v['content'];
 						 $data['remarks']  =  $v['remarks'];
 						 M('product_line_days')->add($data);
-					 }		 
+					 }
 			     }
 			     if($cost){
                      //固定线路价格信息
@@ -879,12 +879,12 @@ class ProductController extends BaseController {
                      }
                  }
 			 }
-			 
-                 
-             $this->success('保存成功！', $referer); 
-            
+
+
+             $this->success('保存成功！', $referer);
+
          } else {
-            
+
 			 //$this->kindlist = M('project_kind')->select();
              $this->line_type= C('LINE_TYPE');
              $this->hotel_start = C('HOTEL_START');
@@ -892,10 +892,10 @@ class ProductController extends BaseController {
              $this->display('add_line');
          }
     }
-	
-	
-	
-	
+
+
+
+
 	// @@@NODE-3###edit_line###修改线路###
     public function edit_line() {
          $this->title('修改线路');
@@ -920,20 +920,20 @@ class ProductController extends BaseController {
              } else {
                  $info['att_id'] = '';
              }
-             
+
 			 //修改附件文件名
              $attdb = M('attachment');
              foreach ($newname as $k => $v) {
                  $attdb->where("id=$k")->setField('filename', $v);
              }
-			 
+
 			 $isok = M('product_line')->data($info)->where(array('id'=>$line_id))->save();
-			 
+
 		     if ($aids) {
 				 $attdb->where("id in ($aids)")->setField(array('rel_id'=>$line_id,'catid'=>3));
 			 }
-				 
-			 
+
+
 			 M('product_line_tpl')->where(array('line_id'=>$line_id,'type'=>1))->delete();
 			 if($pro){
 				 foreach($pro as $v){
@@ -942,9 +942,9 @@ class ProductController extends BaseController {
 					 $data['pro_id']  =  $v;
 					 $data['type']    =  1;
 					 M('product_line_tpl')->add($data);
-				 }		 
+				 }
 			 }
-			 
+
 			 M('product_line_tpl')->where(array('line_id'=>$line_id,'type'=>2))->delete();
 			 if($pro_model){
 				 foreach($pro_model as $v){
@@ -953,9 +953,9 @@ class ProductController extends BaseController {
 					 $data['pro_id']  =  $v;
 					 $data['type']    =  2;
 					 M('product_line_tpl')->add($data);
-				 }		 
+				 }
 			 }
-			 
+
 			 M('product_line_days')->where(array('line_id'=>$line_id))->delete();
 			 if($days){
 				 foreach($days as $v){
@@ -965,7 +965,7 @@ class ProductController extends BaseController {
 					 $data['content']  =  $v['content'];
 					 $data['remarks']  =  $v['remarks'];
 					 M('product_line_days')->add($data);
-				 }		 
+				 }
 			 }
              M('product_line_price')->where(array('line_id'=>$line_id))->delete();
 			 if ($cost){
@@ -992,27 +992,27 @@ class ProductController extends BaseController {
                      M('product_line_carhotel')->add($data);
                  }
              }
-			
-             $this->success('保存成功！', $referer); 
-            
+
+             $this->success('保存成功！', $referer);
+
          } else {
-             
+
 			 $id = I('id',0);
 			 $this->row =  M('product_line')->find($id);
 			 if($this->row){
-				 
+
 				if ($this->row['att_id']) {
 					$this->atts = M('attachment')->where("catid=3 and id in (" . $this->row['att_id']. ")")->select();
 				} else {
 					$this->atts = false;
-				} 
-				
-				 $this->pro_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>1))->select(); 
-				 $this->pro_model_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT_MODEL__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>2))->select(); 
-				 
+				}
+
+				 $this->pro_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>1))->select();
+				 $this->pro_model_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT_MODEL__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>2))->select();
+
 				 $this->days_list = M('product_line_days')->where(array('line_id'=>$id))->select();
 			 }
-			
+
 			 $this->business_depts = C('BUSINESS_DEPT');
 		     $this->subject_fields = C('SUBJECT_FIELD');
 		     $this->ages           = C('AGE_LIST');
@@ -1025,28 +1025,28 @@ class ProductController extends BaseController {
              $this->display('edit_line');
          }
     }
-	
-	
-	
+
+
+
 	public function view_line(){
 		 $id = I('id',0);
 		 $row =  M('product_line')->find($id);
 		 if($row){
-			 
+
 			 $kind = M('project_kind')->find($row['kind']);
 			 $row['kind_name'] = $kind['name'];
 
-			 $this->pro_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>1))->select(); 
-			 
-			 $this->pro_model_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT_MODEL__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>2))->select(); 
-			 
+			 $this->pro_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>1))->select();
+
+			 $this->pro_model_list = M()->field('t.*,p.*')->table('__PRODUCT_LINE_TPL__ as t')->join('__PRODUCT_MODEL__ as p on p.id=t.pro_id')->where(array('t.line_id'=>$id,'t.type'=>2))->select();
+
 			 //获取附件
 			if($row['att_id']){
 				$this->atts = M('attachment')->where("catid=3 and id in (" . $row['att_id']. ")")->select();
 			}else{
 				$this->atts = false;
 			}
-			
+
 			 $this->days_list   = M('product_line_days')->where(array('line_id'=>$id))->select();
              $this->price_list  = M('product_line_price')->where(array('line_id'=>$id))->select();
              $hotel_start       = C('HOTEL_START');
@@ -1065,29 +1065,29 @@ class ProductController extends BaseController {
 		 	 $this->subject_fields = C('SUBJECT_FIELD');
 			 $this->ages           = C('AGE_LIST');
 			 $this->row = $row;
-		 	 $this->display('view_line');	
-		 
+		 	 $this->display('view_line');
+
 		 }else{
 			 $this->error('线路不存在：' . $db->getError());
 	     }
-		
-		 
+
+
 	}
-	
-	
-	
+
+
+
 	// @@@NODE-3###select_tpl###线路选择模板###
 	public function select_tpl(){
 		/*
 		$key  = I('key');
-		
+
 		$where = array();
 		//$where['1'] = priv_where(P::REQ_TYPE_SUPPLIER_RES_U);
 		if($key)  $where['tpl_name'] = array('like','%'.$key.'%');
-		
+
 		$db = M('product_model');
     	$prdb = M('product');
-    	
+
     	$page = new Page($db->where($where)->count(), P::PAGE_SIZE);
     	$lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
     	foreach ($lists as $k => $v) {
@@ -1096,71 +1096,71 @@ class ProductController extends BaseController {
     	$this->lists = $lists;
     	$this->pages = $page->show();
 		*/
-		
+
 		$key          = I('key');
 		$status       = I('status','-1');
 		$bus          = I('bus');
-		
+
 		$db = M('product_model');
 		$this->status = $status;
 		$where = array();
 		if($this->status != '-1') $where['p.audit_status'] = $this->status;
 		if($key)    $where['p.title'] = array('like','%'.$key.'%');
 		if($bus)    $where['p.business_dept'] = $bus;
-		
+
 		$business_depts = M('project_kind')->getField('id,name');
         $page = new Page($db->table('__PRODUCT_MODEL__ as p')->where($where)->count(), P::PAGE_SIZE);
         $this->pages = $page->show();
 		$lists = $db->table('__PRODUCT_MODEL__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
 		foreach($lists as $k=>$v){
-			
-			$lists[$k]['dept'] = $business_depts[$v['business_dept']];	
+
+			$lists[$k]['dept'] = $business_depts[$v['business_dept']];
 		}
-		
+
 		$this->lists = $lists;
-		
+
 		$this->business_depts = M('project_kind')->getField('id,name');
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
 		$this->display('select_tpl');
 	}
-	
-	
+
+
 	// @@@NODE-3###public_info###获取模块信息###
 	public function public_info(){
 		$pids = I('pids');
 		$tpl  = I('tpl');
-		
+
 		$business_depts = C('BUSINESS_DEPT');
 		$subject_fields = C('SUBJECT_FIELD');
 		$ages           = C('AGE_LIST');
-		
+
 		$list = M('product')->where(array('id'=>array('in',$pids)))->select();
 		foreach($list as $row){
 			echo '<tr id="tpl_'.$tpl.$row['id'].'"><td><input type="hidden" name="pro[]" value="'.$row['id'].'">'.$row['id'].'</td><td><a href="'.U('Product/view', array('id'=>$row['id'])).'" target="_blank">'.$row['title'].'</a></td><td>'.$business_depts[$row['business_dept']].'</td><td>'.$subject_fields[$row['subject_field']].'</td><td>'.$ages[$row['age']].'</td><td>'.$row['input_uname'].'</td><td>'.$row['sales_price'].'</td><td>'.$row['peer_price'].'</td><td class="taskOptions"><button onClick="javascript:del_timu(\'tpl_'.$tpl.$row['id'].'\')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td></tr>';
 		}
-		
-		
+
+
 	}
-	
-	
+
+
 	// @@@NODE-3###add_supplier###关联科普资源###
 	public function add_supplier(){
 		$key          = I('key');
 		$type         = I('type');
 		$pro          = I('pro');
-		
+
 		$where = array();
 		$where['1'] = priv_where(P::REQ_TYPE_SCIENCE_RES_V);
 		if($key)      $where['title'] = array('like','%'.$key.'%');
 		if($type)     $where['kind'] = $type;
 		if($pro)      $where['business_dept'] = array('like','%'.$pro.'%');
-		
+
 		//分页
 		$pagecount = M('cas_res')->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        
+
         $this->reskind = M('reskind')->getField('id,name', true);
 		$this->kinds = M('project_kind')->getField('id,name');
         $this->lists = M('cas_res')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
@@ -1978,5 +1978,5 @@ class ProductController extends BaseController {
             }
         }
     }
-    
+
 }
