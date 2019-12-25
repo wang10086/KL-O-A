@@ -141,16 +141,11 @@ class FinanceController extends BaseController {
 	// @@@NODE-3###costacc###成本核算###
     public function costacc(){
 			
-		$opid = I('opid');
-		$id   = I('id');
-		if($id){
-			$budget = M('op_budget')->find($id);
-			$opid = $budget['op_id'];
-		}
+		$opid                       = I('opid');
 		if(!$opid) $this->error('项目不存在');	
 		
-		$where = array();
-		$where['op_id'] = $opid;
+		$where                      = array();
+		$where['op_id']             = $opid;
 
         $isCost     = M('op_costacc')->where(array('op_id'=>$opid,'product_id'=>array('neq','0')))->count();
 		$op         = M('op')->where($where)->find();

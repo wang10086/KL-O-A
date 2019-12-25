@@ -23,6 +23,8 @@
                 <div class="userlist cost_expense" id="costacc_id_c_{$k}">
                     <span class="title"><?php echo $k+1; ?></span>
                     <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" >
+                    <input type="hidden" class="form-control" name="costacc[888{$k}][supplier_id]" value="{$v.supplier_id}">
+                    <input type="hidden" class="form-control" name="costacc[888{$k}][supplier_name]" value="{$v.supplier_name}">
                     <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}">
                     <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
                     <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
