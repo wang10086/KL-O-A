@@ -169,6 +169,8 @@ class OpController extends BaseController {
 
                     //保存标准化模块
                     //if ($costacc){ $mod -> save_create_op_product($opid,$costacc); }
+                    //保存标准化模块的的费用信息
+                    if ($info['standard'] && $info['producted_id']){ $mod -> save_create_op_costacc($opid , $info['producted_id']); }
                     //创建工单
                     if ($exe_user_id){ $mod->save_create_op_worder($addok , $info , $exe_user_id); }
 

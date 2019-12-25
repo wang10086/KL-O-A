@@ -97,7 +97,7 @@ class OpModel extends Model{
         return $new_op['op_id'];
     }
 
-    //立项时保存标准化模块
+    //保存标准化模块
     public function save_create_op_product($opid , $costacc, $resid='', $num=0){
         M('op_product')->where(array('op_id'=>$opid))->delete();
         foreach ($costacc as $k=>$v){
@@ -127,7 +127,29 @@ class OpModel extends Model{
         return $num;
     }
 
-    //立项市创建工单
+    //立项时保存成本核算(标准化产品)
+    public function save_create_op_costacc($opid , $producted_id){
+
+        $db                             = M('producted_material');
+        $op_costacc_db                  = M('op_costacc');
+        $lists                          = $db->where(array('producted_id'=>$producted_id))->select();
+        foreach ($lists as $k=>$v){
+            $data                       = array();
+            $data['op_id']              = $opid;
+            $data['title']              = $v['material'];
+            $data['unitcost']           = $v['unitprice'];
+            $data['amount']             = $v['amount'];
+            $data['total']              = $v['total'];
+            $data['remark']             = $v['remark'];
+            $data['type']               = $v['type'];
+            $data['status']             = 0; //0=>成本核算
+            $data['supplier_id']        = $v['supplierRes_id'];
+            $data['supplier_name']      = $v['channel'];
+            $op_costacc_db->add($data);
+        }
+    }
+
+    //立项时创建工单
     public function save_create_op_worder($addok , $info , $exe_user_id){
         $id                         = $info['kind'];
         $pro_info                   = M('project_kind')->where(array('id'=>$id) )->find();
