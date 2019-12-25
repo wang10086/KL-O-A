@@ -1415,12 +1415,11 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
 
     //获取公司合计合同签订率
     function get_user_contract_list($userid,$yearMonth,$begintime,$endtime){
-        //$userid = 78;
         $mod                                = D('contract');
         $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
         $target                             = $gross_margin['monthTarget']; //当月目标值
         //$op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime); //以出团时间为准
-        $op_list                            = $mod->get_budget_list($userid,$begintime,$endtime); //以预算审核通过为准
+        $op_list                            = $mod->get_budget_list($userid,($begintime-7*24*3600),($endtime-7*24*3600)); //以预算审核通过为准(5个工作日前)
         $op_num 		                    = count($op_list);
         $contract_list                      = array();
         foreach ($op_list as $key=>$value){
