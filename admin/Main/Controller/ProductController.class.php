@@ -1579,7 +1579,7 @@ class ProductController extends BaseController {
         $db                                 = M('supplier');
         $name                               = trim(I('name'));
         $city                               = trim(I('city'));
-        $costType                           = I('costType',0);
+        //$costType                           = I('costType',0);
         //$kind                               = I('kind') ? I('kind') : get_supplierkind($costType);
         $kind                               = I('kind',0);
 
