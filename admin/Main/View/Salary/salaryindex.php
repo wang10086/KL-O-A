@@ -142,7 +142,8 @@
        var month        = myDate.getMonth()+1;//获取当前月
        var date         = myDate.getDate();//当前日
        var Appointime   = Atime(year,month,date);//工资月分
-       if(Appointime==12){
+
+       if(Appointime==12 && date < 16){
            year = year-1;
        }
        var currenttime  = year+p(Appointime).toString();//当前时间
