@@ -1336,8 +1336,8 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
     }
 
     //获取当前考核时间所对应的年月日
-    function get_this_month(){
-        $year                           = date('Y');
+    function get_this_month($year=''){
+        $year                           = $year ? $year : date('Y');
         $month                          = date('m');
         $day                            = date('d');
         $data                           = array();

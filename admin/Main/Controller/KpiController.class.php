@@ -1870,8 +1870,9 @@ class KpiController extends BaseController {
                     }
                 }
             }
+
             if ($pin =='02'){
-                $time_info              = get_this_month();
+                $time_info              = get_this_month($year);
                 $year                   = $time_info['year'];
                 $month                  = $time_info['month'];
                 $yearMonth              = $year.$month;
