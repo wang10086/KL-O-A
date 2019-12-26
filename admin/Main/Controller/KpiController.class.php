@@ -118,6 +118,7 @@ class KpiController extends BaseController {
     public function pdca(){
         $this->title('PDCA');
 		$year                   = I('year',date('Y'));
+		$last_year              = get_init_year();
 		$kpr                    = I('kpr');
 		$bkpr                   = I('bkpr');
 		$month                  = I('month',date('Ym'));
@@ -197,6 +198,7 @@ class KpiController extends BaseController {
 		$this->year 		= $year;
 		$this->prveyear		= $year-1;
 		$this->nextyear		= $year+1;
+		$this->last_year    = $last_year;
 		$this->userkey 		= json_encode($key);
         $this->pin          = $pin;
 
@@ -1890,7 +1892,7 @@ class KpiController extends BaseController {
         return $lists;
     }
 
-    public function get_month_num($cycle=1,$year,$month,$day){
+    /*public function get_month_num($cycle=1,$year,$month,$day){
         $month                  = $month?$month:date('m');
         $day                    = $day?$day:date('d');
         switch ($cycle){
@@ -1964,7 +1966,7 @@ class KpiController extends BaseController {
                 break;
         }
         return $num;
-    }
+    }*/
 
     public function get_kpi_cycle_months($cycle,$year){
         switch ($cycle){

@@ -18,7 +18,7 @@
                         <div class="col-xs-12">
 
                             <div class="btn-group" id="catfont" style="padding-bottom:5px;">
-                                <?php if($prveyear>2019){ ?>
+                                <?php if($prveyear>2018){ ?>
                                     <a href="{:U('Kpi/pdca',array('year'=>$prveyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
@@ -34,7 +34,7 @@
                                         }
                                     }
                                 ?>
-                                <?php if($year<date('Y')){ ?>
+                                <?php if($year<$last_year){ ?>
                                     <a href="{:U('Kpi/pdca',array('year'=>$nextyear,'month'=>'01','show'=>$show))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
