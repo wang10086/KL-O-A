@@ -1386,7 +1386,7 @@ class KpiController extends BaseController {
 
 
 		//更新数据
-		updatekpi($year.$month,$user);
+		updatekpi($year.$month,$user,$year);
 
 		$sta   = C('KPI_STATUS');
 

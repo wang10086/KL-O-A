@@ -92,7 +92,7 @@
                         </if>
                         -->
 
-                        <if condition="rolemenu(array('Product/index','Product/tpl','Product/line','Product/kind','Product/feedback','Project/lession','Project/fields','Project/types',Product/add_standard_product))">
+                        <if condition="rolemenu(array('Product/index','Product/tpl','Product/line','Product/kind','Product/feedback','Project/lession','Project/fields','Project/types','Product/add_standard_product','Product/product_chart'))">
                         <li class="treeview {:on('Product')} {:on('Project')} {:on('Project/lession')} {:on('Project/fields')} {:on('Project/types')}">
                             <a href="javascript:;">
                                 <i class="fa fa-globe"></i>
@@ -100,7 +100,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li class="treeview {:on('Product/standard_product')} {:on('Product/standard_module')} {:on('Product/add_standard_product')} {:on('Product/add_standard_module')} {:on('Product/view')}">
+                                <li class="treeview {:on('Product/standard_product')} {:on('Product/standard_module')} {:on('Product/add_standard_product')} {:on('Product/add_standard_module')} {:on('Product/view')} {:on('Product/public_product_chart')}">
                                     <if condition="rolemenu(array('Product/standard_product','Product/standard_module'))">
                                         <a href=""><i class="fa  fa-indent"></i> 标准化管理</a>
                                     </if>
@@ -110,6 +110,9 @@
                                         </if>
                                         <if condition="rolemenu(array('Product/standard_module'))">
                                             <li class="{:on('Product/standard_module')} {:on('Product/view')} {:on('Product/add_standard_module')}"><a href="{:U('Product/standard_module')}"><i class="fa fa-angle-right"></i> 标准化模块</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Product/product_chart'))">
+                                            <li class="{:on('Product/public_product_chart')} {:on('Product/')}"><a href="{:U('Product/public_product_chart')}"><i class="fa fa-angle-right"></i> 标准化产品使用统计</a></li>
                                         </if>
                                     </ul>
                                 </li>

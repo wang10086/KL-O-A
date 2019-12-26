@@ -4920,3 +4920,14 @@ function get_cost_save_lists($type){
     }
     return $lists;
 }
+
+/**
+ * 获取标准化产品是使用率
+ * @param $year
+ * @param $quarter 季度
+ * @param $standard_kind_ids 标准化产品的项目类型
+ */
+function get_standard_product_use_avg($year,$quarter,$standard_kind_ids){
+    $kinds                                  = get_standard_project_kinds($standard_kind_ids);
+
+}

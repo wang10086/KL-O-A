@@ -1659,6 +1659,22 @@ class ProductController extends BaseController {
         $this->success('删除成功');
     }
 
+    //标准化产品使用率
+    public function public_product_chart(){
+        $this->title('标准化产品使用统计');
+        $year                                       = I('year',date("Y"));
+        $month                                      = date('m');
+        $quarter                                    = I('quarter',get_quarter($month));
+        $standard_kind_ids                          = C('STANDARD_PRODUCT_KIND_IDS');
+        $data                                       = get_standard_product_use_avg($year,$quarter,$standard_kind_ids);
+
+
+        $this->year                                 = $year;
+        $this->prveyear                             = $year-1;
+        $this->nextyear                             = $year+1;
+        $this->display('product_chart');
+    }
+
     public function public_save(){
         $savetype                                   = I('savetype');
         $num                                        = 0;

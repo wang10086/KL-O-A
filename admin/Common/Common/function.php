@@ -1957,20 +1957,43 @@ function set_quarter($year,$quarter){
         return $list;
     }*/
 
+    //判断KPi数据是否更新
+    function get_is_update_in_timely($month,$user,$year=''){
+        $kpi_cycle          = M('account')->where(array('id'=>$user))->getField('kpi_cycle');
+        $cycle_arr_month    = get_kpi_refresh_yearMonth($month,$kpi_cycle);
+        $arr_length         = count($cycle_arr_month);
+        $lastMonth          = $cycle_arr_month[$arr_length-1];
+        $cycle_end_time     = strtotime($lastMonth.'26');
+        //$lastMonthSalary    = get_last_month_salary($lastMonth);
+        $y                  = date('Y');
+        $ym                 = date('Ym');
+        $md                 = date('md');
+        $day                = date('d');
 
-function updatekpi($month,$user){
-    $kpi_cycle          = M('account')->where(array('id'=>$user))->getField('kpi_cycle');
-    $cycle_arr_month    = get_kpi_refresh_yearMonth($month,$kpi_cycle);
-    $arr_length         = count($cycle_arr_month);
-    $lastMonth          = $cycle_arr_month[$arr_length-1];
-    $cycle_end_time     = strtotime($lastMonth.'26');
-    //$lastMonthSalary    = get_last_month_salary($lastMonth);
+        if ($md > 1225){ //12月25日后
+            if (($kpi_cycle == 1 && $year == $y+1 && $month == ($y+1).'01') || (in_array($kpi_cycle,array(2,3,4)) && in_array($month,$cycle_arr_month) && NOW_TIME < $cycle_end_time)){
+                $returnNum  = 1;
+            }else{
+                $returnNum  = 0;
+            }
+        }else{
+            if (($kpi_cycle == 1 && ($month==$ym && $day<26) || ($month==($ym+1) && $day>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array($ym,$cycle_arr_month) && NOW_TIME < $cycle_end_time)){
+                $returnNum  = 1;
+            }else{
+                $returnNum  = 0;
+            }
+        }
+        return $returnNum;
+    }
 
+
+function updatekpi($month,$user,$year=''){
+    $update_in_timely   = get_is_update_in_timely($month,$user,$year);
 	$where = array();
     $where['month']   = array('like','%'.$month.'%');
     $where['user_id'] = $user;
 
-    if (($kpi_cycle == 1 && ($month==date('Ym') && date('d')<26) || ($month==(date('Ym')+1) && date('d')>25)) || (in_array($kpi_cycle,array(2,3,4)) && in_array(date('Ym'),$cycle_arr_month) && NOW_TIME < $cycle_end_time)){   //只刷新当前月份,避免老数据刷新  区分考核周期月度,季度半年度...
+    if ($update_in_timely){   //只刷新当前月份,避免老数据刷新  区分考核周期月度,季度半年度...
         $quto   = M('kpi_more')->where($where)->select();
         if($quto){
             foreach($quto as $k=>$v){
@@ -3027,7 +3050,7 @@ function updatekpi($month,$user){
                                 $complete           = 100;
                             }else{
                                 $score              = (round($hegelv*100/90,2))*100;
-                                $complete           = $score;
+                                $complete           = $score > 100 ? 100 : $score;
                             }
                             $url                    = '';
                         }
@@ -3040,11 +3063,12 @@ function updatekpi($month,$user){
                             $pingfencishu           = $score_date['pingfencishu'];
                             $hegelv                 = $score_date['hegelv'];
 
-                            if ($hegelv >= 1 || !$pingfencishu){
+                            /*if ($hegelv >= 1 || !$pingfencishu){
                                 $complete           = 100;
                             }else{
                                 $complete           = round(($hegelv*100)/72,2)*100;
-                            }
+                            }*/
+                            $complete               = '100%';
                             $url                    = '';
                         }
 
@@ -3509,10 +3533,20 @@ function updatekpi($month,$user){
 
                     }
 
+                    //标准化产品应用比率
+                    if ($v['quota_id']==240){
+                            $year               = $v['year'];
+                            $monon              = substr($v['month'] , 4 , 2);
+                            $quarter            = get_quarter($monon);
+
+                            $complete           = '测试';
+                            $url                = U('Product/public_product_chart',array('year'=>$year,'quarter'=>$quarter));
+                    }
+
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239);
+                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
