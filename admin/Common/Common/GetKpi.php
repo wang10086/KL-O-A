@@ -3121,6 +3121,7 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         $where                              = array();
         if ($uid){ $where['c.input_user_id']= $uid; }
         $where['c.create_time']             = array('between',"$startTime,$endTime");
+        $where['o.standard']                = array('neq' , 1); //非标准化
         $field                              = 'o.op_id,o.group_id,o.project,o.create_user,o.create_user_name,o.create_time as op_create_time,c.*';
         $costacc_list                       = M()->table('__OP_COSTACC_RES__ as c')->join('__OP__ as o on o.op_id=c.op_id','left')->where($where)->field($field)->select();
         $ok_list                            = array();
