@@ -1,4 +1,4 @@
-<?php if($is_zutuan == 1 && $dijie_shouru == 0){ ?>
+<?php if($is_zutuan == 1 && $dijie_shouru == 0 && !in_array($op['kind'],array(87))){ ?> <!--87单进院所-->
     <div class="content" style="margin-left:15px;">地接部门尚未做该地接项目的预算！</div>
 <?php }else{ ?>
     <?php if($op['costacc']!='0.00'){ ?>
