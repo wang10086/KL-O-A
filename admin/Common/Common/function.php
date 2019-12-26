@@ -5833,3 +5833,10 @@ function get_audit_log_record($req_type,$req_id){
     $list                   = $db->where($where)->find();
     return $list;
 }
+
+function get_init_year(){
+    $year                   = date('Y');
+    $md                     = date('md');
+    if ($md > 1225){ $year += 1; }
+    return $year;
+}

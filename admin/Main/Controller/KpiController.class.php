@@ -1817,19 +1817,14 @@ class KpiController extends BaseController {
 	//kpi排行
 	public function kpiChart(){
         $pin            = I('pin')?I('pin'):'00';
-        //if ($pin=='00'){ $this->get_initialize(); }    //初始化KPI数据
         $year           = I('year',date('Y'));
+        $last_year      = get_init_year();
         $where          = array();
         $where['status']= array('neq',2);
         $where['id']    = array('gt',10);
         $where['employee_member'] = array('neq','');
         if ($pin && $pin !=100) $where['rank'] = $pin;
 
-        //分页
-        //$pagecount		= M('account')->field('id,nickname')->where($where)->count();
-        //$page			= new Page($pagecount, P::PAGE_SIZE);
-        //$this->pages 	= $pagecount>P::PAGE_SIZE ? $page->show():'';
-        //$accountlists   = M('account')->field('id,nickname,rank')->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
         $accountlists   = M('account')->field('id,nickname,rank,employee_member,kpi_cycle')->where($where)->order('employee_member ASC')->select();
         $kpiLists       = $this->getKpiResult($accountlists,$year,$pin); //获取KPI数据
         $lists          = $this->getKpiCycle($kpiLists); //获取最终考核结果显示的月份
@@ -1837,6 +1832,7 @@ class KpiController extends BaseController {
         $this->lists    = $lists;
         $this->pin      = $pin;
         $this->year 	= $year;
+        $this->last_year= $last_year;
         $this->prveyear	= $year-1;
         $this->nextyear	= $year+1;
         $this->display();
@@ -1855,13 +1851,15 @@ class KpiController extends BaseController {
             if ($v['kpi_cycle']==2) $lists[$k]['cycle']     = '季度';
             if ($v['kpi_cycle']==3) $lists[$k]['cycle']     = '半年度';
             if ($v['kpi_cycle']==4) $lists[$k]['cycle']     = '年度';
-            $lists[$k]['kpi_cycle']            = $v['kpi_cycle'];
+            $lists[$k]['kpi_cycle']                         = $v['kpi_cycle'];
 
             $sum_score                                      = 0; //总分
+            $num                                            = 0;
             foreach ($kpilists as $key=>$value){
                 $lists[$k]['year']      = $year;
                 if ($value['user_id']==$v['id']){
-                    $num                = $this->get_month_num($value['cycle'],$year,date('m'),date('d'));
+                    //$num                = $this->get_month_num($value['cycle'],$year,date('m'),date('d'));
+                    if ($value['score'] != 0){ $num++; }
                     $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
                     if (in_array($value['month'],$arr_months) &&  date('Ym')>= $year.date('m')){
                         $dm             = substr($value['month'],4,2);

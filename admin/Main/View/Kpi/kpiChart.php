@@ -21,7 +21,7 @@
                                             <a href="{:U('Kpi/kpiChart',array('year'=>$prveyear))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         --><?php /*} */?>
                                 <?php
-                                for($i=2018;$i<=date('Y');$i++){
+                                for($i=2018;$i<=$last_year;$i++){
                                     if($year==$i){
                                         echo '<a href="'.U('Kpi/kpiChart',array('year'=>$i,'pin'=>$pin)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'年</a>';
                                     }else{
