@@ -92,16 +92,6 @@
 
                                     <div class="form-group col-md-4">
                                         <label>客户单位：</label>
-<!--
-                                        <input type="text" name="info[customer]" id="customer_name" value="" placeholder="您可以输入客户单位名称拼音首字母检索" class="form-control" />
--->
-                                        <!--<select  name="info[customer]" class="form-control" required>
-                                            <option value="" selected disabled>请选择客户单位</option>
-                                            <foreach name="geclist"  item="v">
-                                                <option value="{$v.company_name}"><?php /*echo strtoupper(substr($v['pinyin'], 0, 1 )); */?> - {$v.company_name}</option>
-                                            </foreach>
-                                        </select>-->
-
                                         <input type="text" class="form-control" name="info[customer]" value="" list="customer" onblur="check_customer($(this).val())" />
                                         <datalist id="customer">
                                             <foreach name="geclist" item="v">
@@ -117,10 +107,10 @@
                                                 <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}"> {$v}</span>
                                             </foreach>
                                         </div>
-                                        <div class="col-md-12"  style="padding-right: 0">
+                                        <!--<div class="col-md-12"  style="padding-right: 0">
                                             <span class="lm_c">背景提升产品负责人：</span>
                                             <span class="lm_c"><input type="checkbox" name="expert[]" value="202"> 于洵</span>
-                                        </div>
+                                        </div>-->
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -157,35 +147,6 @@
                                         <input type="checkbox" name="exe_user_id[]" value="110"> &nbsp;研发(南京-李艳) &#12288;
                                         <input type="checkbox" name="exe_user_id[]" value="115"> &nbsp;资源(南京-桂小佩) &#12288;
                                     </div>
-
-                                    <!--<div id="productlist" style="display:block;">
-                                        <table class="table table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th width="100">模块</th>
-                                                <th width="80">类别</th>
-                                                <th width="120">科学领域</th>
-                                                <th width="80">来源</th>
-                                                <th width="120">适合年龄</th>
-                                                <th width="100">核算方式</th>
-                                                <th width="100">参考价</th>
-                                                <th width="20">&nbsp;</th>
-                                                <th width="50">数量</th>
-                                                <th width="100">参考费用</th>
-                                                <th width="80">删除</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="productTbody"></tbody>
-                                            <tfoot>
-                                            <tr>
-                                                <td align="left" colspan="11">
-                                                    <a href="javascript:;" class="btn btn-success btn-sm" style="margin-left:-8px;"  onClick="selectproduct(56)"><i class="fa fa-fw  fa-plus"></i> 选择产品模块</a>
-                                                    <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:save('save_product','<?php /*echo U('Op/public_save'); */?>',{$op.op_id});">保存</a>
-                                                </td>
-                                            </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>-->
                                 </div>
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->

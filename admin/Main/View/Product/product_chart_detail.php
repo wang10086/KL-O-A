@@ -21,9 +21,7 @@
                             <div class="box box-success">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
-                                    <div class="box-tools pull-right">
-                                    	<!--<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>-->
-                                    </div>
+                                    <div class="box-tools pull-right"></div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -57,36 +55,5 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-
-    <div id="searchtext">
-        <form action="" method="get" id="searchform">
-            <input type="hidden" name="m" value="Main">
-            <input type="hidden" name="c" value="Product">
-            <input type="hidden" name="a" value="standard_product">
-            <input type="hidden" name="pro" value="{$pro}">
-            <div class="form-group col-md-12">
-                <input type="text" class="form-control" name="key" placeholder="关键字">
-            </div>
-
-            <div class="form-group col-md-12">
-                <select class="form-control" name="kind">
-                    <option value="">适用项目类型</option>
-                    <foreach name="kinds" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                    </foreach>
-                </select>
-            </div>
-
-            <div class="form-group col-md-12">
-                <select class="form-control" name="age">
-                    <option value="">适用年龄</option>
-                    <foreach name="ages" key="k" item="v">
-                        <option value="{$k}">{$v}</option>
-                    </foreach>
-                </select>
-            </div>
-
-        </form>
-    </div>
 
 <include file="Index:footer2" />
