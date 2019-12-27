@@ -3538,8 +3538,11 @@ function updatekpi($month,$user,$year=''){
                             $year               = $v['year'];
                             $monon              = substr($v['month'] , 4 , 2);
                             $quarter            = get_quarter($monon);
+                            $standard_kind_ids  = C('STANDARD_PRODUCT_KIND_IDS');
+                            $data               = get_standard_product_use_avg($year,$quarter,$standard_kind_ids);
+                            $sum_data           = get_standard_product_use_sum_avg($data);
 
-                            $complete           = '测试';
+                            $complete           = $sum_data['average'];
                             $url                = U('Product/public_product_chart',array('year'=>$year,'quarter'=>$quarter));
                     }
 

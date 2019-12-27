@@ -25,8 +25,8 @@
                                     for($i=1;$i<5;$i++){
                                         $par            = array();
                                         $par['year']    = $year;
-                                        $par['month']   = str_pad($i,2,"0",STR_PAD_LEFT);
-                                        if($month==$i){
+                                        $par['quarter'] = $i;
+                                        if($quarter==$i){
                                             echo '<a href="'.U('Product/public_product_chart',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
                                         }else{
                                             echo '<a href="'.U('Product/public_product_chart',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
@@ -46,7 +46,6 @@
                                 <div class="box-body">
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="taskOptions" width="60">序号</th>
                                             <th class="taskOptions">项目类型</th>
                                             <th class="taskOptions">项目数</th>
                                             <th class="taskOptions">标准化项目数</th>
@@ -57,26 +56,26 @@
                                         </tr>
                                         <foreach name="lists" key="k" item="v">
                                             <tr>
-                                                <td class="taskOptions">{$k+1}</td>
-                                                <td class="taskOptions">{$v.title}</td>
-                                                <td class="taskOptions" style="max-width: 150px;">{$v.content}</td>
-                                                <td class="taskOptions">{$v.sum_num}</td>
-                                                <td class="taskOptions">{$v.ok_num}</td>
-                                                <td class="taskOptions">{$v.ok_num}</td>
+                                                <td class="taskOptions">{$v.kind_name}</td>
+                                                <td class="taskOptions">{$v.sum_op_num}</td>
+                                                <td class="taskOptions">{$v.standard_op_num}</td>
+                                                <td class="taskOptions">{$v.sum_cost}</td>
+                                                <td class="taskOptions">{$v.standard_cost}</td>
                                                 <td class="taskOptions">{$v.average}</td>
                                                 <td class="taskOptions">
-                                                    <a href="javascript:;" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                    <a href="{:U('Product/public_product_chart_detail',array('year'=>$year,'quarter'=>$quarter,'kid'=>$v['kind_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                                 </td>
                                             </tr>
                                         </foreach>
                                         <tr class="black">
-                                            <td class="taskOptions" colspan="3">合计</td>
-                                            <td class="taskOptions">{$sum.sum_num}</td>
-                                            <td class="taskOptions">{$sum.ok_num}</td>
-                                            <td class="taskOptions">{$sum.ok_num}</td>
+                                            <td class="taskOptions">合计</td>
+                                            <td class="taskOptions">{$sum.sum_op_num}</td>
+                                            <td class="taskOptions">{$sum.standard_op_num}</td>
+                                            <td class="taskOptions">{$sum.sum_cost}</td>
+                                            <td class="taskOptions">{$sum.standard_cost}</td>
                                             <td class="taskOptions">{$sum.average}</td>
                                             <td class="taskOptions">
-                                                <a href="javascript:;" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                <a href="{:U('Product/public_product_chart_detail',array('year'=>$year,'quarter'=>$quarter))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                             </td>
                                         </tr>
                                     </table>

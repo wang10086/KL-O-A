@@ -1667,12 +1667,31 @@ class ProductController extends BaseController {
         $quarter                                    = I('quarter',get_quarter($month));
         $standard_kind_ids                          = C('STANDARD_PRODUCT_KIND_IDS');
         $data                                       = get_standard_product_use_avg($year,$quarter,$standard_kind_ids);
+        $sum_data                                   = get_standard_product_use_sum_avg($data);
 
-
+        $this->lists                                = $data;
+        $this->sum                                  = $sum_data;
         $this->year                                 = $year;
+        $this->quarter                              = $quarter;
         $this->prveyear                             = $year-1;
         $this->nextyear                             = $year+1;
         $this->display('product_chart');
+    }
+
+    //标准化产品使用率详情
+    public function public_product_chart_detail(){
+        $this->title('标准化使用率详情');
+        $this->pageTitle                            = '产品标准化';
+        $year                                       = I('year');
+        $quarter                                    = I('quarter');
+        $kind_id                                    = I('kid',0);
+        $quarter_cycle                              = get_quarter_cycle_time($year,$quarter);
+        $data                                       = get_standard_settlement_data($kind_id,$quarter_cycle['begin_time'],$quarter_cycle['end_time']);
+        $lists                                      = $data['sum_lists'];
+
+        $this->lists                                = $lists;
+        //$this->kinds                                = M('project_kind')->getField('id,name' , true);
+        $this->display('product_chart_detail');
     }
 
     public function public_save(){

@@ -2910,9 +2910,10 @@ function get_yw_department(){
      * @param $sale_uid 销售id
      * @param int $jd_uid 计调id
      * @param $addr 实施地点
+     * @param $kindid 项目类型
      * @return mixed
      */
-    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0,$addr=''){
+    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0,$addr='',$kindid=''){
         $where                                  = array();
         $where['b.audit_status']                = 1;
         $where['l.req_type']                    = 801;
@@ -2920,7 +2921,8 @@ function get_yw_department(){
         if ($sale_uid) $where['o.create_user']  = $sale_uid;
         if ($jd_uid) $where['l.req_uid']        = $jd_uid;
         if ($addr) $where['o.destination']      = array('like', $addr.'%');
-        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+        if ($kindid) $where['o.kind']           = $kindid;
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,b.budget,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
         $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         return $op_settlement_list;
     }
@@ -4928,6 +4930,70 @@ function get_cost_save_lists($type){
  * @param $standard_kind_ids 标准化产品的项目类型
  */
 function get_standard_product_use_avg($year,$quarter,$standard_kind_ids){
-    $kinds                                  = get_standard_project_kinds($standard_kind_ids);
+    //$kinds                                  = get_standard_project_kinds($standard_kind_ids);
+    $quarter_cycle                          = get_quarter_cycle_time($year,$quarter);
+    $data                                   = array();
+    foreach ($standard_kind_ids as $k=>$v){
+        $data[$k]                           = get_standard_settlement_data($v,$quarter_cycle['begin_time'],$quarter_cycle['end_time']);
+    }
+    return $data;
+}
 
+/**
+ * 获取某一种项目类型的标准化产品使用率
+ * @param $kid 项目类型ID
+ * @param $startTime
+ * @param $endTime
+ */
+function get_standard_settlement_data($kid=0,$startTime,$endTime){
+    $settlement_lists                       = get_settlement_list($startTime,$endTime,'','','',$kid);
+    $sum_op_num                             = 0;
+    $standard_op_num                        = 0;
+    $sum_cost                               = 0; //总成本
+    $standard_cost                          = 0; //标准化总成本
+    $sum_lists                              = array();
+    $standard_lists                         = array();
+    foreach ($settlement_lists as $k =>$v){
+        $sum_op_num                         += 1;
+        $sum_cost                           += $v['budget'];
+        $sum_lists[]                        = $v;
+        if ($v['standard'] == 1){ // 标准化
+            $standard_op_num                += 1;
+            $standard_cost                  += $v['budget'];
+            $standard_lists[]               = $v;
+        }
+    }
+    $kind                                   = $kid ? M('project_kind')->find($kid) : '';
+    $data                                   = array();
+    $data['kind_id']                        = $kind['id'];
+    $data['kind_name']                      = $kind['name'];
+    $data['sum_op_num']                     = $sum_op_num;
+    $data['standard_op_num']                = $standard_op_num;
+    $data['sum_cost']                       = $sum_cost;
+    $data['standard_cost']                  = $standard_cost;
+    $data['average']                        = $sum_cost ? (round($standard_cost/$sum_cost,4)*100).'%' : '0%';
+    $data['sum_lists']                      = $sum_lists;
+    $data['standard_lists']                 = $standard_lists;
+    return $data;
+}
+
+//获取标准化产品是使用率合计数据
+function get_standard_product_use_sum_avg($lists){
+    $sum_op_num                             = 0;
+    $standard_op_num                        = 0;
+    $sum_cost                               = 0;
+    $standard_cost                          = 0;
+    foreach ($lists as $v){
+        $sum_op_num                         += $v['sum_op_num'];
+        $standard_op_num                    += $v['standard_op_num'];
+        $sum_cost                           += $v['sum_cost'];
+        $standard_cost                      += $v['standard_cost'];
+    }
+    $data                                   = array();
+    $data['sum_op_num']                     = $sum_op_num;
+    $data['standard_op_num']                = $standard_op_num;
+    $data['sum_cost']                       = $sum_cost;
+    $data['standard_cost']                  = $standard_cost;
+    $data['average']                        = $sum_cost ? (round($standard_cost/$sum_cost,4)*100).'%' : "0%";
+    return $data;
 }
