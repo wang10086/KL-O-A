@@ -2516,12 +2516,13 @@ class KpiController extends BaseController {
     public function public_kpi_profit(){
         $this->title('季度累计毛利额-产品经理');
         $year                               = I('year',date('Y'));
-        $kind                               = I('kind',0);
+        //$kind                               = I('kind',0);
         $uid                                = I('uid',0);
         $startTime                          = I('st');
         $endTime                            = I('et');
         $target                             = I('tg',0);
-        $data                               = $uid == 202 ? get_gross_profit_op('',$startTime,$endTime,$uid) : get_gross_profit_op($kind,$startTime,$endTime,'');
+        //$data                               = $uid == 202 ? get_gross_profit_op('',$startTime,$endTime,$uid) : get_gross_profit_op($kind,$startTime,$endTime,'');
+        $data                               = get_gross_profit_op($uid,$startTime,$endTime);
         $lists                              = $data['lists'];
         $profit                             = $data['sum_profit']; //累计完成毛利
         $complete                           = $target ? (round($profit/$target,4)*100).'%' : '100%';
@@ -2531,7 +2532,7 @@ class KpiController extends BaseController {
         $this->profit                       = $profit;
         $this->complete                     = $complete;
         $this->year                         = $year;
-        $this->kind                         = $kind;
+        //$this->kind                         = $kind;
         $this->kinds                        = M('project_kind')->getField('id,name',true);
         $this->display('kpi_profit');
     }

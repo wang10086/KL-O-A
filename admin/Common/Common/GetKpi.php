@@ -4447,13 +4447,29 @@ function get_res_op_satisfaction($lists,$type,$dimension){
  * @param $startTime
  * @param $endTime
  */
-    function get_gross_profit_op($opKind=0,$startTime,$endTime,$user_id=0){
+    function get_gross_profit_op($user_id=0,$startTime,$endTime){
+        $opKind                 = get_cpjl_op_kind_id($user_id);
         $lists                  = get_settlement_op_lists($startTime,$endTime,$opKind,$user_id);
         $sum_profit             = $lists ? array_sum(array_column($lists,'maoli')) : 0;
         $data                   = array();
         $data['sum_profit']     = $sum_profit; //合计毛利
         $data['lists']          = $lists;
         return $data;
+    }
+
+    //获取产品经理对应的kpi考核项目类型
+    function get_cpjl_op_kind_id($uid){
+        switch ($uid){
+            case 202: //于洵
+                $kind           = 90; //背景提升及科研实习
+            break;
+            case 232: //梅轶宁
+                $kind           = 67; //实验室建设
+            break;
+            default:
+                $kind           = 0;
+        }
+        return $kind;
     }
 
 /**
