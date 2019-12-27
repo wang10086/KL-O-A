@@ -32,6 +32,7 @@
                                         <th class="taskOptions">团号</th>
                                         <th class="taskOptions">项目名称</th>
                                         <th class="taskOptions">项目成本</th>
+                                        <th class="taskOptions">项目类型</th>
                                         <th class="taskOptions">是否标准化</th>
                                     </tr>
                                     <foreach name="lists" item="row">
@@ -40,6 +41,7 @@
                                             <td class="taskOptions">{$row.group_id}</td>
                                             <td class="taskOptions">{$row.project}</td>
                                             <td class="taskOptions">{$row.budget}</td>
+                                            <td class="taskOptions">{$kinds[$row['kind']]}</td>
                                             <td class="taskOptions"><?php echo $row['standard']==1 ? "<span class='green'>标准化</span>" : '非标准化'; ?></td>
                                         </tr>
                                     </foreach>

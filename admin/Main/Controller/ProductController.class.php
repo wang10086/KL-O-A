@@ -1690,7 +1690,7 @@ class ProductController extends BaseController {
         $lists                                      = $data['sum_lists'];
 
         $this->lists                                = $lists;
-        //$this->kinds                                = M('project_kind')->getField('id,name' , true);
+        $this->kinds                                = M('project_kind')->getField('id,name' , true);
         $this->display('product_chart_detail');
     }
 
