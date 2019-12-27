@@ -1112,14 +1112,16 @@ class ManageModel extends Model{
      * $year 年
      */
     public function yearmonthday($year,$month){
-        $day              = date('d');
+        /*$day              = date('d');
         if ($month.$day > 1225){
             $ymd[0]       = $year.'1226';
             $ymd[1]       = ($year+1).'1226';
         }else{
             $ymd[0]       = ($year-1).'1226';
             $ymd[1]       = $year.'1226';
-        }
+        }*/
+        $ymd[0]       = ($year-1).'1226';
+        $ymd[1]       = $year.'1226';
         return $ymd;
     }
 
