@@ -1323,11 +1323,12 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $month                          = date('m');
         $day                            = date('d');
         if ($month ==12){
-            if ($day < 26){
+            /*if ($day < 26){
                 $year                   = $year - 1;
             }else{
                 $year                   = $year;
-            }
+            }*/
+            $year                       = $year - 1;
         }else{
             $year                       = $year - 1;
         }
@@ -4472,6 +4473,21 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         return $kind;
     }
 
+    //获取全部产品经理累计毛利
+    function get_all_cpjl_gross_profit_op($users,$startTime,$endTime){
+        $sum_profit             = 0;
+        $sum_lists              = array();
+        foreach ($users as $k =>$v){
+            $info               = get_gross_profit_op($k , $startTime , $endTime);
+            $sum_profit         += $info['sum_profit'];
+            $sum_lists          = $info['lists'] ? array_merge($sum_lists , $info['lists']) : $sum_lists;
+        }
+        $data                   = array();
+        $data['sum_profit']     = $sum_profit;
+        $data['sum_lists']      = $sum_lists;
+        return $data;
+    }
+
 /**
  * 获取某个时间段内结算的团
  * @param $startTime
@@ -5020,6 +5036,6 @@ function get_cpjl_users(){
     $where['postid']                        = 29; //研发部产品经理
     $where['formal']                        = 1; //转正
     //$where['status']                        = 0;
-    $lists                                  = M('account')->where($where)->select();
+    $lists                                  = M('account')->where($where)->getField('id , nickname' , true);
     return $lists;
 }

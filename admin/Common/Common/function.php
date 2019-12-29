@@ -3472,7 +3472,8 @@ function updatekpi($month,$user,$year=''){
                     }
 
                     //季度累计毛利额-产品经理
-                    if ($v['quota_id']==234){
+                    //if ($v['quota_id']==234){
+                    if (in_array($v['quota_id'],array(234 , 242))){
                         //$opKind                 = 67; //实验室建设
                         $start_time             = get_year_settlement_start_time($v['year']);
                         $end_time               = $v['end_date'];
@@ -3481,11 +3482,13 @@ function updatekpi($month,$user,$year=''){
                         $profit                 = $data['sum_profit']; //累计完成毛利
                         $target                 = $v['target']; //目标
                         $complete               = $profit;
+
                         $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],/*'kind'=>$opKind,*/'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
                     }
 
                     //顾客满意度-产品经理
-                    if ($v['quota_id']==235){
+                    //if ($v['quota_id']==235){
+                    if (in_array($v['quota_id'] , array(235 , 243))){
                         $opKind                 = 67; //实验室建设
                         $data                   = $v['user_id'] == 202 ? get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],'',$v['user_id']) : get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],$opKind,'');
                         $complete               = $data['complete'];
@@ -3493,7 +3496,8 @@ function updatekpi($month,$user,$year=''){
                     }
 
                     //内部（业务人员）满意度-产品经理
-                    if ($v['quota_id']==236){
+                    //if ($v['quota_id']==236){
+                    if (in_array($v['quota_id'] , array(236 , 244))){
                         $uid                    = $v['user_id'];
                         $opKind                 = 67; //实验室建设
                         $lists                  = $v['user_id'] == 202 ? get_settlement_op_lists($v['start_date'],$v['end_date'],'',$uid) : get_settlement_op_lists($v['start_date'],$v['end_date'],$opKind);
@@ -3549,18 +3553,20 @@ function updatekpi($month,$user,$year=''){
 
                     //各产品经理季度累计毛利额总和
                     if ($v['quota_id']==241){
-                            $cpjl_uids          = get_cpjl_users();
-                            //P($cpjl_uids);
+                        $cpjl_users             = get_cpjl_users();
+                        $startTime              = get_year_settlement_start_time($v['year']);
+                        $endTime                = $v['end_date'];
+                        $data                   = get_all_cpjl_gross_profit_op($cpjl_users,$startTime,$endTime);
 
 
-                            $complete           = '';
-                            $url                = '';
+                        $complete               = $data['sum_profit'];
+                        $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'users'=>$cpjl_users,'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
                     }
 
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240);
+                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
