@@ -5013,3 +5013,13 @@ function get_standard_product_use_sum_avg($lists){
     $data['average']                        = $sum_cost ? (round($standard_cost/$sum_cost,4)*100).'%' : "0%";
     return $data;
 }
+
+//获取所有产品经理信息
+function get_cpjl_users(){
+    $where                                  = array();
+    $where['postid']                        = 29; //研发部产品经理
+    $where['formal']                        = 1; //转正
+    //$where['status']                        = 0;
+    $lists                                  = M('account')->where($where)->select();
+    return $lists;
+}

@@ -3547,6 +3547,16 @@ function updatekpi($month,$user,$year=''){
                             $url                = U('Product/public_product_chart',array('year'=>$year,'quarter'=>$quarter));
                     }
 
+                    //各产品经理季度累计毛利额总和
+                    if ($v['quota_id']==241){
+                            $cpjl_uids          = get_cpjl_users();
+                            //P($cpjl_uids);
+
+
+                            $complete           = '';
+                            $url                = '';
+                    }
+
                    /* }*/
 
                     //已实现自动获取指标值
