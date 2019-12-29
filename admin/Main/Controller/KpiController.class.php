@@ -1829,7 +1829,8 @@ class KpiController extends BaseController {
 
         $accountlists   = M('account')->field('id,nickname,rank,employee_member,kpi_cycle')->where($where)->order('employee_member ASC')->select();
         $kpiLists       = $this->getKpiResult($accountlists,$year,$pin); //获取KPI数据
-        $lists          = $this->getKpiCycle($kpiLists); //获取最终考核结果显示的月份
+        //$lists          = $this->getKpiCycle($kpiLists); //获取最终考核结果显示的月份
+        $lists          = multi_array_sort($kpiLists,'average');  //排序(平均值由高到低)
 
         $this->lists    = $lists;
         $this->pin      = $pin;
@@ -1863,13 +1864,15 @@ class KpiController extends BaseController {
                     //$num                = $this->get_month_num($value['cycle'],$year,date('m'),date('d'));
                     if ($value['score'] != 0){ $num++; }
                     $arr_months         = $this->get_kpi_cycle_months($v['kpi_cycle'],$year);
-                    if (in_array($value['month'],$arr_months) &&  date('Ym')>= $year.date('m')){
+                    //if (in_array($value['month'],$arr_months) &&  date('Ym')>= $year.date('m')){
+                    if (in_array($value['month'],$arr_months)){
                         $dm             = substr($value['month'],4,2);
                         $lists[$k]['kpi'][$dm] = $value['score'];
                         $sum_score      += $value['score'];
                     }
                 }
             }
+
 
             if ($pin =='02'){
                 $time_info              = get_this_month($year);
@@ -1986,7 +1989,7 @@ class KpiController extends BaseController {
         return $months;
     }
 
-    //获取最终考核结果显示的月份
+    /*//获取最终考核结果显示的月份
     private function getKpiCycle($lists){
         foreach ($lists as $k=>$v){
             if ($v['kpi_cycle']=='2'){ //季度
@@ -2002,7 +2005,7 @@ class KpiController extends BaseController {
 
         $lists                              = multi_array_sort($lists,'average');  //排序(平均值由高到低)
         return $lists;
-    }
+    }*/
 
     //关键事项评价
     public function crux(){
