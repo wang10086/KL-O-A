@@ -3489,8 +3489,9 @@ function updatekpi($month,$user,$year=''){
                     //顾客满意度-产品经理
                     //if ($v['quota_id']==235){
                     if (in_array($v['quota_id'] , array(235 , 243))){
-                        $opKind                 = 67; //实验室建设
-                        $data                   = $v['user_id'] == 202 ? get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],'',$v['user_id']) : get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],$opKind,'');
+                        //$opKind                 = 67; //实验室建设
+                        //$data                   = $v['user_id'] == 202 ? get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],'',$v['user_id']) : get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],$opKind,'');
+                        $data                   = get_cp_satisfied_kpi_data($v['user_id'],$v['start_date'],$v['end_date']);
                         $complete               = $data['complete'];
                         $url                    = U('Kpi/public_satisfied',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date']));
                     }

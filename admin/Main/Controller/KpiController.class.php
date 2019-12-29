@@ -2543,8 +2543,9 @@ class KpiController extends BaseController {
         $startTime                          = I('st');
         $endTime                            = I('et');
         $uid                                = I('uid',0);
-        $opKind                             = 67; //实验室建设
-        $lists                              = $uid == 202 ? get_settlement_op_lists($startTime,$endTime,'',$uid) : get_settlement_op_lists($startTime,$endTime,$opKind);
+        //$opKind                             = 67; //实验室建设
+        //$lists                              = $uid == 202 ? get_settlement_op_lists($startTime,$endTime,'',$uid) : get_settlement_op_lists($startTime,$endTime,$opKind);
+        $lists                              = get_settlement_op_lists($uid,$startTime,$endTime);
         $data                               = get_jw_satis_chart($lists,3);
         $this->username                     = username($uid);
         $this->lists                        = $data['lists'];
@@ -2557,8 +2558,9 @@ class KpiController extends BaseController {
 	    $uid                                = I('uid');
 	    $startTime                          = I('st');
 	    $endTime                            = I('et');
-        $opKind                             = 67; //实验室建设
-        $data                               = $uid == 202 ? get_cp_satisfied_kpi_data($startTime,$endTime,'',$uid) : get_cp_satisfied_kpi_data($startTime,$endTime,$opKind,'');
+        //$opKind                             = 67; //实验室建设
+        //$data                               = $uid == 202 ? get_cp_satisfied_kpi_data($startTime,$endTime,'',$uid) : get_cp_satisfied_kpi_data($startTime,$endTime,$opKind,'');
+        $data                               = get_cp_satisfied_kpi_data($uid,$startTime,$endTime);
 
         $this->username                     = username($uid);
         $this->data                         = $data;

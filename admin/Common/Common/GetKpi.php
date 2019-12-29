@@ -4449,8 +4449,9 @@ function get_res_op_satisfaction($lists,$type,$dimension){
  * @param $endTime
  */
     function get_gross_profit_op($user_id=0,$startTime,$endTime){
-        $opKind                 = get_cpjl_op_kind_id($user_id);
-        $lists                  = get_settlement_op_lists($startTime,$endTime,$opKind,$user_id);
+        //$opKind                 = get_cpjl_op_kind_id($user_id);
+        //$lists                  = get_settlement_op_lists($startTime,$endTime,$opKind,$user_id);
+        $lists                  = get_settlement_op_lists($user_id,$startTime,$endTime);
         $sum_profit             = $lists ? array_sum(array_column($lists,'maoli')) : 0;
         $data                   = array();
         $data['sum_profit']     = $sum_profit; //合计毛利
@@ -4495,10 +4496,12 @@ function get_res_op_satisfaction($lists,$type,$dimension){
  * @param int $kind
  * @return mixed
  */
-function get_settlement_op_lists($startTime,$endTime,$kind=0,$user_id=0){
+function get_settlement_op_lists($user_id=0,$startTime,$endTime){
+    $kind                       = get_cpjl_op_kind_id($user_id);
     $where                      = array();
-    if ($kind) $where['o.kind'] = $kind;
-    if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
+    $where['o.kind']            = $kind;
+    //if ($kind) $where['o.kind'] = $kind;
+    //if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
     $where['l.req_type']        = 801;
     $where['l.audit_time']      = array('between',array($startTime,$endTime));
     $where['s.audit_status']    = 1;
@@ -4513,14 +4516,16 @@ function get_settlement_op_lists($startTime,$endTime,$kind=0,$user_id=0){
     return $lists;
 }
 
-function get_cp_satisfied_kpi_data($start_time,$end_time,$kind=0,$user_id=0){
+function get_cp_satisfied_kpi_data($user_id=0,$start_time,$end_time){
+    $kind                           = get_cpjl_op_kind_id($user_id);
     //当月实施的团
     $where                          = array();
     $start_time                     = $start_time;
     $end_time                       = ($end_time)-1;
     $where['c.ret_time']            = array('between',array($start_time,$end_time));
-    if ($kind) $where['o.kind']     = $kind;
-    if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
+    $where['o.kind']                = $kind;
+    //if ($kind) $where['o.kind']     = $kind;
+    //if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
     $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
 
     $score_lists                    = array();
