@@ -1529,10 +1529,9 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
                 $year_shishi_lists[$k]['op_average'] = '0%';
             }
         }
-        $year_score_average                    = (round($year_op_average_sum/$year_score_num,4)*100).'%'; //已调查顾客满意度
+        $year_score_average                    = $year_score_num ? (round($year_op_average_sum/$year_score_num,4)*100).'%' : '100%'; //已调查顾客满意度
         $year_shishi_num                       = count($year_shishi_lists); //所有实施团的数量(包括未调查的数量)
-        $year_average                          = round($year_op_average_sum/$year_shishi_num,4); //全部平均值
-        $year_average                          = ($year_average*100).'%';  //总平均分,包括未调查的
+        $year_average                          = $year_shishi_num ? (round($year_op_average_sum/$year_shishi_num,4)*100).'%' : '100%'; //全部平均值,包括未调查的
 
         $data                                   = array();
         if ($type==2){
@@ -1581,10 +1580,9 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
                 $month_shishi_lists[$k]['op_average'] = '0%';
             }
         }
-        $month_score_average                    = (round($month_op_average_sum/$month_score_num,4)*100).'%'; //已调查顾客满意度
+        $month_score_average                    = $month_score_num ? (round($month_op_average_sum/$month_score_num,4)*100).'%' : '100%'; //已调查顾客满意度
         $month_shishi_num                       = count($month_shishi_lists); //所有实施团的数量(包括未调查的数量)
-        $month_average                          = round($month_op_average_sum/$month_shishi_num,4); //全部平均值
-        $month_average                          = ($month_average*100).'%';  //总平均分,包括未调查的
+        $month_average                          = $month_shishi_num ? (round($month_op_average_sum/$month_shishi_num,4)*100).'%' : '100%'; //全部平均值
 
         $data['month_op_num']                   = count($month_shishi_lists);
         $data['month_score_num']                = $month_score_num;

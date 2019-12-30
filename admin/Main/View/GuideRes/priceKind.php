@@ -24,7 +24,7 @@
                                     <h3 class="box-title">费用分类</h3>
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
-                                         <a href="javascript:;" onClick="javascript:{:open_priceKind()}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建资源</a>
+                                         <a href="javascript:;" onClick="javascript:open_priceKind(`{:U('GuideRes/addPriceKind')}`)" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新建资源</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -53,7 +53,7 @@
                                             <td>{$row.name}</a></td>
                                             <if condition="rolemenu(array('GuideRes/addPriceKind'))">
                                                 <td class="taskOptions">
-                                                    <a href="javascript:;" onClick="javascript:{:open_priceKind($row['id'])}" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
+                                                    <a href="javascript:;" onClick="javascript:open_priceKind(`{:U('GuideRes/addPriceKind',array('id'=>$row['id']))}`)" ><button onClick="javascript:;" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button></a>
                                                 </td>
                                             </if>
                                             <if condition="rolemenu(array('GuideRes/del_priceKind'))">

@@ -1037,9 +1037,9 @@ function open_cost ($op_id,$cost,$name) {
 	return "open_price('" .U('GuideRes/addprice',array('id'=>$id)) ."')";
 }*/
 
-function open_priceKind ($id) {
+/*function open_priceKind ($id) {
 	return "open_priceKind('" .U('GuideRes/addPriceKind',array('id'=>$id)) ."')";
-}
+}*/
 
 function open_edit_tcs_need ($cid,$pid,$opid) {
 	return "open_edit_tcs_need('" .U('Op/edit_tcs_need',array('confirm_id'=>$cid,'price_id'=>$pid,'opid'=>$opid)) ."')";
