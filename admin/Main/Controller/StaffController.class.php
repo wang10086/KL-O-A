@@ -58,7 +58,7 @@ class StaffController extends Controller{
 
             if (!$title || !$content){ $this->error('标题或内容不能为空'); }
             if ($num >= 5){ $this->error('24小时内发送数量已超过允许最大值'); }
-            if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(12,13,14,15,16,17))))){
+            if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(9,12,13,14,15,16,17))))){
                 if ($token == $_SESSION['token']){
                     $info           = array();
                     $info['title']  = stripslashes($title);
@@ -153,7 +153,7 @@ class StaffController extends Controller{
             $day                = date('Y-m-d');
             $hour               = date('H');
             $holiday            = get_holidays();
-            if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(12,13,14,15,16,17))))){
+            if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(9,12,13,14,15,16,17))))){
                 if ($token == $_SESSION['token']){
                     $info           = array();
                     $info['pid']    = $id;
