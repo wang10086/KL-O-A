@@ -634,8 +634,8 @@ class ManageController extends ChartController {
 
     //月度累计毛利率提升比率
     public function public_elevate(){
-        $year                   = I('year');
-        $month                  = I('month');
+        $year                   = I('year',date('Y'));
+        $month                  = I('month',date('m'));
         if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
 
         $cycle                  = get_years_cycle($year,$month); //获取今年和去年的考核周期

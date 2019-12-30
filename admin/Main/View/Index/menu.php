@@ -465,15 +465,15 @@
                         </if>
 
 
-                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/satisfaction','Sale/timely','Op/op_cost_type'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')} {:on('Op/op_cost_type')}">
+                        <if condition="rolemenu(array('Sale/index','Sale/goods','Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/satisfaction','Sale/timely','Op/op_cost_type','Manage/public_elevate'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME, 'Sale')} {:on('Op/op_cost_type')} {:on('Manage/public_elevate')}">
                             <a href="javascript:;">
                                 <i class="fa fa-flag"></i>
                                 <span>计调操作</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li class="treeview {:on('Sale/gross')} {:on('Sale/edit_gross')} {:on('Sale/chart_gross')} {:on('Sale/chart_jd_gross')} {:on('Sale/gross_jd_info')} {:on('Sale/gross_op_list')}">
+                                <li class="treeview {:on('Sale/gross')} {:on('Sale/edit_gross')} {:on('Sale/chart_gross')} {:on('Sale/chart_jd_gross')} {:on('Sale/gross_jd_info')} {:on('Sale/gross_op_list')} {:on('Manage/public_elevate')}">
                                     <if condition="rolemenu(array('Sale/gross','Sale/edit_gross','Sale/chart_gross','Sale/chart_jd_gross'))">
                                         <a href=""><i class="fa  fa-money"></i> 毛利率</a>
                                     </if>
@@ -483,6 +483,9 @@
                                         </if>
                                         <if condition="rolemenu(array('Sale/gross'))">
                                             <li class="{:on('Sale/gross')}"><a href="{:U('Sale/gross')}"><i class="fa fa-angle-right"></i> 设置最低毛利率</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Manage/public_elevate'))">
+                                            <li class="{:on('Manage/public_elevate')}"><a href="{:U('Manage/public_elevate')}"><i class="fa fa-angle-right"></i> 毛利率提升比率</a></li>
                                         </if>
                                     </ul>
                                 </li>
