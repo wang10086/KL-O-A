@@ -49,7 +49,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>集中采购内容</label>
+                                        <label>集中采购事项</label>
                                         <select class="form-control" name="info[quota_id]" required>
                                             <option value="" selected disabled>==请选择==</option>
                                             <foreach name="quota" item="v">
@@ -78,7 +78,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <label>采购类型</label><font color="#999">（例如：科技节物资）</font>
+                                        <label>集中采购内容</label><font color="#999">（例如：科技节物资）</font>
                                         <input type="text" name="info[type]" value="{$list.type}" class="form-control" required />
                                     </div>
 

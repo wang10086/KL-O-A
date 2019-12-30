@@ -36,7 +36,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
-                                            <p>所属分类：{$list.type}</p>
+                                            <p>集中采购内容：{$list.type}</p>
                                         </div>
 
                                         <div class="form-group col-md-4 viwe">
