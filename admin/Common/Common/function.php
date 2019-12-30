@@ -3487,8 +3487,6 @@ function updatekpi($month,$user,$year=''){
                     //顾客满意度-产品经理
                     //if ($v['quota_id']==235){
                     if (in_array($v['quota_id'] , array(235 , 243))){
-                        //$opKind                 = 67; //实验室建设
-                        //$data                   = $v['user_id'] == 202 ? get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],'',$v['user_id']) : get_cp_satisfied_kpi_data($v['start_date'],$v['end_date'],$opKind,'');
                         $data                   = get_cp_satisfied_kpi_data($v['user_id'],$v['start_date'],$v['end_date']);
                         $complete               = $data['complete'];
                         $url                    = U('Kpi/public_satisfied',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date']));
@@ -3498,8 +3496,7 @@ function updatekpi($month,$user,$year=''){
                     //if ($v['quota_id']==236){
                     if (in_array($v['quota_id'] , array(236 , 244))){
                         $uid                    = $v['user_id'];
-                        $opKind                 = 67; //实验室建设
-                        $lists                  = $v['user_id'] == 202 ? get_settlement_op_lists($v['start_date'],$v['end_date'],'',$uid) : get_settlement_op_lists($v['start_date'],$v['end_date'],$opKind);
+                        $lists                  = get_settlement_op_lists($v['user_id'],$v['start_date'],$v['end_date']);
                         $data                   = get_jw_satis_chart($lists,3);
                         $complete               = $data['sum_average'];
                         $url                    = U('Kpi/public_cp_satisfaction_detail',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$uid));

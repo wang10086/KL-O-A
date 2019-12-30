@@ -4119,8 +4119,8 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         $data                                   = array();
         $data['sum_num']                        = $sum_num;
         $data['score_num']                      = $score_num;
-        $data['score_average']                  = $score_zongfen ? (round($defen/$score_zongfen,4)*100).'%' : '0%';
-        $data['sum_average']                    = $sum_zongfen ? (round($defen/$sum_zongfen,4)*100).'%' : '0%';
+        $data['score_average']                  = $score_zongfen ? (round($defen/$score_zongfen,4)*100).'%' : '100%';
+        $data['sum_average']                    = $sum_zongfen ? (round($defen/$sum_zongfen,4)*100).'%' : '100%';
         $data['lists']                          = $lists;
         return $data;
     }
@@ -4536,8 +4536,6 @@ function get_cp_satisfied_kpi_data($user_id=0,$start_time,$end_time){
     $end_time                       = ($end_time)-1;
     $where['c.ret_time']            = array('between',array($start_time,$end_time));
     $where['o.kind']                = $kind;
-    //if ($kind) $where['o.kind']     = $kind;
-    //if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
     $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
 
     $score_lists                    = array();
@@ -4565,16 +4563,9 @@ function get_cp_satisfied_kpi_data($user_id=0,$start_time,$end_time){
         }
     }
     $op_average_sum                 = array_sum(array_filter(explode(',',str_replace('%','',implode(',',array_column($shishi_lists,'op_average'))))));
-    $score_average                  = round($op_average_sum/$score_num,2).'%'; //已调查顾客满意度
+    $score_average                  = $score_num ? round($op_average_sum/$score_num,2).'%' : '100%'; //已调查顾客满意度
     $shishi_num                     = count($shishi_lists); //所有实施团的数量(包括未调查的数量)
-    $average                        = round($op_average_sum/$shishi_num,2)/100; //全部平均值
-
-    if ($shishi_num==0) { //当月无
-        $complete = '0%';
-    }else{
-        //总平均分,包括未调查的
-        $complete = ($average*100).'%';
-    }
+    $complete                       = $shishi_num ? (round($op_average_sum/$shishi_num,2)/100).'%' : '100%'; //全部平均值
 
     //客服满意度
     $data                           = array();

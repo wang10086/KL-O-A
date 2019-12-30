@@ -44,6 +44,7 @@
                                         <tr role="row" class="orders" >
                                             <th class="taskOptions" width="60">序号</th>
                                             <th class="taskOptions">集采事项</th>
+                                            <th class="taskOptions">集采内容</th>
                                             <th class="taskOptions">集中采购方</th>
                                             <th class="taskOptions">计价规则</th>
                                             <th class="taskOptions">计价单位</th>
@@ -67,6 +68,7 @@
                                             <tr>
                                                 <td class="taskOptions">{$k+1}</td>
                                                 <td class="taskOptions">{$v.title}</td>
+                                                <td class="taskOptions">{$v.type}</td>
                                                 <td class="taskOptions"><a href="{:U('SupplierRes/res_view',array('id'=>$v['supplier_id']))}">{$v.supplier_name}</a></td>
                                                 <td class="taskOptions" style="max-width: 150px;">{$v.rule}</td>
                                                 <td class="taskOptions">{$v.unit}</td>
@@ -99,6 +101,7 @@
                                         </foreach>
                                         <tr class="black">
                                             <td class="taskOptions">合计</td>
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
