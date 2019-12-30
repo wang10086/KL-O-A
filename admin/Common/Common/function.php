@@ -1971,7 +1971,7 @@ function set_quarter($year,$quarter){
         $day                = date('d');
 
         if ($md > 1225){ //12月25日后
-            if (($kpi_cycle == 1 && $year == $y+1 && $month == ($y+1).'01') || (in_array($kpi_cycle,array(2,3,4)) && in_array($ym,$cycle_arr_month) && NOW_TIME < $cycle_end_time)){
+            if (($kpi_cycle == 1 && $year == $y+1 && $month == ($y+1).'01') || (in_array($kpi_cycle,array(2,3,4)) && (in_array($ym,$cycle_arr_month) || in_array(($y+1).'01',$cycle_arr_month)) && NOW_TIME < $cycle_end_time)){
                 $returnNum  = 1;
             }else{
                 $returnNum  = 0;
