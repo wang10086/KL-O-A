@@ -2520,12 +2520,10 @@ class KpiController extends BaseController {
         $this->title('季度累计毛利额-产品经理');
         $year                               = I('year',date('Y'));
         $uid                                = I('uid',0);
-        $users                              = I('users',''); //产品经理
         $startTime                          = I('st');
         $endTime                            = I('et');
         $target                             = I('tg',0);
-        //$data                               = $uid == 202 ? get_gross_profit_op('',$startTime,$endTime,$uid) : get_gross_profit_op($kind,$startTime,$endTime,'');
-        $data                               = $users ? get_all_cpjl_gross_profit_op($users,$startTime,$endTime) : get_gross_profit_op($uid,$startTime,$endTime);
+        $data                               = get_gross_profit_op($uid,$startTime,$endTime);
         $lists                              = $data['lists'];
         $profit                             = $data['sum_profit']; //累计完成毛利
         $complete                           = $target ? (round($profit/$target,4)*100).'%' : '100%';
@@ -2535,9 +2533,29 @@ class KpiController extends BaseController {
         $this->profit                       = $profit;
         $this->complete                     = $complete;
         $this->year                         = $year;
-        //$this->kind                         = $kind;
+        $this->kind                         = get_cpjl_op_kind_id($uid);
         $this->kinds                        = M('project_kind')->getField('id,name',true);
         $this->display('kpi_profit');
+    }
+
+    //个产品经理单独数据
+    public function public_cpjl_kpi_profit(){
+        $this->title('各产品经理季度累计毛利额总和');
+        $year                               = I('year',date('Y'));
+        $users                              = I('users',''); //产品经理
+        $months                             = I('m');
+        $startTime                          = I('st');
+        $endTime                            = I('et');
+        $data                               = get_all_cpjl_gross_profit_op($users,$startTime,$endTime,$months);
+        $lists                              = $data['userdata'];
+
+        $this->month                        = substr($months,-2);
+        $this->data                         = $data;
+        $this->lists                        = $lists;
+        $this->year                         = $year;
+        $this->st                           = $startTime;
+        $this->et                           = $endTime;
+        $this->display('cpjl_kpi_profit');
     }
 
     //内部（业务人员）满意度-产品经理

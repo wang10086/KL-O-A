@@ -3474,16 +3474,14 @@ function updatekpi($month,$user,$year=''){
                     //季度累计毛利额-产品经理
                     //if ($v['quota_id']==234){
                     if (in_array($v['quota_id'],array(234 , 242))){
-                        //$opKind                 = 67; //实验室建设
                         $start_time             = get_year_settlement_start_time($v['year']);
                         $end_time               = $v['end_date'];
-                        //$data                   = $v['user_id'] == 202 ? get_gross_profit_op('',$start_time,$end_time,$v['user_id']) : get_gross_profit_op($opKind,$start_time,$end_time,'');
-                        $data                   = get_gross_profit_op($v['user_id'],$startTime,$endTime);
+                        $data                   = get_gross_profit_op($v['user_id'],$start_time,$end_time);
                         $profit                 = $data['sum_profit']; //累计完成毛利
                         $target                 = $v['target']; //目标
                         $complete               = $profit;
 
-                        $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],/*'kind'=>$opKind,*/'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
+                        $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
                     }
 
                     //顾客满意度-产品经理
@@ -3559,9 +3557,8 @@ function updatekpi($month,$user,$year=''){
                         $endTime                = $v['end_date'];
                         $data                   = get_all_cpjl_gross_profit_op($cpjl_users,$startTime,$endTime);
 
-
                         $complete               = $data['sum_profit'];
-                        $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'users'=>$cpjl_users,'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
+                        $url                    = U('Kpi/public_cpjl_kpi_profit',array('year'=>$v['year'],'m'=>$v['month'],'users'=>$cpjl_users,'st'=>$startTime,'et'=>$endTime,'tg'=>$target));
                     }
 
                    /* }*/

@@ -4475,16 +4475,28 @@ function get_res_op_satisfaction($lists,$type,$dimension){
     }
 
     //获取全部产品经理累计毛利
-    function get_all_cpjl_gross_profit_op($users,$startTime,$endTime){
+    function get_all_cpjl_gross_profit_op($users,$startTime,$endTime,$months=''){
         $sum_profit             = 0;
+        $sum_target             = 0;
         $sum_lists              = array();
+        $data                   = array();
+        $userdata               = array();
         foreach ($users as $k =>$v){
             $info               = get_gross_profit_op($k , $startTime , $endTime);
+            $info['userid']     = $k;
+            $info['username']   = $v;
+            $info['target']     = M('kpi_more')->where(array('user_id'=>$k,'month'=>$months,'quota_id'=>242))->getField('target');
+            $info['average']    = $info['target'] ? (round($info['sum_profit']/$info['target'],4)*100).'%' : '100%';
+            $userdata[]         = $info;
+
             $sum_profit         += $info['sum_profit'];
+            $sum_target         += $info['target'];
             $sum_lists          = $info['lists'] ? array_merge($sum_lists , $info['lists']) : $sum_lists;
         }
-        $data                   = array();
         $data['sum_profit']     = $sum_profit;
+        $data['sum_target']     = $sum_target;
+        $data['sum_average']    = $sum_target ? (round($sum_profit/$sum_target,4)*100).'%' : '100%';
+        $data['userdata']       = $userdata;
         $data['sum_lists']      = $sum_lists;
         return $data;
     }

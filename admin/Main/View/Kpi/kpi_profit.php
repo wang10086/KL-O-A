@@ -40,7 +40,7 @@
                                     <tr>
                                         <td class="taskOptions">{$row.op_id}</td>
                                         <td class="taskOptions">{$row.group_id}</td>
-                                        <td>{$row.project}</td>
+                                        <td><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}">{$row.project}</a></td>
                                         <td class="taskOptions">{$row.sale_user}</td>
                                         <td class="taskOptions">{$row.maoli}</td>
                                     </tr>
