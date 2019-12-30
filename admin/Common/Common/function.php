@@ -3412,156 +3412,163 @@ function updatekpi($month,$user,$year=''){
                             $url                        = U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'zy'));
                         }
 
-                    //月度累计毛利率提升比率
-                    if($v['quota_id']==225){
-                        $year                   = $v['year'];
-                        $monon                  = substr($v['month'],-2,2);
+                        //月度累计毛利率提升比率
+                        if($v['quota_id']==225){
+                            $year                   = $v['year'];
+                            $monon                  = substr($v['month'],-2,2);
 
-                        $cycle                  = get_years_cycle($year,$monon); //获取今年和去年的考核周期
-                        $manage_datas           = get_special_manage_data($cycle); //获取经营信息
-                        $complete               = ((round($manage_datas['thisYear_mll']/$manage_datas['lastYear_mll'],4)-1)*100).'%';
-                        $url                    = U('Manage/public_elevate',array('year'=>$year,'month'=>$monon));
-                    }
+                            $cycle                  = get_years_cycle($year,$monon); //获取今年和去年的考核周期
+                            $manage_datas           = get_special_manage_data($cycle); //获取经营信息
+                            $complete               = ((round($manage_datas['thisYear_mll']/$manage_datas['lastYear_mll'],4)-1)*100).'%';
+                            $url                    = U('Manage/public_elevate',array('year'=>$year,'month'=>$monon));
+                        }
 
-                    //城市合伙人保证金累计额
-                    if($v['quota_id']==228){
-                        $user_id                = $v['user_id'];
-                        $target                 = $v['target'];
-                        $start_time             = $v['start_date'];
-                        $end_time               = $v['end_date'];
-                        $data                   = get_partner($user_id,$start_time,$end_time);
-                        $complete               = $data['money']?$data['money']:0;
-                        $url                    = U('Customer/public_kpi_partner',array('uid'=>$user_id,'st'=>$start_time,'et'=>$end_time,'target'=>$target));
-                    }
+                        //城市合伙人保证金累计额
+                        if($v['quota_id']==228){
+                            $user_id                = $v['user_id'];
+                            $target                 = $v['target'];
+                            $start_time             = $v['start_date'];
+                            $end_time               = $v['end_date'];
+                            $data                   = get_partner($user_id,$start_time,$end_time);
+                            $complete               = $data['money']?$data['money']:0;
+                            $url                    = U('Customer/public_kpi_partner',array('uid'=>$user_id,'st'=>$start_time,'et'=>$end_time,'target'=>$target));
+                        }
 
-                    //227 => 城市合伙人-满意度
-                    //180 => 院内资源满意度 - 资源管理部经理
-                    //185 => 日常服务工作满意度-老科学家演讲团教务专员
-                    if(in_array($v['quota_id'],array(227,180,185))){
-                        $uid                    = $v['user_id'];
-                        $month                  = $v['month'];
-                        /*$year                   = $v['year'];
-                        $monon                  = substr($v['month'],4,2);
-                        $yearMonth              = $year.$monon;*/
-                        $data                   = get_partner_satisfaction($uid,$month,$v['quota_id']);
-                        $average                = $data['average']; //平均分
-                        $number                 = $data['number']; //评分次数
-                        $complete               = ($average*100).'%';
+                        //227 => 城市合伙人-满意度
+                        //180 => 院内资源满意度 - 资源管理部经理
+                        //185 => 日常服务工作满意度-老科学家演讲团教务专员
+                        if(in_array($v['quota_id'],array(227,180,185))){
+                            $uid                    = $v['user_id'];
+                            $month                  = $v['month'];
+                            /*$year                   = $v['year'];
+                            $monon                  = substr($v['month'],4,2);
+                            $yearMonth              = $year.$monon;*/
+                            $data                   = get_partner_satisfaction($uid,$month,$v['quota_id']);
+                            $average                = $data['average']; //平均分
+                            $number                 = $data['number']; //评分次数
+                            $complete               = ($average*100).'%';
 
-                        //$url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'ym'=>$yearMonth,'kpi_quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
-                        $url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'kpi_quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
-                    }
+                            //$url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'ym'=>$yearMonth,'kpi_quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
+                            $url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'kpi_quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
+                        }
 
-                    //业务岗人员比率(人事部经理)
-                    if ($v['quota_id']==230){
-                        $data                   = get_sales_ratio();
-                        $complete               = (round($data['sale_num']/$data['sum_num'],4)*100).'%';
-                        $url                    = U('Kpi/public_sales_ratio',array('ym'=>$v['month'],'sum_ids'=>$data['sum_ids'],'sale_ids'=>$data['sale_ids']));
-                    }
+                        //业务岗人员比率(人事部经理)
+                        if ($v['quota_id']==230){
+                            $data                   = get_sales_ratio();
+                            $complete               = (round($data['sale_num']/$data['sum_num'],4)*100).'%';
+                            $url                    = U('Kpi/public_sales_ratio',array('ym'=>$v['month'],'sum_ids'=>$data['sum_ids'],'sale_ids'=>$data['sale_ids']));
+                        }
 
-                    //工作负荷率
-                    if ($v['quota_id']==233){
-                        $end_time               = $v['end_date'] -1;
-                        $worder_lists           = get_workload_worders($v['user_id'],$v['start_date'],$end_time); //求所有响应时间或者计划完成时间在本周期的工单信息
-                        $work_day_data          = get_cycle_work_day_data($v['start_date'],$end_time);
-                        $workload_data          = get_workload_data($worder_lists,$work_day_data,$v['start_date'],$end_time); //求工时信息
-                        $workHourNum            = $work_day_data['workDayNum'] * 8; //当月应工作日*8hours
-                        $workLoadHourNum        = $workload_data['workLoadHourNum'];
-                        $complete               = (round($workLoadHourNum/$workHourNum,4)*100).'%';
-                        $url                    = U('Worder/public_workload',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$end_time));
-                    }
+                        //工作负荷率
+                        if ($v['quota_id']==233){
+                            $end_time               = $v['end_date'] -1;
+                            $worder_lists           = get_workload_worders($v['user_id'],$v['start_date'],$end_time); //求所有响应时间或者计划完成时间在本周期的工单信息
+                            $work_day_data          = get_cycle_work_day_data($v['start_date'],$end_time);
+                            $workload_data          = get_workload_data($worder_lists,$work_day_data,$v['start_date'],$end_time); //求工时信息
+                            $workHourNum            = $work_day_data['workDayNum'] * 8; //当月应工作日*8hours
+                            $workLoadHourNum        = $workload_data['workLoadHourNum'];
+                            $complete               = (round($workLoadHourNum/$workHourNum,4)*100).'%';
+                            $url                    = U('Worder/public_workload',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$end_time));
+                        }
 
-                    //季度累计毛利额-产品经理
-                    //if ($v['quota_id']==234){
-                    if (in_array($v['quota_id'],array(234 , 242))){
-                        $start_time             = get_year_settlement_start_time($v['year']);
-                        $end_time               = $v['end_date'];
-                        $data                   = get_gross_profit_op($v['user_id'],$start_time,$end_time);
-                        $profit                 = $data['sum_profit']; //累计完成毛利
-                        $target                 = $v['target']; //目标
-                        $complete               = $profit;
+                        //季度累计毛利额-产品经理
+                        //if ($v['quota_id']==234){
+                        if (in_array($v['quota_id'],array(234 , 242))){
+                            $start_time             = get_year_settlement_start_time($v['year']);
+                            $end_time               = $v['end_date'];
+                            $data                   = get_gross_profit_op($v['user_id'],$start_time,$end_time);
+                            $profit                 = $data['sum_profit']; //累计完成毛利
+                            $target                 = $v['target']; //目标
+                            $complete               = $profit;
 
-                        $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
-                    }
+                            $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
+                        }
 
-                    //顾客满意度-产品经理
-                    //if ($v['quota_id']==235){
-                    if (in_array($v['quota_id'] , array(235 , 243))){
-                        $data                   = get_cp_satisfied_kpi_data($v['user_id'],$v['start_date'],$v['end_date']);
-                        $complete               = $data['complete'];
-                        $url                    = U('Kpi/public_satisfied',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date']));
-                    }
+                        //顾客满意度-产品经理
+                        //if ($v['quota_id']==235){
+                        if (in_array($v['quota_id'] , array(235 , 243))){
+                            $data                   = get_cp_satisfied_kpi_data($v['user_id'],$v['start_date'],$v['end_date']);
+                            $complete               = $data['complete'];
+                            $url                    = U('Kpi/public_satisfied',array('uid'=>$v['user_id'],'st'=>$v['start_date'],'et'=>$v['end_date']));
+                        }
 
-                    //内部（业务人员）满意度-产品经理
-                    //if ($v['quota_id']==236){
-                    if (in_array($v['quota_id'] , array(236 , 244))){
-                        $uid                    = $v['user_id'];
-                        $lists                  = get_settlement_op_lists($v['user_id'],$v['start_date'],$v['end_date']);
-                        $data                   = get_jw_satis_chart($lists,3);
-                        $complete               = $data['sum_average'];
-                        $url                    = U('Kpi/public_cp_satisfaction_detail',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$uid));
-                    }
+                        //内部（业务人员）满意度-产品经理
+                        //if ($v['quota_id']==236){
+                        if (in_array($v['quota_id'] , array(236 , 244))){
+                            $uid                    = $v['user_id'];
+                            $lists                  = get_settlement_op_lists($v['user_id'],$v['start_date'],$v['end_date']);
+                            $data                   = get_jw_satis_chart($lists,3);
+                            $complete               = $data['sum_average'];
+                            $url                    = U('Kpi/public_cp_satisfaction_detail',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$uid));
+                        }
 
-                    //新客户开拓数量-老科学家演讲团教务专员
-                    if ($v['quota_id']==237){
-                        $startTime              = get_year_cycle($v['year'])['beginTime'];
-                        $new_GEC_lists          = get_new_GEC($startTime,$v['end_date'],$v['user_id']); //获取某个时间段内新增加的客户信息
-                        $data                   = get_kpi_new_GEC_data($v['target'],count($new_GEC_lists));
+                        //新客户开拓数量-老科学家演讲团教务专员
+                        if ($v['quota_id']==237){
+                            $startTime              = get_year_cycle($v['year'])['beginTime'];
+                            $new_GEC_lists          = get_new_GEC($startTime,$v['end_date'],$v['user_id']); //获取某个时间段内新增加的客户信息
+                            $data                   = get_kpi_new_GEC_data($v['target'],count($new_GEC_lists));
 
-                        $complete               = $data['finish'];
-                        $url                    = U('Kpi/public_kpi_new_GEC',array('st'=>$startTime,'et'=>$v['end_date'],'uid'=>$v['user_id'],'kmid'=>$v['id']));
-                    }
+                            $complete               = $data['finish'];
+                            $url                    = U('Kpi/public_kpi_new_GEC',array('st'=>$startTime,'et'=>$v['end_date'],'uid'=>$v['user_id'],'kmid'=>$v['id']));
+                        }
 
-                    //单进院所业务月度累计毛利额-资源专员
-                    if ($v['quota_id']==238){
-                        $startTime              = get_year_cycle($v['year'])['beginTime'];
-                        $kind                   = 87; //单进院所
-                        $oplist                 = get_res_settlement_op($startTime,$v['end_date'],$v['user_id'],$kind);
-                        $total                  = $oplist ? array_sum(array_column($oplist,'maoli')) : '0.00';
+                        //单进院所业务月度累计毛利额-资源专员
+                        if ($v['quota_id']==238){
+                            $startTime              = get_year_cycle($v['year'])['beginTime'];
+                            $kind                   = 87; //单进院所
+                            $oplist                 = get_res_settlement_op($startTime,$v['end_date'],$v['user_id'],$kind);
+                            $total                  = $oplist ? array_sum(array_column($oplist,'maoli')) : '0.00';
 
-                        $complete               = $total;
-                        $url                    = U('Kpi/public_kpi_res_settlement',array('st'=>$startTime,'et'=>$v['end_date'],'uid'=>$v['user_id']));
-                    }
+                            $complete               = $total;
+                            $url                    = U('Kpi/public_kpi_res_settlement',array('st'=>$startTime,'et'=>$v['end_date'],'uid'=>$v['user_id']));
+                        }
 
-                    //集中采购成本降低率-采购主管
-                    if ($v['quota_id']==239){
-                        $year                   = $v['year'];
-                        $type                   = get_cost_save_type($v['month']);
-                        $lists                  = get_cost_save_lists($type);
-                        $sum_data               = get_cost_save_average($lists);
-                        $complete               = $sum_data['average'];
-                        $url                    = U('SupplierRes/public_cost_save',array('year'=>$year,'type'=>$type));
+                        //集中采购成本降低率-采购主管
+                        if ($v['quota_id']==239){
+                            $year                   = $v['year'];
+                            $type                   = get_cost_save_type($v['month']);
+                            $lists                  = get_cost_save_lists($type);
+                            $sum_data               = get_cost_save_average($lists);
+                            $complete               = $sum_data['average'];
+                            $url                    = U('SupplierRes/public_cost_save',array('year'=>$year,'type'=>$type));
 
-                    }
+                        }
 
-                    //标准化产品应用比率
-                    if ($v['quota_id']==240){
-                            $year               = $v['year'];
-                            $monon              = substr($v['month'] , 4 , 2);
-                            $quarter            = get_quarter($monon);
-                            $standard_kind_ids  = C('STANDARD_PRODUCT_KIND_IDS');
-                            $data               = get_standard_product_use_avg($year,$quarter,$standard_kind_ids);
-                            $sum_data           = get_standard_product_use_sum_avg($data);
+                        //标准化产品应用比率
+                        if ($v['quota_id']==240){
+                                $year               = $v['year'];
+                                $monon              = substr($v['month'] , 4 , 2);
+                                $quarter            = get_quarter($monon);
+                                $standard_kind_ids  = C('STANDARD_PRODUCT_KIND_IDS');
+                                $data               = get_standard_product_use_avg($year,$quarter,$standard_kind_ids);
+                                $sum_data           = get_standard_product_use_sum_avg($data);
 
-                            $complete           = $sum_data['average'];
-                            $url                = U('Product/public_product_chart',array('year'=>$year,'quarter'=>$quarter));
-                    }
+                                $complete           = $sum_data['average'];
+                                $url                = U('Product/public_product_chart',array('year'=>$year,'quarter'=>$quarter));
+                        }
 
-                    //各产品经理季度累计毛利额总和
-                    if ($v['quota_id']==241){
-                        $cpjl_users             = get_cpjl_users();
-                        $startTime              = get_year_settlement_start_time($v['year']);
-                        $endTime                = $v['end_date'];
-                        $data                   = get_all_cpjl_gross_profit_op($cpjl_users,$startTime,$endTime);
+                        //各产品经理季度累计毛利额总和
+                        if ($v['quota_id']==241){
+                            $cpjl_users             = get_cpjl_users();
+                            $startTime              = get_year_settlement_start_time($v['year']);
+                            $endTime                = $v['end_date'];
+                            $data                   = get_all_cpjl_gross_profit_op($cpjl_users,$startTime,$endTime);
 
-                        $complete               = $data['sum_profit'];
-                        $url                    = U('Kpi/public_cpjl_kpi_profit',array('year'=>$v['year'],'m'=>$v['month'],'users'=>$cpjl_users,'st'=>$startTime,'et'=>$endTime,'tg'=>$target));
-                    }
+                            $complete               = $data['sum_profit'];
+                            $url                    = U('Kpi/public_cpjl_kpi_profit',array('year'=>$v['year'],'m'=>$v['month'],'users'=>$cpjl_users,'st'=>$startTime,'et'=>$endTime,'tg'=>$target));
+                        }
+
+                        //各业务类型最低毛利率设置合理性
+                        if ($v['quota_id']==245){
+
+                            $complete               = '测试';
+                            $url                    = U('Sale/public_kpi_profit_set');
+                        }
 
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244);
+                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){

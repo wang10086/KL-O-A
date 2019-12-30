@@ -469,4 +469,33 @@ class SaleModel extends Model{
         }
         return $lists;
     }*/
+
+    /**
+     * 各业务类型最低毛利率设置合理性
+     * @param $kinds
+     * @param $startTime
+     * @param $endTime
+     * @return array
+     */
+    public function get_kpi_profit_set($kinds,$startTime,$endTime){
+       $data                            = array();
+       $settlement_lists                = get_settlement_list($startTime,$endTime);
+       foreach ($kinds as $k=>$v){
+           $lists                       = array();
+           $op_num                      = 0;
+           foreach ($settlement_lists as $key=>$value){
+               if ($value['kind'] == $k){
+                   $lists[]             = $value;
+                   $op_num++;
+               }
+           }
+
+           $data[$k]['kind_id']         = $k;
+           $data[$k]['kind_name']       = $v;
+           $data[$k]['op_num']          = $op_num;
+           //$data[$k]['']
+       }
+
+      return $data;
+    }
 }

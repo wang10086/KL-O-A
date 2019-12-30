@@ -644,4 +644,22 @@ class SaleController extends BaseController {
             $this->error('保存失败');
         }
     }
+
+    //各业务类型最低毛利率设置合理性
+    public function public_kpi_profit_set(){
+        $this->title('最低毛利率设置合理性');
+        $year                       = I('year',date('Y'));
+        $quarter                    = I('quarter',get_quarter(date('m')));
+        $cycle                      = get_quarter_cycle_time($year,$quarter);
+        $mod                        = D('Sale');
+        $kinds                      = array_column(get_project_kinds(),'name','id');
+        $data                       = $mod->get_kpi_profit_set($kinds,$cycle['begin_time'],$cycle['end_time']);
+
+        $this->lists                = $data;
+        $this->year                 = $year;
+        $this->quarter              = $quarter;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+        $this->display('kpi_profit_set');
+    }
 }
