@@ -496,11 +496,17 @@ class SaleController extends BaseController {
                 $db                         = M('gross');
                 $info                       = I('info');
                 if (!$info['gross']) $this->error('最低毛利率不能为空');
+                $list                       = $db->where(array('kind_id'=>$info['kind_id']))->find();
                 $info['gross']              = trim($info['gross']);
-                $info['input_time']         = NOW_TIME;
                 $info['input_user_id']      = session('userid');
                 $info['input_user_name']    = session('nickname');
-                $db->add($info);
+                if ($list){
+                    $info['edit_time']      = NOW_TIME;
+                    $db->where(array('kind_id'=>$info['kind_id']))->save($info);
+                }else{
+                    $info['input_time']     = NOW_TIME;
+                    $db->add($info);
+                }
             }
 
             //保存计调及时率指标
