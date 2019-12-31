@@ -481,12 +481,15 @@ class SaleModel extends Model{
        $gross_db                        = M('gross');
        $data                            = array();
        $settlement_lists                = get_settlement_list($startTime,$endTime);
+       $all_kinds_maoli                 = array_sum(array_column($settlement_lists,'maoli')); //所有的已结算毛利
        foreach ($kinds as $k=>$v){
            $lists                       = array();
            $op_num                      = 0;
            $sum_shouru                  = 0;
            $sum_maoli                   = 0;
+           $aaa = 0;
            foreach ($settlement_lists as $key=>$value){
+               $aaa += $value['maoli'];
                if ($value['kind'] == $v['id']){
                    $sum_shouru          += $value['untraffic_shouru']; //不含大交通收入
                    $sum_maoli           += $value['maoli'];
@@ -496,14 +499,55 @@ class SaleModel extends Model{
            }
 
            $gross_list                  = $gross_db->where(array('kind_id'=>$v['id']))->find();
+           $gross                       = $gross_list['gross'] ? $gross_list['gross'] : 0;
+
+
            $data[$k]['kind_id']         = $v['id'];
            $data[$k]['kind_name']       = $v['name'];
-           $data[$k]['gross']           = $gross_list ? $gross_list['gross'] : '<font color="#999">无数据</font>';
+           $data[$k]['gross']           = $gross;
            $data[$k]['op_num']          = $op_num;
            $data[$k]['sum_maoli']       = $sum_maoli;
            $data[$k]['sum_shouru']      = $sum_shouru;
            $data[$k]['maolilv']         = $sum_shouru ? (round($sum_maoli/$sum_shouru,4)*100).'%' : '0%';
+           $deviation                   = $this->get_profit_deviation($data[$k]['gross'],$data[$k]['maolilv']);
+           $data[$k]['deviation']       = $deviation; // 偏差
+           $data[$k]['dev_score']       = $this->get_deviation_score($deviation); //偏差得分
+           $data[$k]['weight']          = (round($sum_maoli/$all_kinds_maoli,4)*100).'%';
+           $data[$k]['weight_score']    = '';
        }
+       
       return $data;
+    }
+
+    /**
+     * 偏差值得分
+     * @param $target
+     * @param $deviation 偏差
+     * 偏差值在 ±10%以内得分为100分 , ±20%以外得分为0分 , 10%~20% 得分 = (2-(偏差/10%))*100分 , 偏差在 -10%~-20% 得分 = (2+(偏差/10%))*100分
+     */
+    private function get_deviation_score($deviation){
+        $deviation_float                = (str_replace('%','',$deviation))/100;
+        if ($deviation_float >= -0.1 && $deviation_float <= 0.1){ // ±10%以内得分为100分
+            $complete                   = 100;
+        }elseif ($deviation_float > 0.2 || $deviation_float < -0.2){ // ±20%以外得分为0分
+            $complete                   = 0;
+        }elseif ($deviation_float > 0.1 && $deviation_float <= 0.2){ //10%~20% 得分 = (2-(偏差/10%))*100分
+            $complete                   = (2-($deviation_float/0.1))*100;
+        }elseif ($deviation_float < -0.1 && $deviation_float >= -0.2){ // 偏差在 -10%~-20% 得分 = (2+(偏差/10%))*100分
+            $complete                   = (2+($deviation_float/0.1))*100;
+        }
+       return $complete;
+    }
+
+    /**
+     * 偏差 = (实际 - 计划)/计划
+     * @param $target
+     * @param $really
+     */
+    private function get_profit_deviation($target , $really){
+        $target_float                   = (str_replace('%','',$target))/100;
+        $really_float                   = (str_replace('%','',$really))/100;
+        $deviation                      = $target_float ? (round(($really_float - $target_float)/$target_float,4)*100).'%' : 0;
+        return $deviation;
     }
 }

@@ -41,7 +41,7 @@
                                             <a href="{:U('Sale/public_kpi_profit_set',array('year'=>$nextyear,'quarter'=>$quarter))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
-
+                                    <P>说明：该数据从{$year-1}年12月26日-{$year}年{:date('m',$endTime)}月{:date('d',$endTime)}日累计结算数据。</P>
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row">
                                         <th class="taskOptions">业务类型</th>
@@ -56,17 +56,27 @@
                                     <foreach name="lists" key="k" item="row">
                                     <tr >
                                         <td class="taskOptions">{$row.kind_name}</td>
-                                        <td class="taskOptions">{$row.gross}</td>
+                                        <td class="taskOptions">{$row['gross'] ? $row['gross'] : '<font color="#999">无数据</font>'}</td>
                                         <td class="taskOptions">{$row.maolilv}</td>
-                                        <td class="taskOptions">{$row.}</td>
+                                        <td class="taskOptions">{$row.deviation}</td>
                                         <?php if ($k == 0){ ?>
-                                        <td class="taskOptions" rowspan="{:count($lists)}">±10%</td>
+                                        <td class="taskOptions" rowspan="{:count($lists)+1}">±10%</td>
                                         <?php } ?>
-                                        <td class="taskOptions">{$row.}</td>
-                                        <td class="taskOptions">{$row.}</td>
-                                        <td class="taskOptions">{$row.}</td>
+                                        <td class="taskOptions">{$row.dev_score}</td>
+                                        <td class="taskOptions">{$row.weight}</td>
+                                        <td class="taskOptions">{$row.weight_score}</td>
                                     </tr>
                                     </foreach>
+                                    <tr class="black">
+                                        <td class="taskOptions">合计</td>
+                                        <td class="taskOptions"></td>
+                                        <td class="taskOptions"></td>
+                                        <td class="taskOptions"></td>
+                                        <td class="taskOptions"></td>
+                                        <td class="taskOptions"></td>
+                                        <td class="taskOptions"></td>
+                                        <td class="taskOptions"></td>
+                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">

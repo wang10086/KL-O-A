@@ -659,13 +659,39 @@ class SaleController extends BaseController {
         $cycle                      = get_quarter_cycle_time($year,$quarter);
         $mod                        = D('Sale');
         $kinds                      = get_project_kinds();
-        $data                       = $mod->get_kpi_profit_set($kinds,$cycle['begin_time'],$cycle['end_time']);
+        $startTime                  = strtotime(($year-1).'1226');
+        $data                       = $mod->get_kpi_profit_set($kinds,$startTime,$cycle['end_time']);
 
         $this->lists                = $data;
         $this->year                 = $year;
         $this->quarter              = $quarter;
         $this->prveyear             = $year-1;
         $this->nextyear             = $year+1;
+        $this->endTime              = $cycle['end_time'];
         $this->display('kpi_profit_set');
+    }
+
+    public function test(){
+        //33=>李婷
+        //86=>何亚丽
+        $kinds                      = M('project_kind')->getField('id,name',true);
+        $lists                      = get_settlement_list(strtotime('20181226'),strtotime('20191226'),'',86);
+        $data                       = array();
+        foreach ($lists as $k=>$v){
+            $info                   = array();
+            $info['op_id']          = $v['op_id'];
+            $info['group_id']       = $v['group_id'];
+            $info['project']        = $v['project'];
+            $info['create_user_name']= $v['create_user_name'];
+            $info['kind']           = $kinds[$v['kind']];
+            $info['shouru']         = $v['shouru'];
+            $info['untraffic_shouru']= $v['untraffic_shouru'];
+            $info['maoli']          = $v['maoli'];
+            $info['req_uname']      = $v['req_uname'];
+            $info['audit_time']     = date('Y-m-d',$v['audit_time']);
+            $data[$k]               = $info;
+        }
+        $title = array('项目编号','团号','项目名称','立项人','项目类型','收入(包含大交通)','收入(不包含大交通)','毛利','计调','结算审核时间');
+        //exportexcel($data,$title,'20181226-20191226结算项目');
     }
 }
