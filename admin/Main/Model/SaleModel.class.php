@@ -496,8 +496,8 @@ class SaleModel extends Model{
            $data[$k]['maolilv']         = $sum_shouru ? (round($sum_maoli/$sum_shouru,4)*100).'%' : '0%';
            $deviation                   = $this->get_profit_deviation($data[$k]['gross'],$data[$k]['maolilv']);
            $data[$k]['deviation']       = $deviation; // 偏差
-           $data[$k]['dev_score']       = $this->get_deviation_score($deviation); //偏差得分
-           $data[$k]['weight']          = (round($sum_maoli/$all_kinds_maoli,4)*100).'%';
+           $data[$k]['dev_score']       = $this->get_deviation_score($deviation,$v['id']); //偏差得分
+           $data[$k]['weight']          = $all_kinds_maoli ? (round($sum_maoli/$all_kinds_maoli,4)*100).'%' : '0%';
            $data[$k]['weight_score']    = $this->get_weight_score($data[$k]['dev_score'],$data[$k]['weight']);
            $sum_weight_score            += $data[$k]['weight_score'];
        }
@@ -522,17 +522,22 @@ class SaleModel extends Model{
      * @param $deviation 偏差
      * 偏差值在 ±10%以内得分为100分 , ±20%以外得分为0分 , 10%~20% 得分 = (2-(偏差/10%))*100分 , 偏差在 -10%~-20% 得分 = (2+(偏差/10%))*100分
      */
-    private function get_deviation_score($deviation){
+    private function get_deviation_score($deviation,$kind_id){
         $deviation_float                = (str_replace('%','',$deviation))/100;
-        if ($deviation_float >= -0.1 && $deviation_float <= 0.1){ // ±10%以内得分为100分
+        if ($kind_id == 3){ //其他,不考核
             $complete                   = 100;
-        }elseif ($deviation_float > 0.2 || $deviation_float < -0.2){ // ±20%以外得分为0分
-            $complete                   = 0;
-        }elseif ($deviation_float > 0.1 && $deviation_float <= 0.2){ //10%~20% 得分 = (2-(偏差/10%))*100分
-            $complete                   = (2-($deviation_float/0.1))*100;
-        }elseif ($deviation_float < -0.1 && $deviation_float >= -0.2){ // 偏差在 -10%~-20% 得分 = (2+(偏差/10%))*100分
-            $complete                   = (2+($deviation_float/0.1))*100;
+        }else{
+            if ($deviation_float >= -0.1 && $deviation_float <= 0.1){ // ±10%以内得分为100分
+                $complete               = $deviation_float==0 ? 0 : 100;
+            }elseif ($deviation_float > 0.2 || $deviation_float < -0.2){ // ±20%以外得分为0分
+                $complete               = 0;
+            }elseif ($deviation_float > 0.1 && $deviation_float <= 0.2){ //10%~20% 得分 = (2-(偏差/10%))*100分
+                $complete               = (2-($deviation_float/0.1))*100;
+            }elseif ($deviation_float < -0.1 && $deviation_float >= -0.2){ // 偏差在 -10%~-20% 得分 = (2+(偏差/10%))*100分
+                $complete               = (2+($deviation_float/0.1))*100;
+            }
         }
+
        return $complete;
     }
 

@@ -58,7 +58,7 @@
                                         <td class="taskOptions">{$row.kind_name}</td>
                                         <td class="taskOptions">{$row['gross'] ? $row['gross'] : '<font color="#999">无数据</font>'}</td>
                                         <td class="taskOptions">{$row.maolilv}</td>
-                                        <td class="taskOptions">{$row.deviation}</td>
+                                        <td class="taskOptions"><?php echo $row['kind_id']==3 ? '<font color="#999">不考核</font>' : ($row['deviation'] ? $row['deviation'] : '<font color="#999">无数据</font>'); ?> </td>
                                         <?php if ($k == 0){ ?>
                                         <td class="taskOptions" rowspan="{:count($lists)+1}">±10%</td>
                                         <?php } ?>
