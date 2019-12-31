@@ -91,10 +91,10 @@
                 <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}" <?php if (in_array($k,$op_expert)) echo "checked"; ?>> {$v}</span>
             </foreach>
         </div>
-        <div class="col-md-12"  style="padding-right: 0">
+        <!--<div class="col-md-12"  style="padding-right: 0">
             <span class="lm_c">背景提升产品负责人：</span>
-            <span class="lm_c"><input type="checkbox" name="expert[]" value="202" <?php if (in_array(202,$op_expert)) echo "checked"; ?>> 于洵</span>
-        </div>
+            <span class="lm_c"><input type="checkbox" name="expert[]" value="202" <?php /*if (in_array(202,$op_expert)) echo "checked"; */?>> 于洵</span>
+        </div>-->
     </div>
 
     <div class="form-group col-md-4">
