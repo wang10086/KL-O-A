@@ -53,13 +53,15 @@
                                         <th class="taskOptions">权重</th>
                                         <th class="taskOptions">权重得分</th>
                                     </tr>
-                                    <foreach name="lists" item="row"> 
+                                    <foreach name="lists" key="k" item="row">
                                     <tr >
                                         <td class="taskOptions">{$row.kind_name}</td>
+                                        <td class="taskOptions">{$row.gross}</td>
+                                        <td class="taskOptions">{$row.maolilv}</td>
                                         <td class="taskOptions">{$row.}</td>
-                                        <td class="taskOptions">{$row.}</td>
-                                        <td class="taskOptions">{$row.}</td>
-                                        <td class="taskOptions">±10%</td>
+                                        <?php if ($k == 0){ ?>
+                                        <td class="taskOptions" rowspan="{:count($lists)}">±10%</td>
+                                        <?php } ?>
                                         <td class="taskOptions">{$row.}</td>
                                         <td class="taskOptions">{$row.}</td>
                                         <td class="taskOptions">{$row.}</td>

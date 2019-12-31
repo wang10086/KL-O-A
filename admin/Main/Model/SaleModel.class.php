@@ -478,24 +478,32 @@ class SaleModel extends Model{
      * @return array
      */
     public function get_kpi_profit_set($kinds,$startTime,$endTime){
+       $gross_db                        = M('gross');
        $data                            = array();
        $settlement_lists                = get_settlement_list($startTime,$endTime);
        foreach ($kinds as $k=>$v){
            $lists                       = array();
            $op_num                      = 0;
+           $sum_shouru                  = 0;
+           $sum_maoli                   = 0;
            foreach ($settlement_lists as $key=>$value){
-               if ($value['kind'] == $k){
+               if ($value['kind'] == $v['id']){
+                   $sum_shouru          += $value['untraffic_shouru']; //不含大交通收入
+                   $sum_maoli           += $value['maoli'];
                    $lists[]             = $value;
                    $op_num++;
                }
            }
 
-           $data[$k]['kind_id']         = $k;
-           $data[$k]['kind_name']       = $v;
+           $gross_list                  = $gross_db->where(array('kind_id'=>$v['id']))->find();
+           $data[$k]['kind_id']         = $v['id'];
+           $data[$k]['kind_name']       = $v['name'];
+           $data[$k]['gross']           = $gross_list ? $gross_list['gross'] : '<font color="#999">无数据</font>';
            $data[$k]['op_num']          = $op_num;
-           //$data[$k]['']
+           $data[$k]['sum_maoli']       = $sum_maoli;
+           $data[$k]['sum_shouru']      = $sum_shouru;
+           $data[$k]['maolilv']         = $sum_shouru ? (round($sum_maoli/$sum_shouru,4)*100).'%' : '0%';
        }
-
       return $data;
     }
 }

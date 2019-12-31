@@ -658,7 +658,7 @@ class SaleController extends BaseController {
         $quarter                    = I('quarter',get_quarter(date('m')));
         $cycle                      = get_quarter_cycle_time($year,$quarter);
         $mod                        = D('Sale');
-        $kinds                      = array_column(get_project_kinds(),'name','id');
+        $kinds                      = get_project_kinds();
         $data                       = $mod->get_kpi_profit_set($kinds,$cycle['begin_time'],$cycle['end_time']);
 
         $this->lists                = $data;
