@@ -269,12 +269,12 @@ class SaleModel extends Model{
 
     /**
      * 获取公司总的毛利相关数据
-     * @param $settlement_no_dj_lists //本周期内结算的团(不包含地接团)
+     //* @param $settlement_no_dj_lists //本周期内结算的团(不包含地接团)
      * @param $settlement_lists //本周期内结算的团(包含地接团)
      * @param $kinds 所有业务类型
      * @param $gross_avg 每种业务类型的最低毛利率
      */
-    public function get_company_sum_gross($settlement_no_dj_lists,$settlement_lists,$kinds,$gross_avg){
+    public function get_company_sum_gross($settlement_lists,$kinds,$gross_avg){
         $sum_shouru                     = 0;
         $sum_maoli                      = 0;
         $sum_untraffic_shouru           = 0;
@@ -285,7 +285,6 @@ class SaleModel extends Model{
         $sum_num                        = 0; //项目数
         $data                           = array();
         $rowspan                        = 1;
-        //$aaaaaaa = 0;
         foreach ($kinds as $k=>$v){
             $arr_kids                   = get_kids($k);
             $shouru                     = 0;
@@ -296,38 +295,22 @@ class SaleModel extends Model{
             $opids                      = array();
             $group_ids                  = array();
             $num                        = 0;
-            foreach ($settlement_no_dj_lists as $key=>$value){ //排除地接的
-                $op_untraffic_shouru    = (int)$value['untraffic_shouru'] ? $value['untraffic_shouru'] : $value['shouru'];
-                if (in_array($value['kind'],$arr_kids)){
-                    //$aaaaaaa++;
-                    //单个业务类型合计
-                    $shouru             += $value['shouru'];
-                    $untraffic_shouru    += $op_untraffic_shouru;
-                    //$untraffic_low_gross += $op_untraffic_shouru*$gross_avg[$k]['num'];
-                    //总合计
-                    $sum_shouru         += $value['shouru'];
-                    $sum_untraffic_shouru += $op_untraffic_shouru;
-                }
-            }
 
             foreach ($settlement_lists as $key=>$value){ //所有的结算数据(包含地接)
-                $op_untraffic_shouru    = (int)$value['untraffic_shouru'] ? $value['untraffic_shouru'] : $value['shouru'];
+                $op_untraffic_shouru        = (int)$value['untraffic_shouru'] ? $value['untraffic_shouru'] : $value['shouru'];
                 if (in_array($value['kind'],$arr_kids)){
                     //单个业务类型合计
-                    $maoli          += $value['maoli'];
-                    $low_gross      += $value['shouru']*$gross_avg[$k]['num'];
-                    $untraffic_low_gross += $op_untraffic_shouru*$gross_avg[$k]['num'];
-                    $opids[]        = $value['op_id'];
-                    $group_ids[]    = $value['group_id'];
+                    $maoli                  += $value['maoli'];
+                    $low_gross              += $value['shouru']*$gross_avg[$k]['num'];
+                    $untraffic_low_gross    += $op_untraffic_shouru*$gross_avg[$k]['num'];
+                    $opids[]                = $value['op_id'];
+                    $group_ids[]            = $value['group_id'];
                     $num++;
-                    if ($k == 84){ //地接研学旅行
-                        //$aaaaaaa++;
-                        $shouru              += $value['shouru'];
-                        $untraffic_shouru    += $op_untraffic_shouru;
-                        $sum_shouru          += $value['shouru'];
-                        $sum_untraffic_shouru += $op_untraffic_shouru;
+                    $shouru                 += $value['shouru'];
+                    $untraffic_shouru       += $op_untraffic_shouru;
+                    $sum_shouru             += $value['shouru'];
+                    $sum_untraffic_shouru   += $op_untraffic_shouru;
 
-                    }
 
                     //总合计
                     $sum_maoli               += $value['maoli'];
@@ -348,20 +331,15 @@ class SaleModel extends Model{
                 $info['maoli']          = $maoli;
                 $info['low_gross']      = $low_gross;
                 $info['maolilv']        = $shouru ? (round($maoli/$shouru,4)*100).'%' : '0%';
-                //$info['rate']           = $low_gross ? (round($maoli/$low_gross,4)*100).'%' : '0%';
                 $info['untraffic_shouru']= $untraffic_shouru;
                 $info['untraffic_maolilv'] = $untraffic_shouru ? (round($maoli/$untraffic_shouru,4)*100).'%' : '0%';
                 $info['untraffic_rate'] = $untraffic_low_gross ? (round($maoli/$untraffic_low_gross,4)*100).'%' : '0%';
                 $info['opids']          = $opids?implode(',',$opids):'';
                 $info['group_ids']      = $group_ids?implode(',',$group_ids):'';
-                //P($info['kind'].'--'.$info['num'].'--'.$info['maoli'].'--'.$info['shouru'].'--'.$info['maolilv'],false);
-                //echo "<hr />";
                 $rowspan++;
                 $data['info'][]         = $info;
             }
         }
-        //P($aaaaaaa);
-        //die;
 
         $data['rowspan']                = $rowspan;
         $data['合计']['jd_id']          = '888888';
@@ -372,7 +350,6 @@ class SaleModel extends Model{
         $data['合计']['maoli']          = $sum_maoli; //毛利包含地接毛利
         $data['合计']['low_gross']      = $sum_low_gross;
         $data['合计']['maolilv']        = $sum_shouru ? (round($sum_maoli/$sum_shouru,4)*100).'%' : '0%';
-        //$data['合计']['rate']           = $sum_low_gross ? (round($sum_maoli/$sum_low_gross,4)*100).'%' : '0%';
         $data['合计']['untraffic_shouru']= $sum_untraffic_shouru;
         $data['合计']['untraffic_maolilv'] = $sum_untraffic_shouru ? (round($sum_maoli/$sum_untraffic_shouru,4)*100).'%' : '0%';
         $data['合计']['untraffic_rate'] = $sum_untraffic_low_gross ? (round($sum_maoli/$sum_untraffic_low_gross,4)*100).'%' : '0%';
@@ -523,9 +500,6 @@ class SaleModel extends Model{
            $data[$k]['weight']          = (round($sum_maoli/$all_kinds_maoli,4)*100).'%';
            $data[$k]['weight_score']    = $this->get_weight_score($data[$k]['dev_score'],$data[$k]['weight']);
            $sum_weight_score            += $data[$k]['weight_score'];
-
-           //P($data[$k]['kind_name'].'--'.$data[$k]['op_num'].'--'.$data[$k]['sum_maoli'].'--'.$data[$k]['sum_shouru'].'--'.$data[$k]['maolilv'],false);
-           //echo "<hr />";
        }
        $data['sum']['op_num']           = array_sum(array_column($data,'op_num'));
        $data['sum']['sum_maoli']        = array_sum(array_column($data,'sum_maoli'));

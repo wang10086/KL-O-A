@@ -282,8 +282,10 @@ class SaleController extends BaseController {
         $kinds                              = M('project_kind')->getField('id,name',true);
         $gross_avg                          = $mod->get_gross_avg($kinds,$times['beginTime'],$times['endTime']); //最低毛利率数据
         $settlement_no_dj_lists             = $mod->get_no_dj_settlement_lists($times['beginTime'],$times['endTime']); //排除地接团数据
-        $settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']); //未排除地接团数据
-        $data                               = $mod->get_company_sum_gross($settlement_no_dj_lists,$settlement_lists,$kinds,$gross_avg); //获取公司总合计数据
+        $settlement_djyxlx_lists            = get_settlement_list($times['beginTime'],$times['endTime'],'','','',84); //84=>地接研学旅行团团数据
+        //$settlement_lists                   = $mod->get_all_settlement_lists($times['beginTime'],$times['endTime']); //未排除地接团数据
+        $settlement_lists                   = array_merge((array)$settlement_no_dj_lists,(array)$settlement_djyxlx_lists);
+        $data                               = $mod->get_company_sum_gross($settlement_lists,$kinds,$gross_avg); //获取公司总合计数据
         $info                               = $data['info'];
         $info['合计']                       = $data['合计'];
 
