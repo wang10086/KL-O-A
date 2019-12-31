@@ -70,12 +70,11 @@
                                     <tr class="black">
                                         <td class="taskOptions">合计</td>
                                         <td class="taskOptions"></td>
+                                        <td class="taskOptions">{$sum_data.maolilv}</td>
                                         <td class="taskOptions"></td>
                                         <td class="taskOptions"></td>
                                         <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
-                                        <td class="taskOptions"></td>
+                                        <td class="taskOptions">{$sum_data.weight_score}</td>
                                     </tr>
                                 </table>
                                 </div><!-- /.box-body -->

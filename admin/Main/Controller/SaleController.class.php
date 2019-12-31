@@ -661,7 +661,10 @@ class SaleController extends BaseController {
         $kinds                      = get_project_kinds();
         $startTime                  = strtotime(($year-1).'1226');
         $data                       = $mod->get_kpi_profit_set($kinds,$startTime,$cycle['end_time']);
+        $sum_data                   = $data['sum'];
+        unset($data['sum']);
 
+        $this->sum_data             = $sum_data;
         $this->lists                = $data;
         $this->year                 = $year;
         $this->quarter              = $quarter;

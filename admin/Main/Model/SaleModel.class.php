@@ -285,6 +285,7 @@ class SaleModel extends Model{
         $sum_num                        = 0; //项目数
         $data                           = array();
         $rowspan                        = 1;
+        //$aaaaaaa = 0;
         foreach ($kinds as $k=>$v){
             $arr_kids                   = get_kids($k);
             $shouru                     = 0;
@@ -298,6 +299,7 @@ class SaleModel extends Model{
             foreach ($settlement_no_dj_lists as $key=>$value){ //排除地接的
                 $op_untraffic_shouru    = (int)$value['untraffic_shouru'] ? $value['untraffic_shouru'] : $value['shouru'];
                 if (in_array($value['kind'],$arr_kids)){
+                    //$aaaaaaa++;
                     //单个业务类型合计
                     $shouru             += $value['shouru'];
                     $untraffic_shouru    += $op_untraffic_shouru;
@@ -319,6 +321,7 @@ class SaleModel extends Model{
                     $group_ids[]    = $value['group_id'];
                     $num++;
                     if ($k == 84){ //地接研学旅行
+                        //$aaaaaaa++;
                         $shouru              += $value['shouru'];
                         $untraffic_shouru    += $op_untraffic_shouru;
                         $sum_shouru          += $value['shouru'];
@@ -351,10 +354,14 @@ class SaleModel extends Model{
                 $info['untraffic_rate'] = $untraffic_low_gross ? (round($maoli/$untraffic_low_gross,4)*100).'%' : '0%';
                 $info['opids']          = $opids?implode(',',$opids):'';
                 $info['group_ids']      = $group_ids?implode(',',$group_ids):'';
+                //P($info['kind'].'--'.$info['num'].'--'.$info['maoli'].'--'.$info['shouru'].'--'.$info['maolilv'],false);
+                //echo "<hr />";
                 $rowspan++;
                 $data['info'][]         = $info;
             }
         }
+        //P($aaaaaaa);
+        //die;
 
         $data['rowspan']                = $rowspan;
         $data['合计']['jd_id']          = '888888';
@@ -480,18 +487,19 @@ class SaleModel extends Model{
     public function get_kpi_profit_set($kinds,$startTime,$endTime){
        $gross_db                        = M('gross');
        $data                            = array();
-       $settlement_lists                = get_settlement_list($startTime,$endTime);
-       $all_kinds_maoli                 = array_sum(array_column($settlement_lists,'maoli')); //所有的已结算毛利
+       $settlement_no_dj_lists          = $this->get_no_dj_settlement_lists($startTime,$endTime); //排除地接团数据
+       $settlement_djyxlx_lists         = get_settlement_list($startTime,$endTime,'','','',84); //84=>地接研学旅行团团数据
+        $settlement_lists                = array_merge($settlement_no_dj_lists,$settlement_djyxlx_lists);
+        $all_kinds_maoli                 = array_sum(array_column($settlement_lists,'maoli')); //所有的已结算毛利
+        $sum_weight_score               = 0;
        foreach ($kinds as $k=>$v){
            $lists                       = array();
            $op_num                      = 0;
            $sum_shouru                  = 0;
            $sum_maoli                   = 0;
-           $aaa = 0;
            foreach ($settlement_lists as $key=>$value){
-               $aaa += $value['maoli'];
                if ($value['kind'] == $v['id']){
-                   $sum_shouru          += $value['untraffic_shouru']; //不含大交通收入
+                   $sum_shouru          += (int)$value['untraffic_shouru'] ? $value['untraffic_shouru'] : $value['shouru']; //不含大交通收入
                    $sum_maoli           += $value['maoli'];
                    $lists[]             = $value;
                    $op_num++;
@@ -513,10 +521,25 @@ class SaleModel extends Model{
            $data[$k]['deviation']       = $deviation; // 偏差
            $data[$k]['dev_score']       = $this->get_deviation_score($deviation); //偏差得分
            $data[$k]['weight']          = (round($sum_maoli/$all_kinds_maoli,4)*100).'%';
-           $data[$k]['weight_score']    = '';
+           $data[$k]['weight_score']    = $this->get_weight_score($data[$k]['dev_score'],$data[$k]['weight']);
+           $sum_weight_score            += $data[$k]['weight_score'];
+
+           //P($data[$k]['kind_name'].'--'.$data[$k]['op_num'].'--'.$data[$k]['sum_maoli'].'--'.$data[$k]['sum_shouru'].'--'.$data[$k]['maolilv'],false);
+           //echo "<hr />";
        }
-       
+       $data['sum']['op_num']           = array_sum(array_column($data,'op_num'));
+       $data['sum']['sum_maoli']        = array_sum(array_column($data,'sum_maoli'));
+       $data['sum']['sum_shouru']       = array_sum(array_column($data,'sum_shouru'));
+       $data['sum']['maolilv']          = $data['sum']['sum_shouru'] ? (round($data['sum']['sum_maoli']/$data['sum']['sum_shouru'],4)*100).'%' : '0%';
+       $data['sum']['weight_score']     = $sum_weight_score;
       return $data;
+    }
+
+    //
+    private function get_weight_score($score,$weight){
+        $weight_float                   = (str_replace('%','',$weight))/100;
+        $weight_score                   = round($score*$weight_float,2);
+        return $weight_score;
     }
 
     /**
