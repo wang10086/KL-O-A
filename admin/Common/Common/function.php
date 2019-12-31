@@ -3560,9 +3560,17 @@ function updatekpi($month,$user,$year=''){
 
                         //各业务类型最低毛利率设置合理性
                         if ($v['quota_id']==245){
-
-                            $complete               = '测试';
-                            $url                    = U('Sale/public_kpi_profit_set');
+                            $year                   = $v['year'];
+                            $monon                  = substr($v['month'] , 4 , 2);
+                            $quarter                = get_quarter($monon);
+                            $cycle                  = get_quarter_cycle_time($year,$quarter);
+                            $mod                    = D('Sale');
+                            $kinds                  = get_project_kinds();
+                            $startTime              = strtotime(($year-1).'1226');
+                            $data                   = $mod->get_kpi_profit_set($kinds,$startTime,$cycle['end_time']);
+                            $sum_data               = $data['sum'];
+                            $complete               = $sum_data['weight_score'];
+                            $url                    = U('Sale/public_kpi_profit_set',array('year'=>$year,'quarter'=>$quarter));
                         }
 
                    /* }*/
