@@ -535,7 +535,7 @@ class SaleModel extends Model{
       return $data;
     }
 
-    //
+    //权重得分
     private function get_weight_score($score,$weight){
         $weight_float                   = (str_replace('%','',$weight))/100;
         $weight_score                   = round($score*$weight_float,2);
