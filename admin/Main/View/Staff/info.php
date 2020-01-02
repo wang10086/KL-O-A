@@ -100,7 +100,7 @@
                                                         <else />
                                                         | <span class="note-xq ml10">点赞：<a href="javascript:;" ><i class="fa fa-thumbs-up"></i></a></span>
                                                     </if>
-                                                    <?php if($v['youke']==cookie('staff_youke') || cookie('staff_username')=='qiaofeng'){ ?>
+                                                    <?php if($v['youke']==cookie('staff_youke') || cookie('staff_username')=='qiaofeng'  || cookie('staff_username')=='aakk'){ ?>
                                                     | <span class="note-xq ml10"><a href="javascript:ConfirmDel('{:U('Staff/del_staff',array('id'=>$v['id']))}')" onclick="">删除</a></span>
                                                     <?php } ?>
                                                 </div>
