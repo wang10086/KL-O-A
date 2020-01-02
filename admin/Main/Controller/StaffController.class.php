@@ -161,6 +161,7 @@ class StaffController extends Controller{
                     $info['send_time']= NOW_TIME;
                     $info['userid'] = cookie('staff_userid')?cookie('staff_userid'):0;
                     $info['youke']  = cookie('staff_youke');
+                    $info['IP']     = $ip;
                     $res = $db->add($info);
 
                     $data           = array();

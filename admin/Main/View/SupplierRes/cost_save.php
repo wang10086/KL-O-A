@@ -58,7 +58,7 @@
                                             <th width="60" class="taskOptions">编辑</th>
                                             </if>
                                             <if condition="rolemenu(array('SupplierRes/cost_save_price'))">
-                                            <th width="60" class="taskOptions">录入市场单价</th>
+                                            <th width="60" class="taskOptions">录入市场基准价</th>
                                             </if>
                                             <if condition="rolemenu(array('SupplierRes/cost_save_del'))">
                                             <th width="60" class="taskOptions">删除</th>
