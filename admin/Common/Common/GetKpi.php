@@ -5081,13 +5081,16 @@ function get_cost_save_finish_avg($target,$really){
     $target_float                           = round(str_replace('%','',$target)/100,4);
     $really_float                           = round(str_replace('%','',$really)/100,4);
     $data                                   = array();
-    $data['float']                          = round(($really_float/$target_float)/2,4);
+    $data['float']                          = $target_float ? (round(($really_float/$target_float),4) > 1 ? 1 : round(($really_float/$target_float),4)) : 1;
     $data['str']                            = ($data['float']*100).'%';
     return $data;
 }
 
 function get_cost_save_finish_sum_data($lists){
-    $float_data                             = array_sum(array_column($lists,'finish_avg_float'));
-    $str_data                               = ($float_data*100).'%';
+    $data                                   = 0;
+    foreach ($lists as $k=>$v){
+        $data                               += $v['finish_avg_float']/2;
+    }
+    $str_data                               = ($data*100).'%';
     return $str_data;
 }
