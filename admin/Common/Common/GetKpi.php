@@ -5045,3 +5045,49 @@ function get_cpjl_users(){
     $lists                                  = M('account')->where($where)->getField('id , nickname' , true);
     return $lists;
 }
+
+/**
+ * 集中采购成本降低完成率
+ * 数据取值  85=>集中采购执行率-采购主管； 239=>集中采购成本降低率-采购主管
+ * @param $year
+ * @param $months
+ */
+function get_cost_save_kpi_lists($year,$months){
+    $where                                  = array();
+    $where['year']                          = $year;
+    $where['month']                         = $months;
+    $where['quota_id']                      = array('in',array(85,239));
+    $lists                                  = M('kpi_more')->where($where)->select();
+    return $lists;
+}
+
+//集中采购成本降低完成率
+function get_cost_save_finish_data($lists){
+    foreach ($lists as $k=>$v){
+        $finish_data                        = get_cost_save_finish_avg($v['target'],$v['complete']);
+        $lists[$k]['finish_avg']            = $finish_data['str'];
+        $lists[$k]['finish_avg_float']      = $finish_data['float'];
+    }
+    return $lists;
+}
+
+/**
+ * 本指标=（实际集中采购比率/公司规定集中采购指标）×50%+（集中采购实际降低成本比率/公司规定集中采购降低成本比率指标）×50%
+ * @param $target 目标值
+ * @param $really 实际完成值
+ * @return string
+ */
+function get_cost_save_finish_avg($target,$really){
+    $target_float                           = round(str_replace('%','',$target)/100,4);
+    $really_float                           = round(str_replace('%','',$really)/100,4);
+    $data                                   = array();
+    $data['float']                          = round(($really_float/$target_float)/2,4);
+    $data['str']                            = ($data['float']*100).'%';
+    return $data;
+}
+
+function get_cost_save_finish_sum_data($lists){
+    $float_data                             = array_sum(array_column($lists,'finish_avg_float'));
+    $str_data                               = ($float_data*100).'%';
+    return $str_data;
+}

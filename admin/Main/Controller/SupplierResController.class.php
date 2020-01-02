@@ -528,6 +528,27 @@ class SupplierResController extends BaseController {
         $this->display();
     }
 
+    /**
+     * 集中采购成本降低完成率
+     * 数据取值  85=>集中采购执行率-采购主管； 239=>集中采购成本降低率-采购主管
+     */
+    public function public_cost_save_finish(){
+        $this->title('集中采购成本降低完成率');
+        $year                               = I('year',date('Y'));
+        $months                             = I('months');
+        $m                                  = substr($months,4,2);
+        $quarter                            = get_quarter($m);
+        $kpi_lists                          = get_cost_save_kpi_lists($year,$months);
+        $data                               = get_cost_save_finish_data($kpi_lists);
+        $sum_data                           = get_cost_save_finish_sum_data($data);
+
+        $this->sum_data                     = $sum_data;
+        $this->lists                        = $data;
+        $this->year                         = $year;
+        $this->quarter                      = $quarter;
+        $this->display('cost_save_finish');
+    }
+
     public function public_save(){
         $savetype                           = I('savetype');
         if (isset($_POST['dosubmint']) && $savetype){
