@@ -3651,8 +3651,10 @@ function get_kpi_data($v,$complete,$url=''){
         }else{
             $rate   = round(2-($comp/$tar),4)*100;
         }
-    }elseif ($v['quota_id']==194){
-        $rate       = str_replace('%','',$complete);
+    }elseif ($v['quota_id']==194) { // 季度财务预算准确率
+        $rate = str_replace('%', '', $complete);
+    }elseif ($v['quota_id']==245){ // 各业务类型最低毛利率设置合理性
+        $rate = $complete;
     } else{
         $rate       = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
         $rate       = $rate>100 ? 100 : $rate;
