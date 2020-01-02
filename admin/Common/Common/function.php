@@ -3575,8 +3575,13 @@ function updatekpi($month,$user,$year=''){
 
                         //集中采购成本降低完成率
                         if ($v['quota_id']==246){
+                            $year                   = $v['year'];
+                            $months                 = $v['month'];
+                            $kpi_lists              = get_cost_save_kpi_lists($year,$months);
+                            $data                   = get_cost_save_finish_data($kpi_lists);
+                            $sum_data               = get_cost_save_finish_sum_data($data);
 
-                            $complete               = '测试';
+                            $complete               = $sum_data;
                             $url                    = U('SupplierRes/public_cost_save_finish',array('year'=>$v['year'],'months'=>$v['month']));
                         }
 
