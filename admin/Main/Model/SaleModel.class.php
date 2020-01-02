@@ -466,9 +466,9 @@ class SaleModel extends Model{
        $data                            = array();
        $settlement_no_dj_lists          = $this->get_no_dj_settlement_lists($startTime,$endTime); //排除地接团数据
        $settlement_djyxlx_lists         = get_settlement_list($startTime,$endTime,'','','',84); //84=>地接研学旅行团团数据
-        $settlement_lists                = array_merge($settlement_no_dj_lists,$settlement_djyxlx_lists);
-        $all_kinds_maoli                 = array_sum(array_column($settlement_lists,'maoli')); //所有的已结算毛利
-        $sum_weight_score               = 0;
+       $settlement_lists                = array_merge((array)$settlement_no_dj_lists,(array)$settlement_djyxlx_lists);
+       $all_kinds_maoli                 = array_sum(array_column($settlement_lists,'maoli')); //所有的已结算毛利
+       $sum_weight_score                = 0;
        foreach ($kinds as $k=>$v){
            $lists                       = array();
            $op_num                      = 0;
