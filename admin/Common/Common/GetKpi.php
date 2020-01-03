@@ -4466,6 +4466,9 @@ function get_res_op_satisfaction($lists,$type,$dimension){
             case 232: //梅轶宁
                 $kind           = 67; //实验室建设
             break;
+            case 82 || 204: //吕严 || 李徵红
+                $kind           = 87; //单进院所
+            break;
             default:
                 $kind           = 0;
         }
@@ -4508,10 +4511,10 @@ function get_res_op_satisfaction($lists,$type,$dimension){
  */
 function get_settlement_op_lists($user_id=0,$startTime,$endTime){
     $kind                       = get_cpjl_op_kind_id($user_id);
+    $dj_opids                   = get_dijie_opids();
     $where                      = array();
+    if ($kind != 87){ $where['o.op_id']   = array('not in' , $dj_opids); }  //单进院所 不排除地接团 , 其余类型排除地接团
     $where['o.kind']            = $kind;
-    //if ($kind) $where['o.kind'] = $kind;
-    //if ($user_id == 202) $where['o.expert'] = array('like','%'.$user_id.'%'); //202=>于洵
     $where['l.req_type']        = 801;
     $where['l.audit_time']      = array('between',array($startTime,$endTime));
     $where['s.audit_status']    = 1;
@@ -4712,13 +4715,13 @@ function get_company_res_citys($departmentid=4){
 }
 
 /**
- * 获取某个时间段单进院所且使用标准化产品模块的项目结算信息
+ * 获取某个时间段单进院所且使用标准化产品模块的项目结算信息  bak_20200103
  * @param $startTime
  * @param $endTime
  * @param $uid
  * @param $kind 项目类型
  */
-function get_res_settlement_op($startTime,$endTime,$uid,$kind){
+/*function get_res_settlement_op($startTime,$endTime,$uid,$kind){
     $where                              = array();
     $where['p.auth_id']                 = $uid;
     $where['o.kind']                    = $kind;
@@ -4735,7 +4738,7 @@ function get_res_settlement_op($startTime,$endTime,$uid,$kind){
         ->group('opro.op_id')
         ->select();
     return $oplist;
-}
+}*/
 
 /**
  *  获取当月老科学家演讲团成员带团信息

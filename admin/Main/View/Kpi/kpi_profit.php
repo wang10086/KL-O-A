@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>{$_action_}</h1>
+                    <h1>{$_action_} <small>{$kinds[$kind]}</small></h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
@@ -36,7 +36,7 @@
                                         <th class="taskOptions">销售</th>
                                         <th class="taskOptions">毛利</th>
                                     </tr>
-                                    <foreach name="lists" item="row"> 
+                                    <foreach name="lists" item="row">
                                     <tr>
                                         <td class="taskOptions">{$row.op_id}</td>
                                         <td class="taskOptions">{$row.group_id}</td>

@@ -2518,7 +2518,7 @@ class KpiController extends BaseController {
 
     //季度累计毛利额(产品经理)详情页
     public function public_kpi_profit(){
-        $this->title('季度累计毛利额-产品经理');
+        $this->title('季度累计毛利额');
         $year                               = I('year',date('Y'));
         $uid                                = I('uid',0);
         $startTime                          = I('st');
@@ -2608,8 +2608,8 @@ class KpiController extends BaseController {
 	    $this->display('res_satisfaction');
     }
 
-    //
-    public function public_kpi_res_settlement(){
+    //bak_20200103
+    /*public function public_kpi_res_settlement(){
 	    $this->title('单进院所业务月度累计毛利额');
 	    $uid                                = I('uid') ? I('uid') : 82; //吕严
         $startTime                          = I('st') ? I('st') : '';
@@ -2621,7 +2621,7 @@ class KpiController extends BaseController {
         $this->list                         = $oplist;
         $this->total                        = $total;
         $this->display('kpi_res_settlement');
-    }
+    }*/
 
     //讲座联络服务满意度-老科学家演讲团教务专员
     public function public_sci_service(){
