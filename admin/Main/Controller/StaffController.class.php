@@ -86,7 +86,7 @@ class StaffController extends Controller{
             $_SESSION['token']  = $token;
             $this->token        = $token;
 
-            $hot_tiezi  = $this->get_hot_tiezi(6);
+            $hot_tiezi  = $this->get_hot_tiezi(8);
             $this->hot_tiezi = $hot_tiezi;
 
             $this->display();
@@ -94,7 +94,9 @@ class StaffController extends Controller{
     }
 
     public function get_hot_tiezi($a){
-        $hot_tiezi  = M('staff')->where(array('pid'=>array('eq',0)))->order('good_num desc,send_time desc')->limit($a)->select();
+        //$hot_tiezi  = M('staff')->where(array('pid'=>array('eq',0)))->order('good_num desc,send_time desc')->limit($a)->select();
+        $hot_tiezi  = M('staff')->where(array('pid'=>array('eq',0),'userid'=>3))->order('send_time desc')->limit($a)->select(); //user_id=>3 乔峰
+
         foreach ($hot_tiezi as $k=>$v){
             $hot_tiezi[$k]['content'] = htmlspecialchars_decode($v['content']);
         }
@@ -123,7 +125,7 @@ class StaffController extends Controller{
         $_SESSION['token']  = $token;
         $this->token        = $token;
 
-        $hot_tiezi          = $this->get_hot_tiezi(6);
+        $hot_tiezi          = $this->get_hot_tiezi(10);
         $this->hot_tiezi    = $hot_tiezi;
 
         $huifu              = M()->field('s.*,u.nickname')->table('__STAFF__ as s')->join('left join __STAFF_USER__ as u on s.userid=u.id')->where(array('s.pid'=>$id))->order('s.send_time desc, s.good_num desc')->select();

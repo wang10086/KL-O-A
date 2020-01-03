@@ -79,7 +79,7 @@
                 <div class="cont ml10">
                     <ul>
                         <foreach name="hot_tiezi" item="v">
-                            <li><a href="{:U('staff/info',array('id'=>$v['id']))}">{$v.content}</a> <span class="note-time ">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span></li>
+                            <li><a href="{:U('staff/info',array('id'=>$v['id']))}">{$v.title}</a> <span class="note-time ">发布时间：{$v.send_time|date='Y-m-d H:i:s',###}</span></li>
                         </foreach>
                     </ul>
                 </div>
@@ -192,4 +192,4 @@
         }
     })
     </script>
-		 
+
