@@ -1420,23 +1420,23 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
         $mod                                = D('contract');
         $gross_margin                       = get_gross_margin($yearMonth,$userid,1);  //获取当月月度累计毛利额目标值(如果毛利额目标为0,则不考核)
         $target                             = $gross_margin['monthTarget']; //当月目标值
-        //$op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime); //以出团时间为准
-        $op_list                            = $mod->get_budget_list($userid,($begintime-7*24*3600),($endtime-7*24*3600)); //以预算审核通过为准(5个工作日前)
+        $op_list                            = $mod->get_user_op_list($userid,$begintime,$endtime); //以出团时间为准
+        //$op_list                            = $mod->get_budget_list($userid,($begintime-7*24*3600),($endtime-7*24*3600)); //以预算审核通过为准(5个工作日前)
         $op_num 		                    = count($op_list);
         $contract_list                      = array();
         foreach ($op_list as $key=>$value){
-            //预算审核通后5天内完成上传
-            $time                           = strtotime(getAfterWorkDay(6,$value['dep_time'])); //出团后6个工作日
-            $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1,'confirm_time'=>array('lt',$time)))->find(); //按规定时间上传合同
-            $list2                          = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1))->find(); //查看截止当期有无合同
+            //$time                           = strtotime(getAfterWorkDay(6,$value['dep_time'])); //出团后6个工作日
+            $time                           = $value['dep_time']; //出团前完成合同上传
+            $list                           = M('contract')->where(array('op_id'=>$value['op_id'],'status'=>1))->find(); //查看截止当期有无合同
 
             if ($list){
-                $contract_list[]               = $list;
+                if ($list['confirm_time'] <= $time){
+                    $contract_list[]               = $list;
+                    $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
+                }else{
+                    $op_list[$key]['contract_stu'] = "<span class='yellow'>合同超时，已返回</span>";
+                }
                 $op_list[$key]['contract_confirm_time'] = $list['confirm_time'];
-                $op_list[$key]['contract_stu'] = "<span class='green'>有合同</span>";
-            }elseif (!$list && $list2){
-                $op_list[$key]['contract_confirm_time'] = $list2['confirm_time'];
-                $op_list[$key]['contract_stu'] = "<span class='yellow'>合同超时，已返回</span>";
             }else{
                 $op_list[$key]['contract_stu'] = "<span class='red'>无合同</span>";
             }

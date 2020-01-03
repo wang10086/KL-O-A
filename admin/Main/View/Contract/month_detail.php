@@ -48,33 +48,29 @@
                                 <div class="box-body">
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" width="" data="">团号</th>
-                                            <th class="sorting" width="" data="">项目名称</th>
-                                            <!--<th class="sorting" width="" data="">实施日期</th>
-                                            <th class="sorting" width="" data="">完成日期</th>-->
-                                            <th class="sorting" width="" data="">预算审核时间</th>
-                                            <th class="sorting" width="" data="">出团时间</th>
-                                            <th class="sorting" width="" data="">合同确认时间</th>
-                                            <th class="sorting" width="" data="">业务人员</th>
-                                            <th class="sorting" width="" data="">是否签订合同</th>
-                                            <th class="sorting" width="" data="">合同份数</th>
+                                            <th width="" data="">团号</th>
+                                            <th width="" data="">项目名称</th>
+                                            <!--<th width="" data="">预算审核时间</th>-->
+                                            <th width="" data="">出团时间</th>
+                                            <th width="" data="">合同确认时间</th>
+                                            <th width="" data="">业务人员</th>
+                                            <th width="" data="">是否签订合同</th>
+                                            <th width="" data="">合同份数</th>
                                         </tr>
                                         <foreach name="lists" item="row">
                                         <tr>
-                                            <td class="sorting">{$row.group_id}</td>
-                                            <td class="sorting"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="查看项目详情">{$row.project}</a></td>
-                                            <!--<td class="sorting">{$row.dep_time|date='Y-m-d',###}</td>
-                                            <td class="sorting">{$row.ret_time|date='Y-m-d',###}</td>-->
-                                            <td class="sorting">{$row.audit_time|date='Y-m-d H:i:s',###}</td>
-                                            <td class="sorting">{$row.dep_time|date='Y-m-d',###}</td>
-                                            <td class="sorting"><?php if ($row['contract_confirm_time']){ echo date('Y-m-d H:i:s',$row['contract_confirm_time']); } ?></td>
-                                            <td class="sorting">{$row.create_user_name}</td>
-                                            <td class="sorting">{$row.contract_stu}</td>
-                                            <td class="sorting">{$row.}</td>
+                                            <td>{$row.group_id}</td>
+                                            <td><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="查看项目详情">{$row.project}</a></td>
+                                            <!--<td>{$row.audit_time|date='Y-m-d H:i:s',###}</td>-->
+                                            <td>{$row.dep_time|date='Y-m-d',###}</td>
+                                            <td><?php if ($row['contract_confirm_time']){ echo date('Y-m-d H:i:s',$row['contract_confirm_time']); } ?></td>
+                                            <td>{$row.create_user_name}</td>
+                                            <td>{$row.contract_stu}</td>
+                                            <td>{$row.}</td>
                                         </tr>
                                         </foreach>
                                         <tr>
-                                            <td class="black" colspan="7">
+                                            <td class="black" colspan="6">
                                                 <span style="display: inline-block; width: 23%">应签合同：{$data.op_num}</span>
                                                 <span style="display: inline-block; width: 23%">实签合同：{$data.contract_num}</span>
                                                 <span style="display: inline-block; width: 23%">目标系数：{$data.target}</span>
@@ -94,8 +90,8 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
-            
+
+
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
@@ -116,7 +112,7 @@
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="opid" placeholder="项目编号">
                 </div>
-                
+
                 </form>
             </div>
 
