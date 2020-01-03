@@ -8,10 +8,10 @@
 
         <div class="actlbox">
             <div class="con-header">
-                <h4 class="notice-tit">温馨提示 :</h4>
-                <p class="ml20">1.本贴吧采用不记名方式！不记名方式！不记名方式！ </p>
-                <p class="ml20">2.如果您在工作或生活中遇到任何愉快(或不愉快)的事情,欢迎来此吐槽 ! </p>
-                <p class="ml20">3.本贴吧只在公司网络环境下有效！ </p>
+                <h4 class="notice-tit">发帖规定：</h4>
+                <p class="ml20">1.发布积极正能量信息，不允许发布负能量、只抱怨无改进建议、无事实根据、故意扰乱公司秩序的信息； </p>
+                <p class="ml20">2.要文明用语，不准使用谩骂或对他人进行人身攻击的语言；</p>
+                <p class="ml20">3.如发生上述情况，公司将一查到底，采取删帖、追踪IP按公司制度对发帖人处理措施。 </p>
             </div>
 
             <foreach name="list" item="v">
@@ -66,7 +66,7 @@
 
 
 
-        
-        
+
+
 <include file="footer" />
-		 
+
