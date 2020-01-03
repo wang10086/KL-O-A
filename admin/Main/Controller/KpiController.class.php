@@ -1822,7 +1822,8 @@ class KpiController extends BaseController {
         $year           = I('year',date('Y'));
         $last_year      = get_init_year();
         $where          = array();
-        $where['status']= array('neq',2);
+        //$where['status']= array('neq',2);
+        $where['status']= 0;
         $where['id']    = array('gt',10);
         $where['employee_member'] = array('neq','');
         if ($pin && $pin !=100) $where['rank'] = $pin;
