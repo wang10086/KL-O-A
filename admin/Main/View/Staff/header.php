@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <title><?php echo P::SYSTEM_NAME; ?></title>
-        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!--<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>-->
         <!-- bootstrap 3.0.2 -->
         <link href="__HTML__/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- font Awesome -->
@@ -34,18 +34,18 @@
           <script src="__HTML__/js/respond.min.js"></script>
         <![endif]-->
         <?php echo PHP_EOL . $__additional_css__ ?>
-        
+
          <!-- jQuery 1.11.1 -->
         <script src="__HTML__/js/jquery-1.7.2.min.js"></script>
         <!-- Bootstrap -->
         <script src="__HTML__/js/bootstrap.min.js" type="text/javascript"></script>
         <!--JqueryUI-->
-        <script src="__HTML__/js/plugins/jqueryui/jquery-ui.js" type="text/javascript"></script>       
+        <script src="__HTML__/js/plugins/jqueryui/jquery-ui.js" type="text/javascript"></script>
         <!--timepicker-->
-        <script src="__HTML__/js/plugins/jqueryui/jquery-ui-slide.min.js" type="text/javascript"></script>   
-        <script src="__HTML__/js/plugins/jqueryui/jquery-ui-timepicker-addon.js" type="text/javascript"></script>     
+        <script src="__HTML__/js/plugins/jqueryui/jquery-ui-slide.min.js" type="text/javascript"></script>
+        <script src="__HTML__/js/plugins/jqueryui/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
         <!--artdialog-->
-        
+
         <script src="__HTML__/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
         <script src="__HTML__/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
        	<script src="__HTML__/js/plugins/ionslider/ion.rangeSlider.min.js" type="text/javascript"></script>
@@ -69,8 +69,8 @@
         <?php echo $__additional_jscode__ ?>
         <script src="__HTML__/js/public.js?v=1.0.6" type="text/javascript"></script>
         <script src="__HTML__/js/py/app.js" type="text/javascript"></script>
-        <script src="__HTML__/js/artDialog.js"></script> 
-        <script src="__HTML__/js/iframeTools.js"></script> 
+        <script src="__HTML__/js/artDialog.js"></script>
+        <script src="__HTML__/js/iframeTools.js"></script>
         <script src="__HTML__/comm/charts/highcharts.js" type="text/javascript"></script>
         <script src="__HTML__/comm/plupload/plupload.full.min.js" type="text/javascript"></script>
 		<script src="__HTML__/comm/charts/modules/exporting.js" type="text/javascript"></script>
