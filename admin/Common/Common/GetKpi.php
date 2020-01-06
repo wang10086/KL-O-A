@@ -2927,6 +2927,23 @@ function get_yw_department(){
     }
 
     /**
+     * 获取某一周期结算的毛利和
+     * @param $userid
+     * @param $begin_time
+     * @param $end_time
+     * @return mixed
+     */
+    function get_settlement_maoli($userid,$begin_time,$end_time){
+        $where = array();
+        $where['b.audit_status']		= 1;
+        $where['o.create_user']			= $userid;
+        $where['l.req_type']			= 801;
+        $where['l.audit_time']			= array('between',array($begin_time,$end_time));
+        $settlement_money               = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+        return $settlement_money;
+    }
+
+    /**
      * 获取计调的满意度评分
      * @param $settlement_lists
      */

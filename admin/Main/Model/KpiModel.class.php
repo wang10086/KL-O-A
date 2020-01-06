@@ -207,11 +207,64 @@ class KpiModel extends Model
         if ($encourage_type == 1){ //业务
             $data               = $this -> get_yw_encourage_data($userid,$year,$month);
         }
+        return $data;
     }
 
     //业务岗激励机制数据
     public function get_yw_encourage_data($userid,$year,$month){
+        //任务系数
+        $quarter                = get_quarter($month);
+        $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
+        $quarterMonth           = getQuarterMonths($quarter,$year); //本季度月份
+        $lastYearMonth          = substr($lastQuarterMonth,-6); //上季度最后一个月
+        $endYearMonth           = substr($quarterMonth,-6); //本季度最后一个月
+        $lastTarget             = $quarter == 1 ? 0 : M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>1,'month'=>$lastYearMonth))->getField('target'); //上季度累计任务系数
+        $target                 = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>1,'month'=>$endYearMonth))->getField('target'); //(本季度)累计任务系数
 
+        //业绩
+        $quarter_cycle          = getQuarterlyCicle($year,$month);
+        $yearBeginTime          =get_year_settlement_start_time($year);
+        $maoli                  = get_settlement_maoli($userid,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度业绩
+        $sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
+
+        //提成 (100%内提取5%; 100%-150%=>20%; 大于150%=>25%)
+        $royalty5               = 0; //5%提成部分
+        $royalty20              = 0; //20%提成部分
+        $royalty25              = 0; //25%提成部分
+        $royaltySum             = 0; //全部提成
+        if ($maoli < $target){
+            $royaltySum         += $maoli*0.05;
+
+            $royalty5           += $maoli*0.5;
+            $royalty20          += 0;
+            $royalty25          += 0;
+        }elseif ($maoli > $target && $maoli < $target*1.5){
+            $royaltySum         += $target*0.05;
+            $royaltySum         += ($maoli - $target)*0.2;
+
+            $royalty5           += $target*0.5;
+            $royalty20          += ($maoli - $target)*0.2;
+            $royalty25          += 0;
+        }elseif ($maoli > $target*1.5){
+            $royaltySum         += $target*0.05;
+            $royaltySum         += ($target*1.5 - $target)*0.2;
+            $royaltySum         += ($maoli - $target*1.5)*0.25;
+
+            $royalty5           += $target*0.5;
+            $royalty20          += ($target*1.5 - $target)*0.2;
+            $royalty25          += ($maoli - $target*1.5)*0.25;
+        }
+
+        $data                   = array();
+        $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
+        $data['complete']       = $maoli; //当季度业绩
+        $data['sum_target']     = $target; //累计目标值
+        $data['sum_complete']   = $sum_maoli; //累计业绩
+        $data['royalty5']       = $royalty5; //5%部分业绩提成
+        $data['royalty20']      = $royalty20; //20%部分业绩提成
+        $data['royalty25']      = $royalty25; //25%部分业绩提成
+        $data['royaltySum']     = $royaltySum; //全部业绩提成
+        return $data;
     }
 
 }

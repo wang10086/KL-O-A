@@ -1428,6 +1428,7 @@ class KpiController extends BaseController {
 		//操作记录
 		$applist                = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
 
+		$this->encourage_data   = $encourage_data;
 		$this->encourage_type   = $encourage_type;
 		$this->user             = M('account')->find($user); //用户信息
 		$this->uid              = $user;

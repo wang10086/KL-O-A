@@ -15,30 +15,29 @@
             <div class="box-body table-responsive no-padding">
                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                     <tr role="row" class="orders" >
-                        <th width="">当季度任务指标</th>
-                        <th style="">当季度业绩</th>
-                        <th width="">累计任务指标</th>
-                        <th width="">累计业绩</th>
-                        <th width="">0-100%提成</th>
-                        <th width="">100%-150%提成</th>
-                        <th width="">150%-200%提成</th>
-                        <th width="">200以上提成</th>
-                        <th width="">累计合计提成</th>
-                        <th width="">累计已发放提成</th>
-                        <th width="">当季度发放提成</th>
+                        <th class="taskOptions">当季度任务指标</th>
+                        <th class="taskOptions">当季度业绩</th>
+                        <th class="taskOptions">累计任务指标</th>
+                        <th class="taskOptions">累计业绩</th>
+                        <th class="taskOptions">0-100%提成</th>
+                        <th class="taskOptions">100%-150%提成</th>
+                        <th class="taskOptions">150%以上提成</th>
+                        <!--<th class="taskOptions">200%以上提成</th>-->
+                        <th class="taskOptions">累计合计提成</th>
+                        <th class="taskOptions">累计已发放提成</th>
+                        <th class="taskOptions">当季度发放提成</th>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td class="taskOptions">{$encourage_data.target}</td>
+                        <td class="taskOptions">{$encourage_data.complete}</td>
+                        <td class="taskOptions">{$encourage_data.sum_target}</td>
+                        <td class="taskOptions">{$encourage_data.sum_complete}</td>
+                        <td class="taskOptions">{$encourage_data.royalty5}</td>
+                        <td class="taskOptions">{$encourage_data.royalty20}</td>
+                        <td class="taskOptions">{$encourage_data.royalty25}</td>
+                        <td class="taskOptions">{$encourage_data.royaltySum}</td>
+                        <td class="taskOptions">{$encourage_data.}</td>
+                        <td class="taskOptions">{$encourage_data.}</td>
                     </tr>
                 </table>
 
