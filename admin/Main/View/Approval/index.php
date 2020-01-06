@@ -64,7 +64,7 @@
                                             <td class="taskOptions">
                                                 <?php if ($row['status'] == 0){ ?>
                                                     <a href="{:U('Approval/file_upload',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                                <?php }elseif($row['status'] == 3){ ?>
+                                                <?php }elseif($row['status'] == 3 && in_array(cookie('userid'),array($row['create_user'],1))){ ?>
                                                     <a href="{:U('Approval/file_re_upload',array('id'=>$row['id']))}" title="编辑" class="btn btn-primary btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 <?php } ?>
                                             </td>
