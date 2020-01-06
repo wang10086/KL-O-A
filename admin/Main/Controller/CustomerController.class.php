@@ -680,8 +680,6 @@ class CustomerController extends BaseController {
 
                 $info['start_date']         = strtotime($info['start_date']);
                 $info['end_date']           = strtotime($info['end_date']);
-                $info['create_user_id']     = session('userid');
-                $info['create_user_name']   = session('nickname');
 
                 if ($partner_id){
                     $record_msg             = '编辑城市合伙人';
@@ -689,6 +687,8 @@ class CustomerController extends BaseController {
                     $res                    = $partner_db->where(array('id'=>$partner_id))->save($info);
                 }else{
                     $record_msg             = '添加城市合伙人';
+                    $info['create_user_id'] = session('userid');
+                    $info['create_user_name']= session('nickname');
                     $info['audit_stu']      = 0; //未审核
                     $info['create_time']    = NOW_TIME;
                     $res                    = $partner_db->add($info);
