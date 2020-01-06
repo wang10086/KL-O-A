@@ -192,5 +192,26 @@ class KpiModel extends Model
         M('kpi_op_record')->add($data);
     }
 
+    //激励机制
+    public function get_encourage_type($userid){
+        $userinfo               = M('account')->find($userid);
+        $num                    = 0;
+        if ($userinfo['rank'] == '02'){ //2队列
+            $num                = 1;
+        }
+        return $num;
+    }
+
+    //各激励机制数据
+    public function get_encourage_data($encourage_type,$userid,$year,$month){
+        if ($encourage_type == 1){ //业务
+            $data               = $this -> get_yw_encourage_data($userid,$year,$month);
+        }
+    }
+
+    //业务岗激励机制数据
+    public function get_yw_encourage_data($userid,$year,$month){
+
+    }
 
 }

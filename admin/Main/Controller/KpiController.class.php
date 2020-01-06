@@ -1384,7 +1384,6 @@ class KpiController extends BaseController {
 		$month = I('month',date('m'));
 		$user  = I('uid',cookie('userid'));
 
-
 		//更新数据
 		updatekpi($year.$month,$user,$year);
 
@@ -1415,28 +1414,31 @@ class KpiController extends BaseController {
 		}
 
 		//审核记录
-		$applist          = M('pdca_apply')->where(array('kpiid'=>$kpi['id']))->order('apply_time DESC')->select();
+		$applist                = M('pdca_apply')->where(array('kpiid'=>$kpi['id']))->order('apply_time DESC')->select();
 		foreach($applist as $k=>$v){
 			$applist[$k]['status'] = $sta[$v['status']];
 		}
 
+		//激励机制
+        $mod                    = D('Kpi');
+		$encourage_type         = $mod->get_encourage_type($user);
+        $encourage_data         = $mod -> get_encourage_data($encourage_type,$user,$year,$month);
+
 
 		//操作记录
-		$applist          = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
+		$applist                = M('kpi_op_record')->where(array('kpi_id'=>$kpi['id']))->order('op_time DESC')->select();
 
-
-		//用户信息
-		$this->user       = M('account')->find($user);
-
-		$this->uid        = $user;
-		$this->year       = $year;
-		$this->month      = $month;
-		$this->kpi        = $kpi;
-		$this->lists      = $lists;
-		$this->applist    = $applist;
-		$this->prveyear   = $year-1;
-		$this->nextyear   = $year+1;
-		$this->allmonth   = $year.sprintf('%02s', $month);
+		$this->encourage_type   = $encourage_type;
+		$this->user             = M('account')->find($user); //用户信息
+		$this->uid              = $user;
+		$this->year             = $year;
+		$this->month            = $month;
+		$this->kpi              = $kpi;
+		$this->lists            = $lists;
+		$this->applist          = $applist;
+		$this->prveyear         = $year-1;
+		$this->nextyear         = $year+1;
+		$this->allmonth         = $year.sprintf('%02s', $month);
 
 		$this->display('kpi_info');
 	}

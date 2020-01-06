@@ -130,22 +130,23 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <?php } ?>
-                        </div><!--/.col (right) -->
-                        
-                        
-                        <div class="col-md-12">
+
+                            <?php if ($encourage_type == 1){ ?>
+                                <include file="kpi_encourage_yw" />
+                            <?php } ?>
+
                             <div class="box box-warning">
                                 <div class="box-body">
-                                	<?php 
-									if(!$kpi['id']){
-									?>
-                                    <p style="text-align:center; width:100%; font-size:18px; padding:40px 0;">暂未制定KPI指标</p>
-                                    <?php 
-									}
-									?>
+                                    <?php
+                                    if(!$kpi['id']){
+                                        ?>
+                                        <p style="text-align:center; width:100%; font-size:18px; padding:40px 0;">暂未制定KPI指标</p>
+                                        <?php
+                                    }
+                                    ?>
                                     <!--
                                     <if condition="rolemenu(array('Kpi/addkpi'))">
-                                	
+
 									<form method="post" action="{:U('Kpi/addkpi')}" name="myform" id="myform">
 									<input type="hidden" name="dosubmint" value="1">
 									<input type="hidden" name="year" value="{$year}">
@@ -154,96 +155,96 @@
 									<button type="submit" class="btn btn-info btn-lg" id="lrpd">获取KPI数据</button>
 									</div>
 									</form>
-									
+
                                 	</if>
                                     -->
-                                    
-                                    <?php 
-									if($kpi['status']==0 && cookie('userid')==$kpi['user_id']){
-									?>
-                                    <!--
-									<form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
-									<input type="hidden" name="dosubmint" value="1">
-									<input type="hidden" name="kpiid" value="{$kpi.id}">
-									<input type="hidden" name="status" value="1">
-									<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
-									<button type="submit" class="btn btn-info btn-lg" id="lrpd">申请审核</button>
-									</div>
-									</form>
-                                    -->
-									<?php 
-									}
-									?>
-                                    
-                                    
-                                
-                                    <?php 
-									if($kpi['status']==1 && cookie('userid')==$kpi['ex_user_id'] ){
-									?>
-                                    <!--
-                                    <form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
-                                    <input type="hidden" name="dosubmint" value="1" />
-                                    <input type="hidden" name="kpiid" value="{$kpi.id}">
-                                    <div class="form-group col-md-12" style=" margin-top:20px;">
-                                        <div class="checkboxlist" id="applycheckbox">
-                                        <input type="radio" name="status" value="2"> 通过 &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input type="radio" name="status" value="3"> 不通过
+
+                                    <?php
+                                    if($kpi['status']==0 && cookie('userid')==$kpi['user_id']){
+                                        ?>
+                                        <!--
+                                        <form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="kpiid" value="{$kpi.id}">
+                                        <input type="hidden" name="status" value="1">
+                                        <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">申请审核</button>
                                         </div>
-                                    </div>
-                                    
-                                    <div class="form-group col-md-12 select_2 ">
-                                    	<textarea class="form-control"  placeholder="不通过原因" name="app_remark" ></textarea>
-                                    </div>
-                                    
-                                    <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
-                                    <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                                    </div>
-                                    
-                                    </form>
-                                    -->
+                                        </form>
+                                        -->
+                                        <?php
+                                    }
+                                    ?>
+
+
+
+                                    <?php
+                                    if($kpi['status']==1 && cookie('userid')==$kpi['ex_user_id'] ){
+                                        ?>
+                                        <!--
+                                        <form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
+                                        <input type="hidden" name="dosubmint" value="1" />
+                                        <input type="hidden" name="kpiid" value="{$kpi.id}">
+                                        <div class="form-group col-md-12" style=" margin-top:20px;">
+                                            <div class="checkboxlist" id="applycheckbox">
+                                            <input type="radio" name="status" value="2"> 通过 &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="radio" name="status" value="3"> 不通过
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12 select_2 ">
+                                            <textarea class="form-control"  placeholder="不通过原因" name="app_remark" ></textarea>
+                                        </div>
+
+                                        <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                        </div>
+
+                                        </form>
+                                        -->
                                     <?php } ?>
-                                    
-                                    
-                                    
-									
-									<?php 
-									if($kpi['status']==2 && cookie('userid')==$kpi['user_id']){
-									?>
+
+
+
+
+                                    <?php
+                                    if($kpi['status']==2 && cookie('userid')==$kpi['user_id']){
+                                        ?>
+                                        <!--
+                                        <form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="kpiid" value="{$kpi.id}">
+                                        <input type="hidden" name="status" value="4">
+                                        <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">申请评分</button>
+                                        </div>
+                                        </form>
+                                        -->
+                                        <?php
+                                    }
+                                    ?>
+
+
+                                    <?php
+                                    if($kpi['status']==4 && cookie('userid')==$kpi['mk_user_id']){
+                                        ?>
+                                        <!--
+                                        <form method="post" action="{:U('Kpi/kpi_score')}" name="myform" id="myform">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="kpiid" value="{$kpi.id}">
+                                        <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                                        {$totalstr}
+                                        </div>
+                                        <div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
+                                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">确定评分</button>
+                                        </div>
+                                        </form>
+                                        -->
+                                        <?php
+                                    }
+                                    ?>
+
                                     <!--
-									<form method="post" action="{:U('Kpi/kpi_applyscore')}" name="myform" id="myform">
-									<input type="hidden" name="dosubmint" value="1">
-									<input type="hidden" name="kpiid" value="{$kpi.id}">
-									<input type="hidden" name="status" value="4">
-									<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
-									<button type="submit" class="btn btn-info btn-lg" id="lrpd">申请评分</button>
-									</div>
-									</form>
-                                    -->
-									<?php 
-									}
-									?>
-                            		
-                                    
-                                    <?php 
-									if($kpi['status']==4 && cookie('userid')==$kpi['mk_user_id']){
-									?>
-                                    <!--
-									<form method="post" action="{:U('Kpi/kpi_score')}" name="myform" id="myform">
-									<input type="hidden" name="dosubmint" value="1">
-									<input type="hidden" name="kpiid" value="{$kpi.id}">
-									<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
-									{$totalstr}
-									</div>
-									<div class="form-group col-md-12" style="text-align:center; margin-top:20px;">
-									<button type="submit" class="btn btn-info btn-lg" id="lrpd">确定评分</button>
-									</div>
-									</form>
-                                    -->
-									<?php 
-									}
-									?>
-                        
-                            		<!--
                                     <?php if($applist){ ?>
                                     <div class="form-group col-md-12" id="apptab" style="margin-top:40px;">
                                         <div class="box-body no-padding">
@@ -265,14 +266,11 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <?php 
-									}
-									?>
+                                    <?php
+                                    }
+                                    ?>
                                     -->
-                                    
-                                    
-                                    
-                                    
+
                                     <div class="form-group col-md-12" id="apptab" style="margin-top:40px;">
                                         <div class="box-body no-padding">
                                             <table class="table">
@@ -282,20 +280,20 @@
                                                     <th>备注</th>
                                                 </tr>
                                                 <foreach name="applist" key="k" item="v">
-                                                <tr>
-                                                	<td><if condition="$v['op_time']">{$v.op_time|date='Y-m-d H:i',###}</if></td>
-                                                    <td>{$v.op_user_name}</td>
-                                                    <td>{$v.remarks}</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td><if condition="$v['op_time']">{$v.op_time|date='Y-m-d H:i',###}</if></td>
+                                                        <td>{$v.op_user_name}</td>
+                                                        <td>{$v.remarks}</td>
+                                                    </tr>
                                                 </foreach>
                                             </table>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group">&nbsp;</div>
                                 </div>
                             </div>
-                        </div>
+                        </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
                 
