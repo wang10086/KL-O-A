@@ -1420,9 +1420,10 @@ class KpiController extends BaseController {
 		}
 
 		//激励机制
+        $userinfo               = M('account')->find($user); //用户信息
         $mod                    = D('Kpi');
 		$encourage_type         = $mod->get_encourage_type($user);
-        $encourage_data         = $mod -> get_encourage_data($encourage_type,$user,$year,$month);
+        $encourage_data         = $mod -> get_encourage_data($encourage_type,$user,$year,$month,$userinfo);
 
 
 		//操作记录
@@ -1430,7 +1431,7 @@ class KpiController extends BaseController {
 
 		$this->encourage_data   = $encourage_data;
 		$this->encourage_type   = $encourage_type;
-		$this->user             = M('account')->find($user); //用户信息
+		$this->user             = $userinfo;
 		$this->uid              = $user;
 		$this->year             = $year;
 		$this->month            = $month;

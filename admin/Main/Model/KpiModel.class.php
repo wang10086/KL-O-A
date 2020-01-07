@@ -203,15 +203,15 @@ class KpiModel extends Model
     }
 
     //各激励机制数据
-    public function get_encourage_data($encourage_type,$userid,$year,$month){
+    public function get_encourage_data($encourage_type,$userid,$year,$month,$userinfo){
         if ($encourage_type == 1){ //业务
-            $data               = $this -> get_yw_encourage_data($userid,$year,$month);
+            $data               = $this -> get_yw_encourage_data($userid,$year,$month,$userinfo);
         }
         return $data;
     }
 
     //业务岗激励机制数据
-    public function get_yw_encourage_data($userid,$year,$month){
+    public function get_yw_encourage_data($userid,$year,$month,$userinfo){
         //任务系数
         $quarter                = get_quarter($month);
         $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
@@ -227,33 +227,57 @@ class KpiModel extends Model
         $maoli                  = get_settlement_maoli($userid,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度业绩
         $sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
 
-        //提成 (100%内提取5%; 100%-150%=>20%; 大于150%=>25%)
+        $partner_money          = get_partner_money($userinfo,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度城市合伙人押金
+        $sum_partner_money      = get_partner_money($userinfo,$yearBeginTime,$quarter_cycle['end_time']); //累计城市合伙人押金
+        $sum_maoli              = $sum_maoli + $sum_partner_money; //累计毛利 + 累计城市合伙人
+        $maoli                  = $maoli + $partner_money; //当季度毛利 + 当季度称会死合伙人
+
+        //提成 (100%内提取5%; 100%-150%=>20%; 150%-200%=>25%; 大于200%=>40%)
         $royalty5               = 0; //5%提成部分
         $royalty20              = 0; //20%提成部分
         $royalty25              = 0; //25%提成部分
+        $royalty40              = 0; //40%提成部分
         $royaltySum             = 0; //全部提成
         if ($maoli < $target){
             $royaltySum         += $maoli*0.05;
 
-            $royalty5           += $maoli*0.5;
+            $royalty5           += $maoli*0.05;
             $royalty20          += 0;
             $royalty25          += 0;
+            $royalty40          += 0;
         }elseif ($maoli > $target && $maoli < $target*1.5){
             $royaltySum         += $target*0.05;
             $royaltySum         += ($maoli - $target)*0.2;
 
-            $royalty5           += $target*0.5;
+            $royalty5           += $target*0.05;
             $royalty20          += ($maoli - $target)*0.2;
             $royalty25          += 0;
-        }elseif ($maoli > $target*1.5){
+            $royalty40          += 0;
+        }elseif ($maoli > $target*1.5 && $maoli < $target*2){
             $royaltySum         += $target*0.05;
             $royaltySum         += ($target*1.5 - $target)*0.2;
             $royaltySum         += ($maoli - $target*1.5)*0.25;
 
-            $royalty5           += $target*0.5;
+            $royalty5           += $target*0.05;
             $royalty20          += ($target*1.5 - $target)*0.2;
             $royalty25          += ($maoli - $target*1.5)*0.25;
+            $royalty40          += 0;
+        }elseif ($maoli > $target*2){
+            $royaltySum         += $target*0.05;
+            $royaltySum         += ($target*1.5 - $target)*0.2;
+            $royaltySum         += ($target*2 - $target*1.5)*0.25;
+            $royaltySum         += ($maoli - $target*2)*0.4;
+
+            $royalty5           += $target*0.05;
+            $royalty20          += ($target*1.5 - $target)*0.2;
+            $royalty25          += ($target*2.0 - $target*1.5)*0.25;
+            $royalty40          += ($maoli - $target*2)*0.4;
         }
+
+        //累计已发放提成	当季度发放提成
+        $salary_months          = $this->get_salary_months($year,$month);
+        $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('total');
+        $quarter_royalty_salary = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_months']),'account_id'=>$userid,'status'=>4))->sum('total');
 
         $data                   = array();
         $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
@@ -263,7 +287,53 @@ class KpiModel extends Model
         $data['royalty5']       = $royalty5; //5%部分业绩提成
         $data['royalty20']      = $royalty20; //20%部分业绩提成
         $data['royalty25']      = $royalty25; //25%部分业绩提成
+        $data['royalty40']      = $royalty40; //40%部分业绩提成
         $data['royaltySum']     = $royaltySum; //全部业绩提成
+        $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0;
+        $data['quarter_royalty_payoff'] = $quarter_royalty_salary ? $quarter_royalty_salary : 0;
+        return $data;
+    }
+
+    //发放业绩提成的月份
+    private function get_salary_months($year,$month){
+        $year_arr               = array();
+        $month_arr              = array();
+
+        //年度薪资月份信息
+        for ($i=2; $i<=12; $i++){
+            $mon                = strlen($i)<2 ? str_pad($i,2,'0',STR_PAD_LEFT) : $i;
+            $year_arr[]         = $year.$mon;
+        }
+        $year_arr[]             = ($year+1).'01'; //一月份发上一年的提成
+
+        //季度提成薪资信息
+        switch ($month){
+            case in_array($month,array('01','02','03')):
+                $month_arr[]    = $year.'02';
+                $month_arr[]    = $year.'03';
+                $month_arr[]    = $year.'04';
+                break;
+            case in_array($month,array('04','05','06')):
+                $month_arr[]    = $year.'05';
+                $month_arr[]    = $year.'06';
+                $month_arr[]    = $year.'07';
+                break;
+            case in_array($month,array('07','08','09')):
+                $month_arr[]    = $year.'08';
+                $month_arr[]    = $year.'09';
+                $month_arr[]    = $year.'10';
+                break;
+            case in_array($month,array('10','11','12')):
+                $month_arr[]    = $year.'11';
+                $month_arr[]    = $year.'12';
+                $month_arr[]    = ($year+1).'01';
+                break;
+        }
+
+
+        $data                       = array();
+        $data['salary_year_months'] = $year_arr;
+        $data['salary_months']      = $month_arr;
         return $data;
     }
 
