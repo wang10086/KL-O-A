@@ -2910,9 +2910,10 @@ function get_yw_department(){
      * @param int $jd_uid 计调id
      * @param $addr 实施地点
      * @param $kindid 项目类型
+     * @param $saleUids 多个销售人员 array
      * @return mixed
      */
-    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0,$addr='',$kindid=''){
+    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0,$addr='',$kindid='',$saleUids=''){
         $where                                  = array();
         $where['b.audit_status']                = 1;
         $where['l.req_type']                    = 801;
@@ -2921,6 +2922,7 @@ function get_yw_department(){
         if ($jd_uid) $where['l.req_uid']        = $jd_uid;
         if ($addr) $where['o.destination']      = array('like', $addr.'%');
         if ($kindid) $where['o.kind']           = $kindid;
+        if ($saleUids) $where['o.create_user']  = array('in',$saleUids);
         $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
         $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         return $op_settlement_list;
@@ -4864,16 +4866,16 @@ function get_kpi_new_GEC_data($target,$finish){
 //新增客户结算信息
 function get_new_GEC_settlement($lists,$startTime,$endTime){
     foreach ($lists as $k=>$v){
-        $where                                  = array();
-        $where['b.audit_status']                = 1;
-        $where['l.req_type']                    = 801;
-        $where['l.audit_time']                  = array('between', "$startTime,$endTime");
-        $where['o.customer']                    = $v['company_name'];
-        $field                                  = 'o.op_id,o.project,o.group_id,o.customer,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
-        $settlement_lists                       = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
-        $lists[$k]['op_num']                    = count($settlement_lists);
-        $lists[$k]['sum_shouru']                = array_sum(array_column($settlement_lists,'shouru')) ? array_sum(array_column($settlement_lists,'shouru')) : 0;
-        $lists[$k]['settlement_lists']          = $settlement_lists;
+        $where                              = array();
+        $where['b.audit_status']            = 1;
+        $where['l.req_type']                = 801;
+        $where['l.audit_time']              = array('between', "$startTime,$endTime");
+        $where['o.customer']                = $v['company_name'];
+        $field                              = 'o.op_id,o.project,o.group_id,o.customer,o.create_user,o.create_user_name,b.shouru,b.maoli,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+        $settlement_lists                   = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+        $lists[$k]['op_num']                = count($settlement_lists);
+        $lists[$k]['sum_shouru']            = array_sum(array_column($settlement_lists,'shouru')) ? array_sum(array_column($settlement_lists,'shouru')) : 0;
+        $lists[$k]['settlement_lists']      = $settlement_lists;
     }
     return $lists;
 }
@@ -5123,9 +5125,42 @@ function get_cost_save_finish_sum_data($lists){
  * @param $quarter
  */
 function get_budget_up_rate($uid,$year,$quarter){
+    $departmentid                       = M('account')->where(array('id'=>$uid))->getField('departmentid');
+    $department_users                   = get_department_account($departmentid);
+    $department_userids                 = array_column($department_users,'id');
     $last_year_quarter_cycle            = get_quarter_cycle_time($year - 1, $quarter); //上一年季度周期
     $this_year_quarter_cycle            = get_quarter_cycle_time($year , $quarter); //当年季度周期
-    $last_year_settlement_lists         = get_settlement_list($last_year_quarter_cycle['begin_time'] , $last_year_quarter_cycle['end_time']);
-    $this_year_settlement_lists         = get_settlement_list($this_year_quarter_cycle['begin_time'] , $this_year_quarter_cycle['end_time']);
+    $last_year_settlement_lists         = get_settlement_list($last_year_quarter_cycle['begin_time'] , $last_year_quarter_cycle['end_time'],'','','','',$department_userids);
+    $this_year_settlement_lists         = get_settlement_list($this_year_quarter_cycle['begin_time'] , $this_year_quarter_cycle['end_time'],'','','','',$department_userids);
 
+    $last_year_data                     = array();
+    $last_year_data['year']             = $year - 1;
+    $last_year_data['op_num']           = count($last_year_settlement_lists);
+    $last_year_data['sum_maoli']        = $last_year_settlement_lists ? array_sum(array_column($last_year_settlement_lists,'maoli')) : 0;
+    $last_year_data['lists']            = $last_year_settlement_lists;
+    $this_year_data                     = array();
+    $this_year_data['year']             = $year;
+    $this_year_data['op_num']           = count($this_year_settlement_lists);
+    $this_year_data['sum_maoli']        = $this_year_settlement_lists ? array_sum(array_column($this_year_settlement_lists,'maoli')) : 0;
+    $this_year_data['lists']            = $this_year_settlement_lists;
+
+    $data                               = array();
+    $data['this_year_data']             = $this_year_data;
+    $data['last_year_data']             = $last_year_data;
+    $data['up_rate']                    = $last_year_data['sum_maoli'] ? (round(($this_year_data['sum_maoli'] - $last_year_data['sum_maoli'])/$last_year_data['sum_maoli'],4)*100).'%' : '100%';
+    return $data;
 }
+
+/**
+ * 获取本部门人员信息
+ * @param $departmentid
+ * @return mixed
+ */
+function get_department_account($departmentid){
+    $where                              = array();
+    $where['departmentid']              = $departmentid;
+    $field                              = 'id,nickname';
+    $lists                              = M('account')->where($where)->field($field)->select();
+    return $lists;
+}
+

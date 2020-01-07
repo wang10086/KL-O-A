@@ -2697,10 +2697,13 @@ class KpiController extends BaseController {
         $month                              = date('m');
         $quarter                            = I('quarter',get_quarter($month));
         $uid                                = I('uid',0);
-        $data                               = get_budget_up_rate($uid,$year,$quarter);
+        //$data                               = get_budget_up_rate($uid,$year,$quarter);
+        $lastYearData                       = $data['last_year_data'];
+        $thisYearData                       = $data['this_year_data'];
 
-
-
+        $this->thisYearData                 = $thisYearData;
+        $this->lastYearData                 = $lastYearData;
+        $this->up_rate                      = $data['up_rate'];
         $this->year                         = $year;
         $this->quarter                      = $quarter;
         $this->uid                          = $uid;

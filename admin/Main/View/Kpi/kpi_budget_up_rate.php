@@ -53,16 +53,16 @@
                                 <th width="100">详情</th>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td rowspan="2"></td>
+                                <td>{$lastYearData.year}</td>
+                                <td>{$lastYearData.op_num}</td>
+                                <td>{$lastYearData.sum_maoli}</td>
+                                <td rowspan="2">{$up_rate}</td>
                                 <td><a href="javascript:;" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{$thisYearData.year}</td>
+                                <td>{$thisYearData.op_num}</td>
+                                <td>{$thisYearData.sum_maoli}</td>
                                 <td><a href="javascript:;" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
                             </tr>
                         </table><br><br>

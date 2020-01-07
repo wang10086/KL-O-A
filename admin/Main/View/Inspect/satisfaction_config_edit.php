@@ -26,7 +26,7 @@
                 </div>
                 <div class="form-group box-float-6">
                     <label>评分月份</label>：
-                    <input type="text" name="info[month]" value="{$month}" class="form-control monthly" />
+                    <input type="text" name="info[month]" value="{$month}" class="form-control monthly" onblur="reSetYear($(this).val())" />
                 </div>
 
                 <div class="form-group box-float-12 mt20" id="satisfaction_box">
@@ -98,5 +98,10 @@
             '<input type="submit" class="btn btn-info btn-sm" style="margin-top: -3px" value="添加" onclick="sure_userinfo($(`#userid`).val(),$(`#username`).val())" />';
         $('#write_user_div').html(init_html);
         autocomplete_id('username','userid',keywords);
+    }
+
+    function reSetYear(yearMonth) {
+        let year = yearMonth.substr(0,4);
+        $('input[name="info[year]"]').val(year)
     }
 </script>

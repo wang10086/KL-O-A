@@ -1120,7 +1120,7 @@ class InspectController extends BaseController{
             $data                           = I('data');
             $year                           = $info['year'];
 
-            if (!$info['userid'] || !$info['month']) $this->error('数据错误');
+            if (!$info['userid'] || !$info['month'] || !$year) $this->error('数据错误');
             $month                          = $info['month'] ? substr($info['month'],-2) : date('m');
                 if ($data && $info['month'] >= date('Ym')){
                     for ($m=1;$m<=12;$m++){
