@@ -25,7 +25,7 @@
                         <th class="taskOptions">200%以上提成</th>
                         <th class="taskOptions">累计合计提成</th>
                         <th class="taskOptions">累计已发放提成</th>
-                        <th class="taskOptions">当季度发放提成</th>
+                        <th class="taskOptions">当季度应发提成</th>
                     </tr>
                     <tr>
                         <td class="taskOptions">{$encourage_data.target}</td>
@@ -38,7 +38,7 @@
                         <td class="taskOptions">{$encourage_data.royalty40}</td>
                         <td class="taskOptions">{$encourage_data.royaltySum}</td>
                         <td class="taskOptions">{$encourage_data.sum_royalty_payoff}</td>
-                        <td class="taskOptions">{$encourage_data.quarter_royalty_payoff}</td>
+                        <td class="taskOptions">{$encourage_data.quarter_should_royalty}</td>
                     </tr>
                 </table>
 
