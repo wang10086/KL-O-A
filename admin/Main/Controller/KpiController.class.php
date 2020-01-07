@@ -1879,7 +1879,8 @@ class KpiController extends BaseController {
             }
 
 
-            if ($pin =='02'){
+            /* bak20200107
+             * if ($pin =='02'){
                 $time_info              = get_this_month($year);
                 $year                   = $time_info['year'];
                 $month                  = $time_info['month'];
@@ -1896,7 +1897,9 @@ class KpiController extends BaseController {
                 $lists[$k]['average']   = $month_num ? (round($sum_other_score/$month_num,2) + $maoli_score) : 0;
             }else{
                 $lists[$k]['average']   = $num ? round($sum_score/$num,2) : 0;
-            }
+            }*/
+
+            $lists[$k]['average']   = $num ? round($sum_score/$num,2) : 0;
         }
         return $lists;
     }
