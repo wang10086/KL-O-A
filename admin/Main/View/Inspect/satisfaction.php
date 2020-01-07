@@ -64,8 +64,8 @@
                                 <div class="box-body">
 
                                     <div class="btn-group" id="catfont">
-                                        <a href="{:U('Inspect/satisfaction',array('pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">管理岗位</a>
-                                        <a href="{:U('Inspect/satisfaction',array('pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">其他岗位</a>
+                                        <a href="{:U('Inspect/satisfaction',array('year'=>$year,'month'=>$month,'yearMonth'=>$yearMonth,'pin'=>1))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">管理岗位</a>
+                                        <a href="{:U('Inspect/satisfaction',array('year'=>$year,'month'=>$month,'yearMonth'=>$yearMonth,'pin'=>2))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">其他岗位</a>
                                     </div>
 
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
