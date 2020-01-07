@@ -227,10 +227,10 @@ class KpiModel extends Model
         $maoli                  = get_settlement_maoli($userid,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度业绩
         $sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
 
-        $partner_money          = get_partner_money($userinfo,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度城市合伙人押金
+        /*$partner_money          = get_partner_money($userinfo,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度城市合伙人押金
         $sum_partner_money      = get_partner_money($userinfo,$yearBeginTime,$quarter_cycle['end_time']); //累计城市合伙人押金
         $sum_maoli              = $sum_maoli + $sum_partner_money; //累计毛利 + 累计城市合伙人
-        $maoli                  = $maoli + $partner_money; //当季度毛利 + 当季度称会死合伙人
+        $maoli                  = $maoli + $partner_money; //当季度毛利 + 当季度城市合伙人*/
 
         //提成 (100%内提取5%; 100%-150%=>20%; 150%-200%=>25%; 大于200%=>40%)
         $royalty5               = 0; //5%提成部分

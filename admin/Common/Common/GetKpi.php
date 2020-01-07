@@ -2940,6 +2940,7 @@ function get_yw_department(){
         $where['l.req_type']			= 801;
         $where['l.audit_time']			= array('between',array($begin_time,$end_time));
         $settlement_money               = M()->table('__OP_SETTLEMENT__ as b')->field('b.maoli')->join('__OP__ as o on b.op_id = o.op_id','LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id','LEFT')->where($where)->sum('b.maoli');
+        $settlement_money               = $settlement_money ? $settlement_money : 0;
         return $settlement_money;
     }
 

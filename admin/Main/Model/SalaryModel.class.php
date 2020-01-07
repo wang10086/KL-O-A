@@ -184,7 +184,8 @@ class SalaryModel extends Model
     }
 
     //获取本人季度业绩提成
-    private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter,$partner_money=0){
+    //private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter,$partner_money=0){
+    private function get_quarter_royalty($user,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter){
         foreach ($sale_configs as $k=>$v){
             if ($user['id'] == 59){ //李保罗
                 $coefficient                    = $this->get_lbl_coefficient($quarter);
@@ -201,7 +202,7 @@ class SalaryModel extends Model
             }
         }
         $sum_profit                             = array_sum(array_column($lists,'maoli'));  //当季度结算毛利总额
-        $sum_profit                             = $partner_money ? $sum_profit + $partner_money : $partner_money;
+        //$sum_profit                             = $partner_money ? $sum_profit + $partner_money : $partner_money;
 
         //提成金额 = 季度目标系数 * 工资岗位薪酬 (100%内提取5%; 100%-150%=>20%; 大于150%=>25%)
         if (in_array($user['id'],array(44,45,123,113))){ $salary += 800; } //44=>许世伟 , 45=>赵鹏 , 113=>郑志江 , 123=>王爱 , 局人才额外800
@@ -481,8 +482,9 @@ class SalaryModel extends Model
         $quarter_time                           = getQuarterlyCicle($p_year,$p_month);          //获取该季度周期,方便业务提成(结算)取值
         $op_settlement_list                     = $this->get_quarter_settlement_list($quarter_time);   //获取该季度所有的结算团
 
-        $partner_money                          = get_partner_money($userinfo,$quarter_time['begin_time'],$quarter_time['end_time']); //城市合伙人保证金
-        $quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter,$partner_money);    //销售季度目标 完成 提成
+        //$partner_money                          = get_partner_money($userinfo,$quarter_time['begin_time'],$quarter_time['end_time']); //城市合伙人保证金
+        //$quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter,$partner_money);    //销售季度目标 完成 提成
+        $quarter_royalty_data                   = $this->get_quarter_royalty($userinfo,$sale_configs,$op_settlement_list,$salary,$pay_month,$quarter);    //销售季度目标 完成 提成
         return $quarter_royalty_data;
     }
 
