@@ -5115,3 +5115,17 @@ function get_cost_save_finish_sum_data($lists){
     $str_data                               = ($data*100).'%';
     return $str_data;
 }
+
+/**
+ * 季度毛利额累计增长比率 和上一年同季度对比
+ * @param $uid
+ * @param $year
+ * @param $quarter
+ */
+function get_budget_up_rate($uid,$year,$quarter){
+    $last_year_quarter_cycle            = get_quarter_cycle_time($year - 1, $quarter); //上一年季度周期
+    $this_year_quarter_cycle            = get_quarter_cycle_time($year , $quarter); //当年季度周期
+    $last_year_settlement_lists         = get_settlement_list($last_year_quarter_cycle['begin_time'] , $last_year_quarter_cycle['end_time']);
+    $this_year_settlement_lists         = get_settlement_list($this_year_quarter_cycle['begin_time'] , $this_year_quarter_cycle['end_time']);
+
+}

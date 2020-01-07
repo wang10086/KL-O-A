@@ -2690,6 +2690,23 @@ class KpiController extends BaseController {
         $this->display('kpi_new_GEC');
     }
 
+    //季度毛利额累计增长比率
+    public function public_kpi_budget_up_rate(){
+        $this->title('季度毛利额累计增长比率');
+        $year                               = I('year',date('Y'));
+        $month                              = date('m');
+        $quarter                            = I('quarter',get_quarter($month));
+        $uid                                = I('uid',0);
+        $data                               = get_budget_up_rate($uid,$year,$quarter);
+
+
+
+        $this->year                         = $year;
+        $this->quarter                      = $quarter;
+        $this->uid                          = $uid;
+        $this->display('kpi_budget_up_rate');
+    }
+
     public function aaa(){
         set_after_salary_kpi(201906);
     }
