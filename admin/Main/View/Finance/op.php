@@ -334,8 +334,9 @@
         if (!shouru || shouru==0){ art_show_msg('收入不能为空',3); return false; }
         var money_return_plan = 0;
         $('#payment').find('.money_back_amount').each(function () {
-            money_return_plan += parseInt($(this).val());
+            money_return_plan += parseFloat($(this).val());
         })
+
         if (money_return_plan != shouru && dijie == 0){ art_show_msg('请确保回款总金额和收入一致',3); return false; }
         $('#save_appcost').submit();
     }
