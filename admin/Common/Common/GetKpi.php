@@ -179,41 +179,6 @@ function get_zhuanhualv($user,$start_date,$end_date){
 }
 
 /*
- * 教务满意度
- * 1.员工id
- * 2.本周期开始时间
- * 3.本周期结束时间
- * */
-//bak_20190802
-/*function get_jw_myd($user,$start_date,$end_date){
-    //本月以评分的总项目
-    $where                  = array();
-    $where['c.manager_id']  = $user;
-    $where['s.input_time']  = array('between',array($start_date,$end_date));
-    $where['s.late']        = array('neq',0);
-    $field                  = "s.id,s.guide,s.late,s.manage,s.morality,u.id as uid,u.confirm_id";
-    $lists                  = M()->table('__TCS_SCORE__ as s')->field($field)->join('__TCS_SCORE_USER__ as u on u.id=s.uid','left')->join('__OP_GUIDE_CONFIRM__ as c on c.id=u.confirm_id','left')->where($where)->select();
-
-    $hegexiangmu            = array();
-    $zongfen                = 4*5;   //考核4项, 每项5分, 满分总分
-    foreach ($lists as $k=>$v){
-        $defen              = $v['guide']+$v['late']+$v['manage']+$v['morality'];
-        $score              = round($defen/$zongfen,2);
-        if ($score > 0.72){
-            $hegexiangmu[]  = $v;
-        }
-    }
-
-    $data                   = array();
-    $data['zongxiangmu']    = $lists;
-    $data['hegexiangmu']    = $hegexiangmu;
-    $data['zongshu']        = count($lists);
-    $data['hegeshu']        = count($hegexiangmu);
-    $data['hegelv']         = round($data['hegeshu']/$data['zongshu'],2);
-    return $data;
-}*/
-
-/*
  * 辅导员管理准确性
  * 1.员工id
  * 2.本周期开始时间
@@ -247,48 +212,6 @@ function get_fdyzqx($user,$start_date,$end_date){
     //$data['hegelv']         = $hegelv;
     return $data;
 }
-
-/*
- * bak_20190731
- * 辅导员管理及时率
- * 1.员工id
- * 2.本周期开始时间
- * 3.本周期结束时间
- * */
-/*function get_fdyjsl($user,$start_date,$end_date){
-    //辅导员本月调度总团数
-    $before_where                   = array();
-    $before_where['manager_id']     = $user;
-    $before_where['set_guide_time'] = array('between',array($start_date,$end_date));
-    $before_lists                   = M('op_guide_confirm')->where($before_where)->select();   //出团前安排人员
-    $after_where                    = array();
-    $after_where['heshi_oa_uid']    = $user;
-    $after_where['heshi_time']      = array('between',array($start_date,$end_date));
-    $after_lists                    = M('op_guide_confirm')->where($after_where)->select();          //活动结束后核实人员信息
-
-    $zongxiangmu            = array();
-    $hegexiangmu            = array();
-
-    foreach ($after_lists as $kk=>$vv){
-        $timeaa             = $vv['heshi_time']-$vv['daiheshi_time'];
-        $timebb             = strtopinyin(date('Ym').'26');     //活动实施后每月26号前完成内完成核实
-        if ($timeaa <= $timebb){
-            $hegexiangmu[]  = $vv;
-        }
-        $zongxiangmu[]      = $vv;
-    }
-    $zongshu                = count($zongxiangmu);
-    $hegeshu                = count($hegexiangmu);
-    $hegelv                 = round($hegeshu/$zongshu,2);
-
-    $data                   = array();
-    $data['zongxiangmu']    = $zongxiangmu;
-    $data['hegexiangmu']    = $hegexiangmu;
-    $data['zongshu']        = $zongshu;
-    $data['hegeshu']        = $hegeshu;
-    $data['hegelv']         = $hegelv;
-    return $data;
-}*/
 
 
 /*
@@ -406,41 +329,6 @@ function get_hegelv($lists,$n,$star=5){
     return $hegelv;
 }
 
-//根据项目类型不同考核内容不同(研发)
-/*function get_hegelvaa($lists){
-    $score_kind1        = array_keys(C('SCORE_KIND1')); //线路类
-    $score_kind2        = array_keys(C('SCORE_KIND2')); //课程类
-    $score_kind3        = array_keys(C('SCORE_KIND3')); //亲自旅行 , 冬夏令营
-
-    $hege_list          = array();
-    foreach ($lists as $k=>$v){
-        if (in_array($v['kind'],$score_kind2)){
-            //考核研发(3项:课程深度、课程专业性、课程趣味性)
-            $n          = 3;
-            $defen      = $v['depth']+ $v['major']+ $v['interest'];
-        }elseif (in_array($v['kind'],$score_kind3)){
-            //考核研发(项1:内容专业性)
-            $n          = 1;
-            $defen      = $v['major'];
-        }else{
-            //考核研发(1项:)
-            $n          = 1;
-            $defen      = $v['content'];
-        }
-        $zongfen        = 5*$n;
-        $ratio          = round($defen/$zongfen,2);
-        //大于72%即为合格
-        if ($ratio >= 0.72){
-            $hege_list[]= $v;
-        }
-    }
-    $hegetuanshu        = count($hege_list);
-    $zongtuanshu        = count($lists);
-    $hegelv             = round($hegetuanshu/$zongtuanshu,2);
-
-    return $hegelv;
-}*/
-
 //客户满意度 kpi
 function get_manyidu($lists){
     $defen      = 0;
@@ -513,43 +401,6 @@ function get_sum_department_operate($department,$year,$month,$type){
     $data['rsfyl']              = $data['yysr'] ? round($data['rlzycb']/$data['yysr'],4)*100 : 0;   //人事费用率(%)  人力资源成本/营业收入
     return $data;
 }
-
-/**
- * 获取部门实际经营信息(从季度经营报表中取值)
- * @param $userid
- * @param $month
- */
- /*function get_department_operate_bak_20190417($department,$year,$month){
-     $mod                       = D('Manage');
-     $quart                     = quarter_month1($month);  //季度信息
-
-     $yms                       = $mod->get_yms($year,$quart,'q');  //获取费季度包含的全部月份
-     $times                     = $mod->get_times($year,$quart,'q');    //获取考核周期开始及结束时间戳
-
-     $ymd[0]                    = date("Ymd",$times['beginTime']);
-     $ymd[1]                    = date("Ymd",$times['endTime']);
-     $mon                       = not_team_not_share($ymd[0],$ymd[1]);//季度其他费用取出数据(不分摊)
-     $mon_share                 = not_team_share($ymd[0],$ymd[1]);//季度其他费用取出数据(分摊)
-     $otherExpenses             = $mod->department_data($mon,$mon_share);//季度其他费用部门数据
-
-     $number                    = $mod->get_numbers($year,$yms);    //季度平均人数
-     $hr_cost                   = $mod->get_quarter_hr_cost($year,$yms,$times);// 季度部门人力资源成本
-     $profit                    = get_business_sum($year,$yms);// 季度 monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
-     $human_affairs             = $mod->human_affairs($hr_cost,$profit);//季度 人事费用率
-     $total_profit              = $mod->total_profit($profit,$hr_cost,$otherExpenses);//季度 利润总额
-
-     $info                      = array();
-     $info['ygrs']              = $number[$department];             //部门员工人数
-     $info['yysr']              = $profit[$department]['monthzsr']; //营业收入
-     $info['yyml']              = $profit[$department]['monthzml']; //营业毛利
-     $info['yymll']             = $profit[$department]['monthmll']; //营业毛利率
-     $info['rlzycb']            = $hr_cost[$department];            //人力资源成本
-     $info['qtfy']              = $otherExpenses[$department]['money'];      //其他费用
-     $info['lrze']              = $total_profit[$department];       //利润总额
-     $info['rsfyl']             = $human_affairs[$department];      //人事费用率
-
-     return $info;
-}*/
 
     /**
      * 实际经营信息(年度累计)
@@ -937,24 +788,6 @@ function get_gross_profit($userid,$beginTime,$endTime){
     $data['lists']              = $all_op_lists;
     return $data;
 }
-
-    /*//研发专家毛利总额 和 基本工资总和
-        function get_sum_gross_profit($userids,$beginTime,$endTime){
-            $lists                      = array();
-            $base_wages                 = array();
-            foreach ($userids as $v){
-                $lists[$v]              = get_gross_profit($v,$beginTime,$endTime);
-                $base_wages[$v]         = get_wages_info($v);
-            }
-
-            $data                       = array();
-            $sum_profit                 = array_sum(array_column($lists,'self')) + array_sum(array_column($lists,'other')); //毛利总额
-            $sum_base_wages             = array_sum(array_column($base_wages,'otherWages'));    //1.5倍基本工资总和
-
-            $data['sum_profit']         = $sum_profit;
-            $data['sum_base_wages']     = $sum_base_wages;
-            return $data;
-        }*/
 
 //研发专家毛利总额 和 基本工资总和
 function get_sum_gross_profit($userids,$beginTime,$endTime){
@@ -1780,26 +1613,6 @@ function get_department_person_score_statis($year='',$month='',$department_id,$c
         return $income_data;
     }
 
-    /**
-     * 根据平均值求结果分(财务)
-     */
-    /*function get_rifht_avg($point,$snum){ //bak_20190715
-            if ($point > -0.1 && $point <= 0.1){
-                $score                  = $snum;
-            }else {
-                for ($i = 1; $i < 10; $i++) {
-                    if (($point > '0.'.$i && $point <= '0.'.($i+1)) || ($point > '-0.'.($i+2) && $point <= '-0.'.($i+1))){
-                        $score          = $snum - (10*$i);
-                        if ($score < 0) $score = 0;
-                        break;
-                    }else{
-                        $score          = 0;
-                    }
-                }
-            }
-        return $score;
-    }*/
-
     function get_rifht_avg($point,$snum){
         $score                      = round($point * $snum,2);
         $score                      = $score < 0 ? 0 : ($score > $snum ? $snum : $score);
@@ -2441,24 +2254,6 @@ function get_yw_department(){
      * @param $plan 预算值
      * 偏差值 = [(完成数据 - 预算数据)/|预算数据绝对值|]*100%
      */
-    /*function get_exact_budget($real,$plan){ //bak20190715
-        if ($real < $plan){ //实际值 < 计划值
-            if ($plan == 0){ //计划值为0
-                $res                    = $real - $plan;
-            }else{
-                $res                    = round(($real - $plan)/$plan,4); //(实际值 - 计划值)/计划值
-            }
-        }else{
-            if ($plan == 0){ //计划值为0
-                $res                    = $real - $plan;
-            }elseif ($real > 0 && $plan < 0){ //实际正,计划负
-               $res                     = round(1-(($real - $plan)/$plan),4); // 1-(实际-计划)/计划
-           }else{
-                $res                    = round(($real - $plan)/$plan,4); //(实际值 - 计划值)/计划值
-           }
-        }
-        return $res;
-    }*/
     function get_exact_budget($real,$plan){
         if ($plan == 0){
             $res                    = $real - $plan;
@@ -3893,7 +3688,6 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         return $rate;
     }
 
-    /*******************************************************************/
     /**
      * 专家/辅导员确认核实及时性(各教务)
      * @param $startTime
@@ -4073,16 +3867,6 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         return $list;
     }
 
-    /*//获取该周期所有的评分信息
-    function get_eval_list($startTime,$endTime,$type=2,$uid=''){
-        $where                              = array();
-        $where['e.create_time']             = array('between',array($startTime,$endTime));
-        $where['e.type']                    = $type;
-        if ($uid) $where['account_id']      = $uid;
-        $field                              = 'e.*,t.AA as TAA,t.BB as TBB,t.CC as TCC,t.DD as TDD,t.EE as TEE';
-        $lists                              = M()->table('__OP_EVAL__ as e')->join('__OP_EVAL_TITLE__ as t on t.eval_id=e.id','left')->where($where)->field($field)->select();
-        return $lists;
-    }*/
 
     //获取该周期调度(打分)信息(已核实时间为准)
     function get_guide_confirm_list($startTime,$endTime,$uid=''){
