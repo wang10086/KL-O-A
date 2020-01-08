@@ -3582,9 +3582,13 @@ function updatekpi($month,$user,$year=''){
 
                         //季度毛利额累计增长比率
                         if ($v['quota_id']==248){
+                            $year                   = $v['year'];
                             $monon                  = substr($v['month'],4,2);
                             $quarter                = get_quarter($monon);
-                            $complete               = "测试";
+                            $uid                    = $v['user_id'];
+                            $data                   = get_budget_up_rate($uid,$year,$quarter);
+
+                            $complete               = $data['up_rate'];
                             $url                    = U('Kpi/public_kpi_budget_up_rate',array('year'=>$v['year'],'quarter'=>$quarter,'uid'=>$v['user_id']));
                         }
 

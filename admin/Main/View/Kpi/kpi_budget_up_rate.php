@@ -40,7 +40,7 @@
 
                 <div class="box box-warning">
                     <div class="box-header">
-                        <h3 class="box-title">{$_action_}</h3>
+                        <h3 class="box-title">{$department}</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
@@ -57,13 +57,13 @@
                                 <td>{$lastYearData.op_num}</td>
                                 <td>{$lastYearData.sum_maoli}</td>
                                 <td rowspan="2">{$up_rate}</td>
-                                <td><a href="javascript:;" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
+                                <td><a href="{:U('Kpi/public_kpi_budget_up_rate_detail', array('uid'=>$uid,'year'=>$lastYearData['year'],'quarter'=>$quarter))}" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
                             </tr>
                             <tr>
                                 <td>{$thisYearData.year}</td>
                                 <td>{$thisYearData.op_num}</td>
                                 <td>{$thisYearData.sum_maoli}</td>
-                                <td><a href="javascript:;" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
+                                <td><a href="{:U('Kpi/public_kpi_budget_up_rate_detail', array('uid'=>$uid,'year'=>$thisYearData['year'],'quarter'=>$quarter))}" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
                             </tr>
                         </table><br><br>
 

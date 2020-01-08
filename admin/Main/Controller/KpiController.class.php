@@ -2697,10 +2697,12 @@ class KpiController extends BaseController {
         $month                              = date('m');
         $quarter                            = I('quarter',get_quarter($month));
         $uid                                = I('uid',0);
-        //$data                               = get_budget_up_rate($uid,$year,$quarter);
+        $data                               = get_budget_up_rate($uid,$year,$quarter);
         $lastYearData                       = $data['last_year_data'];
         $thisYearData                       = $data['this_year_data'];
+        $userinfo                           = $uid ? M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as p on p.id=a.departmentid','left')->field('a.id,a.nickname,a.departmentid,p.department')->where(array('a.id'=>$uid))->find() : '';
 
+        $this->department                   = $userinfo['department'];
         $this->thisYearData                 = $thisYearData;
         $this->lastYearData                 = $lastYearData;
         $this->up_rate                      = $data['up_rate'];
@@ -2709,6 +2711,39 @@ class KpiController extends BaseController {
         $this->uid                          = $uid;
         $this->display('kpi_budget_up_rate');
     }
+
+    //季度毛利率增长率项目详情
+    public function public_kpi_budget_up_rate_detail(){
+        $this->title('季度毛利额增长率');
+        $year                               = I('year');
+        $quarter                            = I('quarter');
+        $uid                                = I('uid');
+        $userinfo                           = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as p on p.id=a.departmentid','left')->field('a.id,a.nickname,a.departmentid,p.department')->where(array('a.id'=>$uid))->find();
+        $departmentid                       = $userinfo['departmentid'];
+        $department_users                   = get_department_account($departmentid);
+        $department_userids                 = array_column($department_users,'id');
+        $quarter_cycle                      = get_quarter_cycle_time($year , $quarter); //当年季度周期
+
+        $where                              = array();
+        $where['b.audit_status']            = 1;
+        $where['l.req_type']                = 801;
+        $where['l.audit_time']              = array('between', "$quarter_cycle[begin_time],$quarter_cycle[end_time]");
+        $where['o.create_user']             = array('in',$department_userids);
+        $field                              = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+
+        $pagecount		                    = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->count();
+        $page			                    = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $settlement_lists                   = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->limit($page->firstRow,$page->listRows)->select();
+
+        $this->department                   = $userinfo['department'];
+        $this->lists                        = $settlement_lists;
+        $this->year                         = $year;
+        $this->quarter                      = $quarter;
+        $this->display('kpi_budget_up_rate_detail');
+    }
+
 
     public function aaa(){
         set_after_salary_kpi(201906);

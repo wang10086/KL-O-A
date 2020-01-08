@@ -20,54 +20,37 @@
         <div class="row">
             <!-- right column -->
             <div class="col-md-12">
-                <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                    <?php if (($year-1)>2017){ ?>
-                    <a href="{:U('Kpi/public_kpi_budget_up_rate',array('year'=>$year-1,'quarter'=>$quarter,'uid'=>$uid))}" class="btn btn-default" id="btn-default_id1" style="padding:8px 18px;">上一年</a>
-                    <?php } ?>
-                    <?php
-                        for($i=1;$i<5;$i++){
-                            if ($quarter == $i){
-                                echo '<a href="'.U('Kpi/public_kpi_budget_up_rate',array('year'=>$year,'quarter'=>$i,'uid'=>$uid)).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
-                            }else{
-                                echo '<a href="'.U('Kpi/public_kpi_budget_up_rate',array('year'=>$year,'quarter'=>$i,'uid'=>$uid)).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
-                            }
-                        }
-                    ?>
-                    <?php if ($year < date("Y")){ ?>
-                    <a href="{:U('Kpi/public_kpi_budget_up_rate',array('year'=>$year+1,'quarter'=>$quarter,'uid'=>$uid))}" class="btn btn-default" id="btn-default_id3" style="padding:8px 18px;">下一年</a>
-                    <?php } ?>
-                </div>
-
                 <div class="box box-warning">
                     <div class="box-header">
-                        <h3 class="box-title">{$_action_}</h3>
+                        <h3 class="box-title">{$department}</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body">
 
                         <table class="table table-bordered dataTable fontmini" id="tablecenter">
                             <tr role="row" class="orders" style="text-align:center;" >
-                                <th class="">年度</th>
-                                <th class="">项目数</th>
-                                <th class="">毛利额</th>
-                                <th class="">增长率</th>
-                                <th width="100">详情</th>
+                                <th class="">项目编号</th>
+                                <th class="">团号</th>
+                                <th class="">项目名称</th>
+                                <th class="">毛利</th>
+                                <th class="">销售</th>
+                                <th class="">结算时间</th>
                             </tr>
-                            <tr>
-                                <td>{$lastYearData.year}</td>
-                                <td>{$lastYearData.op_num}</td>
-                                <td>{$lastYearData.sum_maoli}</td>
-                                <td rowspan="2">{$up_rate}</td>
-                                <td><a href="javascript:;" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
-                            </tr>
-                            <tr>
-                                <td>{$thisYearData.year}</td>
-                                <td>{$thisYearData.op_num}</td>
-                                <td>{$thisYearData.sum_maoli}</td>
-                                <td><a href="javascript:;" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
-                            </tr>
+                            <foreach name="lists" item="v">
+                                <tr>
+                                    <td>{$v.op_id}</td>
+                                    <td>{$v.group_id}</td>
+                                    <td>{$v.project}</td>
+                                    <td>{$v.maoli}</td>
+                                    <td>{$v.create_user_name}</td>
+                                    <td>{$v.audit_time|date="Y-m-d H:i:s",###}</td>
+                                </tr>
+                            </foreach>
                         </table><br><br>
-
                     </div><!-- /.box-body -->
+
+                    <div class="box-footer clearfix">
+                        <div class="pagestyle">{$pages}</div>
+                    </div>
                 </div><!-- /.box -->
 
             </div><!--/.col (right) -->
