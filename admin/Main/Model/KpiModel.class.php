@@ -198,20 +198,44 @@ class KpiModel extends Model
         $num                    = 0;
         if ($userinfo['rank'] == '02'){ //2队列
             $num                = 1;
+        }elseif (in_array($userinfo['postid'],array(76,95,100,101))){ //76=>计调部计调专员,95=>南京计调专员 , 100=>京区计调专员 , 101=>京区计调组长
+            $num                = 2;
         }
         return $num;
     }
 
     //各激励机制数据
-    public function get_encourage_data($encourage_type,$userid,$year,$month,$userinfo){
+    public function get_encourage_data($encourage_type,$userid,$year,$month){
         if ($encourage_type == 1){ //业务
-            $data               = $this -> get_yw_encourage_data($userid,$year,$month,$userinfo);
+            $data               = $this -> get_yw_encourage_data($userid,$year,$month);
+        }elseif ($encourage_type == 2){ //计调
+            $data               = $this -> get_jd_encourage_data($userid,$year,$month);
         }
         return $data;
     }
 
+    //计调岗激励机制数据
+    public function get_jd_encourage_data($userid,$year,$month){
+        $year_cycle             = get_year_cycle($year);
+        $quarter_cycle          = getQuarterlyCicle($year,$month); //当季度周期
+        $year_settlement_lists  = get_settlement_list($year_cycle['beginTime'],$year_cycle['endTime'],'',$userid);
+        $quarter_settlement_lists = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],'',$userid);
+
+        //累计已发操作奖金
+        $salary_months          = $this->get_salary_months($year);
+        $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
+
+        $data                   = array();
+        $data['complete']       = $quarter_settlement_lists ? array_sum(array_column($quarter_settlement_lists,'maoli')) : 0; //当季度业绩
+        $data['sum_complete']   = $year_settlement_lists ? array_sum(array_column($year_settlement_lists,'maoli')) : 0; //累计业绩
+        $data['quarter_should_royalty'] = $data['complete'] * 0.01; //当季度应发操作奖金 = 当季度操作毛利 * 1%
+        $data['sum_should_royalty']     = $data['sum_complete'] * 0.01; //累计应发操作奖金
+        $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+        return $data;
+    }
+
     //业务岗激励机制数据
-    public function get_yw_encourage_data($userid,$year,$month,$userinfo){
+    public function get_yw_encourage_data($userid,$year,$month){
         //任务系数
         $quarter                = get_quarter($month);
         $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
@@ -223,7 +247,7 @@ class KpiModel extends Model
 
         //业绩
         $quarter_cycle          = getQuarterlyCicle($year,$month);
-        $yearBeginTime          =get_year_settlement_start_time($year);
+        $yearBeginTime          = get_year_settlement_start_time($year);
         $maoli                  = get_settlement_maoli($userid,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度业绩
         $sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
 
@@ -275,10 +299,8 @@ class KpiModel extends Model
         }
 
         //累计已发放提成	当季度发放提成
-        //$salary_months          = $this->get_salary_months($year,$month);
         $salary_months          = $this->get_salary_months($year);
         $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('total');
-        //$quarter_royalty_salary = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_months']),'account_id'=>$userid,'status'=>4))->sum('total');
 
         $data                   = array();
         $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
@@ -291,16 +313,13 @@ class KpiModel extends Model
         $data['royalty40']      = $royalty40; //40%部分业绩提成
         $data['royaltySum']     = $royaltySum; //全部业绩提成
         $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发提成
-        //$data['quarter_royalty_payoff'] = $quarter_royalty_salary ? $quarter_royalty_salary : 0; //当季度已发提成
         $data['quarter_should_royalty'] = $data['royaltySum'] - $data['sum_royalty_payoff']; //当季度应发提成 = 全部业绩提成 - 累计已发提成;
         return $data;
     }
 
     //发放业绩提成的月份
-    //private function get_salary_months($year,$month){
     private function get_salary_months($year){
         $year_arr               = array();
-        $month_arr              = array();
 
         //年度薪资月份信息
         for ($i=2; $i<=12; $i++){
@@ -309,34 +328,8 @@ class KpiModel extends Model
         }
         $year_arr[]             = ($year+1).'01'; //一月份发上一年的提成
 
-        //季度提成薪资信息
-        /*switch ($month){
-            case in_array($month,array('01','02','03')):
-                $month_arr[]    = $year.'02';
-                $month_arr[]    = $year.'03';
-                $month_arr[]    = $year.'04';
-                break;
-            case in_array($month,array('04','05','06')):
-                $month_arr[]    = $year.'05';
-                $month_arr[]    = $year.'06';
-                $month_arr[]    = $year.'07';
-                break;
-            case in_array($month,array('07','08','09')):
-                $month_arr[]    = $year.'08';
-                $month_arr[]    = $year.'09';
-                $month_arr[]    = $year.'10';
-                break;
-            case in_array($month,array('10','11','12')):
-                $month_arr[]    = $year.'11';
-                $month_arr[]    = $year.'12';
-                $month_arr[]    = ($year+1).'01';
-                break;
-        }*/
-
-
         $data                       = array();
         $data['salary_year_months'] = $year_arr;
-        //$data['salary_months']      = $month_arr;
         return $data;
     }
 
