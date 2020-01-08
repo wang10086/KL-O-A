@@ -109,7 +109,7 @@
                         </foreach>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[2222{$k}][supplier_id]" value="{$v.supplier_id}" id="2222{$k}_supplierRes_id">
-                    <input type="text" class="form-control supplier-name-class" name="costacc[2222{$k}][supplier_name]" value="{$v.supplier_name}" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})">
+                    <input type="text" class="form-control supplier-name-class" name="costacc[2222{$k}][supplier_name]" value="<?php echo $v['supplier_id'] ? $v['supplier_name'] : ''; ?>" id="2222{$k}_supplierRes_name" onfocus="get_supplierRes(2222{$k})">
                     <input type="text" class="form-control longinput" name="costacc[2222{$k}][remark]" value="{$v.remark}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_js_{$k}')">删除</a>
                 </div>
@@ -136,7 +136,7 @@
                         </foreach>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[888{$k}][supplier_id]" value="{$v.supplier_id}" id="888{$k}_supplierRes_id">
-                    <input type="text" class="form-control supplier-name-class" name="costacc[888{$k}][supplier_name]" value="{$v.supplier_name}" id="888{$k}_supplierRes_name" onfocus="get_supplierRes(888{$k})">
+                    <input type="text" class="form-control supplier-name-class" name="costacc[888{$k}][supplier_name]" value="<?php echo $v['supplier_id'] ? $v['supplier_name'] : ''; ?>" id="888{$k}_supplierRes_name" onfocus="get_supplierRes(888{$k})">
                     <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$remark}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_aa_{$k}')">删除</a>
                 </div>
@@ -162,7 +162,7 @@
                         <option value="2" selected>专家辅导员</option>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[7777{$k}][supplier_id]" value="{$v.supplier_id}" id="7777{$k}_supplierRes_id">
-                    <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})">
+                    <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="<?php echo $v['supplier_id'] ? $v['supplier_name'] : ''; ?>" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})">
                     <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_ac_{$k}')">删除</a>
                 </div>
@@ -181,7 +181,7 @@
                         <option value="2" selected>专家辅导员</option>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[7777{$k}][supplier_id]" value="{$v.supplier_id}" id="7777{$k}_supplierRes_id">
-                    <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})" readonly disabled>
+                    <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="<?php echo $v['supplier_id'] ? $v['supplier_name'] : ''; ?>" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})" readonly disabled>
                     <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}" readonly>
                 </div>
                 <?php } ?>
@@ -204,7 +204,7 @@
                         </foreach>
                     </select>
                     <input type="hidden" class="form-control" name="costacc[7777{$k}][supplier_id]" value="{$v.supplier_id}" id="7777{$k}_supplierRes_id">
-                    <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="{$v.supplier_name}" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})">
+                    <input type="text" class="form-control supplier-name-class" name="costacc[7777{$k}][supplier_name]" value="<?php echo $v['supplier_id'] ? $v['supplier_name'] : ''; ?>" id="7777{$k}_supplierRes_name" onfocus="get_supplierRes(7777{$k})">
                     <input type="text" class="form-control longinput" name="costacc[7777{$k}][remark]" value="{$v.remark}">
                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_a_{$k}')">删除</a>
                 </div>
