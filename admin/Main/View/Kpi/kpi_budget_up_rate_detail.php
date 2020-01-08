@@ -39,7 +39,7 @@
                                 <tr>
                                     <td>{$v.op_id}</td>
                                     <td>{$v.group_id}</td>
-                                    <td>{$v.project}</td>
+                                    <td><a href="{:U('Finance/settlement',array('opid'=>$v['op_id']))}">{$v.project}</a></td>
                                     <td>{$v.maoli}</td>
                                     <td>{$v.create_user_name}</td>
                                     <td>{$v.audit_time|date="Y-m-d H:i:s",###}</td>
