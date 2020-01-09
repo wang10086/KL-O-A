@@ -114,7 +114,7 @@
 
 <include file="Index:footer2" />
 
-<script>
+<!--<script>
     function ConfirmPrint(id,msg) {
 
         art.dialog({
@@ -173,4 +173,4 @@
             $('.accessdata').iCheck('uncheck');
         });
     });
-</script>
+</script>-->
