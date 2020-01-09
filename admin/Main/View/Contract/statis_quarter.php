@@ -16,8 +16,8 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                                <a href="{:U('Contract/statis')}" class="btn <?php echo ACTION_NAME == 'statis' ? 'btn-info' : 'btn-default';  ?>" style="padding:8px 18px;">月度</a>
-                                <a href="{:U('Contract/statis_quarter')}" class="btn <?php echo ACTION_NAME == 'statis_quarter' ? 'btn-info' : 'btn-default';  ?>" style="padding:8px 18px;">季度</a>
+                                <a href="{:U('Contract/public_statis')}" class="btn <?php echo ACTION_NAME == 'statis' ? 'btn-info' : 'btn-default';  ?>" style="padding:8px 18px;">月度</a>
+                                <a href="{:U('Contract/public_statis_quarter')}" class="btn <?php echo ACTION_NAME == 'statis_quarter' ? 'btn-info' : 'btn-default';  ?>" style="padding:8px 18px;">季度</a>
                             </div>
 
                             <div class="box box-warning">
@@ -29,7 +29,7 @@
 
                                     <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                                         <?php if($prveyear>2017){ ?>
-                                            <a href="{:U('Contract/statis_quarter',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                            <a href="{:U('Contract/public_statis_quarter',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                         <?php } ?>
                                         <?php
                                         for($i=1;$i<5;$i++){
@@ -37,14 +37,14 @@
                                             $par['year']  = $year;
                                             $par['quarter'] = $i;
                                             if($quarter==$i){
-                                                echo '<a href="'.U('Contract/statis_quarter',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
+                                                echo '<a href="'.U('Contract/public_statis_quarter',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
                                             }else{
-                                                echo '<a href="'.U('Contract/statis_quarter',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
+                                                echo '<a href="'.U('Contract/public_statis_quarter',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
                                             }
                                         }
                                         ?>
                                         <?php if($year<date('Y')){ ?>
-                                            <a href="{:U('Contract/statis_quarter',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                            <a href="{:U('Contract/public_statis_quarter',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                         <?php } ?>
                                     </div>
 

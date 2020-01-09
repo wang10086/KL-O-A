@@ -3199,7 +3199,7 @@ function updatekpi($month,$user,$year=''){
                             $sum                    = get_contract_sum($lists);
                             $complete               = $sum['average'];
                             $mm                     = substr($v['month'],4,2);
-                            $url                    = $v['user_id'] == 77 ? U('Contract/statis_quarter',array('year'=>$v['year'],'month'=>$mm)) : U('Contract/statis',array('year'=>$v['year'],'month'=>$mm));
+                            $url                    = $v['user_id'] == 77 ? U('Contract/public_statis_quarter',array('year'=>$v['year'],'month'=>$mm)) : U('Contract/public_statis',array('year'=>$v['year'],'month'=>$mm));
                         }
 
                         //院内接待资源方开发 - 资源管理部经理
@@ -3599,7 +3599,7 @@ function updatekpi($month,$user,$year=''){
                                 $data                   = get_department_contract($department,$v['start_date'],$v['end_date'],$yearMonth);
 
                                 $complete               = $data['average'];
-                                $url                    = U('Contract/statis_quarter',array('year'=>$v['year'],'month'=>$mm));
+                                $url                    = U('Contract/public_statis_quarter',array('year'=>$v['year'],'month'=>$mm));
                         }
 
                    /* }*/

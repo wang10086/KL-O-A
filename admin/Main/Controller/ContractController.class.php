@@ -267,7 +267,7 @@ class ContractController extends BaseController {
 	}
 
 	//合同统计(月度)
-    public function statis(){
+    public function public_statis(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
         if (strlen($month)<2) $month        = str_pad($month,2,'0',STR_PAD_LEFT);
@@ -287,7 +287,7 @@ class ContractController extends BaseController {
         $this->month	                    = I('month',date('m'));
         $this->prveyear	                    = $year-1;
         $this->nextyear	                    = $year+1;
-        $this->display();
+        $this->display('statis');
     }
 
     public function public_department_detail(){
@@ -332,7 +332,7 @@ class ContractController extends BaseController {
     }
 
     //合同统计(季度)
-    public function statis_quarter(){
+    public function public_statis_quarter(){
         $year		                        = I('year',date('Y'));
         $month	                            = I('month',date('m'));
         $quarter                            = I('quarter') ? I('quarter') : get_quarter($month);
@@ -353,7 +353,7 @@ class ContractController extends BaseController {
         $this->month                        = $month;
         $this->prveyear	                    = $year-1;
         $this->nextyear	                    = $year+1;
-        $this->display();
+        $this->display('statis_quarter');
     }
 
     public function public_department_quarter_detail(){
