@@ -205,9 +205,9 @@ class KpiModel extends Model
     }
 
     //各激励机制数据
-    public function get_encourage_data($encourage_type,$userid,$year,$month){
+    public function get_encourage_data($encourage_type,$userid,$year,$month,$userinfo){
         if ($encourage_type == 1){ //业务
-            $data               = $this -> get_yw_encourage_data($userid,$year,$month);
+            $data               = $this -> get_yw_encourage_data($userid,$year,$month,$userinfo);
         }elseif ($encourage_type == 2){ //计调
             $data               = $this -> get_jd_encourage_data($userid,$year,$month);
         }
@@ -235,7 +235,7 @@ class KpiModel extends Model
     }
 
     //业务岗激励机制数据
-    public function get_yw_encourage_data($userid,$year,$month){
+    public function get_yw_encourage_data($userid,$year,$month,$userinfo){
         //任务系数
         $quarter                = get_quarter($month);
         $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份

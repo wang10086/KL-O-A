@@ -1423,7 +1423,7 @@ class KpiController extends BaseController {
         $userinfo               = M('account')->find($user); //用户信息
         $mod                    = D('Kpi');
 		$encourage_type         = $mod->get_encourage_type($user);
-        $encourage_data         = $mod -> get_encourage_data($encourage_type,$user,$year,$month);
+        $encourage_data         = $mod -> get_encourage_data($encourage_type,$user,$year,$month,$userinfo);
 
 
 		//操作记录

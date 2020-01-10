@@ -2009,9 +2009,9 @@ function updatekpi($month,$user,$year=''){
                             $yearBeginTime                   =get_year_settlement_start_time($v['year']);
                             $settlement_money               = get_settlement_maoli($user,$yearBeginTime,$v['end_date']);
                             $userinfo                       = get_userinfo($v['user_id']);
-                            //$partner_money                  = get_partner_money($userinfo,$yearBeginTime,$v['end_date']); //城市合伙人押金
-                            //$sum                            = $settlement_money + $partner_money;
-                            $complete                       = $settlement_money ? $settlement_money : 0;
+                            $partner_money                  = get_partner_money($userinfo,$yearBeginTime,$v['end_date']); //城市合伙人押金
+                            $sum                            = $settlement_money + $partner_money;
+                            $complete                       = $sum ? $sum : 0;
                             $username                       = $userinfo['nickname'];
                             $url                            = U('Chart/finance',array('xs'=>$username,'st'=>date('Ymd',$yearBeginTime),'et'=>date('Ymd',$v['end_date']),'kpi_total'=>1,'uid'=>$v['user_id']));
                         }
