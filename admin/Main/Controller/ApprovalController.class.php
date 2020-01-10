@@ -411,6 +411,12 @@ class ApprovalController extends BaseController {
                 $data['status']             = 4; //已提交总经理审核
                 $res                        = $db->where(array('id'=>$id))->save($data);
                 if ($res){
+                    //源文件审核内容带过来
+                    $app_list               = $db->find($id);
+                    if (($app_list['file_id'] != $app_list['sfile_id']) && $app_list['sfile_id']){ //主文件有作修改
+                        $this->saveNewFileRecordLists($app_list['file_id'],$app_list['sfile_id']);
+                    }
+
                     $num++;
                     $msg                    = '提交成功';
 
@@ -501,6 +507,28 @@ class ApprovalController extends BaseController {
                 $this->save_approval_stu($appid,cookie('userid')); //更新审核人信息
                 $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
                 $this->success('保存成功');
+            }
+        }
+    }
+
+    /**
+     * 把源文件的审核结果带入新文件
+     * @param $old_file_id
+     * @param $new_file_id
+     */
+    private function saveNewFileRecordLists($old_file_id,$new_file_id){
+        $db                                 = M('approval_record');
+        $record_lists                       = $db->where(array('file_id'=>$old_file_id))->select();
+        if ($record_lists){
+            foreach ($record_lists as $v){
+                $data                       = array();
+                $data['file_id']            = $new_file_id;
+                $data['file_content']       = trim($v['file_content']);
+                $data['suggest']            = $v['suggest'];
+                $data['create_user']        = $v['create_user'];
+                $data['create_user_name']   = $v['create_user_name'];
+                $data['create_time']        = $v['create_time'];
+                $db->add($data);
             }
         }
     }
