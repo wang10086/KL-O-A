@@ -17,7 +17,7 @@
                     <th class="taskOptions">累计毛利增长</th>
                     <th class="taskOptions">累计毛利增长奖金</th>
                     <th class="taskOptions">累计已发毛利增长奖金</th>
-                    <th class="taskOptions">当季应发操作奖金</th>
+                    <th class="taskOptions">当季应发毛利增长奖金</th>
                 </tr>
                 <tr>
                     <td class="taskOptions">{$year-1} 年</td>
