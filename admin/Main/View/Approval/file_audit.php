@@ -131,8 +131,8 @@
 <script src="__HTML__/js/jquery.media.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(function () {
-        $('a.media').media({width:700, height:600});
-        $('a.mediase').media({width:700, height:600});
+        $('a.media').media({width:680, height:600});
+        $('a.mediase').media({width:680, height:600});
     })
 
     function submit_audit_form() {
