@@ -4246,6 +4246,7 @@ th{outline: none;}
 .line-success{border-top:2px solid #00a65a;}
 .line-primary{border-top:2px solid #3c8dbc;}
 .line-info{border-top:2px solid #00c0ef;}
+.line-bottom-box-gray{border-bottom: 2px solid #cccccc; }
 .input_ratio{height: 34px; width: 47%; padding: 6px 12px; font-size: 14px; line-height: 1.428571429; color: #555; vertical-align: middle; background-color: #fff; border: 1px solid #ccc;}
 
 

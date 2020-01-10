@@ -200,6 +200,8 @@ class KpiModel extends Model
             $num                = 1;
         }elseif (in_array($userinfo['postid'],array(76,95,100,101))){ //76=>计调部计调专员,95=>南京计调专员 , 100=>京区计调专员 , 101=>京区计调组长
             $num                = 2;
+        }elseif ($userinfo['postid'] == 74){ //74=>计调部经理
+            $num                = 3;
         }
         return $num;
     }
@@ -208,8 +210,10 @@ class KpiModel extends Model
     public function get_encourage_data($encourage_type,$userid,$year,$month,$userinfo){
         if ($encourage_type == 1){ //业务
             $data               = $this -> get_yw_encourage_data($userid,$year,$month,$userinfo);
-        }elseif ($encourage_type == 2){ //计调
+        }elseif ($encourage_type == 2){ //计调专员
             $data               = $this -> get_jd_encourage_data($userid,$year,$month);
+        }elseif ($encourage_type == 3){ //计调部经理
+            $data               = '';
         }
         return $data;
     }
