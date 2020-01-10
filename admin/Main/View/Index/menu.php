@@ -855,7 +855,7 @@
                                         <li><a href="{:U('worder/new_worder')}"><i class="fa fa-angle-right"></i> 发起工单</a></li>
                                     </if>
                                     <if condition="rolemenu(array('worder/worder_list'))">
-                                        <li><a href="{:U('worder/worder_list')}"><i class="fa fa-angle-right"></i> 管理工单</a></li>
+                                        <li><a href="{:U('worder/worder_list')}"><i class="fa fa-angle-right"></i> 工单列表</a></li>
                                     </if>
                                     <!--<if condition="rolemenu(array('worder/project'))">
                                         <li><a href="{:U('worder/project')}"><i class="fa fa-angle-right"></i> 项目工单</a></li>
