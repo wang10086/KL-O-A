@@ -213,9 +213,39 @@ class KpiModel extends Model
         }elseif ($encourage_type == 2){ //计调专员
             $data               = $this -> get_jd_encourage_data($userid,$year,$month);
         }elseif ($encourage_type == 3){ //计调部经理
-            $data               = '';
+            $data               = $this -> get_jdjl_encourage_data($userid,$year,$month);
         }
         return $data;
+    }
+
+    //计调经理激励机制数据
+    public function get_jdjl_encourage_data($userid,$year,$month){
+        $year_cycle             = get_year_cycle($year);
+        $quarter_cycle          = getQuarterlyCicle($year,$month);  //当季度周期
+        $last_year_cycle        = get_year_cycle($year-1);          //去年周期
+        $last_quarter_cycle     = getQuarterlyCicle($year-1,$month); //去年当季度周期
+
+        /*P($year_cycle,false);
+        P(date('Y-m-d',$year_cycle['beginTime']),false);
+        P(date('Y-m-d',$year_cycle['endTime']),false);
+        P(date('Y-m-d',$quarter_cycle['begin_time']),false);
+        P(date('Y-m-d',$quarter_cycle['end_time']),false);
+        echo "<hr />";
+        P(date('Y-m-d',$last_year_cycle['beginTime']),false);
+        P(date('Y-m-d',$last_year_cycle['endTime']),false);
+        P(date('Y-m-d',$last_quarter_cycle['begin_time']),false);
+        P(date('Y-m-d',$last_quarter_cycle['end_time']),false);
+        P($quarter_cycle);*/
+
+
+        $year_settlement_lists          = get_settlement_list($year_cycle['beginTime'],$year_cycle['endTime']);
+        $quarter_settlement_lists       = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time']);
+        $last_year_settlement_lists     = get_settlement_list($last_year_cycle['beginTime'],$last_year_cycle['endTime']);
+        $last_quarter_settlement_lists  = get_settlement_list($last_quarter_cycle['begin_time'],$last_quarter_cycle['end_time']);
+
+        /*P($quarter_settlement_lists,false);
+        echo "<hr />";
+        P($year_settlement_lists);*/
     }
 
     //计调岗激励机制数据
@@ -255,52 +285,13 @@ class KpiModel extends Model
         $maoli                  = get_settlement_maoli($userid,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度业绩
         $sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
 
-        /*$partner_money          = get_partner_money($userinfo,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度城市合伙人押金
+        $partner_money          = get_partner_money($userinfo,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //当季度城市合伙人押金
         $sum_partner_money      = get_partner_money($userinfo,$yearBeginTime,$quarter_cycle['end_time']); //累计城市合伙人押金
-        $sum_maoli              = $sum_maoli + $sum_partner_money; //累计毛利 + 累计城市合伙人
+        /*$sum_maoli              = $sum_maoli + $sum_partner_money; //累计毛利 + 累计城市合伙人
         $maoli                  = $maoli + $partner_money; //当季度毛利 + 当季度城市合伙人*/
 
-        //提成 (100%内提取5%; 100%-150%=>20%; 150%-200%=>25%; 大于200%=>40%)
-        $royalty5               = 0; //5%提成部分
-        $royalty20              = 0; //20%提成部分
-        $royalty25              = 0; //25%提成部分
-        $royalty40              = 0; //40%提成部分
-        $royaltySum             = 0; //全部提成
-        if ($sum_maoli < $target){
-            $royaltySum         += $sum_maoli*0.05;
-
-            $royalty5           += $sum_maoli*0.05;
-            $royalty20          += 0;
-            $royalty25          += 0;
-            $royalty40          += 0;
-        }elseif ($sum_maoli > $target && $sum_maoli < $target*1.5){
-            $royaltySum         += $target*0.05;
-            $royaltySum         += ($sum_maoli - $target)*0.2;
-
-            $royalty5           += $target*0.05;
-            $royalty20          += ($sum_maoli - $target)*0.2;
-            $royalty25          += 0;
-            $royalty40          += 0;
-        }elseif ($sum_maoli > $target*1.5 && $sum_maoli < $target*2){
-            $royaltySum         += $target*0.05;
-            $royaltySum         += ($target*1.5 - $target)*0.2;
-            $royaltySum         += ($sum_maoli - $target*1.5)*0.25;
-
-            $royalty5           += $target*0.05;
-            $royalty20          += ($target*1.5 - $target)*0.2;
-            $royalty25          += ($sum_maoli - $target*1.5)*0.25;
-            $royalty40          += 0;
-        }elseif ($sum_maoli > $target*2){
-            $royaltySum         += $target*0.05;
-            $royaltySum         += ($target*1.5 - $target)*0.2;
-            $royaltySum         += ($target*2 - $target*1.5)*0.25;
-            $royaltySum         += ($sum_maoli - $target*2)*0.4;
-
-            $royalty5           += $target*0.05;
-            $royalty20          += ($target*1.5 - $target)*0.2;
-            $royalty25          += ($target*2.0 - $target*1.5)*0.25;
-            $royalty40          += ($sum_maoli - $target*2)*0.4;
-        }
+        //业绩提成
+        $royaltyData            = $this -> get_royalty_data($target , $sum_maoli , $sum_partner_money);
 
         //累计已发放提成	当季度发放提成
         $salary_months          = $this->get_salary_months($year);
@@ -311,13 +302,141 @@ class KpiModel extends Model
         $data['complete']       = $maoli; //当季度业绩
         $data['sum_target']     = $target; //累计目标值
         $data['sum_complete']   = $sum_maoli; //累计业绩
-        $data['royalty5']       = $royalty5; //5%部分业绩提成
-        $data['royalty20']      = $royalty20; //20%部分业绩提成
-        $data['royalty25']      = $royalty25; //25%部分业绩提成
-        $data['royalty40']      = $royalty40; //40%部分业绩提成
-        $data['royaltySum']     = $royaltySum; //全部业绩提成
+        $data['royalty5']       = $royaltyData['royalty5']; //5%部分业绩提成
+        $data['royalty20']      = $royaltyData['royalty20']; //20%部分业绩提成
+        $data['royalty25']      = $royaltyData['royalty25']; //25%部分业绩提成
+        $data['royalty40']      = $royaltyData['royalty40']; //40%部分业绩提成
+        $data['royaltySum']     = $royaltyData['royaltySum']; //全部业绩提成
         $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发提成
         $data['quarter_should_royalty'] = $data['royaltySum'] - $data['sum_royalty_payoff']; //当季度应发提成 = 全部业绩提成 - 累计已发提成;
+        return $data;
+    }
+
+    /**
+     * 获取业务人员提成信息
+     * 城市合伙人只提5%(可抵结算项目基数) 结算项目提成(100%内提取5%; 100%-150%=>20%; 150%-200%=>25%; 大于200%=>40%)
+     * @param $target 目标值
+     * @param $sum_maoli 累计项目毛利
+     * @param $sum_partner_money 累计城市合伙人押金
+     */
+    private function get_royalty_data($target=0,$sum_maoli=0,$sum_partner_money=0){
+        $royalty5               = 0; //5%提成部分
+        $royalty20              = 0; //20%提成部分
+        $royalty25              = 0; //25%提成部分
+        $royalty40              = 0; //40%提成部分
+        if (!$sum_partner_money){ //没有城市合伙人押金
+            switch ($sum_maoli){
+                case $sum_maoli <= $target:
+                    $royalty5           += $sum_maoli*0.05;
+                    $royalty20          += 0;
+                    $royalty25          += 0;
+                    $royalty40          += 0;
+                    break;
+                case $sum_maoli > $target && $sum_maoli <= $target*1.5:
+                    $royalty5           += $target*0.05;
+                    $royalty20          += ($sum_maoli - $target)*0.2;
+                    $royalty25          += 0;
+                    $royalty40          += 0;
+                    break;
+                case $sum_maoli > $target*1.5 && $sum_maoli <= $target*2:
+                    $royalty5           += $target*0.05;
+                    $royalty20          += ($target*1.5 - $target)*0.2;
+                    $royalty25          += ($sum_maoli - $target*1.5)*0.25;
+                    $royalty40          += 0;
+                    break;
+                case $sum_maoli > $target*2:
+                    $royalty5           += $target*0.05;
+                    $royalty20          += ($target*1.5 - $target)*0.2;
+                    $royalty25          += ($target*2.0 - $target*1.5)*0.25;
+                    $royalty40          += ($sum_maoli - $target*2)*0.4;
+                    break;
+            }
+        }else{
+            $royalty5                   += $sum_partner_money*0.05;
+            $money                      = $sum_partner_money + $sum_maoli; //城市合伙人押金 +　结算毛利
+            switch ($money){ //城市合伙人押金小于目标值
+                case $money <= $target:
+                    $royalty5           += ($money - $sum_partner_money) * 0.05;
+                    $royalty20          += 0;
+                    $royalty25          += 0;
+                    $royalty40          += 0;
+                    break;
+                case $money > $target && $money <= $target*1.5:
+                    switch ($sum_partner_money){
+                        case $sum_partner_money <= $target:
+                            $royalty5           += ($target - $sum_partner_money) * 0.05;
+                            $royalty20          += ($money - $target) * 0.2;
+                            $royalty25          += 0;
+                            $royalty40          += 0;
+                            break;
+                        case $sum_partner_money > $target:
+                            $royalty5           += 0;
+                            $royalty20          += ($money - $sum_partner_money) * 0.2;
+                            $royalty25          += 0;
+                            $royalty40          += 0;
+                            break;
+                    }
+                    break;
+                case $money > $target*1.5 && $money <= $target*2:
+                    switch ($sum_partner_money){
+                        case $sum_partner_money <= $target:
+                            $royalty5           += ($target - $sum_partner_money) * 0.05;
+                            $royalty20          += ($target*1.5 - $target) * 0.2;
+                            $royalty25          += ($money - $target*1.5) * 0.25;
+                            $royalty40          += 0;
+                            break;
+                        case $sum_partner_money > $target && $sum_partner_money <= $target*1.5:
+                            $royalty5           += 0;
+                            $royalty20          += ($target*1.5 - $sum_partner_money) * 0.2;
+                            $royalty25          += ($money - $target*1.5) * 0.25;
+                            $royalty40          += 0;
+                            break;
+                        case $sum_partner_money > $target*1.5:
+                            $royalty5           += 0;
+                            $royalty20          += 0;
+                            $royalty25          += ($money - $sum_partner_money) * 0.25;
+                            $royalty40          += 0;
+                            break;
+                    }
+                    break;
+                case $money > $target*2:
+                    switch ($sum_partner_money){
+                        case $sum_partner_money <= $target:
+                            $royalty5           += ($target - $sum_partner_money) * 0.05;
+                            $royalty20          += ($target*1.5 - $target) * 0.2;
+                            $royalty25          += ($target*2.0 - $target*1.5) * 0.25;
+                            $royalty40          += ($money - $target*2.0) * 0.4;
+                            break;
+                        case $sum_partner_money > $target && $sum_partner_money <= $target*1.5:
+                            $royalty5           += 0;
+                            $royalty20          += ($target*1.5 - $sum_partner_money) * 0.2;
+                            $royalty25          += ($target*2.0 - $target*1.5) * 0.25;
+                            $royalty40          += ($money - $target*2.0) * 0.4;
+                            break;
+                        case $sum_partner_money > $target*1.5 && $sum_partner_money <= $target*2.0:
+                            $royalty5           += 0;
+                            $royalty20          += 0;
+                            $royalty25          += ($target*2.0 - $sum_partner_money) * 0.25;
+                            $royalty40          += ($money - $target*2.0) * 0.4;
+                            break;
+                        case $sum_partner_money > $target*2.0:
+                            $royalty5           += 0;
+                            $royalty20          += 0;
+                            $royalty25          += 0;
+                            $royalty40          += ($money - $sum_partner_money) * 0.4;
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        $data                       = array();
+        $royaltySum                 = $royalty5 + $royalty20 + $royalty25 + $royalty40;
+        $data['royalty5']           = $royalty5;
+        $data['royalty20']          = $royalty20;
+        $data['royalty25']          = $royalty25;
+        $data['royalty40']          = $royalty40;
+        $data['royaltySum']         = $royaltySum;
         return $data;
     }
 
