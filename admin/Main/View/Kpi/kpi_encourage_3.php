@@ -7,7 +7,7 @@
 
     <div class="box-body">
         <div class="content">
-            <div class="line-bottom-box-gray black">年度数据增长</div>
+            <!--<div class="line-bottom-box-gray black">年度数据增长</div>-->
             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                 <tr role="row" class="orders" >
                     <th class="taskOptions">年度</th>
@@ -21,24 +21,24 @@
                 </tr>
                 <tr>
                     <td class="taskOptions">{$year-1} 年</td>
-                    <td class="taskOptions"></td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
+                    <td class="taskOptions">{$encourage_data.last_quarter_maoli}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.quarter_maoli_up}</td>
+                    <td class="taskOptions">{$encourage_data.last_year_maoli}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.year_maoli_up}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.year_should_royalty_up}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.year_royalty_payoff_up}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.quarter_should_royalty_up}</td>
                 </tr>
                 <tr>
                     <td class="taskOptions">{$year} 年</td>
-                    <td class="taskOptions"></td>
-                    <td class="taskOptions"></td>
+                    <td class="taskOptions">{$encourage_data.quarter_maoli}</td>
+                    <td class="taskOptions">{$encourage_data.year_maoli}</td>
                 </tr>
             </table>
         </div>
 
         <div class="content">
-            <div class="line-bottom-box-gray black">操作提成</div>
+            <!--<div class="line-bottom-box-gray black">操作提成</div>-->
             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                 <tr role="row" class="orders" >
                     <th class="taskOptions">当季度操作毛利</th>
@@ -49,12 +49,12 @@
                     <th class="taskOptions">当季应发奖金合计</th>
                 </tr>
                 <tr>
-                    <td class="taskOptions">{$encourage_data.complete}</td>
+                    <td class="taskOptions">{$encourage_data.quarter_maoli_op}</td>
+                    <td class="taskOptions">{$encourage_data.quarter_should_royalty_op}</td>
+                    <td class="taskOptions">{$encourage_data.year_maoli_op}</td>
+                    <td class="taskOptions">{$encourage_data.year_should_royalty_op}</td>
+                    <td class="taskOptions">{$encourage_data.year_royalty_payoff}</td>
                     <td class="taskOptions">{$encourage_data.quarter_should_royalty}</td>
-                    <td class="taskOptions">{$encourage_data.sum_complete}</td>
-                    <td class="taskOptions">{$encourage_data.sum_should_royalty}</td>
-                    <td class="taskOptions">{$encourage_data.sum_royalty_payoff}</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
                 </tr>
             </table>
         </div>

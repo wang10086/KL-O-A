@@ -208,7 +208,7 @@ class KpiModel extends Model
 
     //各激励机制数据
     public function get_encourage_data($encourage_type,$userid,$year,$month,$userinfo){
-        if ($encourage_type == 1){ //业务
+        if ($encourage_type == 1 && !in_array($userid,array(41,42,43))){ //业务 排除常规业务中心
             $data               = $this -> get_yw_encourage_data($userid,$year,$month,$userinfo);
         }elseif ($encourage_type == 2){ //计调专员
             $data               = $this -> get_jd_encourage_data($userid,$year,$month);
@@ -220,32 +220,77 @@ class KpiModel extends Model
 
     //计调经理激励机制数据
     public function get_jdjl_encourage_data($userid,$year,$month){
-        $year_cycle             = get_year_cycle($year);
-        $quarter_cycle          = getQuarterlyCicle($year,$month);  //当季度周期
-        $last_year_cycle        = get_year_cycle($year-1);          //去年周期
-        $last_quarter_cycle     = getQuarterlyCicle($year-1,$month); //去年当季度周期
-
-        /*P($year_cycle,false);
-        P(date('Y-m-d',$year_cycle['beginTime']),false);
-        P(date('Y-m-d',$year_cycle['endTime']),false);
-        P(date('Y-m-d',$quarter_cycle['begin_time']),false);
-        P(date('Y-m-d',$quarter_cycle['end_time']),false);
-        echo "<hr />";
-        P(date('Y-m-d',$last_year_cycle['beginTime']),false);
-        P(date('Y-m-d',$last_year_cycle['endTime']),false);
-        P(date('Y-m-d',$last_quarter_cycle['begin_time']),false);
-        P(date('Y-m-d',$last_quarter_cycle['end_time']),false);
-        P($quarter_cycle);*/
-
+        $quarter                        = get_quarter($month);
+        $year_cycle                     = get_year_cycle($year);
+        $quarter_cycle                  = getQuarterlyCicle($year,$month);  //当季度周期
+        $last_year_cycle                = get_year_cycle($year-1);          //去年周期
+        $last_quarter_cycle             = getQuarterlyCicle($year-1,$month); //去年当季度周期
 
         $year_settlement_lists          = get_settlement_list($year_cycle['beginTime'],$year_cycle['endTime']);
         $quarter_settlement_lists       = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time']);
         $last_year_settlement_lists     = get_settlement_list($last_year_cycle['beginTime'],$last_year_cycle['endTime']);
         $last_quarter_settlement_lists  = get_settlement_list($last_quarter_cycle['begin_time'],$last_quarter_cycle['end_time']);
 
-        /*P($quarter_settlement_lists,false);
-        echo "<hr />";
-        P($year_settlement_lists);*/
+        $year_maoli                     = array_sum(array_column($year_settlement_lists,'maoli'));
+        $quarter_maoli                  = array_sum(array_column($quarter_settlement_lists,'maoli'));
+        $last_year_maoli                = array_sum(array_column($last_year_settlement_lists,'maoli'));
+        $last_quarter_maoli             = array_sum(array_column($last_quarter_settlement_lists,'maoli'));
+
+        //当季度操作团信息
+        $op_data                        = $this -> get_jd_encourage_data($userid,$year,$month);
+
+        $data                           = array();
+        $data['quarter_maoli']          = $quarter_maoli; //季度毛利
+        $data['last_quarter_maoli']     = $last_quarter_maoli; //去年季度毛利
+        $data['quarter_maoli_up']       = $data['quarter_maoli'] - $data['last_quarter_maoli']; //季度毛利增长
+        $data['year_maoli']             = $year_maoli;   //累计毛利
+        $data['last_year_maoli']        = $last_year_maoli; //去年累计毛利
+        $data['year_maoli_up']          = $data['year_maoli'] - $data['last_year_maoli']; //累计毛利增长
+        $data['year_should_royalty_up'] = round($data['year_maoli_up'] * 0.005 , 2); //累计毛利增长奖金 = 累计增长业绩* 0.5%
+        $data['year_royalty_payoff_up'] = $this -> get_payoff_quarterRoyalty($userid,$year,'AA_num'); //累计已发毛利增长奖金
+        $data['quarter_should_royalty_up'] = $data['year_should_royalty_up'] - $data['year_royalty_payoff_up']; //当季度应发毛利增长奖金 = 累计毛利增长奖金 - 累计已发毛利增长奖金
+        $data['quarter_maoli_op']       = $op_data['complete']; //当季度操作毛利
+        $data['quarter_should_royalty_op'] = $op_data['quarter_should_royalty']; //当季度应发操作奖金
+        $data['year_maoli_op']          = $op_data['sum_complete']; //累计操作毛利
+        $data['year_should_royalty_op'] = $op_data['sum_should_royalty']; //累计应发操作奖金
+        $data['year_royalty_payoff']    = $this -> get_payoff_quarterRoyalty($userid,$year,'BB_num');
+        $data['quarter_should_royalty'] = $data['quarter_should_royalty_up'] + $data['quarter_should_royalty_op']; //当季应发奖金合计 = 当季应发毛利增长奖金 + 当季应发操作奖金
+
+        $info                           = array();
+        $info['account_id']             = $userid;
+        $info['AA_tit']                 = "季度毛利增长奖金";
+        $info['AA_num']                 = $quarter == 1 ? round($data['quarter_maoli_up'] * 0.005 , 2) : $data['quarter_should_royalty_up'];
+        $info['BB_tit']                 = "季度应发操作奖金";
+        $info['BB_num']                 = $quarter == 1 ? $data['quarter_should_royalty_op'] : $data['year_should_royalty_op'];
+        $info['sum']                    = $info['AA_num'] + $info['BB_num'];
+        $data['info']                   = $info;
+        return $data;
+    }
+
+    /**
+     * 获取累计已发毛利增长奖金
+     * @param $uid
+     * @param $year
+     * @param $month
+     */
+    private function get_payoff_quarterRoyalty($uid, $year, $field){
+        $db                             = M('salary_quartyRoyalty');
+        $where                          = array();
+        $where['account_id']            = $uid;
+        $where['year']                  = $year;
+        if (date('Y') == $year){
+            $salary_months              = $this->get_salary_months($year);
+            $salary_num                 = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['quarterRoyalty_months']),'account_id'=>$uid,'status'=>4))->field('id')->count();
+            if ($salary_num){
+                $quarters               = array();
+                for ($i = 1; $i <= $salary_num; $i++){
+                    $quarters[]         = $i;
+                }
+                $where['quarter']       = array('in' , $quarters);
+            }
+        }
+        $data                           = $db->where($where)->sum($field);
+        return $data;
     }
 
     //计调岗激励机制数据
@@ -265,6 +310,11 @@ class KpiModel extends Model
         $data['quarter_should_royalty'] = $data['complete'] * 0.01; //当季度应发操作奖金 = 当季度操作毛利 * 1%
         $data['sum_should_royalty']     = $data['sum_complete'] * 0.01; //累计应发操作奖金
         $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+
+        $info                   = array();
+        $info['account_id']     = $userid;
+        $info['sum']            = $data['quarter_should_royalty'];
+        $data['info']           = $info;
         return $data;
     }
 
@@ -309,6 +359,11 @@ class KpiModel extends Model
         $data['royaltySum']     = $royaltyData['royaltySum']; //全部业绩提成
         $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发提成
         $data['quarter_should_royalty'] = $data['royaltySum'] - $data['sum_royalty_payoff']; //当季度应发提成 = 全部业绩提成 - 累计已发提成;
+
+        $info                   = array();
+        $info['account_id']     = $userid;
+        $info['sum']            = $data['quarter_should_royalty'];
+        $data['info']           = $info;
         return $data;
     }
 
@@ -443,16 +498,22 @@ class KpiModel extends Model
     //发放业绩提成的月份
     private function get_salary_months($year){
         $year_arr               = array();
+        $quarterRoyalty_arr     = array(); //累计发放季度提成月份
 
         //年度薪资月份信息
         for ($i=2; $i<=12; $i++){
             $mon                = strlen($i)<2 ? str_pad($i,2,'0',STR_PAD_LEFT) : $i;
             $year_arr[]         = $year.$mon;
+            if (in_array($i,array(4,7,10))){
+                $quarterRoyalty_arr[] = $year.$mon;
+            }
         }
         $year_arr[]             = ($year+1).'01'; //一月份发上一年的提成
+        $quarterRoyalty_arr[]   = ($year+1).'01';
 
         $data                       = array();
         $data['salary_year_months'] = $year_arr;
+        $data['quarterRoyalty_months'] = $quarterRoyalty_arr;
         return $data;
     }
 

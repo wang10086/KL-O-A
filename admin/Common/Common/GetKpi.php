@@ -4948,3 +4948,29 @@ function get_department_account($departmentid){
     return $lists;
 }
 
+//保存激励机制数据
+function save_encourage_data($year,$month,$info=''){
+    $now_quarter                        = get_quarter(date('m'));
+    $cycle                              = get_quarter_cycle_time($year,$now_quarter);
+    $ymTime                             = strtotime($year.$month.'01');
+   if ($year == date('Y') && ($ymTime > $cycle['begin_time'] && $ymTime < $cycle['end_time'])){
+       if ($info){
+           $info['year']                   = $year;
+           $info['month']                  = $year.$month;
+           $info['quarter']                = get_quarter($month);
+
+           $db                             = M('salary_quarty_royalty');
+           $where                          = array();
+           $where['year']                  = $year;
+           $where['quarter']               = $info['quarter'];
+           $where['account_id']            = $info['account_id'];
+           $list                           = $db->where($where)->find();
+           if ($list){
+               $db->where(array('id'=>$list['id']))->save($info);
+           }else{
+               $db->add($info);
+           }
+       }
+   }
+}
+
