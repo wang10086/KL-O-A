@@ -196,27 +196,37 @@ class KpiModel extends Model
     public function get_encourage_type($userid){
         $userinfo               = M('account')->find($userid);
         $num                    = 0;
-        if ($userinfo['rank'] == '02'){ //2队列
+        if ($userinfo['rank'] == '02' && !in_array($userid,array(41,42,43))){ //2队列  排除常规业务中心
             $num                = 1;
         }elseif (in_array($userinfo['postid'],array(76,95,100,101))){ //76=>计调部计调专员,95=>南京计调专员 , 100=>京区计调专员 , 101=>京区计调组长
             $num                = 2;
         }elseif ($userinfo['postid'] == 74){ //74=>计调部经理
             $num                = 3;
+        }elseif (in_array($userinfo['postid'],array(77,94,45))){ // 77=>京区业务中心经理,94=>南京项目部经理,45=>武汉项目部副经理
+            $num                = 4;
         }
         return $num;
     }
 
     //各激励机制数据
     public function get_encourage_data($encourage_type,$userid,$year,$month,$userinfo){
-        if ($encourage_type == 1 && !in_array($userid,array(41,42,43))){ //业务 排除常规业务中心
+        if ($encourage_type == 1){ //业务 排除常规业务中心
             $data               = $this -> get_yw_encourage_data($userid,$year,$month,$userinfo);
         }elseif ($encourage_type == 2){ //计调专员
             $data               = $this -> get_jd_encourage_data($userid,$year,$month);
-        }elseif ($encourage_type == 3){ //计调部经理
-            $data               = $this -> get_jdjl_encourage_data($userid,$year,$month);
+        }elseif ($encourage_type == 3) { //计调部经理
+            $data = $this->get_jdjl_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type == 4) { // 部门经理 京区,南京,武汉
+            $data = $this->get_ywbmjl_encourage_data($userid, $year, $month);
         }
         return $data;
     }
+
+    //部门经理激励机制数据
+    public function get_ywbmjl_encourage_data($userid, $year, $month){
+
+    }
+
 
     //计调经理激励机制数据
     public function get_jdjl_encourage_data($userid,$year,$month){
