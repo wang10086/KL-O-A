@@ -40,7 +40,7 @@
                                         <th class="sorting" width="60" data="id">id</th>
                                         <th class="sorting" width="120" data="worder_title">工单标题</th>
                                         <th class="sorting" width="80" data="worder_type">工单类型</th>
-                                        <th class="sorting" width="80" data="init_user_name">发起人姓名</th>
+                                        <th class="sorting" width="80" data="ini_user_name">发起人姓名</th>
                                         <th class="sorting" width="80"  data="exe_user_name">接收人姓名</th>
                                         <th class="sorting" width="80"  data="assign_name">执行人姓名</th>
                                         <th class="sorting" width="80" data="status">工单状态</th>
@@ -100,12 +100,17 @@
                 <input type="hidden" name="c" value="Worder">
                 <input type="hidden" name="a" value="worder_list">
 
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <input type="text" class="form-control" name="worder_title" placeholder="工单名称">
                 </div>
 
                 <div class="form-group col-md-6">
+                    <input type="text" class="form-control" name="worder_content" placeholder="工单内容">
+                </div>
+
+                <div class="form-group col-md-6">
                     <select name="worder_type" class="form-control">
+                        <option value="">==请选择==</option>
                         <foreach name="worder_type" key="k" item="v">
                             <option value="{$k}">{$v}</option>
                         </foreach>
@@ -113,7 +118,7 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                    <input type="text" class="form-control" name="worder_content" placeholder="工单内容">
+                    <input type="text" class="form-control" name="ini" placeholder="发起人">
                 </div>
                 
                 </form>

@@ -143,6 +143,7 @@ class WorderController extends BaseController{
         $worder_title               = I('worder_title');
         $worder_content             = I('worder_content');
         $worder_type                = I('worder_type');
+        $ini                        = I('ini');
         $pin                        = I('pin')?I('pin'):0;
         $kpiUrl                     = trim(I('kpiUrl'));
         $kpi_worder_ids             = explode(',',trim(I('kpi_worder_ids')));
@@ -151,6 +152,7 @@ class WorderController extends BaseController{
         if ($worder_title)          $where['worder_title']      = array('like','%'.$worder_title.'%');
         if ($worder_content)        $where['worder_content']    = array('like','%'.$worder_content.'%');
         if ($worder_type)           $where['worder_type']       = $worder_type;
+        if ($ini)                   $where['ini_user_name']     = array('like','%'.$ini.'%');
         if ($pin==1)			    $where['ini_user_id']       = cookie('userid');
         if ($pin==2)                $where['assign_id']		    = cookie('userid');
         if ($pin==3)			    $where['exe_user_id']       = cookie('userid');
