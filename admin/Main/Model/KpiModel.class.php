@@ -221,10 +221,13 @@ class KpiModel extends Model
     //计调经理激励机制数据
     public function get_jdjl_encourage_data($userid,$year,$month){
         $quarter                        = get_quarter($month);
-        $year_cycle                     = get_year_cycle($year);
+        //$year_cycle                     = get_year_cycle($year);
+        $year_cycle                     = get_year_begin_to_this_quarter_end_cycle($year,$month); //获取年初累计到当季度末周期
         $quarter_cycle                  = getQuarterlyCicle($year,$month);  //当季度周期
-        $last_year_cycle                = get_year_cycle($year-1);          //去年周期
+        //$last_year_cycle                = get_year_cycle($year-1);          //去年周期
+        $last_year_cycle                = get_year_begin_to_this_quarter_end_cycle($year-1,$month); //获取年初累计到当季度末周期
         $last_quarter_cycle             = getQuarterlyCicle($year-1,$month); //去年当季度周期
+        //$grand_total_cycle              = get_year_begin_to_this_quarter_end_cycle($year,$month); //获取年初累计到当季度末周期
 
         $year_settlement_lists          = get_settlement_list($year_cycle['beginTime'],$year_cycle['endTime']);
         $quarter_settlement_lists       = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time']);
@@ -287,9 +290,12 @@ class KpiModel extends Model
                     $quarters[]         = $i;
                 }
                 $where['quarter']       = array('in' , $quarters);
+                $data                   = $db->where($where)->sum($field);
             }
+        }else{
+            $data                       = $db->where($where)->sum($field);
         }
-        $data                           = $db->where($where)->sum($field);
+        $data                           = $data ? $data : 0;
         return $data;
     }
 

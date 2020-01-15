@@ -5502,6 +5502,17 @@ function get_half_year_cycle($year,$month){
         return $data;
     }
 
+    //获取年初累计到当前季度周期
+    function get_year_begin_to_this_quarter_end_cycle($year,$month){
+        $quarter                    = get_quarter($month);
+        $year_cycle                 = get_year_cycle($year);
+        $quarter_cycle              = get_quarter_cycle_time($year,$quarter);
+        $data                       = array();
+        $data['beginTime']          = $year_cycle['beginTime'];
+        $data['endTime']            = $quarter_cycle['end_time'];
+        return $data;
+    }
+
     /**
      * 获取各部门业务人员信息
      * @param $department_id
