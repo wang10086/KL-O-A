@@ -352,6 +352,8 @@ class KpiModel extends Model
         $data['complete']       = $maoli; //当季度业绩
         $data['sum_target']     = $target; //累计目标值
         $data['sum_complete']   = $sum_maoli; //累计业绩
+        $data['quarter_partner_money'] = $partner_money; //当季度城市合伙人押金
+        $data['sum_partner_money'] = $sum_partner_money; //累计城市合伙人押金
         $data['royalty5']       = $royaltyData['royalty5']; //5%部分业绩提成
         $data['royalty20']      = $royaltyData['royalty20']; //20%部分业绩提成
         $data['royalty25']      = $royaltyData['royalty25']; //25%部分业绩提成
@@ -379,8 +381,9 @@ class KpiModel extends Model
         $royalty20              = 0; //20%提成部分
         $royalty25              = 0; //25%提成部分
         $royalty40              = 0; //40%提成部分
+
         if (!$sum_partner_money){ //没有城市合伙人押金
-            switch ($sum_maoli){
+            switch ($target){
                 case $sum_maoli <= $target:
                     $royalty5           += $sum_maoli*0.05;
                     $royalty20          += 0;
@@ -409,7 +412,7 @@ class KpiModel extends Model
         }else{
             $royalty5                   += $sum_partner_money*0.05;
             $money                      = $sum_partner_money + $sum_maoli; //城市合伙人押金 +　结算毛利
-            switch ($money){ //城市合伙人押金小于目标值
+            switch ($target){ //城市合伙人押金小于目标值
                 case $money <= $target:
                     $royalty5           += ($money - $sum_partner_money) * 0.05;
                     $royalty20          += 0;
