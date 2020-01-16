@@ -12,17 +12,17 @@
 
                 <!-- Main content -->
                 <section class="content">
-               
+
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
-                            
-                                  
+
+
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
                             	<?php if($prveyear>2019){ ?>
                                 <a href="{:U('Kpi/kpiinfo',array('year'=>$prveyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
 								<?php } ?>
-								<?php 
+								<?php
                                 for($i=1;$i<13;$i++){
                                     if (strlen($i)<2){ $i = str_pad($i,2,'0',STR_PAD_LEFT);}
                                     $par = array();
@@ -40,8 +40,8 @@
                                 <a href="{:U('Kpi/kpiinfo',array('year'=>$nextyear,'uid'=>$uid))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
-                                    
-                            
+
+
                             <?php if($kpi['id']){ ?>
                             <div class="box box-warning">
                                 <div class="box-header">
@@ -62,11 +62,11 @@
                                         <!--
                                         状态：{$kpi.status_str}
                                         -->
-                                        </span> 
-                                        
-                                        <a href="{:u('Ajax/updatekpi',array('month'=>$allmonth,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 更新数据</a>  
-                                        
-                                        
+                                        </span>
+
+                                        <a href="{:u('Ajax/updatekpi',array('month'=>$allmonth,'uid'=>$uid))}" class="btn btn-success btn-sm" style="float:right;"><i class="fa fa-fw  fa-refresh"></i> 更新数据</a>
+
+
                                         <div class="box-body table-responsive no-padding">
                                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                             <tr role="row" class="orders" >
@@ -77,13 +77,13 @@
                                                 <th width="100">完成</th>
                                                 <th width="100">完成率</th>
                                                 <th width="100">权重</th>
-                                                
+
                                                 <th width="100">考评得分</th>
                                                 <th width="60">锁定</th>
-                                                <?php 
+                                                <?php
 												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['mk_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
 												?>
-                                                
+
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
                                                 <th width="50" class="taskOptions">编辑</th>
                                                 </if>
@@ -106,10 +106,10 @@
                                                 <td>{$row.weight}</td>
                                                 <td>{$row.score}</td>
 												<td><?php if($row['automatic']){ echo '<i class="fa fa-lock" style="color:#ff6600;font-size:14px;"></i>';} ?></td>
-                                                
-                                                
-                                                <?php 
-												
+
+
+                                                <?php
+
 												if(cookie('roleid')==43 || cookie('roleid')==44 || cookie('userid')==$kpi['mk_user_id'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username') ){
 												?>
                                                 <if condition="rolemenu(array('Kpi/editkpi'))">
@@ -117,16 +117,16 @@
                                                 <a href="javascript:;" onClick="edit_kpi({$row.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                                 </if>
-                                                
+
                                                 <?php }?>
                                             </tr>
-                                            </foreach>					
-                                        </table> 
+                                            </foreach>
+                                        </table>
 
                                         </div>
                                         <div class="form-group">&nbsp;</div>
                                     </div>
-                                    
+
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
                             <?php } ?>
@@ -138,7 +138,7 @@
                             <?php }elseif ($encourage_type == 3){ ?>
                                 <include file="kpi_encourage_3" />
                             <?php }elseif ($encourage_type == 4){ ?>
-                                <include file="kpi_encourage_5" />
+                                <include file="kpi_encourage_4" />
                             <?php } ?>
 
                             <div class="box box-warning">
@@ -302,14 +302,14 @@
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->
-                
+
             </aside><!-- /.right-side -->
-			
+
   		</div>
 	</div>
 
 	<include file="Index:footer2" />
-    
+
     <script>
     //编辑KPI指标
 	function edit_kpi(id) {
@@ -328,9 +328,9 @@
 			cancelValue:'取消',
 			cancel: function () {
 			}
-		});	
+		});
 	}
-	
+
 	//单项评分
 	function unitscore(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=kpi_unitscore&id='+id,{
@@ -347,10 +347,10 @@
 			cancelValue:'取消',
 			cancel: function () {
 			}
-		});	
+		});
 	}
-	
-	
+
+
 	 //查看KPI指标
 	function kpi(id) {
 		art.dialog.open('index.php?m=Main&c=Kpi&a=kpidetail&id='+id,{
@@ -359,20 +359,20 @@
 			width:800,
 			height:400,
 			fixed: true,
-			
-		});	
+
+		});
 	}
-    
+
 	/*
 	$(document).ready(function(e) {
 		$('#applycheckbox').find('ins').each(function(index, element) {
 			$(this).click(function(){
 				if(index==0){
 					$('.select_1').show();
-					$('.select_2').hide();	
+					$('.select_2').hide();
 				}else{
 					$('.select_2').show();
-					$('.select_1').hide();	
+					$('.select_1').hide();
 				}
 			})
 		});

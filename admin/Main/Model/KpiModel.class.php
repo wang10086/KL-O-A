@@ -222,7 +222,7 @@ class KpiModel extends Model
         return $data;
     }
 
-    //部门经理激励机制数据
+    //业务部门经理激励机制数据
     public function get_ywbmjl_encourage_data($userid, $year, $month){
 
     }
