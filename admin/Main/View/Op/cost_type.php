@@ -22,7 +22,7 @@
                                     <a href="javascript:;" class="btn btn-success btn-sm" onclick="javascript:open_edit_cost_type(`{:U('Op/edit_cost_type')}`);"><i class="fa fa-plus"></i> 添加</a>
                             </div>
                         </div><!-- /.box-header -->
-                        <div class="box-body">    
+                        <div class="box-body">
                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                             <tr role="row" class="orders" >
                                 <th class="sorting" width="80" data="id">编号</th>
@@ -30,12 +30,12 @@
                                 <if condition="rolemenu(array('Op/edit_cost_type'))">
                                 <th width="40" class="taskOptions">编辑</th>
                                 </if>
-                                
+
                                 <if condition="rolemenu(array('Op/del_cost_type'))">
                                 <th width="40" class="taskOptions">删除</th>
-                                </if> 
+                                </if>
                             </tr>
-                            <foreach name="lists" item="row"> 
+                            <foreach name="lists" item="row">
                             <tr>
                                 <td>{$row.id}</td>
                                 <td>{$row.name}</td>
@@ -50,7 +50,7 @@
                                 </td>
                                 </if>
                             </tr>
-                            </foreach>					
+                            </foreach>
                         </table>
                         </div><!-- /.box-body -->
                             <div class="box-footer clearfix">
@@ -63,7 +63,7 @@
 
         </section><!-- /.content -->
     </aside><!-- /.right-side -->
-            
+
 <include file="Index:footer2" />
 
 <script type="text/javascript">
@@ -76,12 +76,14 @@ function open_edit_cost_type (url) {
 		okVal: '提交',
 		ok: function () {
             this.iframe.contentWindow.gosubmint();
-            location.reload();
+            this.close();
 			return false;
 		},
 		cancelValue:'取消',
-		cancel: function () {
-		}
+		cancel: function () {},
+        close: function () {
+            art.dialog.open.origin.location.reload();
+        }
 	});
 }
 </script>
