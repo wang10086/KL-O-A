@@ -24,8 +24,8 @@
                 </tr>
                 <tr>
                     <td class="taskOptions">{$year-1} 年</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
+                    <td class="taskOptions">{$encourage_data.last_year_maoli}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.maoli_up_rate}</td>
                     <td class="taskOptions">{$encourage_data.}</td>
                     <!--<td class="taskOptions" rowspan="2">{$encourage_data.}</td>-->
                     <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
@@ -37,8 +37,8 @@
                 </tr>
                 <tr>
                     <td class="taskOptions">{$year} 年</td>
-                    <td class="taskOptions">{$encourage_data.quarter_maoli}</td>
                     <td class="taskOptions">{$encourage_data.year_maoli}</td>
+                    <td class="taskOptions">{$encourage_data.}</td>
                 </tr>
             </table>
         </div>

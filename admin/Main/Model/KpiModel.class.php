@@ -224,7 +224,27 @@ class KpiModel extends Model
 
     //业务部门经理激励机制数据
     public function get_ywbmjl_encourage_data($userid, $year, $month){
+        /**
+        $mod                            = D('Rbac');
+        $thisMonthData                  = $mod->get_sum_hr_cost($months);
+         */
+        $quarter                            = I('quarter',get_quarter($month));
+        //毛利数据
+        $maolidata                          = get_budget_up_rate($userid,$year,$quarter);
+        $lastYearData                       = $maolidata['last_year_data'];
+        $thisYearData                       = $maolidata['this_year_data'];
 
+        //累计人力成本
+        $rbacMod                            = D('Rbac');
+        $months                             = '';
+
+
+
+        $data                               = array();
+        $data['last_year_maoli']            = $lastYearData['sum_maoli']; //上年累计毛利
+        $data['year_maoli']                 = $thisYearData['sum_maoli']; //当年累计毛利
+        $data['maoli_up_rate']              = $maolidata['up_rate']; //毛利增长率
+        return $data;
     }
 
 
