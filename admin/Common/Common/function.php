@@ -5354,6 +5354,16 @@ function get_quarter_cycle_time($year,$quarter){
     return $data;
 }
 
+//获取累计到当前月的所有月份信息
+function get_to_now_months($year,$month){
+    $months                         = array();
+    for ($i=1; $i <= (int)$month; $i++){
+        $mon                        = strlen($i) < 2 ? str_pad($i , 2 , '0' , STR_PAD_LEFT) : $i;
+        $months[]                   = $year.$mon;
+    }
+    return $months;
+}
+
 //获取每个季度的月份
     function getQuarterMonths($quarter,$year){
     switch ($quarter){

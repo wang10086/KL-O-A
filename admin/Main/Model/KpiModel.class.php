@@ -224,10 +224,6 @@ class KpiModel extends Model
 
     //业务部门经理激励机制数据
     public function get_ywbmjl_encourage_data($userid, $year, $month){
-        /**
-        $mod                            = D('Rbac');
-        $thisMonthData                  = $mod->get_sum_hr_cost($months);
-         */
         $quarter                            = I('quarter',get_quarter($month));
         //毛利数据
         $maolidata                          = get_budget_up_rate($userid,$year,$quarter);
@@ -235,15 +231,24 @@ class KpiModel extends Model
         $thisYearData                       = $maolidata['this_year_data'];
 
         //累计人力成本
+        $departmentData                     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$userid))->field('d.id,d.department')->find();
         $rbacMod                            = D('Rbac');
-        $months                             = '';
+        $lastYearMonths                     = get_to_now_months($year-1,$month);
+        $thisYearMonths                     = get_to_now_months($year,$month);
+        $lastSumHrCostData                  = $rbacMod -> get_sum_hr_cost($lastYearMonths); //今年累计人力成本
+        $thisSumHrCostData                  = $rbacMod -> get_sum_hr_cost($thisYearMonths); //今年累计人力成本
+        $lastHrCost                         = $lastSumHrCostData['sum'][$departmentData['department']];
+        $thisHrCost                         = $thisSumHrCostData['sum'][$departmentData['department']];
+
 
 
 
         $data                               = array();
         $data['last_year_maoli']            = $lastYearData['sum_maoli']; //上年累计毛利
-        $data['year_maoli']                 = $thisYearData['sum_maoli']; //当年累计毛利
+        $data['this_year_maoli']            = $thisYearData['sum_maoli']; //当年累计毛利
         $data['maoli_up_rate']              = $maolidata['up_rate']; //毛利增长率
+        $data['lastHrCostData']             = $lastHrCost; //上一年累计人力成本
+        $data['thisHrCostData']             = $thisHrCost; //当年累计人力成本
         return $data;
     }
 
