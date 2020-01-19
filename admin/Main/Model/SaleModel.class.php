@@ -60,7 +60,7 @@ class SaleModel extends Model{
         $where['l.audit_time']  = array('between', "$beginTime,$endTime");
         $where['o.kind']        = array('not in',array(3,86));
 
-        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.untraffic_shouru,l.req_uid,l.req_uname';
+        $field                  = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.false_maoli,s.untraffic_shouru,l.req_uid,l.req_uname';
 
         $lists                  = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->select();
         return $lists;
@@ -118,7 +118,7 @@ class SaleModel extends Model{
                     if (in_array($value['kind'],$arr_kids)){
                         //单个业务类型合计
                         $shouru         += $value['shouru'];
-                        $maoli          += $value['maoli'];
+                        $maoli          += (int)$value['false_maoli'] ? (int)$value['false_maoli'] : $value['maoli']; //单进院所项目取false_maoli值
                         $untraffic_shouru+= $op_untraffic_shouru;
                         $low_gross      += $value['shouru']*$gross_avg[$kk]['num'];
                         $untraffic_low_gross += $op_untraffic_shouru*$gross_avg[$kk]['num'];
@@ -128,7 +128,7 @@ class SaleModel extends Model{
 
                         //总合计
                         $sum_shouru     += $value['shouru'];
-                        $sum_maoli      += $value['maoli'];
+                        $sum_maoli      += (int)$value['false_maoli'] ? (int)$value['false_maoli'] : $value['maoli'];
                         $sum_low_gross  += $value['shouru']*$gross_avg[$kk]['num'];
                         $sum_untraffic_shouru += $op_untraffic_shouru;
                         $sum_untraffic_low_gross += $op_untraffic_shouru*$gross_avg[$kk]['num'];

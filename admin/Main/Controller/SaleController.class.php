@@ -352,7 +352,7 @@ class SaleController extends BaseController {
         $where                              = array();
         $where['s.op_id']                   = array('in', $opids);
         $where['l.req_type']                = 801;
-        $field                              = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.maolilv,s.untraffic_shouru,s.untraffic_maolilv,l.req_uid,l.req_uname';
+        $field                              = 'o.op_id,o.group_id,o.project,o.create_user_name,o.kind,s.shouru,s.maoli,s.false_maoli,s.maolilv,s.untraffic_shouru,s.untraffic_maolilv,l.req_uid,l.req_uname';
 
         //分页
         $pagecount                          = M()->table('__OP_SETTLEMENT__ as s')->field($field)->join('__OP__ as o on s.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = s.id', 'LEFT')->where($where)->count();

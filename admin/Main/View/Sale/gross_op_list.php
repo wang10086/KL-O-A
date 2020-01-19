@@ -48,7 +48,7 @@
                                                 <td class="sorting">{$v['group_id']}</td>
                                                 <td class="sorting"><a href="{:U('Finance/settlement',array('opid'=>$v['op_id']))}">{$v['project']}</a></td>
                                                 <td class="taskOptions">{$v['low_gross']}</td>
-                                                <td class="taskOptions">{$v['maoli']}</td>
+                                                <td class="taskOptions">{$v['kind']==87 ? $v['false_maoli'] : $v['maoli']}</td>
                                                 <td class="taskOptions">{$v['shouru']}</td>
                                                 <td class="taskOptions">{$v['maolilv']}</td>
                                                 <!--<td class="taskOptions">{$v['rate']}</td>-->
