@@ -4974,3 +4974,15 @@ function save_encourage_data($year,$month,$info=''){
    }
 }
 
+/**
+ * 求本部门所有的非业务人员信息
+ * @param $departmentid 部门ID
+ */
+function get_unBusinessUsers($departmentid){
+    $where                              = array();
+    $where['a.departmentid']            = $departmentid;
+    $where['p.position_name']           = array('notlike' , '%S%');
+    $users                              = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id = a.position_id','left')->where($where)->field('a.id,a.nickname')->select();
+    return $users;
+}
+

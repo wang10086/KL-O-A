@@ -224,21 +224,32 @@ class KpiModel extends Model
 
     //业务部门经理激励机制数据
     public function get_ywbmjl_encourage_data($userid, $year, $month){
-        $quarter                            = I('quarter',get_quarter($month));
+        $quarter                            = get_quarter($month);
         //毛利数据
         $maolidata                          = get_budget_up_rate($userid,$year,$quarter);
         $lastYearData                       = $maolidata['last_year_data'];
         $thisYearData                       = $maolidata['this_year_data'];
 
-        //累计人力成本
+        //累计人力成本 + 公司五险一金增量
         $departmentData                     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$userid))->field('d.id,d.department')->find();
         $rbacMod                            = D('Rbac');
         $lastYearMonths                     = get_to_now_months($year-1,$month);
         $thisYearMonths                     = get_to_now_months($year,$month);
         $lastSumHrCostData                  = $rbacMod -> get_sum_hr_cost($lastYearMonths); //今年累计人力成本
         $thisSumHrCostData                  = $rbacMod -> get_sum_hr_cost($thisYearMonths); //今年累计人力成本
-        $lastHrCost                         = $lastSumHrCostData['sum'][$departmentData['department']];
-        $thisHrCost                         = $thisSumHrCostData['sum'][$departmentData['department']];
+        $lastHrCost                         = $lastSumHrCostData['sum'][$departmentData['department']]; // 上一年累计人力成本
+        $thisHrCost                         = $thisSumHrCostData['sum'][$departmentData['department']]; // 当年累计人力成本
+        $lastFiveRisksOneFund               = $lastSumHrCostData['insurance'][$departmentData['department']]['sum']; //上一年累计五险一金
+        $thisFiveRisksOneFund               = $thisSumHrCostData['insurance'][$departmentData['department']]['sum']; //当年累计五险一金
+
+        //部门业绩提成(本部门非业务岗人员的毛利业绩*5%)
+        $unBusinessUsers                    = get_unBusinessUsers($departmentData['id']);
+        $userids                            = array_column($unBusinessUsers,id);
+        $quarter_cycle                      = get_quarter_cycle_time($year,$quarter);
+        $unBusinessUsersOpLists             = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],0,0,'','',$userids);
+        $unBusinessUsersSumMaoli            = array_sum(array_column($unBusinessUsersOpLists,'maoli'));
+        $departmentRoyalty                  = $unBusinessUsersSumMaoli ? round($unBusinessUsersSumMaoli * 0.05, 2) : 0;
+
 
 
 
@@ -249,6 +260,8 @@ class KpiModel extends Model
         $data['maoli_up_rate']              = $maolidata['up_rate']; //毛利增长率
         $data['lastHrCostData']             = $lastHrCost; //上一年累计人力成本
         $data['thisHrCostData']             = $thisHrCost; //当年累计人力成本
+        $data['fiveRisksOneFundUpData']     = $thisFiveRisksOneFund - $lastFiveRisksOneFund; //五险一金增长
+        $data['departmentRoyalty']          = $departmentRoyalty; //部门业绩提成
         return $data;
     }
 

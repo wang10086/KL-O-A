@@ -28,8 +28,8 @@
                     <td class="taskOptions" rowspan="2">{$encourage_data.maoli_up_rate}</td>
                     <td class="taskOptions">{$encourage_data.lastHrCostData}</td>
                     <!--<td class="taskOptions" rowspan="2">{$encourage_data.}</td>-->
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.departmentRoyalty}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.fiveRisksOneFundUpData}</td>
                     <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
                     <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
                     <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
