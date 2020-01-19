@@ -224,69 +224,71 @@ class KpiModel extends Model
 
     //业务部门经理激励机制数据
     public function get_ywbmjl_encourage_data($userid, $year, $month){
-        $quarter                            = get_quarter($month);
-        $quarter_cycle                      = get_quarter_cycle_time($year,$quarter);
-        $year_cycle                         = get_year_cycle($year);
-        $departmentData                     = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$userid))->field('d.id,d.department')->find();
+        $quarter                        = get_quarter($month);
+        $quarter_cycle                  = get_quarter_cycle_time($year,$quarter);
+        $year_cycle                     = get_year_cycle($year);
+        $departmentData                 = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$userid))->field('d.id,d.department')->find();
         //毛利数据
-        $maolidata                          = get_budget_up_rate($userid,$year,$quarter);
-        $lastYearData                       = $maolidata['last_year_data'];
-        $thisYearData                       = $maolidata['this_year_data'];
+        $maolidata                      = get_budget_up_rate($userid,$year,$quarter);
+        $lastYearData                   = $maolidata['last_year_data'];
+        $thisYearData                   = $maolidata['this_year_data'];
 
         //累计人力成本 + 公司五险一金增量
-        $rbacMod                            = D('Rbac');
-        $lastYearMonths                     = get_to_now_months($year-1,$month);
-        $thisYearMonths                     = get_to_now_months($year,$month);
-        $lastSumHrCostData                  = $rbacMod -> get_sum_hr_cost($lastYearMonths); //今年累计人力成本
-        $thisSumHrCostData                  = $rbacMod -> get_sum_hr_cost($thisYearMonths); //今年累计人力成本
-        $lastHrCost                         = $lastSumHrCostData['sum'][$departmentData['department']]; // 上一年累计人力成本
-        $thisHrCost                         = $thisSumHrCostData['sum'][$departmentData['department']]; // 当年累计人力成本
-        $lastFiveRisksOneFund               = $lastSumHrCostData['insurance'][$departmentData['department']]['sum']; //上一年累计五险一金
-        $thisFiveRisksOneFund               = $thisSumHrCostData['insurance'][$departmentData['department']]['sum']; //当年累计五险一金
+        $rbacMod                        = D('Rbac');
+        $lastYearMonths                 = get_to_now_months($year-1,$month);
+        $thisYearMonths                 = get_to_now_months($year,$month);
+        $lastSumHrCostData              = $rbacMod -> get_sum_hr_cost($lastYearMonths); //今年累计人力成本
+        $thisSumHrCostData              = $rbacMod -> get_sum_hr_cost($thisYearMonths); //今年累计人力成本
+        $lastHrCost                     = $lastSumHrCostData['sum'][$departmentData['department']]; // 上一年累计人力成本
+        $thisHrCost                     = $thisSumHrCostData['sum'][$departmentData['department']]; // 当年累计人力成本
+        $lastFiveRisksOneFund           = $lastSumHrCostData['insurance'][$departmentData['department']]['sum']; //上一年累计五险一金
+        $thisFiveRisksOneFund           = $thisSumHrCostData['insurance'][$departmentData['department']]['sum']; //当年累计五险一金
 
         //当年度累计人力成本额度 = 上年度累计人力成本 * (1 + 增长比率/2)
-        $totalHrCost                        = round($lastHrCost * (1 + ($maolidata['up_rate_float']/2)), 2);
+        $totalHrCost                    = round($lastHrCost * (1 + ($maolidata['up_rate_float']/2)), 2);
 
         //部门业绩提成(本部门非业务岗人员的毛利业绩*5%)
-        $unBusinessUsers                    = get_unBusinessUsers($departmentData['id']);
-        $userids                            = array_column($unBusinessUsers,id);
-        $unBusinessUsersOpLists             = get_settlement_list($year_cycle['beginTime'],$quarter_cycle['end_time'],0,0,'','',$userids);
-        $unBusinessUsersSumMaoli            = array_sum(array_column($unBusinessUsersOpLists,'maoli'));
-        $departmentRoyalty                  = $unBusinessUsersSumMaoli ? round($unBusinessUsersSumMaoli * 0.05, 2) : 0;
+        $unBusinessUsers                = get_unBusinessUsers($departmentData['id']);
+        $userids                        = array_column($unBusinessUsers,id);
+        $unBusinessUsersOpLists         = get_settlement_list($year_cycle['beginTime'],$quarter_cycle['end_time'],0,0,'','',$userids);
+        $unBusinessUsersSumMaoli        = array_sum(array_column($unBusinessUsersOpLists,'maoli'));
+        $departmentRoyalty              = $unBusinessUsersSumMaoli ? round($unBusinessUsersSumMaoli * 0.05, 2) : 0;
 
         //部门奖金包
-        $departmentAllUsers                 = get_department_account($departmentData['id']);
-        $departmentAllUserIds               = array_column($departmentAllUsers,'id');
-        $departmentSettlementLists          = get_settlement_list($year_cycle['beginTime'],$quarter_cycle['end_time'],0,0,'','',$departmentAllUserIds);
-        $opids                              = array_unique(array_column($departmentSettlementLists,'op_id'));
-        $allRoyaltyKeyWords                 = array('计调提成','资源提成','研发提成','奖金包','计调奖金包','资源奖金包','研发奖金包','总奖金包');
-        $allCostaccBonus                    = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$allRoyaltyKeyWords)))->sum('total');
-        $jdRoyaltyKeyWords                  = array('计调提成','计调奖金包');
-        $jdCostaccBonus                     = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$jdRoyaltyKeyWords)))->sum('total');
-        $departmentBonus                    = ($allCostaccBonus - $jdCostaccBonus)>0 ? $allCostaccBonus - $jdCostaccBonus : 0;
+        $departmentAllUsers             = get_department_account($departmentData['id']);
+        $departmentAllUserIds           = array_column($departmentAllUsers,'id');
+        $departmentSettlementLists      = get_settlement_list($year_cycle['beginTime'],$quarter_cycle['end_time'],0,0,'','',$departmentAllUserIds);
+        $opids                          = array_unique(array_column($departmentSettlementLists,'op_id'));
+        $allRoyaltyKeyWords             = array('计调提成','资源提成','研发提成','奖金包','计调奖金包','资源奖金包','研发奖金包','总奖金包');
+        $allCostaccBonus                = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$allRoyaltyKeyWords)))->sum('total');
+        $jdRoyaltyKeyWords              = array('计调提成','计调奖金包');
+        $jdCostaccBonus                 = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$jdRoyaltyKeyWords)))->sum('total');
+        $departmentBonus                = ($allCostaccBonus - $jdCostaccBonus)>0 ? $allCostaccBonus - $jdCostaccBonus : 0;
 
-
-
-
-
-        $data                               = array();
-        $data['last_year_maoli']            = $lastYearData['sum_maoli']; //上年累计毛利
-        $data['this_year_maoli']            = $thisYearData['sum_maoli']; //当年累计毛利
-        $data['maoli_up_rate']              = $maolidata['up_rate']; //毛利增长率
-        $data['lastHrCostData']             = $lastHrCost; //上一年累计人力成本
-        $data['thisHrCostData']             = $thisHrCost; //当年累计人力成本
-        $data['totalHrCost']                = $totalHrCost; //当年度累计人力成本额度
-        $data['fiveRisksOneFundUpData']     = $thisFiveRisksOneFund - $lastFiveRisksOneFund; //五险一金增长
-        $data['departmentRoyalty']          = $departmentRoyalty; //部门业绩提成
-        $data['departmentBonus']            = $departmentBonus; //部门奖金包
-        $data['total_salary_bag']           = $data['totalHrCost'] + $data['departmentRoyalty'] + $data['fiveRisksOneFundUpData'] + $data['departmentBonus']; //当年度累计薪酬包 = 当年度累计人力成本额度 + 部门业绩提成 + 公司五险一金增量 + 部门奖金包
-        $data['totalSalaryBagLeftOver']     = $data['total_salary_bag'] - $data['thisHrCostData'];  //当年度累计薪酬包结余 = 当年季度累计薪酬包 - 当年季度累计实发人力成本
-        $data['selfSumBonus']               = round($data['totalSalaryBagLeftOver'] * 0.15, 2); //本人季度累计奖励 = 当年季度累计薪酬包结余 * 15%
-        $data['selfSumBonusPaid']           = ''; //本人已发放奖励
-        $data['selfSumBonusShould']         = ''; //本人当季度应发奖励
-        $data['teamSumBonus']               = round($data['totalSalaryBagLeftOver'] * 0.25, 2); //团队季度累计奖励 = 当年季度累计薪酬包结余 * 25%
-        $data['teamSumBonusPaid']           = ''; //团队已发放奖励
-        $data['teamSumBonusShould']         = ''; //团队当季度应发放奖励
+        $data                           = array();
+        $data['last_year_maoli']        = $lastYearData['sum_maoli']; //上年累计毛利
+        $data['this_year_maoli']        = $thisYearData['sum_maoli']; //当年累计毛利
+        $data['maoli_up_rate']          = $maolidata['up_rate']; //毛利增长率
+        $data['lastHrCostData']         = $lastHrCost; //上一年累计人力成本
+        $data['thisHrCostData']         = $thisHrCost; //当年累计人力成本
+        $data['totalHrCost']            = $totalHrCost; //当年度累计人力成本额度
+        $data['fiveRisksOneFundUpData'] = $thisFiveRisksOneFund - $lastFiveRisksOneFund; //五险一金增长
+        $data['departmentRoyalty']      = $departmentRoyalty; //部门业绩提成
+        $data['departmentBonus']        = $departmentBonus; //部门奖金包
+        $data['total_salary_bag']       = $data['totalHrCost'] + $data['departmentRoyalty'] + $data['fiveRisksOneFundUpData'] + $data['departmentBonus']; //当年度累计薪酬包 = 当年度累计人力成本额度 + 部门业绩提成 + 公司五险一金增量 + 部门奖金包
+        $data['totalSalaryBagLeftOver'] = $data['total_salary_bag'] - $data['thisHrCostData'];  //当年度累计薪酬包结余 = 当年季度累计薪酬包 - 当年季度累计实发人力成本
+        $data['selfSumBonus']           = round($data['totalSalaryBagLeftOver'] * 0.15, 2); //本人季度累计奖励 = 当年季度累计薪酬包结余 * 15%
+        //$data['selfSumBonusPaid']       = $this->get_payoff_quarterRoyalty($userid, $year, 'sum'); //本人已发放奖励
+        //$data['selfSumBonusShould']     = $data['selfSumBonus'] - $data['selfSumBonusPaid']; //本人当季度应发奖励 = 本人季度累计奖励 - 本人季度已发放奖励
+        $data['teamSumBonus']           = round($data['totalSalaryBagLeftOver'] * 0.25, 2); //团队季度累计奖励 = 当年季度累计薪酬包结余 * 25%
+        //$data['teamSumBonusPaid']       = $this->get_payoff_quarterRoyalty($userid, $year, 'AA_num');; //团队已发放奖励
+        //$data['teamSumBonusShould']     = $data['teamSumBonus'] - $data['teamSumBonusPaid']; //团队当季度应发放奖励
+        $info                           = array();
+        $info['account_id']             = $userid;
+        $info['sum']                    = $data['selfSumBonusShould'];
+        $info['AA_tit']                 = "团队当季度应发奖励";
+        $info['AA_num']                 = $data['teamSumBonusShould'];
+        //$data['info']                   = $info;
         return $data;
     }
 
