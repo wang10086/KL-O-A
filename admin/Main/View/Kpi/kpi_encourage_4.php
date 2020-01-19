@@ -13,27 +13,27 @@
                     <th class="taskOptions">年度</th>
                     <th class="taskOptions">累计毛利</th>
                     <th class="taskOptions">增长比率</th>
-                    <th class="taskOptions">累计人力成本</th>
-                    <!--<th class="taskOptions"></th>-->
+                    <th class="taskOptions">累计实发人力成本</th>
+                    <th class="taskOptions">当年度累计人力成本额度</th>
                     <th class="taskOptions">部门业绩提成</th>
                     <th class="taskOptions">公司五险一金增量</th>
                     <th class="taskOptions">部门奖金包</th>
-                    <th class="taskOptions">当年度累计薪酬包</th>
-                    <th class="taskOptions">当年度累计实发薪酬包</th>
-                    <th class="taskOptions">当年度累计薪酬包结余</th>
+                    <th class="taskOptions">当年季度累计薪酬包</th>
+                    <!--<th class="taskOptions">当年季度累计实发薪酬包</th>-->
+                    <th class="taskOptions">当年季度累计薪酬包结余</th>
                 </tr>
                 <tr>
                     <td class="taskOptions">{$year-1} 年</td>
                     <td class="taskOptions">{$encourage_data.last_year_maoli}</td>
                     <td class="taskOptions" rowspan="2">{$encourage_data.maoli_up_rate}</td>
                     <td class="taskOptions">{$encourage_data.lastHrCostData}</td>
-                    <!--<td class="taskOptions" rowspan="2">{$encourage_data.}</td>-->
+                    <td class="taskOptions" rowspan="2">{$encourage_data.totalHrCost}</td>
                     <td class="taskOptions" rowspan="2">{$encourage_data.departmentRoyalty}</td>
                     <td class="taskOptions" rowspan="2">{$encourage_data.fiveRisksOneFundUpData}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
-                    <td class="taskOptions" rowspan="2">{$encourage_data.}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.departmentBonus}</td>
+                    <td class="taskOptions" rowspan="2">{$encourage_data.total_salary_bag}</td>
+                    <!--<td class="taskOptions" rowspan="2">{$encourage_data.}</td>-->
+                    <td class="taskOptions" rowspan="2">{$encourage_data.totalSalaryBagLeftOver}</td>
                 </tr>
                 <tr>
                     <td class="taskOptions">{$year} 年</td>
@@ -55,12 +55,12 @@
                     <th class="taskOptions">团队当季度应发奖励</th>
                 </tr>
                 <tr>
-                    <td class="taskOptions">{$encourage_data.}</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
-                    <td class="taskOptions">{$encourage_data.}</td>
+                    <td class="taskOptions">{$encourage_data.selfSumBonus}</td>
+                    <td class="taskOptions">{$encourage_data.selfSumBonusPaid}</td>
+                    <td class="taskOptions">{$encourage_data.selfSumBonusShould}</td>
+                    <td class="taskOptions">{$encourage_data.teamSumBonus}</td>
+                    <td class="taskOptions">{$encourage_data.teamSumBonusPaid}</td>
+                    <td class="taskOptions">{$encourage_data.teamSumBonusShould}</td>
                 </tr>
             </table>
         </div>

@@ -4931,7 +4931,8 @@ function get_budget_up_rate($uid,$year,$quarter){
     $data                               = array();
     $data['this_year_data']             = $this_year_data;
     $data['last_year_data']             = $last_year_data;
-    $data['up_rate']                    = $last_year_data['sum_maoli'] ? (round(($this_year_data['sum_maoli'] - $last_year_data['sum_maoli'])/$last_year_data['sum_maoli'],4)*100).'%' : '100%';
+    $data['up_rate']                    = $last_year_data['sum_maoli'] ? (round(($this_year_data['sum_maoli'] - $last_year_data['sum_maoli'])/$last_year_data['sum_maoli'],4)*100).'%' : '100%'; //百分号形势
+    $data['up_rate_float']              = $last_year_data['sum_maoli'] ? (round(($this_year_data['sum_maoli'] - $last_year_data['sum_maoli'])/$last_year_data['sum_maoli'],4)) : 1; //小数形式
     return $data;
 }
 
