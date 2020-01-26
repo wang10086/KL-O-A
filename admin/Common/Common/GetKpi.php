@@ -2891,11 +2891,11 @@ function get_res_op_satisfaction($lists,$type,$dimension){
     $score_list                         = array();  //已评分的团
     $zongfen                            = 0; //总分
     $yipingfen                          = 0; //已评分总分
-    $defen                              = 0; //已得分
     $sum_defen                          = 0; //总得分(未评分的50%)
     $num                                = 0; //所有团数量
     $score_num                          = 0; //已评分团数量
     foreach ($lists as $k=>$v){
+        $defen                          = 0; //已得分
         $real_score                     = 0;
         $s_list                         = get_op_score_data($v['op_id'],$type);
         if ($s_list){
@@ -2918,7 +2918,7 @@ function get_res_op_satisfaction($lists,$type,$dimension){
     $data['defen']                      = $defen;
     $data['num']                        = $num;
     $data['score_num']                  = $score_num;
-    $data['score_average']              = $yipingfen ? (round($defen/$yipingfen,4)*100).'%' : '100%'; //已评分得分
+    $data['score_average']              = $yipingfen ? (round($sum_defen/$yipingfen,4)*100).'%' : '100%'; //已评分得分
     $data['sum_average']                = $zongfen ? (round($sum_defen/$zongfen,4)*100).'%' : '100%'; //合计得分(包含未评分的)
     $data['score_list']                 = $score_list;
     $data['list']                       = $list;
