@@ -57,7 +57,7 @@ class StaffController extends Controller{
             $num            = M('staff')->where(array('IP'=>$ip,'send_time'=>array('gt',$time)))->count();
 
             if (!$title || !$content){ $this->error('标题或内容不能为空'); }
-            if ($num >= 5){ $this->error('24小时内发送数量已超过允许最大值'); }
+            //if ($num >= 5){ $this->error('24小时内发送数量已超过允许最大值'); }
             if (in_array($ip,$arr_ip) || (!in_array($day,$holiday) && (in_array($hour,array(12,13,14,15,16,17))))){
                 if ($token == $_SESSION['token']){
                     $info           = array();
