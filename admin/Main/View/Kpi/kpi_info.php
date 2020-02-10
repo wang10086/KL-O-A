@@ -139,6 +139,8 @@
                                 <include file="kpi_encourage_3" />
                             <?php }elseif ($encourage_type == 4){ ?>
                                 <include file="kpi_encourage_4" />
+                            <?php }elseif ($encourage_type == 5){ ?>
+                                <include file="kpi_encourage_5" />
                             <?php } ?>
 
                             <div class="box box-warning">

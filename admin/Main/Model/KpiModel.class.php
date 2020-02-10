@@ -204,6 +204,8 @@ class KpiModel extends Model
             $num                = 3;
         }elseif (in_array($userinfo['postid'],array(77,94,45))){ // 77=>京区业务中心经理,94=>南京项目部经理,45=>武汉项目部副经理
             $num                = 4;
+        }elseif (in_array($userinfo['postid'],array(29))) { // 29=>研发部产品经理
+            $num = 5;
         }
         return $num;
     }
@@ -218,8 +220,23 @@ class KpiModel extends Model
             $data = $this->get_jdjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type == 4) { // 部门经理 京区,南京,武汉
             $data = $this->get_ywbmjl_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type == 5) { // 研发部产品经理
+            $data = $this->get_yfcpjl_encourage_data($userid, $year, $month);
         }
         return $data;
+    }
+
+    //研发部产品经理激励机制数据
+    public function get_yfcpjl_encourage_data($userid, $year, $month){
+        //任务系数
+        $quarter                = get_quarter($month);
+        $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
+        $quarterMonth           = getQuarterMonths($quarter,$year); //本季度月份
+        //$lastYearMonth          = substr($lastQuarterMonth,-6); //上季度最后一个月
+        $endYearMonth           = substr($quarterMonth,-6); //本季度最后一个月
+        //$lastTarget             = $quarter == 1 ? 0 : M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>1,'month'=>$lastYearMonth))->getField('target'); //上季度累计任务系数
+        $target                 = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$endYearMonth)))->getField('target'); //(本季度)累计任务系数  242=>季度累计毛利额-产品经理
+        //P($target,false);
     }
 
     //业务部门经理激励机制数据
