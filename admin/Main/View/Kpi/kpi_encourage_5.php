@@ -10,6 +10,7 @@
             <div class="box-body table-responsive no-padding">
                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                     <tr role="row" class="orders" >
+                        <th class="taskOptions">上年季度毛利</th>
                         <th class="taskOptions">当季度任务指标</th>
                         <th class="taskOptions">当季度毛利额</th>
                         <th class="taskOptions">累计任务指标</th>
@@ -21,6 +22,7 @@
                         <th class="taskOptions">当季度应发提成</th>
                     </tr>
                     <tr>
+                        <td class="taskOptions">{$encourage_data.lastYearTarget}</td>
                         <td class="taskOptions">{$encourage_data.target}</td>
                         <td class="taskOptions"><?php echo $encourage_data['quarter_partner_money'] ? $encourage_data['complete'] .'+<span class="red">'. $encourage_data['quarter_partner_money'].'</span>' : $encourage_data['complete']; ?></td>
                         <td class="taskOptions">{$encourage_data.sum_target}</td>
