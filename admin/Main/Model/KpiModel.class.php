@@ -278,17 +278,17 @@ class KpiModel extends Model
         $data['total_salary_bag']       = $data['totalHrCost'] + $data['departmentRoyalty'] + $data['fiveRisksOneFundUpData'] + $data['departmentBonus']; //当年度累计薪酬包 = 当年度累计人力成本额度 + 部门业绩提成 + 公司五险一金增量 + 部门奖金包
         $data['totalSalaryBagLeftOver'] = $data['total_salary_bag'] - $data['thisHrCostData'];  //当年度累计薪酬包结余 = 当年季度累计薪酬包 - 当年季度累计实发人力成本
         $data['selfSumBonus']           = round($data['totalSalaryBagLeftOver'] * 0.15, 2); //本人季度累计奖励 = 当年季度累计薪酬包结余 * 15%
-        //$data['selfSumBonusPaid']       = $this->get_payoff_quarterRoyalty($userid, $year, 'sum'); //本人已发放奖励
-        //$data['selfSumBonusShould']     = $data['selfSumBonus'] - $data['selfSumBonusPaid']; //本人当季度应发奖励 = 本人季度累计奖励 - 本人季度已发放奖励
+        $data['selfSumBonusPaid']       = $this->get_payoff_quarterRoyalty($userid, $year, 'sum'); //本人已发放奖励
+        $data['selfSumBonusShould']     = $data['selfSumBonus'] - $data['selfSumBonusPaid']; //本人当季度应发奖励 = 本人季度累计奖励 - 本人季度已发放奖励
         $data['teamSumBonus']           = round($data['totalSalaryBagLeftOver'] * 0.25, 2); //团队季度累计奖励 = 当年季度累计薪酬包结余 * 25%
-        //$data['teamSumBonusPaid']       = $this->get_payoff_quarterRoyalty($userid, $year, 'AA_num');; //团队已发放奖励
-        //$data['teamSumBonusShould']     = $data['teamSumBonus'] - $data['teamSumBonusPaid']; //团队当季度应发放奖励
+        $data['teamSumBonusPaid']       = $this->get_payoff_quarterRoyalty($userid, $year, 'AA_num');; //团队已发放奖励
+        $data['teamSumBonusShould']     = $data['teamSumBonus'] - $data['teamSumBonusPaid']; //团队当季度应发放奖励
         $info                           = array();
         $info['account_id']             = $userid;
         $info['sum']                    = $data['selfSumBonusShould'];
         $info['AA_tit']                 = "团队当季度应发奖励";
         $info['AA_num']                 = $data['teamSumBonusShould'];
-        //$data['info']                   = $info;
+        $data['info']                   = $info;
         return $data;
     }
 
