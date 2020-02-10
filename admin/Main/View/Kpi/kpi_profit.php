@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>{$_action_} <small>{$kinds[$kind]}</small></h1>
+                    <h1>{$_action_} <small>{$kinds[$kind[0]]}</small></h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
@@ -18,7 +18,7 @@
                         <div class="col-xs-12">
                             <div class="box box-warning">
                                 <div class="box-header">
-                                    <h3 class="box-title">{$year}年{$kinds[$kind]}</h3>
+                                    <h3 class="box-title">{$year}年{$kinds[$kind[0]]}</h3>
                                     <div class="box-tools pull-right"></div>
                                 </div><!-- /.box-header -->
 

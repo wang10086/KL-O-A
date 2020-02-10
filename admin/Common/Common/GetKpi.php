@@ -4265,13 +4265,16 @@ function get_res_op_satisfaction($lists,$type,$dimension){
     function get_cpjl_op_kind_id($uid){
         switch ($uid){
             case 202: //于洵
-                $kind           = 90; //背景提升及科研实习
+                $kind           = array(90); //背景提升及科研实习
             break;
             case 232: //梅轶宁
-                $kind           = 67; //实验室建设
+                $kind           = array(67); //实验室建设
             break;
+            case 234: //马娜
+                $kind           = array(54,83,84); //54研学旅行,83组团研学旅行,84地接研学旅行
+                break;
             case 82 || 204: //吕严 || 李徵红
-                $kind           = 87; //单进院所
+                $kind           = array(87); //单进院所
             break;
             default:
                 $kind           = 0;
@@ -4317,8 +4320,9 @@ function get_settlement_op_lists($user_id=0,$startTime,$endTime){
     $kind                       = get_cpjl_op_kind_id($user_id);
     $dj_opids                   = get_dijie_opids();
     $where                      = array();
-    if ($kind != 87){ $where['o.op_id']   = array('not in' , $dj_opids); }  //单进院所 不排除地接团 , 其余类型排除地接团
-    $where['o.kind']            = $kind;
+    if ($kind != array(87)){ $where['o.op_id']   = array('not in' , $dj_opids); }  //单进院所 不排除地接团 , 其余类型排除地接团
+    //$where['o.kind']            = $kind;
+    $where['o.kind']            = array('in',$kind);
     $where['l.req_type']        = 801;
     $where['l.audit_time']      = array('between',array($startTime,$endTime));
     $where['s.audit_status']    = 1;
@@ -4340,7 +4344,8 @@ function get_cp_satisfied_kpi_data($user_id=0,$start_time,$end_time){
     $start_time                     = $start_time;
     $end_time                       = ($end_time)-1;
     $where['c.ret_time']            = array('between',array($start_time,$end_time));
-    $where['o.kind']                = $kind;
+    //$where['o.kind']                = $kind;
+    $where['o.kind']                = array('in',$kind);
     $shishi_lists                   = M()->table('__OP_TEAM_CONFIRM__ as c')->join('__OP__ as o on o.op_id = c.op_id','left')->where($where)->select();
 
     $score_lists                    = array();

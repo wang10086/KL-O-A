@@ -232,11 +232,20 @@ class KpiModel extends Model
         $quarter                = get_quarter($month);
         $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
         $quarterMonth           = getQuarterMonths($quarter,$year); //本季度月份
-        //$lastYearMonth          = substr($lastQuarterMonth,-6); //上季度最后一个月
+        $lastYearMonth          = substr($lastQuarterMonth,-6); //上季度最后一个月
         $endYearMonth           = substr($quarterMonth,-6); //本季度最后一个月
-        //$lastTarget             = $quarter == 1 ? 0 : M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>1,'month'=>$lastYearMonth))->getField('target'); //上季度累计任务系数
+        $lastTarget             = $quarter == 1 ? 0 : M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$lastYearMonth)))->getField('target'); //上季度累计任务系数
         $target                 = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$endYearMonth)))->getField('target'); //(本季度)累计任务系数  242=>季度累计毛利额-产品经理
-        //P($target,false);
+
+        $data                   = array();
+        $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
+        $data['complete']       = $maoli; //当季度业绩
+        $data['sum_target']     = $target; //累计目标值
+        $data['sum_complete']   = $sum_maoli; //累计业绩
+
+
+        return $data;
+
     }
 
     //业务部门经理激励机制数据
