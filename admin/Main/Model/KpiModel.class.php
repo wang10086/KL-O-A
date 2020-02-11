@@ -230,18 +230,39 @@ class KpiModel extends Model
     public function get_yfcpjl_encourage_data($userid, $year, $month){
         //任务系数
         $quarter                = get_quarter($month);
-        $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
-        $quarterMonth           = getQuarterMonths($quarter,$year); //本季度月份
-        $lastYearMonth          = substr($lastQuarterMonth,-6); //上季度最后一个月
-        $endYearMonth           = substr($quarterMonth,-6); //本季度最后一个月
-        $lastTarget             = $quarter == 1 ? 0 : M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$lastYearMonth)))->getField('target'); //上季度累计任务系数
-        $target                 = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$endYearMonth)))->getField('target'); //(本季度)累计任务系数  242=>季度累计毛利额-产品经理
+        $lastQuarterMonths      = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
+
+        $quarterMonths          = getQuarterMonths($quarter,$year); //本季度月份
+        $lastQuarterMonth       = substr($lastQuarterMonths,-6); //上季度最后一个月
+        $endQuarterMonth        = substr($quarterMonths,-6); //本季度最后一个月
+        $lastTarget             = $quarter == 1 ? 0 : M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$lastQuarterMonth)))->getField('target'); //上季度累计任务系数
+        $target                 = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$endQuarterMonth)))->getField('target'); //(本季度)累计任务系数  242=>季度累计毛利额-产品经理
+
+        //毛利
+        /**
+         * $start_time             = get_year_settlement_start_time($v['year']);
+        $end_time               = $v['end_date'];
+        $data                   = get_gross_profit_op($v['user_id'],$start_time,$end_time);
+        $profit                 = $data['sum_profit']; //累计完成毛利
+        $target                 = $v['target']; //目标
+        $complete               = $profit;
+         *
+         * [begin_time] => 1545753600
+        [end_time] => 1553529600
+         */
+        $lastYearQuarterCycle   = get_quarter_cycle_time($year-1,$quarter); //上年当季度周期
+        $thisYearQuarterCycle   = get_quarter_cycle_time($year,$quarter); //本年当季度周期
+        $thisYearCycle          = get_year_cycle($year); //年度累计周期
+        $lastYearQuarterProfit  = get_gross_profit_op($userid,$lastYearQuarterCycle['begin_time'],$lastYearQuarterCycle['end_time']); //上年当季度结算毛利
+        $thisYearQuarterProfit  = get_gross_profit_op($userid,$thisYearQuarterCycle['begin_time'],$thisYearQuarterCycle['end_time']); //当年当季度结算毛利
+        $thisYearSumProfit      = get_gross_profit_op($userid,$thisYearCycle['beginTime'],$thisYearQuarterCycle['end_time']); //当年累计至当季度结算毛利
 
         $data                   = array();
         $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
-        $data['complete']       = $maoli; //当季度业绩
         $data['sum_target']     = $target; //累计目标值
-        $data['sum_complete']   = $sum_maoli; //累计业绩
+        $data['lastYearProfit'] = $lastYearQuarterProfit['sum_profit']; //上年当季度业绩
+        $data['thisYearProfit'] = $thisYearQuarterProfit['sum_profit']; //当年当季度业绩
+        $data['thisYearSumProfit'] = $thisYearSumProfit['sum_profit']; //当年累计至当季度业绩
 
 
         return $data;

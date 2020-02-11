@@ -22,11 +22,11 @@
                         <th class="taskOptions">当季度应发提成</th>
                     </tr>
                     <tr>
-                        <td class="taskOptions">{$encourage_data.lastYearTarget}</td>
+                        <td class="taskOptions">{$encourage_data.lastYearProfit}</td>
                         <td class="taskOptions">{$encourage_data.target}</td>
-                        <td class="taskOptions"><?php echo $encourage_data['quarter_partner_money'] ? $encourage_data['complete'] .'+<span class="red">'. $encourage_data['quarter_partner_money'].'</span>' : $encourage_data['complete']; ?></td>
+                        <td class="taskOptions">{$encourage_data.thisYearProfit}</td>
                         <td class="taskOptions">{$encourage_data.sum_target}</td>
-                        <td class="taskOptions"><?php echo $encourage_data['sum_partner_money'] ? $encourage_data['sum_complete'] .'+<span class="red">'. $encourage_data['sum_partner_money'].'</span>' : $encourage_data['sum_complete']; ?></td>
+                        <td class="taskOptions">{$encourage_data.thisYearSumProfit}</td>
                         <td class="taskOptions">{$encourage_data.royalty5}</td>
                         <td class="taskOptions">{$encourage_data.royalty10}</td>
                         <td class="taskOptions">{$encourage_data.royaltySum}</td>
