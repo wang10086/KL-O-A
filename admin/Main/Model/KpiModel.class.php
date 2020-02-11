@@ -262,8 +262,8 @@ class KpiModel extends Model
         $data['royalty5']       = $royaltyData['royalty5']; //5%提成部分
         $data['royalty10']      = $royaltyData['royalty10']; //10%提成部分
         $data['sum_should_royalty']     = $royaltyData['royaltySum']; //累计应发提成
-        //$data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
-        //$data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
+        $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+        $data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
 
         $info                   = array();
         $info['account_id']     = $userid;
