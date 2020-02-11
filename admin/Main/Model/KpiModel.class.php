@@ -239,17 +239,6 @@ class KpiModel extends Model
         $target                 = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>242,'month'=>array(like,'%'.$endQuarterMonth)))->getField('target'); //(本季度)累计任务系数  242=>季度累计毛利额-产品经理
 
         //毛利
-        /**
-         * $start_time             = get_year_settlement_start_time($v['year']);
-        $end_time               = $v['end_date'];
-        $data                   = get_gross_profit_op($v['user_id'],$start_time,$end_time);
-        $profit                 = $data['sum_profit']; //累计完成毛利
-        $target                 = $v['target']; //目标
-        $complete               = $profit;
-         *
-         * [begin_time] => 1545753600
-        [end_time] => 1553529600
-         */
         $lastYearQuarterCycle   = get_quarter_cycle_time($year-1,$quarter); //上年当季度周期
         $thisYearQuarterCycle   = get_quarter_cycle_time($year,$quarter); //本年当季度周期
         $thisYearCycle          = get_year_cycle($year); //年度累计周期
@@ -257,16 +246,58 @@ class KpiModel extends Model
         $thisYearQuarterProfit  = get_gross_profit_op($userid,$thisYearQuarterCycle['begin_time'],$thisYearQuarterCycle['end_time']); //当年当季度结算毛利
         $thisYearSumProfit      = get_gross_profit_op($userid,$thisYearCycle['beginTime'],$thisYearQuarterCycle['end_time']); //当年累计至当季度结算毛利
 
+        //业绩提成
+        $royaltyData            = $this->get_cpjl_royalty_data($target,$thisYearSumProfit['sum_profit']);
+
+        //累计已发提成数据
+        $salary_months          = $this->get_salary_months($year);
+        $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
+
         $data                   = array();
         $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
         $data['sum_target']     = $target; //累计目标值
         $data['lastYearProfit'] = $lastYearQuarterProfit['sum_profit']; //上年当季度业绩
         $data['thisYearProfit'] = $thisYearQuarterProfit['sum_profit']; //当年当季度业绩
         $data['thisYearSumProfit'] = $thisYearSumProfit['sum_profit']; //当年累计至当季度业绩
+        $data['royalty5']       = $royaltyData['royalty5']; //5%提成部分
+        $data['royalty10']      = $royaltyData['royalty10']; //10%提成部分
+        $data['sum_should_royalty']     = $royaltyData['royaltySum']; //累计应发提成
+        //$data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+        //$data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
 
-
+        $info                   = array();
+        $info['account_id']     = $userid;
+        $info['sum']            = $data['quarter_should_royalty'];
+        $data['info']           = $info;
         return $data;
 
+    }
+
+    //研发部产品经理提成数据
+    private function get_cpjl_royalty_data($target=0,$sum_maoli=0){
+        $royalty5               = 0; //5%提成部分
+        $royalty10              = 0; //10%提成部分
+        switch ($target){
+            case $sum_maoli <= $target:
+                $royalty5           += 0;
+                $royalty10          += 0;
+                break;
+            case $sum_maoli > $target && $sum_maoli <= $target*2:
+                $royalty5           += 0;
+                $royalty10          += ($sum_maoli - $target)*0.05;
+                break;
+            case $sum_maoli > $target*2:
+                $royalty5           += ($target*2 - $target)*0.05;
+                $royalty10          += ($sum_maoli - $target*2)*0.1;
+                break;
+        }
+
+        $data                       = array();
+        $royaltySum                 = $royalty5 + $royalty10;
+        $data['royalty5']           = $royalty5;
+        $data['royalty10']          = $royalty10;
+        $data['royaltySum']         = $royaltySum;
+        return $data;
     }
 
     //业务部门经理激励机制数据

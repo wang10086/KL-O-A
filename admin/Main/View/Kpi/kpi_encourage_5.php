@@ -29,7 +29,7 @@
                         <td class="taskOptions">{$encourage_data.thisYearSumProfit}</td>
                         <td class="taskOptions">{$encourage_data.royalty5}</td>
                         <td class="taskOptions">{$encourage_data.royalty10}</td>
-                        <td class="taskOptions">{$encourage_data.royaltySum}</td>
+                        <td class="taskOptions">{$encourage_data.sum_should_royalty}</td>
                         <td class="taskOptions">{$encourage_data.sum_royalty_payoff}</td>
                         <td class="taskOptions">{$encourage_data.quarter_should_royalty}</td>
                     </tr>
