@@ -277,7 +277,7 @@ class KpiModel extends Model
     private function get_cpjl_royalty_data($target=0,$sum_maoli=0){
         $royalty5               = 0; //5%提成部分
         $royalty10              = 0; //10%提成部分
-        switch ($target){
+        switch ($sum_maoli){
             case $sum_maoli <= $target:
                 $royalty5           += 0;
                 $royalty10          += 0;
