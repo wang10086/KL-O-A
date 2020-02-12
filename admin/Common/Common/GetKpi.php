@@ -4908,7 +4908,7 @@ function get_cost_save_finish_sum_data($lists){
 }
 
 /**
- * 季度毛利额累计增长比率 和上一年同季度对比
+ * 季度毛利额[本部门]累计增长比率 和上一年同季度对比
  * @param $uid
  * @param $year
  * @param $quarter
@@ -4921,6 +4921,37 @@ function get_budget_up_rate($uid,$year,$quarter){
     $this_year_quarter_cycle            = get_quarter_cycle_time($year , $quarter); //当年季度周期
     $last_year_settlement_lists         = get_settlement_list($last_year_quarter_cycle['begin_time'] , $last_year_quarter_cycle['end_time'],'','','','',$department_userids);
     $this_year_settlement_lists         = get_settlement_list($this_year_quarter_cycle['begin_time'] , $this_year_quarter_cycle['end_time'],'','','','',$department_userids);
+
+    $last_year_data                     = array();
+    $last_year_data['year']             = $year - 1;
+    $last_year_data['op_num']           = count($last_year_settlement_lists);
+    $last_year_data['sum_maoli']        = $last_year_settlement_lists ? array_sum(array_column($last_year_settlement_lists,'maoli')) : 0;
+    $last_year_data['lists']            = $last_year_settlement_lists;
+    $this_year_data                     = array();
+    $this_year_data['year']             = $year;
+    $this_year_data['op_num']           = count($this_year_settlement_lists);
+    $this_year_data['sum_maoli']        = $this_year_settlement_lists ? array_sum(array_column($this_year_settlement_lists,'maoli')) : 0;
+    $this_year_data['lists']            = $this_year_settlement_lists;
+
+    $data                               = array();
+    $data['this_year_data']             = $this_year_data;
+    $data['last_year_data']             = $last_year_data;
+    $data['up_rate']                    = $last_year_data['sum_maoli'] ? (round(($this_year_data['sum_maoli'] - $last_year_data['sum_maoli'])/$last_year_data['sum_maoli'],4)*100).'%' : '100%'; //百分号形势
+    $data['up_rate_float']              = $last_year_data['sum_maoli'] ? (round(($this_year_data['sum_maoli'] - $last_year_data['sum_maoli'])/$last_year_data['sum_maoli'],4)) : 1; //小数形式
+    return $data;
+}
+
+/**
+ * 获取季度毛利额累计增长比率 和上一年同期数据对比  年初累计至本季度末
+ * @param $year
+ * @param $quarter
+ * @param int $kindid
+ */
+function get_settlement_maoli_up_rate($year,$quarter,$kindid=0){
+    $last_year_quarter_cycle            = get_year_begin_to_quarter_end_cycle($year - 1, $quarter); //上一年年初至本季度末周期
+    $this_year_quarter_cycle            = get_year_begin_to_quarter_end_cycle($year , $quarter); //当年年初至本季度末周期
+    $last_year_settlement_lists         = get_settlement_list($last_year_quarter_cycle['begin_time'] , $last_year_quarter_cycle['end_time'],'','','',$kindid);
+    $this_year_settlement_lists         = get_settlement_list($this_year_quarter_cycle['begin_time'] , $this_year_quarter_cycle['end_time'],'','','',$kindid);
 
     $last_year_data                     = array();
     $last_year_data['year']             = $year - 1;
