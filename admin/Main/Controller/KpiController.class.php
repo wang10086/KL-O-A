@@ -2745,6 +2745,55 @@ class KpiController extends BaseController {
         $this->display('kpi_budget_up_rate_detail');
     }
 
+    //季度毛利额累计增长比率
+    public function public_kpi_settlement_maoli_up_rate(){
+        $kindid                             = I('kid',0);
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $title                              = $kindid ? $kinds[$kindid].'季度毛利额累计增长比率' : '季度毛利额累计增长比率';
+        $this->title($title);
+        $year                               = I('year',date('Y'));
+        $month                              = date('m');
+        $quarter                            = I('quarter',get_quarter($month));
+        $data                               = get_settlement_maoli_up_rate($year,$quarter,$kindid);
+        $lastYearData                       = $data['last_year_data'];
+        $thisYearData                       = $data['this_year_data'];
+
+        $this->thisYearData                 = $thisYearData;
+        $this->lastYearData                 = $lastYearData;
+        $this->up_rate                      = $data['up_rate'];
+        $this->year                         = $year;
+        $this->quarter                      = $quarter;
+        $this->kid                          = $kindid;
+        $this->display('kpi_settlement_maoli_up_rate');
+    }
+
+    public function public_kpi_settlement_maoli_up_rate_detail(){
+        $this->title('季度毛利额增长率');
+        $year                               = I('year');
+        $quarter                            = I('quarter');
+        $kid                                = I('kid');
+        $quarter_cycle                      = get_quarter_cycle_time($year , $quarter); //当年季度周期
+
+        $where                              = array();
+        $where['b.audit_status']            = 1;
+        $where['l.req_type']                = 801;
+        $where['l.audit_time']              = array('between', "$quarter_cycle[begin_time],$quarter_cycle[end_time]");
+        $where['o.kind']                    = $kid;
+        $field                              = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+
+        $pagecount		                    = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->count();
+        $page			                    = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+        $settlement_lists                   = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->limit($page->firstRow,$page->listRows)->select();
+
+        $this->lists                        = $settlement_lists;
+        $this->year                         = $year;
+        $this->quarter                      = $quarter;
+        $this->kid                          = $kid;
+        $this->display('kpi_settlement_maoli_up_rate_detail');
+    }
+
 
     public function aaa(){
         set_after_salary_kpi(201906);

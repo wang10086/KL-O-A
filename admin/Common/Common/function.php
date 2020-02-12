@@ -3607,13 +3607,10 @@ function updatekpi($month,$user,$year=''){
                             $monon                      = substr($v['month'],4,2);
                             $quarter                    = get_quarter($monon);
                             $kindid                     = 69; //科学快车
-                           // $kindid                     = 54;
-
                             $data                       = get_settlement_maoli_up_rate($v['year'],$quarter,$kindid);
 
-
-                            $complete                   = '开发中...';
-                            $url                        = '';
+                            $complete                   = $data['up_rate'];
+                            $url                        = U('Kpi/public_kpi_settlement_maoli_up_rate',array('year'=>$v['year'],'quarter'=>$quarter,'kid'=>$kindid));
                         }
 
                         //252 城市合伙人满意度
