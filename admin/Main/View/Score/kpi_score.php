@@ -15,10 +15,7 @@
                     <input type="hidden" name="token" value="{$token}">
                     <!--<input type="hidden" name="info[quota_id]" value="{$quota_id}">-->
 
-                    <?php if ($quota_id == 227){ ?>
-                        <!--王丹-->
-                        <include file="quota_227" />
-                    <?php }elseif($quota_id == 180){ ?>
+                    <?php if ($quota_id == 180){ ?>
                         <!--李徵红-->
                         <include file="quota_180" />
                     <?php }elseif($quota_id == 184){ ?>
@@ -27,6 +24,12 @@
                     <?php }elseif($quota_id == 185){ ?>
                         <!--赵冬--日常服务工作满意度-老科学家演讲团教务专员 -->
                         <include file="quota_185" />
+                    <?php }elseif($quota_id == 227){ ?>
+                        <!--王丹--城市合伙人-满意度-->
+                        <include file="quota_227" />
+                    <?php }elseif($quota_id == 252){ ?>
+                        <!--王茜--城市合伙人满意度-->
+                        <include file="quota_252" />
                     <?php } ?>
 
                     <div align="center" class="form-group col-md-12">
@@ -240,7 +243,7 @@
 </script>
 
 
-        
-        
+
+
 <include file="footer" />
-		 
+
