@@ -232,42 +232,51 @@ class KpiModel extends Model
 
     //市场部经理激励机制数据
     public function get_scbjl_encourage_data($userid, $year, $month){
-        $quarter                = get_quarter($month);
-        $thisYearTimeCycle      = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
-        $lastYearTimeCycle      = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
+        $quarter                    = get_quarter($month);
+        $thisYearTimeCycle          = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
+        $lastYearTimeCycle          = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
 
-        $kindid                 = 69; //69 科学快车
-        $kxkcdata               = get_settlement_maoli_up_rate($year,$quarter,$kindid);
+        //科学快车
+        $kindid                     = 69; //69 科学快车
+        $kxkcdata                   = get_settlement_maoli_up_rate($year,$quarter,$kindid);
 
+        //季度合伙人累计毛利
+        $thisYearPartnerData        = $this->get_partner_profit($thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time']);
+        $lastYearPartnerData        = $this->get_partner_profit($lastYearTimeCycle['begin_time'],$lastYearTimeCycle['end_time']);
 
-        /*
-         * Array
-(
-    [this_year_data] => Array
-        (
-            [year] => 2020
-            [op_num] => 0
-            [sum_maoli] => 0
-            [lists] =>
-        )
-
-    [last_year_data] => Array
-        (
-            [year] => 2019
-            [op_num] => 0
-            [sum_maoli] => 0
-            [lists] =>
-        )
-
-    [up_rate] => 100%
-    [up_rate_float] => 1
-)
-         * */
         $data                       = array();
         $data['thisYearKxkcSum']    = $kxkcdata['this_year_data']['sum_maoli'];
         $data['lastYearKxkcSum']    = $kxkcdata['last_year_data']['sum_maoli'];
         $data['kxkcUpData']         = $data['thisYearKxkcSum'] - $data['lastYearKxkcSum'];
         $data['kxkc_bonus']         = $data['kxkcUpData'] * 0.1;
+        $data['thisYearPartnerSum'] = $thisYearPartnerData['sum_maoli'];
+        $data['lastYearPartnerSum'] = $lastYearPartnerData['sum_maoli'];
+        $data['partnerUpData']      = $data['thisYearPartnerSum'] - $data['lastYearPartnerSum'];
+        $data['partner_bonus']      = round($data['partnerUpData'] * 0.01, 2);
+        $data['quarter_should_royalty'] = $data['kxkc_bonus'] + $data['partner_bonus'];
+
+        $info                       = array();
+        $info['account_id']         = $userid;
+        $info['sum']                = $data['quarter_should_royalty'];
+        $data['info']               = $info;
+        return $data;
+    }
+
+    //市场部经理城市合伙人累计毛利
+    private function get_partner_profit($startTime,$endTime){
+        $partners                   = M('customer_partner')->where(array('audit_stu'=>2,'del_stu'=>0))->getField('name',true); //所有审核通过的城市合伙人信息
+
+        //求本周期结算的城市合伙人项目毛利
+        $where                      = array();
+        $where['b.audit_status']    = 1;
+        $where['l.req_type']        = 801;
+        $where['l.audit_time']      = array('between', "$startTime,$endTime");
+        $where['o.customer']          = array('in',$partners);
+        $field                      = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+        $op_settlement_list         = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+        $data                       = array();
+        $data['sum_maoli']          = $op_settlement_list ? array_sum(array_column($op_settlement_list,'maoli')) : 0;
+        $data['op_lists']           = $op_settlement_list ? $op_settlement_list : array();
         return $data;
     }
 
