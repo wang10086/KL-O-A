@@ -778,6 +778,7 @@ class CustomerController extends BaseController {
                 $info                           = I('info');
                 $id                             = I('id');
                 $info['audit_remark']           = trim($info['audit_remark']);
+                $info['audit_time']             = NOW_TIME;
 
                 $res                            = $db->where(array('id'=>$id))->save($info);
                 if ($res){

@@ -224,7 +224,50 @@ class KpiModel extends Model
             $data = $this->get_ywbmjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type == 5) { // 研发部产品经理
             $data = $this->get_yfcpjl_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type ==6) { // 市场部经理
+            $data = $this->get_scbjl_encourage_data($userid, $year, $month);
         }
+        return $data;
+    }
+
+    //市场部经理激励机制数据
+    public function get_scbjl_encourage_data($userid, $year, $month){
+        $quarter                = get_quarter($month);
+        $thisYearTimeCycle      = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
+        $lastYearTimeCycle      = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
+
+        $kindid                 = 69; //69 科学快车
+        $kxkcdata               = get_settlement_maoli_up_rate($year,$quarter,$kindid);
+
+
+        /*
+         * Array
+(
+    [this_year_data] => Array
+        (
+            [year] => 2020
+            [op_num] => 0
+            [sum_maoli] => 0
+            [lists] =>
+        )
+
+    [last_year_data] => Array
+        (
+            [year] => 2019
+            [op_num] => 0
+            [sum_maoli] => 0
+            [lists] =>
+        )
+
+    [up_rate] => 100%
+    [up_rate_float] => 1
+)
+         * */
+        $data                       = array();
+        $data['thisYearKxkcSum']    = $kxkcdata['this_year_data']['sum_maoli'];
+        $data['lastYearKxkcSum']    = $kxkcdata['last_year_data']['sum_maoli'];
+        $data['kxkcUpData']         = $data['thisYearKxkcSum'] - $data['lastYearKxkcSum'];
+        $data['kxkc_bonus']         = $data['kxkcUpData'] * 0.1;
         return $data;
     }
 
