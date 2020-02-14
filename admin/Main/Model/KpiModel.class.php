@@ -206,6 +206,8 @@ class KpiModel extends Model
             $num                = 4;
         }elseif (in_array($userinfo['postid'],array(29))) { // 29=>研发部产品经理
             $num = 5;
+        }elseif (in_array($userinfo['postid'],array(66))) { // 66=>市场部经理
+            $num = 6;
         }
         return $num;
     }
