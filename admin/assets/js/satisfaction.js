@@ -638,8 +638,8 @@ function change_score_content() {
                         }else if(account_id == 31){ //京区研发主管(魏春竹)
                             var content = '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
-                                '<input type="hidden" name="data[AA]" value="支撑服务及时性">'+
-                                '<label>支撑服务及时性：</label>'+
+                                '<input type="hidden" name="data[AA]" value="支撑服务质量">'+
+                                '<label>支撑服务质量：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -649,8 +649,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[BB]" value="支撑服务态度">'+
-                                '<label>支撑服务态度：</label>'+
+                                '<input type="hidden" name="data[BB]" value="成本要素性价比">'+
+                                '<label>成本要素性价比：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -660,8 +660,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[CC]" value="培训及指导(辅导员及业务人员)">'+
-                                '<label>培训及指导(辅导员及业务人员)：</label>'+
+                                '<input type="hidden" name="data[CC]" value="支撑服务及时性">'+
+                                '<label>支撑服务及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -671,8 +671,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[DD]" value="产品客户需求符合度">'+
-                                '<label>产品客户需求符合度：</label>'+
+                                '<input type="hidden" name="data[DD]" value="产品需求符合度">'+
+                                '<label>产品需求符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
