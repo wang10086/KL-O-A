@@ -85,7 +85,7 @@ $config = array(
     ),
 
     'UPLOAD_FILE_CFG' => array(
-        'maxSize'    =>    1048576 * 20,
+        'maxSize'    =>    1048576 * 30,
         'rootPath'   =>    'upload/',
         'savePath'   =>    date('Ym') ."/",
         'saveName'   =>    array('uniqid',''),
