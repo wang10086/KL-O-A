@@ -3616,9 +3616,14 @@ function updatekpi($month,$user,$year=''){
 
                         //253 部门接待实施产品累计标准化率
                         if ($v['quota_id']==253){
+                            $monon                      = substr($v['month'],4,2);
+                            $quarter                    = get_quarter($monon);
+                            $cycle_times                = get_quarter_cycle_time($v['year'],$quarter);
+                            $departmentid               = M('account')->where(array('id'=>$v['user_id']))->getField('departmentid');
+                            $data                       = get_department_settlement_data($departmentid,$cycle_times['begin_time'],$cycle_times['end_time']);
 
-                            $complete                   = '开发中......';
-                            $url                        = '';
+                            $complete                   = $data['standard_budget_rate'];
+                            $url                        = U('Kpi/public_kpi_standard_rate',array('year'=>$v['year'],'quarter'=>$quarter,'departmentid'=>$departmentid));
                         }
 
                    /* }*/

@@ -2718,7 +2718,7 @@ function get_yw_department(){
         if ($addr) $where['o.destination']      = array('like', $addr.'%');
         if ($kindid) $where['o.kind']           = $kindid;
         if ($saleUids) $where['o.create_user']  = array('in',$saleUids);
-        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+        $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,o.in_dijie,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
         $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         return $op_settlement_list;
     }
@@ -5021,5 +5021,39 @@ function get_unBusinessUsers($departmentid){
     $where['p.position_name']           = array('notlike' , '%S%');
     $users                              = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id = a.position_id','left')->where($where)->field('a.id,a.nickname')->select();
     return $users;
+}
+
+//
+function get_department_settlement_data($departmentid,$startTime,$endTime){
+    $users                              = get_department_account($departmentid);
+    $userids                            = array_column($users,'id');
+    $standard_kind_ids                  = C('STANDARD_PRODUCT_KIND_IDS');
+    $all_settlements_lists              = get_settlement_list($startTime,$endTime,'','','','',$userids);
+    $sum_op_num                         = 0;
+    $standard_op_num                    = 0;
+    $sum_budget                         = 0; //总成本
+    $standard_budget                    = 0; //标准化成本
+    $lists                              = array();
+    foreach ($all_settlements_lists as $v){
+        if (in_array($v['kind'],$standard_kind_ids) && $v['in_dijie'] != 1){ //有标准化产品 && 非内部地接发起团
+            $sum_op_num++;
+            $sum_budget                 += $v['budget'];
+            $lists[]                    = $v;
+            if ($v['standard']==1){ //标准化
+                $standard_op_num++;
+                $standard_budget        += $v['budget'];
+            }
+        }
+
+    }
+
+    $data                               = array();
+    $data['sum_op_num']                 = $sum_op_num;
+    $data['standard_op_num']            = $standard_op_num;
+    $data['sum_budget']                 = $sum_budget;
+    $data['standard_budget']            = $standard_budget;
+    $data['standard_budget_rate']       = (round($data['standard_budget']/$data['sum_budget'],4)*100).'%';
+    $data['lists']                      = $lists;
+    return $data;
 }
 

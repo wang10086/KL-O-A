@@ -2794,6 +2794,24 @@ class KpiController extends BaseController {
         $this->display('kpi_settlement_maoli_up_rate_detail');
     }
 
+    //部门接待实施产品累计标准化率
+    public function public_kpi_standard_rate(){
+        $this->title('部门接待实施产品累计标准化率');
+        $year                               = I('year',date('Y'));
+        $month                              = date('m');
+        $quarter                            = I('quarter',get_quarter($month));
+        $departmentid                       = I('departmentid');
+        $cycle_times                        = get_quarter_cycle_time($year,$quarter);
+        $data                               = get_department_settlement_data($departmentid,$cycle_times['begin_time'],$cycle_times['end_time']);
+
+        $this->kinds                        = M('project_kind')->getField('id,name',true);
+        $this->year                         = $year;
+        $this->quarter                      = $quarter;
+        $this->lists                        = $data['lists'];
+        $this->data                         = $data;
+        $this->display('kpi_standard_rate');
+    }
+
 
     public function aaa(){
         set_after_salary_kpi(201906);
