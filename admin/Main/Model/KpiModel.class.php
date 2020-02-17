@@ -244,6 +244,9 @@ class KpiModel extends Model
         $thisYearPartnerData        = $this->get_partner_profit($thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time']);
         $lastYearPartnerData        = $this->get_partner_profit($lastYearTimeCycle['begin_time'],$lastYearTimeCycle['end_time']);
 
+        //累计已发提成数据
+        $sum_royalty_salary         = $this->get_sum_royalty_salary($year,$userid);
+
         $data                       = array();
         $data['thisYearKxkcSum']    = $kxkcdata['this_year_data']['sum_maoli'];
         $data['lastYearKxkcSum']    = $kxkcdata['last_year_data']['sum_maoli'];
@@ -253,7 +256,9 @@ class KpiModel extends Model
         $data['lastYearPartnerSum'] = $lastYearPartnerData['sum_maoli'];
         $data['partnerUpData']      = $data['thisYearPartnerSum'] - $data['lastYearPartnerSum'];
         $data['partner_bonus']      = round($data['partnerUpData'] * 0.01, 2);
-        $data['quarter_should_royalty'] = $data['kxkc_bonus'] + $data['partner_bonus'];
+        $data['sum_should_royalty'] = $data['kxkc_bonus'] + $data['partner_bonus']; //累计应发奖金
+        $data['sum_royalty_payoff'] = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发奖金
+        $data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
 
         $info                       = array();
         $info['account_id']         = $userid;
@@ -304,8 +309,9 @@ class KpiModel extends Model
         $royaltyData            = $this->get_cpjl_royalty_data($target,$thisYearSumProfit['sum_profit']);
 
         //累计已发提成数据
-        $salary_months          = $this->get_salary_months($year);
-        $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
+        //$salary_months          = $this->get_salary_months($year);
+        //$sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
+        $sum_royalty_salary     = $this->get_sum_royalty_salary($year,$userid);
 
         $data                   = array();
         $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
@@ -514,8 +520,9 @@ class KpiModel extends Model
         $quarter_settlement_lists = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],'',$userid);
 
         //累计已发操作奖金
-        $salary_months          = $this->get_salary_months($year);
-        $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
+        //$salary_months          = $this->get_salary_months($year);
+        //$sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
+        $sum_royalty_salary     = $this->get_sum_royalty_salary($year,$userid);
 
         $data                   = array();
         $data['complete']       = $quarter_settlement_lists ? array_sum(array_column($quarter_settlement_lists,'maoli')) : 0; //当季度业绩
@@ -556,7 +563,7 @@ class KpiModel extends Model
         //业绩提成
         $royaltyData            = $this -> get_royalty_data($target , $sum_maoli , $sum_partner_money);
 
-        //累计已发放提成	当季度发放提成
+        //业务岗累计已发放提成	当季度发放提成
         $salary_months          = $this->get_salary_months($year);
         $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('total');
 
@@ -731,6 +738,13 @@ class KpiModel extends Model
         $data['salary_year_months'] = $year_arr;
         $data['quarterRoyalty_months'] = $quarterRoyalty_arr;
         return $data;
+    }
+
+    //获取累计已发提成数据(非业务岗奖金)
+    private function get_sum_royalty_salary($year,$userid){
+        $salary_months              = $this->get_salary_months($year);
+        $sum_royalty_salary         = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
+        return $sum_royalty_salary;
     }
 
 }
