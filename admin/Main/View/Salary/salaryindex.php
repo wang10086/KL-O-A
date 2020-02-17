@@ -31,7 +31,7 @@
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                
+
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:8px;">
                                         <tr role="row" class="orders" >
                                             <th class="sorting" data="">ID</th>
@@ -127,7 +127,8 @@
     }
     function Atime(y,m,d){
 
-        if(d < 16){
+        //if(d < 16){
+        if(d < 25){
             if(m==1){
                 m=13;
             }
