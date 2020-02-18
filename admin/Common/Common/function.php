@@ -3470,14 +3470,31 @@ function updatekpi($month,$user,$year=''){
                         //238 单进院所业务月度累计毛利额-资源专员
                         //247 单进院所业务月度累计毛利额-资源管理经理
                         if (in_array($v['quota_id'],array(234,242,238,247))){
-                            $start_time             = get_year_settlement_start_time($v['year']);
-                            $end_time               = $v['end_date'];
-                            $data                   = get_gross_profit_op($v['user_id'],$start_time,$end_time);
-                            $profit                 = $data['sum_profit']; //累计完成毛利
-                            $target                 = $v['target']; //目标
-                            $complete               = $profit;
+                            if ($v['user_id'] == 234){ // 马娜   具体指非标准化产品线路发布人和标准化产品研发设计人为马娜的项目毛利
+                                $start_time             = get_year_settlement_start_time($v['year']);
+                                $end_time               = $v['end_date'];
+                                $data                   = get_cpjl_gross_profit_op($v['user_id'],$start_time,$end_time);
+                                /*$profit                 = $data['sum_profit']; //累计完成毛利
+                                $target                 = $v['target']; //目标
+                                $complete               = $profit;
 
-                            $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
+                                $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));*/
+
+
+
+
+                                $complete               = $data['sum_profit'];
+                                $url                    = '';
+                            }else{
+                                $start_time             = get_year_settlement_start_time($v['year']);
+                                $end_time               = $v['end_date'];
+                                $data                   = get_gross_profit_op($v['user_id'],$start_time,$end_time);
+                                $profit                 = $data['sum_profit']; //累计完成毛利
+                                $target                 = $v['target']; //目标
+                                $complete               = $profit;
+
+                                $url                    = U('Kpi/public_kpi_profit',array('year'=>$v['year'],'uid'=>$v['user_id'],'st'=>$start_time,'et'=>$end_time,'tg'=>$target));
+                            }
                         }
 
                         //顾客满意度-产品经理

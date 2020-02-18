@@ -5057,3 +5057,38 @@ function get_department_settlement_data($departmentid,$startTime,$endTime){
     return $data;
 }
 
+/**
+ * 获取产品经理业绩结算毛利数据
+ * @param $uid
+ * @param $start_time
+ * @param $end_time
+ */
+function get_cpjl_gross_profit_op($uid,$startTime,$endTime){
+    $standardProductIds                     = M('producted')->where(array('auth_id'=>$uid,'audit_status'=>1))->getField('id',true); //其研发的标准化产品ID
+    $lineIds                                = M('product_line')->where(array('input_user'=>$uid,'audit_status'=>1))->getField('id',true); //其上传的线路ID
+
+    //其研发的标准化的团
+    $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.kind,o.standard,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+    $where                                  = array();
+    $where['b.audit_status']                = 1;
+    $where['l.req_type']                    = 801;
+    $where['l.audit_time']                  = array('between', "$startTime,$endTime");
+    $where['o.standard']                    = 1; //标准化
+    $where['o.producted_id']                = array('in',$standardProductIds);
+    $standard_op_lists                      = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+
+    //使用其上传的线路的团
+    $where                                  = array();
+    $where['b.audit_status']                = 1;
+    $where['l.req_type']                    = 801;
+    $where['l.audit_time']                  = array('between', "$startTime,$endTime");
+    $where['o.standard']                    = array('neq',1); //非标准化
+    $where['o.line_id']                     = array('in',$lineIds);
+    $line_op_lists                          = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+    $lists                                  = array_merge((array)$standard_op_lists,(array)$line_op_lists);
+    $data                                   = array();
+    $data['sum_profit']                     = array_sum(array_column($lists,'maoli'));
+    $data['lists']                          = $lists;
+    return $data;
+}
+
