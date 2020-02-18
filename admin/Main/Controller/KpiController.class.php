@@ -1424,7 +1424,7 @@ class KpiController extends BaseController {
         $mod                    = D('Kpi');
 		$encourage_type         = $mod->get_encourage_type($user);
         $encourage_data         = $mod -> get_encourage_data($encourage_type,$user,$year,$month,$userinfo);
-        if ($encourage_type) { save_encourage_data($year,$month,$encourage_data['info']); }
+        if ($encourage_type && $encourage_data['info']) { save_encourage_data($year,$month,$encourage_data['info']); }
 
 
 		//操作记录

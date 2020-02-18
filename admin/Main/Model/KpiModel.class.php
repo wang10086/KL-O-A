@@ -208,6 +208,8 @@ class KpiModel extends Model
             $num = 5;
         }elseif (in_array($userinfo['postid'],array(66))) { // 66=>市场部经理
             $num = 6;
+        }elseif (in_array($userinfo['postid'],array(79))) { // 79=>京区业务中心研发主管
+            $num = 7;
         }
         return $num;
     }
@@ -226,6 +228,8 @@ class KpiModel extends Model
             $data = $this->get_yfcpjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==6) { // 市场部经理
             $data = $this->get_scbjl_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type ==7) { //京区业务中心研发主管
+            $data = '';
         }
         return $data;
     }
