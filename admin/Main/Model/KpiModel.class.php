@@ -229,8 +229,21 @@ class KpiModel extends Model
         }elseif ($encourage_type ==6) { // 市场部经理
             $data = $this->get_scbjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==7) { //京区业务中心研发主管
-            $data = '';
+            $data = $this->get_jqyfzg_encourage_data($userid, $year, $month);
         }
+        return $data;
+    }
+
+    //京区研发主管激励机制数据
+    public function get_jqyfzg_encourage_data($userid, $year, $month){
+        $department_encourage_data  = $this->get_ywbmjl_encourage_data($userid, $year, $month);
+        $data                       = array();
+        $data['department_royalty'] = $department_encourage_data['departmentBonus'];
+        $data['quarter_should_royalty'] = round($department_encourage_data['departmentBonus']*0.1,2);
+        $info                       = array();
+        $info['account_id']         = $userid;
+        $info['sum']                = $data['quarter_should_royalty'];
+        $data['info']               = $info;
         return $data;
     }
 

@@ -15,7 +15,7 @@
 
                     </tr>
                     <tr>
-                        <td class="taskOptions"></td>
+                        <td class="taskOptions">{$encourage_data.department_royalty}</td>
                         <td class="taskOptions">{$encourage_data.quarter_should_royalty}</td>
                     </tr>
                 </table>
