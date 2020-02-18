@@ -5068,7 +5068,7 @@ function get_cpjl_gross_profit_op($uid,$startTime,$endTime){
     $lineIds                                = M('product_line')->where(array('input_user'=>$uid,'audit_status'=>1))->getField('id',true); //其上传的线路ID
 
     //其研发的标准化的团
-    $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.kind,o.standard,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+    $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.kind,o.standard,o.sale_user,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
     $where                                  = array();
     $where['b.audit_status']                = 1;
     $where['l.req_type']                    = 801;

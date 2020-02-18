@@ -2532,7 +2532,7 @@ class KpiController extends BaseController {
         $startTime                          = I('st');
         $endTime                            = I('et');
         $target                             = I('tg',0);
-        $data                               = get_gross_profit_op($uid,$startTime,$endTime);
+        $data                               = $uid == 234 ? get_cpjl_gross_profit_op($uid,$startTime,$endTime) : get_gross_profit_op($uid,$startTime,$endTime);
         $lists                              = $data['lists'];
         $profit                             = $data['sum_profit']; //累计完成毛利
         $complete                           = $target ? (round($profit/$target,4)*100).'%' : '100%';
