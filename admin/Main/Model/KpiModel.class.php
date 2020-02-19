@@ -262,13 +262,13 @@ class KpiModel extends Model
         $data['thisYearProfit']     = $thisYearProfit;
         $data['profitUpData']       = $data['thisYearProfit'] - $data['lastYearProfit'];
         $data['sum_should_royalty'] = round($data['profitUpData'] * 0.01,2); //累计应发奖励
-        //$data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
-        //$data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
+        $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+        $data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
 
         $info                       = array();
         $info['account_id']         = $userid;
         $info['sum']                = $data['quarter_should_royalty'];
-        //$data['info']               = $info;
+        $data['info']               = $info;
         return $data;
     }
 
