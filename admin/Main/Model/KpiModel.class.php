@@ -318,9 +318,16 @@ class KpiModel extends Model
         $lastYearQuarterCycle   = get_quarter_cycle_time($year-1,$quarter); //上年当季度周期
         $thisYearQuarterCycle   = get_quarter_cycle_time($year,$quarter); //本年当季度周期
         $thisYearCycle          = get_year_cycle($year); //年度累计周期
-        $lastYearQuarterProfit  = get_gross_profit_op($userid,$lastYearQuarterCycle['begin_time'],$lastYearQuarterCycle['end_time']); //上年当季度结算毛利
-        $thisYearQuarterProfit  = get_gross_profit_op($userid,$thisYearQuarterCycle['begin_time'],$thisYearQuarterCycle['end_time']); //当年当季度结算毛利
-        $thisYearSumProfit      = get_gross_profit_op($userid,$thisYearCycle['beginTime'],$thisYearQuarterCycle['end_time']); //当年累计至当季度结算毛利
+
+        if ($userid == 234){ // 马娜   具体指非标准化产品线路发布人和标准化产品研发设计人为马娜的项目毛利
+            $lastYearQuarterProfit  = get_cpjl_gross_profit_op($userid,$lastYearQuarterCycle['begin_time'],$lastYearQuarterCycle['end_time']); //上年当季度结算毛利
+            $thisYearQuarterProfit  = get_cpjl_gross_profit_op($userid,$thisYearQuarterCycle['begin_time'],$thisYearQuarterCycle['end_time']); //当年当季度结算毛利
+            $thisYearSumProfit      = get_cpjl_gross_profit_op($userid,$thisYearCycle['beginTime'],$thisYearQuarterCycle['end_time']); //当年累计至当季度结算毛利
+        }else{
+            $lastYearQuarterProfit  = get_gross_profit_op($userid,$lastYearQuarterCycle['begin_time'],$lastYearQuarterCycle['end_time']); //上年当季度结算毛利
+            $thisYearQuarterProfit  = get_gross_profit_op($userid,$thisYearQuarterCycle['begin_time'],$thisYearQuarterCycle['end_time']); //当年当季度结算毛利
+            $thisYearSumProfit      = get_gross_profit_op($userid,$thisYearCycle['beginTime'],$thisYearQuarterCycle['end_time']); //当年累计至当季度结算毛利
+        }
 
         //业绩提成
         $royaltyData            = $this->get_cpjl_royalty_data($target,$thisYearSumProfit['sum_profit']);
@@ -360,8 +367,8 @@ class KpiModel extends Model
                 $royalty10          += 0;
                 break;
             case $sum_maoli > $target && $sum_maoli <= $target*2:
-                $royalty5           += 0;
-                $royalty10          += ($sum_maoli - $target)*0.05;
+                $royalty5           += ($sum_maoli - $target)*0.05;
+                $royalty10          += 0;
                 break;
             case $sum_maoli > $target*2:
                 $royalty5           += ($target*2 - $target)*0.05;
