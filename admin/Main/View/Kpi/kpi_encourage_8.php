@@ -19,11 +19,11 @@
 
                     </tr>
                     <tr>
-                        <td class="taskOptions">{$encourage_data.}</td>
-                        <td class="taskOptions">{$encourage_data.}</td>
-                        <td class="taskOptions">{$encourage_data.}</td>
-                        <td class="taskOptions">{$encourage_data.}</td>
-                        <td class="taskOptions">{$encourage_data.}</td>
+                        <td class="taskOptions">{$encourage_data.lastYearProfit}</td>
+                        <td class="taskOptions">{$encourage_data.thisYearProfit}</td>
+                        <td class="taskOptions">{$encourage_data.profitUpData}</td>
+                        <td class="taskOptions">{$encourage_data.sum_should_royalty}</td>
+                        <td class="taskOptions">{$encourage_data.sum_royalty_payoff}</td>
                         <td class="taskOptions">{$encourage_data.quarter_should_royalty}</td>
                     </tr>
                 </table>

@@ -233,7 +233,42 @@ class KpiModel extends Model
             $data = $this->get_scbjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==7) { //京区业务中心研发主管
             $data = $this->get_jqyfzg_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type ==8) { // 研发部经理
+            $data = $this->get_yfbjl_encourage_data($userid, $year, $month);
         }
+        return $data;
+    }
+
+    //研发部经理激励机制数据
+    public function get_yfbjl_encourage_data($userid, $year, $month){
+
+        //研发部产品经理
+        $postid                     = 29; //研发部产品经理
+        $cpjls                      = M('account')->where(array('postid'=>$postid))->getField('id,nickname',true);
+
+        $lastYearProfit             = 0; //去年累计毛利
+        $thisYearProfit             = 0; //今年累计毛利
+        foreach ($cpjls as $k => $v){
+            $yfcpjl                 = $this->get_yfcpjl_encourage_data($k, $year, $month);
+            $lastYearProfit         += $yfcpjl['lastYearProfit'];
+            $thisYearProfit         += $yfcpjl['thisYearProfit'];
+        }
+
+        //累计已发提成数据
+        $sum_royalty_salary         = $this->get_sum_royalty_salary($year,$userid);
+
+        $data                       = array();
+        $data['lastYearProfit']     = $lastYearProfit;
+        $data['thisYearProfit']     = $thisYearProfit;
+        $data['profitUpData']       = $data['thisYearProfit'] - $data['lastYearProfit'];
+        $data['sum_should_royalty'] = round($data['profitUpData'] * 0.01,2); //累计应发奖励
+        //$data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+        //$data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
+
+        $info                       = array();
+        $info['account_id']         = $userid;
+        $info['sum']                = $data['quarter_should_royalty'];
+        //$data['info']               = $info;
         return $data;
     }
 
