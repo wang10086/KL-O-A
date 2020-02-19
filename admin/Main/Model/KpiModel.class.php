@@ -210,6 +210,9 @@ class KpiModel extends Model
             $num = 6;
         }elseif (in_array($userinfo['postid'],array(79))) { // 79=>京区业务中心研发主管
             $num = 7;
+        }elseif (in_array($userinfo['postid'],array(36))) { // 36=>研发部经理,秦鸣
+            $num = 8;
+
         }
         return $num;
     }
