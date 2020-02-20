@@ -212,6 +212,8 @@ class KpiModel extends Model
             $num = 7;
         }elseif (in_array($userinfo['postid'],array(36))) { // 36=>研发部经理,秦鸣
             $num = 8;
+        }elseif (in_array($userinfo['postid'],array(70))) { // 70=>资源管理部经理，李徵红
+            $num = 9;
 
         }
         return $num;
@@ -235,6 +237,8 @@ class KpiModel extends Model
             $data = $this->get_jqyfzg_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==8) { // 研发部经理
             $data = $this->get_yfbjl_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type ==9){ // 资源管理部经理
+            $data = '';
         }
         return $data;
     }
