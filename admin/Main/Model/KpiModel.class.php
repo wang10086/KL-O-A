@@ -238,14 +238,72 @@ class KpiModel extends Model
         }elseif ($encourage_type ==8) { // 研发部经理
             $data = $this->get_yfbjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==9){ // 资源管理部经理
-            $data = '';
+            $data = $this->get_zybjl_encourage_data($userid, $year, $month);
         }
         return $data;
     }
 
+    //资源管理部经理激励机制数据
+    public function get_zybjl_encourage_data($userid, $year, $month){
+        $quarter                    = get_quarter($month);
+        $thisYearTimeCycle          = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
+        $lastYearTimeCycle          = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
+
+        //求本周所有结算的团
+        $thisYearOpLists            = get_settlement_list($thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time']);
+        $lastYearOpLists            = get_settlement_list($lastYearTimeCycle['begin_time'],$lastYearTimeCycle['end_time']);
+        $thisYearOpids              = array_column($thisYearOpLists,'op_id');
+        $lastYearOpids              = array_column($lastYearOpLists,'op_id');
+
+        //求本周期结算的团结算列表中包含"研究所台站"的项目
+        $thisYearResSettLists       = $this->get_res_settlement_lists($thisYearOpids);
+        $lastYearResSettLists       = $this->get_res_settlement_lists($lastYearOpids);
+        $thisYearResSettOpids       = array_column($thisYearResSettLists,'op_id');
+        $lastYearResSettOpids       = array_column($lastYearResSettLists,'op_id');
+
+        $thisYearProfit             = $this->get_ok_sett_sum_maoli($thisYearOpLists,$thisYearResSettOpids);
+        $lastYearProfit             = $this->get_ok_sett_sum_maoli($lastYearOpLists,$lastYearResSettOpids);
+
+        //累计已发提成数据
+        $sum_royalty_salary         = $this->get_sum_royalty_salary($year,$userid);
+
+        $data                       = array();
+        $data['lastYearProfit']     = $lastYearProfit;
+        $data['thisYearProfit']     = $thisYearProfit;
+        $data['profitUpData']       = $data['thisYearProfit'] - $data['lastYearProfit'];
+        //$data['sum_should_royalty'] = round($data['profitUpData'] * 0.01,2); //累计应发奖励
+        //$data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+        //$data['quarter_should_royalty'] = $data['sum_should_royalty'] - $data['sum_royalty_payoff'];
+
+        $info                       = array();
+        $info['account_id']         = $userid;
+        $info['sum']                = $data['quarter_should_royalty'];
+        //$data['info']               = $info;
+        return $data;
+    }
+
+    private function get_ok_sett_sum_maoli($sett_lists,$opids){
+        $sum_maoli                  = 0;
+        foreach ($sett_lists as $k=>$v){
+            if (in_array($v['op_id'],$opids)){
+                $sum_maoli          += $v['maoli'];
+            }
+        }
+        return $sum_maoli;
+    }
+
+    //获取结算列表中包含"研究所台站"的项目
+    private function get_res_settlement_lists($opids){
+        $where                      = array();
+        $where['status']            = 2; //结算
+        $where['type']              = 6; //研究所台站
+        $where['op_id']             = array('in',$opids);
+        $lists                      = M('op_costacc')->where($where)->group('op_id')->select();
+        return $lists;
+    }
+
     //研发部经理激励机制数据
     public function get_yfbjl_encourage_data($userid, $year, $month){
-
         //研发部产品经理
         $postid                     = 29; //研发部产品经理
         $cpjls                      = M('account')->where(array('postid'=>$postid))->getField('id,nickname',true);
