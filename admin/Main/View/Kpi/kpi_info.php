@@ -132,9 +132,9 @@
                             <?php } ?>
 
                             <?php if ($encourage_type == 1){ ?>
-                                <include file="kpi_encourage_yw" />
+                                <include file="kpi_encourage_1" />
                             <?php }elseif ($encourage_type == 2){ ?>
-                                <include file="kpi_encourage_jd" />
+                                <include file="kpi_encourage_2" />
                             <?php }elseif ($encourage_type == 3){ ?>
                                 <include file="kpi_encourage_3" />
                             <?php }elseif ($encourage_type == 4){ ?>
@@ -149,6 +149,8 @@
                                 <include file="kpi_encourage_8" />
                             <?php }elseif ($encourage_type == 9){ ?>
                                 <include file="kpi_encourage_9" />
+                            <?php }elseif ($encourage_type == 10){ ?>
+                                <include file="kpi_encourage_10" />
                             <?php } ?>
 
                             <div class="box box-warning">
