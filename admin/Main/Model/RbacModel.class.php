@@ -81,14 +81,16 @@
          * @param $months
          * @param int $departments
          * @param int $userType 1=>求员工人数 , 排除名字中带1的, 0=>求费用信息,不排除名字中带1的数据
+         * @param array $uids
          * @return array
          */
-        public function get_staff_data($months,$departments=0,$userType=0){
+        public function get_staff_data($months,$departments=0,$userType=0,$uids=''){
             $where                      = array();
             if ($departments != 0){ $where['a.departmentid'] = array('in',$departments); }
             $where['s.datetime']        = array('in',$months);
             $where['s.status']          = 4;
             if ($userType==1) $where['s.user_name'] = array('notlike','%1');
+            if ($uids) $where['s.account_id']       = array('in',$uids);
             $field                      = 's.*,a.position_id,d.bonusType,p.position_name,p.code,b.extract,b.foreign_bonus,b.annual_bonus,sub.housing_subsidy,sub.foreign_subsidies,sub.computer_subsidy';
             $lists                      = M()->table('__SALARY_WAGES_MONTH__ as s')
                                             ->join('__ACCOUNT__ as a on a.id=s.account_id','left')
@@ -102,7 +104,7 @@
             $month_num                  = count(array_unique(array_column($lists,'datetime')));
             $data                       = array();
             $data['avg_num']            = $month_num ? round(count($lists)/$month_num,2) : 0;
-            $data['uids']               = implode(',',array_column($lists,'account_id'));
+            $data['uids']               = implode(',',array_unique(array_column($lists,'account_id')));  //////////////////
             $data['list']               = $lists;
             return $data;
         }
@@ -218,12 +220,19 @@
             $data                               = array();
             foreach ($department_info as $k => $v){
                 $staff_data                     = $this->get_staff_data($months,$v); //员工人数
-                $post_salary[$k]                = $this->get_post_salary($staff_data['list'])['salary']; //岗位薪酬
+                $salary_data                    = $this->get_post_salary($staff_data['list']);
+                /*$post_salary[$k]                = $this->get_post_salary($staff_data['list'])['salary']; //岗位薪酬
                 $bonus[$k]                      = $this->get_post_salary($staff_data['list'])['bonus']; //奖金
                 $subsidy[$k]                    = $this->get_post_salary($staff_data['list'])['subsidy']; //补助
                 $insurance[$k]                  = $this->get_post_salary($staff_data['list'])['insurance']; //公司五险一金
                 $sum[$k]                        = $this->get_post_salary($staff_data['list'])['sum']; //合计
-                $uids[$k]                       = $this->get_post_salary($staff_data['list'])['uids'];
+                $uids[$k]                       = $this->get_post_salary($staff_data['list'])['uids'];*/
+                $post_salary[$k]                = $salary_data['salary']; //岗位薪酬
+                $bonus[$k]                      = $salary_data['bonus']; //奖金
+                $subsidy[$k]                    = $salary_data['subsidy']; //补助
+                $insurance[$k]                  = $salary_data['insurance']; //公司五险一金
+                $sum[$k]                        = $salary_data['sum']; //合计
+                $uids[$k]                       = $salary_data['uids'];
             }
 
             $data['postSalary']                 = $post_salary;

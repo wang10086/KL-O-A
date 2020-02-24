@@ -6020,3 +6020,22 @@ function get_init_year(){
     if ($md > 1225){ $year += 1; }
     return $year;
 }
+
+//获取机关部门人员信息(不包含总经办人员)
+function get_jiguan_no_manager_users(){
+    $departmentIds          = C('JiGuanNoManagerDepartmentIds');
+    $users                  = M('account')->where(array('departmentid'=>array('in',$departmentIds)))->field('id,nickname,departmentid')->select();
+    $shichangUsers          = get_shichang_no_business_users(); //市场部非业务岗人员信息
+    $users                  = array_merge((array)$users,(array)$shichangUsers);
+    return $users;
+}
+
+//获取市场部非业务人员信息
+function get_shichang_no_business_users(){
+    $shichang_dep               = 2; //市场部ID
+    $where                      = array();
+    $where['a.departmentid']    = $shichang_dep;
+    $where['p.position_name']   = array('notlike','%S%');
+    $shichang_users             = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id = a.position_id','left')->where($where)->field('a.id,a.nickname,a.departmentid')->select();
+    return $shichang_users;
+}
