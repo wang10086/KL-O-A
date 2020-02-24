@@ -29,8 +29,8 @@
                     </tr>
                     <tr>
                         <td class="taskOptions">{$year - 1}年</td>
-                        <td class="taskOptions">①{$encourage_data.}</td>
-                        <td class="taskOptions" rowspan="2">③{$encourage_data.}</td>
+                        <td class="taskOptions">{$encourage_data.lastYearProfit}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.profit_up_rate}</td>
                         <td class="taskOptions">④{$encourage_data.}</td>
                         <td class="taskOptions" rowspan="2">⑥{$encourage_data.}</td>
                         <td class="taskOptions" rowspan="2">⑦{$encourage_data.}</td>
@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td class="taskOptions">{$year}年</td>
-                        <td class="taskOptions">②{$encourage_data.}</td>
+                        <td class="taskOptions">{$encourage_data.thisYearProfit}</td>
                         <td class="taskOptions">⑤{$encourage_data.}</td>
                     </tr>
                 </table>

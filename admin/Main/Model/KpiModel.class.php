@@ -249,7 +249,35 @@ class KpiModel extends Model
 
     //人资综合部经理激励机制数据
     public function get_rzzhbjl_encourage_data($userid, $year, $month){
+        /**
+         * $quarter                        = get_quarter($month);
+        $quarter_cycle                  = get_quarter_cycle_time($year,$quarter);
+        $year_cycle                     = get_year_cycle($year);
+        $departmentData                 = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$userid))->field('d.id,d.department')->find();
 
+        //累计人力成本 + 公司五险一金增量
+        $rbacMod                        = D('Rbac');
+        $lastYearMonths                 = get_to_now_months($year-1,$month);
+        $thisYearMonths                 = get_to_now_months($year,$month);
+        $lastSumHrCostData              = $rbacMod -> get_sum_hr_cost($lastYearMonths); //今年累计人力成本
+        $thisSumHrCostData              = $rbacMod -> get_sum_hr_cost($thisYearMonths); //今年累计人力成本
+        $lastHrCost                     = $lastSumHrCostData['sum'][$departmentData['department']]; // 上一年累计人力成本
+        $thisHrCost                     = $thisSumHrCostData['sum'][$departmentData['department']]; // 当年累计人力成本
+        $lastFiveRisksOneFund           = $lastSumHrCostData['insurance'][$departmentData['department']]['sum']; //上一年累计五险一金
+        $thisFiveRisksOneFund           = $thisSumHrCostData['insurance'][$departmentData['department']]['sum']; //当年累计五险一金
+         */
+        $quarter                    = get_quarter($month);
+        $thisYearTimeCycle          = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
+        $lastYearTimeCycle          = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
+
+        //毛利数据
+        $maoliData                  = get_settlement_maoli_up_rate($year,$quarter);
+
+        $data                       = array();
+        $data['lastYearProfit']     = $maoliData['last_year_data']['sum_maoli'];
+        $data['thisYearProfit']     = $maoliData['this_year_data']['sum_maoli'];
+        $data['profit_up_rate']     = $maoliData['up_rate'];
+        return $data;
     }
 
     //资源管理部经理激励机制数据
