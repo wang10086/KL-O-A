@@ -5092,3 +5092,24 @@ function get_cpjl_gross_profit_op($uid,$startTime,$endTime){
     return $data;
 }
 
+/**
+ * 获取某一项KPI指标的目标值
+ * @param $uid
+ * @param $year
+ * @param $month
+ * @param $quota_id
+ */
+function get_profit_up_rate_target($uid,$year,$month,$quota_id){
+    $list                                   = M('kpi_more')->where(array('user_id'=>$uid,'month'=>array('like','%'.$year.$month.'%'),'quota_id'=>$quota_id))->find();
+    $target                                 = $list['target'];
+    $target_arr                             = str_split($target);
+    if (in_array('%',$target_arr)){
+        $target_float                       = (str_replace('%','',$target))/100;
+    }
+
+    $data                                   = array();
+    $data['target']                         = $target ? $target : '';
+    $data['target_float']                   = $target_float ? $target_float : 0;
+    return $data;
+}
+
