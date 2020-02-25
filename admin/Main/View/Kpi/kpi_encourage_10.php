@@ -34,10 +34,10 @@
                         <td class="taskOptions">{$encourage_data.lastYearHrCost}</td>
                         <td class="taskOptions" rowspan="2">{$encourage_data.shouldHrCost}</td>
                         <td class="taskOptions" rowspan="2">{$encourage_data.Insurance_up_data}</td>
-                        <td class="taskOptions" rowspan="2">⑧{$encourage_data.}</td>
-                        <td class="taskOptions" rowspan="2">⑨{$encourage_data.}</td>
-                        <td class="taskOptions" rowspan="2">⑩{$encourage_data.}</td>
-                        <td class="taskOptions" rowspan="2">⑪{$encourage_data.}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.jiguan_bonus}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.jiguan_sum_salary_bag}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.totalSalaryBagLeftOver}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.satisfaction_weight}</td>
                         <td class="taskOptions" rowspan="2">⑫{$encourage_data.}</td>
                         <td class="taskOptions" rowspan="2">⑬{$encourage_data.}</td>
                         <td class="taskOptions" rowspan="2">⑭{$encourage_data.}</td>

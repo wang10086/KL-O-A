@@ -249,26 +249,9 @@ class KpiModel extends Model
 
     //人资综合部经理激励机制数据
     public function get_rzzhbjl_encourage_data($userid, $year, $month){
-        /**
-         * $quarter                        = get_quarter($month);
-        $quarter_cycle                  = get_quarter_cycle_time($year,$quarter);
-        $year_cycle                     = get_year_cycle($year);
-        $departmentData                 = M()->table('__ACCOUNT__ as a')->join('__SALARY_DEPARTMENT__ as d on d.id=a.departmentid','left')->where(array('a.id'=>$userid))->field('d.id,d.department')->find();
-
-        //累计人力成本 + 公司五险一金增量
-        $rbacMod                        = D('Rbac');
-        $lastYearMonths                 = get_to_now_months($year-1,$month);
-        $thisYearMonths                 = get_to_now_months($year,$month);
-        $lastSumHrCostData              = $rbacMod -> get_sum_hr_cost($lastYearMonths); //今年累计人力成本
-        $thisSumHrCostData              = $rbacMod -> get_sum_hr_cost($thisYearMonths); //今年累计人力成本
-        $lastHrCost                     = $lastSumHrCostData['sum'][$departmentData['department']]; // 上一年累计人力成本
-        $thisHrCost                     = $thisSumHrCostData['sum'][$departmentData['department']]; // 当年累计人力成本
-        $lastFiveRisksOneFund           = $lastSumHrCostData['insurance'][$departmentData['department']]['sum']; //上一年累计五险一金
-        $thisFiveRisksOneFund           = $thisSumHrCostData['insurance'][$departmentData['department']]['sum']; //当年累计五险一金
-         */
         $quarter                        = get_quarter($month);
         $thisYearTimeCycle              = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
-        $lastYearTimeCycle              = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
+        //$lastYearTimeCycle              = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
 
         //毛利数据
         $maoliData                      = get_settlement_maoli_up_rate($year,$quarter);
@@ -287,27 +270,62 @@ class KpiModel extends Model
         $lastYearSalary_data            = $rbacMod->get_post_salary($lastYearSalaryLists);
         $thisYearSalary_data            = $rbacMod->get_post_salary($thisYearSalaryLists);
         //上一年
-        $lastYearPost_salary_sum        = $lastYearSalary_data['salary']; //岗位薪酬
-        $lastYearBonus_sum              = $lastYearSalary_data['bonus']; //奖金
-        $lastYearSubsidy_sum            = $lastYearSalary_data['subsidy']; //补助
+        //$lastYearPost_salary_sum        = $lastYearSalary_data['salary']; //岗位薪酬
+        //$lastYearBonus_sum              = $lastYearSalary_data['bonus']; //奖金
+        //$lastYearSubsidy_sum            = $lastYearSalary_data['subsidy']; //补助
         $lastYearInsurance_sum          = $lastYearSalary_data['insurance']; //公司五险一金
-        $lastYearSum                    = $lastYearSalary_data['sum']; //合计
+        //$lastYearSum                    = $lastYearSalary_data['sum']; //合计
         //当年
-        $thisYearPost_salary_sum        = $thisYearSalary_data['salary']; //岗位薪酬
-        $thisYearBonus_sum              = $thisYearSalary_data['bonus']; //奖金
-        $thisYearSubsidy_sum            = $thisYearSalary_data['subsidy']; //补助
+        //$thisYearPost_salary_sum        = $thisYearSalary_data['salary']; //岗位薪酬
+        //$thisYearBonus_sum              = $thisYearSalary_data['bonus']; //奖金
+        //$thisYearSubsidy_sum            = $thisYearSalary_data['subsidy']; //补助
         $thisYearInsurance_sum          = $thisYearSalary_data['insurance']; //公司五险一金
-        $thisYearSum                    = $thisYearSalary_data['sum']; //合计
+        //$thisYearSum                    = $thisYearSalary_data['sum']; //合计
 
+        //机关奖金包
+        $departmentid                   = M('account')->where(array('id'=>$userid))->getField('departmentid');
+        $jiguan_bonus                   = $this->get_departmentBonus($thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time'],$departmentid);
+        $satisfaction_weight            = $this->get_jiguan_satisfaction_weight($userid,$year,$month); //本部门经理内部满意度权重 = 本部门经理KPI中的内部满意度 / 所有机关部门经理KPI中的内部满意度之和 * 100%
 
+        $data                           = array();
+        $data['lastYearProfit']         = $maoliData['last_year_data']['sum_maoli'];
+        $data['thisYearProfit']         = $maoliData['this_year_data']['sum_maoli'];
+        $data['profit_up_rate']         = $maoliData['up_rate'];
+        $data['lastYearHrCost']         = $lastYearSalary_data['sum'];
+        $data['thisYearHrCost']         = $thisYearSalary_data['sum'];
+        $data['shouldHrCost']           = round($lastYearSalary_data['sum'] * (1 + ($maoliData['up_rate_float']/2)),2);  //当年度机关累计人力成本额度 = 上年机关累计发生人力成本 * (1 + 累计毛利增长比率/2)
+        $data['Insurance_up_data']      = $thisYearInsurance_sum['sum'] - $lastYearInsurance_sum['sum']; //公司五险一金增量
+        $data['jiguan_bonus']           = $jiguan_bonus; //机关奖金包
+        $data['jiguan_sum_salary_bag']  = $data['shouldHrCost'] + $data['Insurance_up_data'] + $data['jiguan_bonus']; //当年机关季度累计薪酬包 = 当年度机关累计人力成本额度 + 机关五险一金增量 + 机关奖金包
+        $data['totalSalaryBagLeftOver'] = $data['jiguan_sum_salary_bag'] - $data['thisYearHrCost']; //当年机关季度累计薪酬包结余 = 当年机关季度累计薪酬包 - 机关累计发生人力成本(当年)
+        $data['satisfaction_weight']    = $satisfaction_weight['weigh_str']; //本部门经理内部满意度权重
+        return $data;
+    }
+
+    /**
+     * 获取本部门经理内部满意度权重(机关部门经理)
+     * 本部门经理内部满意度权重 = 本部门经理KPI中的内部满意度 / 所有机关部门经理KPI中的内部满意度之和 * 100%
+     * @param $userid
+     * @param $year
+     * @param $month
+     * @return array
+     */
+    private function get_jiguan_satisfaction_weight($userid,$year,$month){
+        $manager_uids               = array(12,13,26,39,55,77,204); //机关部门经理 12=>秦鸣,13=>杜莹,26=>李岩,39=>孟华,55=>程小平,77=>王茜,204=>李徵红
+        $yearMonths                 = get_sum_months($year,$month,2);
+        $satisfaction_lists         = M('satisfaction')->where(array('account_id'=>array('in',$manager_uids),'monthly'=>array('in',$yearMonths)))->select();
+        $userscore                  = 0;
+        $sumscore                   = 0;
+        foreach ($satisfaction_lists as $v){
+            if ($v['account_id'] == $userid){
+                $userscore          += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'] + $v['FF'];
+            }
+            $sumscore               += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'] + $v['FF'];
+        }
+        $weight                     = round($userscore/$sumscore,4);
         $data                       = array();
-        $data['lastYearProfit']     = $maoliData['last_year_data']['sum_maoli'];
-        $data['thisYearProfit']     = $maoliData['this_year_data']['sum_maoli'];
-        $data['profit_up_rate']     = $maoliData['up_rate'];
-        $data['lastYearHrCost']     = $lastYearSalary_data['sum'];
-        $data['thisYearHrCost']     = $thisYearSalary_data['sum'];
-        $data['shouldHrCost']       = round($lastYearSalary_data['sum'] * (1 + ($maoliData['up_rate_float']/2)),2);  //当年度机关累计人力成本额度 = 上年机关累计发生人力成本 * (1 + 累计毛利增长比率/2)
-        $data['Insurance_up_data']  = $thisYearInsurance_sum['sum'] - $lastYearInsurance_sum['sum']; //公司五险一金增量
+        $data['weigh_str']          = ($weight*100).'%';
+        $data['weigh_floot']        = $weight;
         return $data;
     }
 
