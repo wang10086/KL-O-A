@@ -5004,7 +5004,8 @@ function user_table($where,$type=''){//查询用户 1 查询一个 2 查询符�
     function datetime($time_Y,$time_M,$time_D,$type){//获取年月日
 
         if($type==1){
-            if($time_D < 20){
+            //if($time_D < 20){
+            if($time_D < 29){ //2020年1月份工资做完后调整回去
                 if($time_M==1){
                     $time_Y = $time_Y-1;
                     $time_M = 13;
