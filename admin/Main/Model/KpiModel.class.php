@@ -587,8 +587,8 @@ class KpiModel extends Model
         $unBusinessUsersSumMaoli        = array_sum(array_column($unBusinessUsersOpLists,'maoli'));
         $departmentRoyalty              = $unBusinessUsersSumMaoli ? round($unBusinessUsersSumMaoli * 0.05, 2) : 0;
 
-        //部门奖金包
-        $departmentAllUsers             = get_department_account($departmentData['id']);
+        //部门奖金包(本部门人员立项)
+        /*$departmentAllUsers             = get_department_account($departmentData['id']);
         $departmentAllUserIds           = array_column($departmentAllUsers,'id');
         $departmentSettlementLists      = get_settlement_list($year_cycle['beginTime'],$quarter_cycle['end_time'],0,0,'','',$departmentAllUserIds);
         $opids                          = array_unique(array_column($departmentSettlementLists,'op_id'));
@@ -596,7 +596,10 @@ class KpiModel extends Model
         $allCostaccBonus                = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$allRoyaltyKeyWords)))->sum('total');
         $jdRoyaltyKeyWords              = array('计调提成','计调奖金包');
         $jdCostaccBonus                 = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$jdRoyaltyKeyWords)))->sum('total');
-        $departmentBonus                = ($allCostaccBonus - $jdCostaccBonus)>0 ? $allCostaccBonus - $jdCostaccBonus : 0;
+        $departmentBonus                = ($allCostaccBonus - $jdCostaccBonus)>0 ? $allCostaccBonus - $jdCostaccBonus : 0;*/
+
+        //部门奖金包(本部门计调人员操作的奖金包)
+        $departmentBonus                = $this->get_departmentBonus($year_cycle['beginTime'],$quarter_cycle['end_time'],$departmentData['id']);
 
         $data                           = array();
         $data['last_year_maoli']        = $lastYearData['sum_maoli']; //上年累计毛利
@@ -608,8 +611,8 @@ class KpiModel extends Model
         $data['fiveRisksOneFundUpData'] = $thisFiveRisksOneFund - $lastFiveRisksOneFund; //五险一金增长
         $data['departmentRoyalty']      = $departmentRoyalty; //部门业绩提成
         $data['departmentBonus']        = $departmentBonus; //部门奖金包
-        $data['total_salary_bag']       = $data['totalHrCost'] + $data['departmentRoyalty'] + $data['fiveRisksOneFundUpData'] + $data['departmentBonus']; //当年度累计薪酬包 = 当年度累计人力成本额度 + 部门业绩提成 + 公司五险一金增量 + 部门奖金包
-        $data['totalSalaryBagLeftOver'] = $data['total_salary_bag'] - $data['thisHrCostData'];  //当年度累计薪酬包结余 = 当年季度累计薪酬包 - 当年季度累计实发人力成本
+        $data['total_salary_bag']       = round($data['totalHrCost'] + $data['departmentRoyalty'] + $data['fiveRisksOneFundUpData'] + $data['departmentBonus'],2); //当年度累计薪酬包 = 当年度累计人力成本额度 + 部门业绩提成 + 公司五险一金增量 + 部门奖金包
+        $data['totalSalaryBagLeftOver'] = round($data['total_salary_bag'] - $data['thisHrCostData'],2);  //当年度累计薪酬包结余 = 当年季度累计薪酬包 - 当年季度累计实发人力成本
         $data['selfSumBonus']           = round($data['totalSalaryBagLeftOver'] * 0.15, 2); //本人季度累计奖励 = 当年季度累计薪酬包结余 * 15%
         $data['selfSumBonusPaid']       = $this->get_payoff_quarterRoyalty($userid, $year, 'sum'); //本人已发放奖励
         $data['selfSumBonusShould']     = $data['selfSumBonus'] - $data['selfSumBonusPaid']; //本人当季度应发奖励 = 本人季度累计奖励 - 本人季度已发放奖励
@@ -622,6 +625,52 @@ class KpiModel extends Model
         $info['AA_tit']                 = "团队当季度应发奖励";
         $info['AA_num']                 = $data['teamSumBonusShould'];
         $data['info']                   = $info;
+        return $data;
+    }
+
+    //部门奖金包(本部门计调人员操作的奖金包)
+    private function get_departmentBonus($beginTime,$endTime,$departmentid){
+        $settlement_lists               = get_settlement_list($beginTime,$endTime);
+        $jd_uids                        = array_unique(array_column($settlement_lists,'req_uid'));
+        $jd_data                        = M('account')->where(array('id'=>array('in',$jd_uids)))->getField('id,nickname,departmentid',true);
+
+        $department_jd_data             = $this->get_department_jd_uids($jd_data,$departmentid);
+        $department_jd_ids              = array_column($department_jd_data,'id');
+
+        $department_op_lists            = array();
+        foreach ($settlement_lists as $v){
+            if (in_array($v['req_uid'],$department_jd_ids)){
+                $department_op_lists[]  = $v;
+            }
+        }
+        $opids                          = array_column($department_op_lists,'op_id');
+        $allRoyaltyKeyWords             = array('计调提成','资源提成','研发提成','奖金包','计调奖金包','资源奖金包','研发奖金包','总奖金包');
+        $allCostaccBonus                = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$allRoyaltyKeyWords)))->sum('total');
+        $jdRoyaltyKeyWords              = array('计调提成','计调奖金包');
+        $jdCostaccBonus                 = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$jdRoyaltyKeyWords)))->sum('total');
+        $departmentBonus                = ($allCostaccBonus - $jdCostaccBonus)>0 ? $allCostaccBonus - $jdCostaccBonus : 0;
+        return $departmentBonus;
+    }
+
+    //获取本部门的计调
+    private function get_department_jd_uids($jd_data,$departmentid){
+        $s_departmentids                = C('noJiGuanJidiaoDepartmentIds');
+        $data                           = array();
+        if (in_array($departmentid,$s_departmentids)){ //使用本部门计调
+            foreach ($jd_data as $v){
+                if ($v['departmentid'] == $departmentid){
+                    $data[]             = $v;
+                }
+            }
+        }else{
+            foreach ($jd_data as $v){
+                if (!in_array($v['departmentid'],$s_departmentids)){
+                    $data[]             = $v;
+                }
+            }
+            $data['8888']['id']         = 0; //系统自动生成的(无计调) 记入机关部门
+        }
+
         return $data;
     }
 
