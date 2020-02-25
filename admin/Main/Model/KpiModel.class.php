@@ -592,11 +592,12 @@ class KpiModel extends Model
         $lastFiveRisksOneFund           = $lastSumHrCostData['insurance'][$departmentData['department']]['sum']; //上一年累计五险一金
         $thisFiveRisksOneFund           = $thisSumHrCostData['insurance'][$departmentData['department']]['sum']; //当年累计五险一金
 
-        //当年度累计人力成本额度 = (上年度累计人力成本 * (1 + 增长比率/2)) * 季度毛利额累计增长比率目标值
+        //当年度累计人力成本额度 = (上年度累计人力成本 * (1 + 增长比率/2))
+        //季度毛利额累计增长比率 > 季度毛利额累计增长比率目标值 ? 目标值 : 季度毛利额累计增长比率
         $quota_id                       = 248; //季度毛利额累计增长比率
         $profit_up_rate_target          = get_profit_up_rate_target($userid,$year,$month,$quota_id); //kpi季度毛利额累计增长比率目标值
-        $profit_up_rate_target_float    = $profit_up_rate_target['target_float'];
-        $totalHrCost                    = round(($lastHrCost * (1 + ($maolidata['up_rate_float']/2))) * $profit_up_rate_target_float, 2);
+        $maoli_up_rate_float            = $maolidata['up_rate_float'] > $profit_up_rate_target['target_float'] ? $profit_up_rate_target['target_float'] : $maolidata['up_rate_float'];
+        $totalHrCost                    = round($lastHrCost * (1 + ($maoli_up_rate_float/2)), 2);
 
         //部门业绩提成(本部门非业务岗人员的毛利业绩*5%)
         $unBusinessUsers                = get_unBusinessUsers($departmentData['id']);
