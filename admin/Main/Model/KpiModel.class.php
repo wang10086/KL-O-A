@@ -646,9 +646,10 @@ class KpiModel extends Model
         $opids                          = array_column($department_op_lists,'op_id');
         $allRoyaltyKeyWords             = array('计调提成','资源提成','研发提成','奖金包','计调奖金包','资源奖金包','研发奖金包','总奖金包');
         $allCostaccBonus                = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$allRoyaltyKeyWords)))->sum('total');
-        $jdRoyaltyKeyWords              = array('计调提成','计调奖金包');
-        $jdCostaccBonus                 = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$jdRoyaltyKeyWords)))->sum('total');
-        $departmentBonus                = ($allCostaccBonus - $jdCostaccBonus)>0 ? $allCostaccBonus - $jdCostaccBonus : 0;
+        //$jdRoyaltyKeyWords              = array('计调提成','计调奖金包');
+        //$jdCostaccBonus                 = M('op_costacc')->where(array('status'=>2,'op_id'=>array('in',$opids),'title'=>array('in',$jdRoyaltyKeyWords)))->sum('total');
+        //$departmentBonus                = ($allCostaccBonus - $jdCostaccBonus)>0 ? $allCostaccBonus - $jdCostaccBonus : 0;
+        $departmentBonus                = $allCostaccBonus ? $allCostaccBonus : 0;
         return $departmentBonus;
     }
 
