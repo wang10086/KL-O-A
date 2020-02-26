@@ -40,9 +40,9 @@
                         <td class="taskOptions" rowspan="2">{$encourage_data.satisfaction_weight}</td>
                         <td class="taskOptions" rowspan="2">{$encourage_data.member_weight}</td>
                         <td class="taskOptions" rowspan="2">{$encourage_data.departmentSumEncourage}</td>
-                        <td class="taskOptions" rowspan="2">⑭{$encourage_data.}</td>
-                        <td class="taskOptions" rowspan="2">⑮{$encourage_data.quarter_should_royalty}</td>
-                        <td class="taskOptions" rowspan="2">⑯{$encourage_data.quarter_should_royalty}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.department_sum_royalty_payoff}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.department_should_royalty}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.quarter_should_royalty}</td>
                     </tr>
                     <tr>
                         <td class="taskOptions">{$year}年</td>

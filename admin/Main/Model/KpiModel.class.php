@@ -296,6 +296,9 @@ class KpiModel extends Model
         $my_info                        = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id=a.postid','left')->where(array('a.id'=>$userid))->field('a.id,a.nickname,a.postid,p.post_name')->find();
         $my_member_weight               = $this->get_member_weight_det($my_info);
 
+        //本部门季度累计已发奖励
+        $department_sum_royalty_payoff  = $this->get_department_sum_royalty_salary($year,$departmentUsers); //获取本部门"部门季度累计已发奖励"
+
         $data                           = array();
         $data['lastYearProfit']         = $maoliData['last_year_data']['sum_maoli'];
         $data['thisYearProfit']         = $maoliData['this_year_data']['sum_maoli'];
@@ -310,9 +313,27 @@ class KpiModel extends Model
         $data['satisfaction_weight']    = $satisfaction_weight['weigh_str']; //本部门经理内部满意度权重
         $data['member_weight']          = $department_member_weight; //本部门核定权重人数12
         $data['departmentSumEncourage'] = round(($data['totalSalaryBagLeftOver'] * $satisfaction_weight['weigh_floot'] * $data['member_weight'])/$jiguan_member_weight,2); //本部门季度累计奖励13 = (当年机关季度累计薪酬包结余 * 本部门经理内部满意度权重 * 本部门核定权重人数)/机关各部门所有权重人数
+        $data['department_sum_royalty_payoff'] = $department_sum_royalty_payoff; //本部门季度累计已发奖励
+        $data['department_should_royalty'] = $data['departmentSumEncourage'] - $data['department_sum_royalty_payoff'];
+        $data['quarter_should_royalty'] = round(($data['department_should_royalty']/$data['member_weight']) * $my_member_weight,2);
         return $data;
     }
 
+    //获取本部门"部门季度累计已发奖励"
+    private function get_department_sum_royalty_salary($year,$users){
+        $un_use_username                = C('UN_USE_MEMBER_WEIGHT_USER'); //不计入的人
+        $sum_royalty_salary             = 0;
+        foreach ($users as $v){
+            if (!in_array($v['nickname'],$un_use_username)){
+                //累计已发提成数据
+                $royalty_salary         = $this->get_sum_royalty_salary($year,$v['id']);
+                $sum_royalty_salary     += $royalty_salary;
+            }
+        }
+        return $sum_royalty_salary;
+    }
+
+    //获取人员岗位信息
     private function get_uids_posts_account($uids){
         $where                                  = array();
         $where['a.id']                          = array('in',$uids);
@@ -325,7 +346,7 @@ class KpiModel extends Model
 
     //获取本部门核定权重人数
     private function get_member_weight($users){
-        $un_use_username                = array('刘利','李菊华','刘丹'); //不计入的人
+        $un_use_username                = C('UN_USE_MEMBER_WEIGHT_USER'); //不计入的人
         $weight                         = 0;
         foreach ($users as $k=>$v){
             if (!in_array($v['nickname'],$un_use_username)){
