@@ -6041,3 +6041,31 @@ function get_shichang_no_business_users(){
     $shichang_users             = M()->table('__ACCOUNT__ as a')->join('__POSITION__ as p on p.id = a.position_id','left')->where($where)->field('a.id,a.nickname,a.departmentid')->select();
     return $shichang_users;
 }
+
+//获取当季度的月份(年月)
+function get_quarter_yearMonths($year,$quarter){
+    $yearMonths                 = array();
+    switch ($quarter){
+        case 1:
+            $yearMonths[]       = $year.'01';
+            $yearMonths[]       = $year.'02';
+            $yearMonths[]       = $year.'03';
+            break;
+        case 2:
+            $yearMonths[]       = $year.'04';
+            $yearMonths[]       = $year.'05';
+            $yearMonths[]       = $year.'06';
+            break;
+        case 3:
+            $yearMonths[]       = $year.'07';
+            $yearMonths[]       = $year.'08';
+            $yearMonths[]       = $year.'09';
+            break;
+        case 4:
+            $yearMonths[]       = $year.'10';
+            $yearMonths[]       = $year.'11';
+            $yearMonths[]       = $year.'12';
+            break;
+    }
+    return $yearMonths;
+}

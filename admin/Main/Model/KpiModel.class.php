@@ -285,7 +285,7 @@ class KpiModel extends Model
         //机关奖金包
         $departmentid                   = M('account')->where(array('id'=>$userid))->getField('departmentid');
         $jiguan_bonus                   = $this->get_departmentBonus($thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time'],$departmentid);
-        $satisfaction_weight            = $this->get_jiguan_satisfaction_weight($userid,$year,$month); //本部门经理内部满意度权重 = 本部门经理KPI中的内部满意度 / 所有机关部门经理KPI中的内部满意度之和 * 100%
+        $satisfaction_weight            = $this->get_jiguan_satisfaction_weight($userid,$year,$month,$quarter); //本部门经理内部满意度权重 = 本部门经理KPI中的内部满意度 / 所有机关部门经理KPI中的内部满意度之和 * 100%
 
         //本部门核定权重人数
         $departmentUsers                = get_department_posts_account($departmentid,1,1); //本部门人员
@@ -293,6 +293,8 @@ class KpiModel extends Model
         $jiguan_member_weight_users     = $this->get_uids_posts_account($jiguan_uids);
         $department_member_weight       = $this->get_member_weight($departmentUsers);
         $jiguan_member_weight           = $this->get_member_weight($jiguan_member_weight_users);
+        $my_info                        = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id=a.postid','left')->where(array('a.id'=>$userid))->field('a.id,a.nickname,a.postid,p.post_name')->find();
+        $my_member_weight               = $this->get_member_weight_det($my_info);
 
         $data                           = array();
         $data['lastYearProfit']         = $maoliData['last_year_data']['sum_maoli'];
@@ -307,7 +309,7 @@ class KpiModel extends Model
         $data['totalSalaryBagLeftOver'] = $data['jiguan_sum_salary_bag'] - $data['thisYearHrCost']; //当年机关季度累计薪酬包结余 = 当年机关季度累计薪酬包 - 机关累计发生人力成本(当年)
         $data['satisfaction_weight']    = $satisfaction_weight['weigh_str']; //本部门经理内部满意度权重
         $data['member_weight']          = $department_member_weight; //本部门核定权重人数12
-        $data['departmentSumEncourage'] = round(($data['totalSalaryBagLeftOver'] * $satisfaction_weight['weigh_floot'] * $data['member_weight'])/$jiguan_member_weight,2); //本部门季度累计奖励 = (当年机关季度累计薪酬包结余 * 本部门经理内部满意度权重 * 本部门核定权重人数)/机关各部门所有权重人数
+        $data['departmentSumEncourage'] = round(($data['totalSalaryBagLeftOver'] * $satisfaction_weight['weigh_floot'] * $data['member_weight'])/$jiguan_member_weight,2); //本部门季度累计奖励13 = (当年机关季度累计薪酬包结余 * 本部门经理内部满意度权重 * 本部门核定权重人数)/机关各部门所有权重人数
         return $data;
     }
 
@@ -356,18 +358,29 @@ class KpiModel extends Model
      * @param $month
      * @return array
      */
-    private function get_jiguan_satisfaction_weight($userid,$year,$month){
+    private function get_jiguan_satisfaction_weight($userid,$year,$month,$quarter){
         $manager_uids               = array(12,13,26,39,55,77,204); //机关部门经理 12=>秦鸣,13=>杜莹,26=>李岩,39=>孟华,55=>程小平,77=>王茜,204=>李徵红
-        $yearMonths                 = get_sum_months($year,$month,2);
-        $satisfaction_lists         = M('satisfaction')->where(array('account_id'=>array('in',$manager_uids),'monthly'=>array('in',$yearMonths)))->select();
+        $yearMonths                 = get_quarter_yearMonths($year,$quarter);
+        $inspectMod                 = D('inspect');
         $userscore                  = 0;
         $sumscore                   = 0;
-        foreach ($satisfaction_lists as $v){
-            if ($v['account_id'] == $userid){
-                $userscore          += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'] + $v['FF'];
+        $sumLists                   = array();
+        foreach ($yearMonths as $yearMonth){
+            $lists                  = $inspectMod -> get_satisfaction_list($yearMonth,1);
+            foreach ($lists as $v){
+                if (in_array($v['account_id'],$manager_uids)){
+                    if ($v['sum_average'] != '50%'){
+                        $float_avg  = (str_replace('%','',$v['sum_average']))/100;
+                        $sumscore   += $float_avg;
+                        $sumLists[] = $v;
+                        if ($v['account_id'] == $userid){
+                            $userscore += $float_avg;
+                        }
+                    }
+                }
             }
-            $sumscore               += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'] + $v['FF'];
         }
+
         $weight                     = round($userscore/$sumscore,4);
         $data                       = array();
         $data['weigh_str']          = ($weight*100).'%';
