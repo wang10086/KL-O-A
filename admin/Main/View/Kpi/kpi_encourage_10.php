@@ -1,7 +1,7 @@
 <!--激励机制--业务-->
 <div class="box box-warning">
     <div class="box-header">
-        <h3 class="box-title">激励机制 <span class="red">(开发中...)</span></h3>
+        <h3 class="box-title">激励机制</h3>
         <div class="box-tools pull-right"></div>
     </div><!-- /.box-header -->
     <div class="box-body">
