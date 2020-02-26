@@ -4975,13 +4975,34 @@ function get_settlement_maoli_up_rate($year,$quarter,$kindid=0){
 /**
  * 获取本部门人员信息
  * @param $departmentid
+ * @param $delStu //1=>排除已删除人员
+ * @param $nameLike1 //1=>排除名字包含1的用户
  * @return mixed
  */
-function get_department_account($departmentid){
+function get_department_account($departmentid,$delStu=0,$nameLike1=0){
     $where                              = array();
     $where['departmentid']              = $departmentid;
+    if ($delStu == 1) $where['status']  = array('neq',2);
+    if ($nameLike1 == 1) $where['nickname'] = array('notlike','%1%');
     $field                              = 'id,nickname';
     $lists                              = M('account')->where($where)->field($field)->select();
+    return $lists;
+}
+
+/**
+ * 获取本部门人员信息(带岗位)
+ * @param $departmentid
+ * @param $delStu //1=>排除已删除人员
+ * @param $nameLike1 //1=>排除名字包含1的用户
+ * @return mixed
+ */
+function get_department_posts_account($departmentid,$delStu=0,$nameLike1=0){
+    $where                                  = array();
+    $where['a.departmentid']                = $departmentid;
+    if ($delStu == 1) $where['a.status']    = array('neq',2);
+    if ($nameLike1 == 1) $where['a.nickname'] = array('notlike','%1%');
+    $field                                  = 'a.id,a.nickname,a.postid,p.post_name';
+    $lists                                  = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id=a.postid','left')->where($where)->field($field)->select();
     return $lists;
 }
 

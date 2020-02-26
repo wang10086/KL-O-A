@@ -287,6 +287,13 @@ class KpiModel extends Model
         $jiguan_bonus                   = $this->get_departmentBonus($thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time'],$departmentid);
         $satisfaction_weight            = $this->get_jiguan_satisfaction_weight($userid,$year,$month); //本部门经理内部满意度权重 = 本部门经理KPI中的内部满意度 / 所有机关部门经理KPI中的内部满意度之和 * 100%
 
+        //本部门核定权重人数
+        $departmentUsers                = get_department_posts_account($departmentid,1,1); //本部门人员
+        $jiguan_uids                    = array_column($jiguan_users,'id');
+        $jiguan_member_weight_users     = $this->get_uids_posts_account($jiguan_uids);
+        $department_member_weight       = $this->get_member_weight($departmentUsers);
+        $jiguan_member_weight           = $this->get_member_weight($jiguan_member_weight_users);
+
         $data                           = array();
         $data['lastYearProfit']         = $maoliData['last_year_data']['sum_maoli'];
         $data['thisYearProfit']         = $maoliData['this_year_data']['sum_maoli'];
@@ -299,7 +306,46 @@ class KpiModel extends Model
         $data['jiguan_sum_salary_bag']  = $data['shouldHrCost'] + $data['Insurance_up_data'] + $data['jiguan_bonus']; //当年机关季度累计薪酬包 = 当年度机关累计人力成本额度 + 机关五险一金增量 + 机关奖金包
         $data['totalSalaryBagLeftOver'] = $data['jiguan_sum_salary_bag'] - $data['thisYearHrCost']; //当年机关季度累计薪酬包结余 = 当年机关季度累计薪酬包 - 机关累计发生人力成本(当年)
         $data['satisfaction_weight']    = $satisfaction_weight['weigh_str']; //本部门经理内部满意度权重
+        $data['member_weight']          = $department_member_weight; //本部门核定权重人数12
+        $data['departmentSumEncourage'] = round(($data['totalSalaryBagLeftOver'] * $satisfaction_weight['weigh_floot'] * $data['member_weight'])/$jiguan_member_weight,2); //本部门季度累计奖励 = (当年机关季度累计薪酬包结余 * 本部门经理内部满意度权重 * 本部门核定权重人数)/机关各部门所有权重人数
         return $data;
+    }
+
+    private function get_uids_posts_account($uids){
+        $where                                  = array();
+        $where['a.id']                          = array('in',$uids);
+        $where['a.status']                      = array('neq',2);
+        $where['a.nickname']                    = array('notlike','%1%');
+        $field                                  = 'a.id,a.nickname,a.postid,p.post_name';
+        $lists                                  = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id=a.postid','left')->where($where)->field($field)->select();
+        return $lists;
+    }
+
+    //获取本部门核定权重人数
+    private function get_member_weight($users){
+        $un_use_username                = array('刘利','李菊华','刘丹'); //不计入的人
+        $weight                         = 0;
+        foreach ($users as $k=>$v){
+            if (!in_array($v['nickname'],$un_use_username)){
+                $weight                 += $this->get_member_weight_det($v);
+            }
+        }
+        return $weight;
+    }
+
+    //获取本部门核定权重人数  部门经理为3，副经理为2，主管为1.5，其他为1
+    private function get_member_weight_det($info){
+        //strstr() , strpos()
+        if (strpos($info['post_name'],'经理') && !strpos($info['post_name'],'副经理' ) && !strpos($info['post_name'],'产品经理' )){
+            $num = 3;
+        } elseif (strpos($info['post_name'],'副经理')){
+            $num = 2;
+        } elseif (strpos($info['post_name'],'主管')){
+            $num = '1.5';
+        } else {
+            $num = 1;
+        }
+        return $num;
     }
 
     /**

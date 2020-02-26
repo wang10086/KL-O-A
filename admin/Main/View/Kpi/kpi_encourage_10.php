@@ -38,8 +38,8 @@
                         <td class="taskOptions" rowspan="2">{$encourage_data.jiguan_sum_salary_bag}</td>
                         <td class="taskOptions" rowspan="2">{$encourage_data.totalSalaryBagLeftOver}</td>
                         <td class="taskOptions" rowspan="2">{$encourage_data.satisfaction_weight}</td>
-                        <td class="taskOptions" rowspan="2">⑫{$encourage_data.}</td>
-                        <td class="taskOptions" rowspan="2">⑬{$encourage_data.}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.member_weight}</td>
+                        <td class="taskOptions" rowspan="2">{$encourage_data.departmentSumEncourage}</td>
                         <td class="taskOptions" rowspan="2">⑭{$encourage_data.}</td>
                         <td class="taskOptions" rowspan="2">⑮{$encourage_data.quarter_should_royalty}</td>
                         <td class="taskOptions" rowspan="2">⑯{$encourage_data.quarter_should_royalty}</td>
