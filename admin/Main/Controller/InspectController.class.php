@@ -818,11 +818,13 @@ class InspectController extends BaseController{
 
     //内部人员满意度
     public function satisfaction(){
+        $mod                = D('Inspect');
         $year               = I('year',date('Y'));
         $month              = I('month',date('m'));
         $yearMonth          = I('yearMonth')?I('yearMonth'):$year.$month;
         $pin                = I('pin',1);
-        $lists              = $this->get_satisfaction_list($yearMonth,$pin);
+        $lists              = $mod->get_satisfaction_list($yearMonth,$pin);
+        //P($lists);
 
         $this->lists        = $lists;
         $this->pin          = $pin;
@@ -832,70 +834,6 @@ class InspectController extends BaseController{
         $this->prveyear     = $year-1;
         $this->nextyear     = $year+1;
         $this->display();
-    }
-
-    public function get_satisfaction_list($yearMonth,$pin){
-        $mod                            = D('Inspect');
-        $db                             = M('satisfaction');
-        $satisfaction_config_db         = M('satisfaction_config');
-        $satisfaction_lists             = $db->where(array('monthly'=>$yearMonth,'kind'=>P::SCORE_KIND_ACCOUNT))->select(); //所有的已评分列表
-        $should_users_lists             = $satisfaction_config_db->where(array('month'=>$yearMonth))->select(); //所有当月应评分信息
-        //$user_lists                     = array_keys(C('SATISFACTION_USERS'));
-        $user_lists                     = array_keys($this->get_satisfaction_user($pin));
-
-        $lists                          = array();
-        foreach ($user_lists as $k=>$v){
-            $should_users               = array(); //应评分人员
-            $input_userids              = array(); //已评价人员
-            $unscore_userids            = array(); //未评价人员
-            $info                       = array();
-
-            foreach ($should_users_lists as $sk=>$sv){
-                if ($sv['user_id']==$v){
-                    $should_users[]     = $sv['score_user_id'];
-                }
-            }
-
-            foreach ($satisfaction_lists as $key=>$value){
-                if ($value['monthly']==$yearMonth && $value['account_id']==$v){
-                    $info[]             = $value;
-                    $input_userids[]    = $value['input_userid'];
-                }
-            }
-
-            foreach ($should_users as $kk=>$vv){
-                if (!in_array($vv,$input_userids)){
-                    $unscore_userids[]  = $vv;
-                }
-            }
-            $unscore_user_lists         = M('account')->where(array('id'=>array('in',$unscore_userids)))->getField('nickname',true);
-
-            $average_data               = $mod->get_average_data($info,$unscore_userids);
-            $lists[$k]['monthly']       = $yearMonth;
-            $lists[$k]['account_id']    = $v;
-            $lists[$k]['account_name']  = M('account')->where(array('id'=>$v))->getField('nickname');
-            $lists[$k]['average_AA']    = $average_data['average_AA'];
-            $lists[$k]['average_BB']    = $average_data['average_BB'];
-            $lists[$k]['average_CC']    = $average_data['average_CC'];
-            $lists[$k]['average_DD']    = $average_data['average_DD'];
-            $lists[$k]['average_EE']    = $average_data['average_EE'];
-            $lists[$k]['average_FF']    = $average_data['average_FF'];
-            $lists[$k]['sum_average']   = $average_data['sum_average'];
-            $lists[$k]['score_accounts']= $average_data['score_account_name'];
-            $lists[$k]['unscore_users'] = implode(',',$unscore_user_lists);
-        }
-        return $lists;
-    }
-
-    //获取内部满意度需评分人员
-    private function get_satisfaction_user($type=0){
-        $db                             = M('Satisfaction_user');
-        if ($type){
-            $data                       = $db->where(array('type'=>$type))->getField('account_id,account_name',true);
-        }else{
-            $data                       = $db->getField('account_id,account_name',true);
-        }
-        return $data;
     }
 
 
@@ -1072,11 +1010,12 @@ class InspectController extends BaseController{
 
     //内部满意度评分人配置
     public function satisfaction_config(){
+        $mod                        = D('Inspect');
         $year                       = I('year',date('Y'));
         $month                      = I('month',date('m'));
         $yearMonth                  = I('yearMonth')?I('yearMonth'):$year.$month;
         //$users                      = C('SATISFACTION_USERS');
-        $users                      = $this->get_satisfaction_user();
+        $users                      = $mod->get_satisfaction_user();
         $db                         = M('satisfaction_config');
         $lists                      = array();
         foreach ($users as $k=>$v){
