@@ -2488,40 +2488,43 @@ class KpiController extends BaseController {
 
     //业务岗人员比率KPI详情页(人事经理)
     public function public_sales_ratio(){
+        $this->title('业务岗人员占比增长比率');
+        $year                               = I('year',date('Y'));
+        $month                              = I('mon',date('m'));
+        $quarter                            = get_quarter($month);
+
+        $thisYearSaleRate                   = get_sales_ratio(); //当年数据th
+        //业务岗人员占比增长比率
+        $lastYearSaleRate                   = get_last_year_sale_rate($year,$quarter); //上一年数据
+        $complete                           = ((round($thisYearSaleRate['yw_rate_float']/$lastYearSaleRate['yw_rate_float'],4) - 1)*100).'%';
+
+        $this->thisYearData                 = $thisYearSaleRate;
+        $this->lastYearData                 = $lastYearSaleRate;
+        $this->complete                     = $complete;
+        $this->year                         = $year;
+        $this->month                        = $month;
+        $this->quarter                      = $quarter;
+        $this->display('kpi_sales_ratio');
+    }
+
+    //业务岗人员比率KPI详情页(人事经理)
+    public function public_sales_ratio_detail(){
+        $this->title('业务岗人员占比增长比率');
         $pin                                = I('pin',1);
-        $yearMonth                          = I('ym');
-        $sum_id                             = I('sum_ids');
-        $sale_id                            = I('sale_ids');
-        $sum_ids                            = $sum_id?explode(',',$sum_id):array();
-        $sale_ids                           = $sale_id?explode(',',$sale_id):array();
-        $departments                        = M('salary_department')->getField('id,department',true);
-        $positions                          = M('position')->getField('id,position_name',true);
+        $year                               = I('year',date('Y'));
+        $quarter                            = I('quarter');
 
-        $where                              = array();
-        $where['id']                        = $pin==1 ? array('in',$sum_ids) : array('in',$sale_ids);
+        $thisYearSaleRate                   = get_sales_ratio(); //当年数据th
+        //业务岗人员占比增长比率
+        $lastYearSaleRate                   = get_last_year_sale_rate($year,$quarter); //上一年数据
+        $complete                           = ((round($thisYearSaleRate['yw_rate_float']/$lastYearSaleRate['yw_rate_float'],4) - 1)*100).'%';
 
-        $pagecount		                    = M('account')->where($where)->order($this->orders('id'))->count();
-        $page			                    = new Page($pagecount, P::PAGE_SIZE);
-        $this->pages	                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $lists                              = M('account')->where($where)->order($this->orders('id'))->limit($page->firstRow . ',' . $page->listRows)->select();
-        foreach ($lists as $k=>$v){
-            if (in_array($v['id'],$sale_ids)){
-                $lists[$k]['isSale']        = '<span class="green">业务</span>';
-            }else{
-                $lists[$k]['isSale']        = '<font color="#999">非业务</font>';
-            }
-            $lists[$k]['department']        = $departments[$v['departmentid']];
-            $lists[$k]['position']          = $v['position_id'] ? $positions[$v['position_id']] : '';
-        }
-
-        $this->lists                        = $lists;
-        $this->pin                          = $pin;
-        $this->yearMonth                    = $yearMonth;
-        $this->sum_ids                      = $sum_id;
-        $this->sale_ids                     = $sale_id;
-        $this->title('业务岗人员比率');
-        $this->display('sales_ratio');
+        $this->lists                        = $pin == 1 ? $thisYearSaleRate['lists'] : $lastYearSaleRate['lists'];
+        $this->departments                  = M('salary_department')->getField('id,department',true);
+        $this->positions                    = M('position')->getField('id,position_name',true);
+        $this->year                         = $pin == 1 ? $year : $year - 1;
+        $this->quarter                      = $quarter;
+        $this->display('kpi_sales_ratio_detail');
     }
 
     //季度累计毛利额(产品经理)详情页

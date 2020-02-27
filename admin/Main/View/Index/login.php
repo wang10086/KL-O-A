@@ -32,10 +32,10 @@
                     </div>
                     <div class="form-group">
                         <input type="password" name="password" class="form-control" placeholder="密码"/>
-                    </div>          
+                    </div>
                 </div>
-                <div class="footer">                                                               
-                    <button type="submit" class="btn bg-olive btn-block">进入系统</button>  
+                <div class="footer">
+                    <button type="submit" class="btn bg-olive btn-block">进入系统</button>
                 </div>
             </form>
         </div>
@@ -49,13 +49,13 @@
         </a>
 
         <div class="unbox copy">
-            版权所有 &copy; 中科教科学教育平台 <a href="http://www.miitbeian.gov.cn" target="_blank">京ICP备12018327号</a>  &nbsp; <!--京公网安备110402500027号-->
+            版权所有 &copy; 中科科行教育科技（北京）有限责任公司 <a href="http://beian.miit.gov.cn/" target="_blank">京ICP备12018327号</a>  &nbsp; <!--京公网安备110402500027号-->
         </div>
 
         <!-- jQuery 1.11.1 -->
         <script src="__HTML__/js/jquery-1.11.1.min.js"></script>
         <!-- Bootstrap -->
-        <script src="__HTML__/js/bootstrap.min.js" type="text/javascript"></script>        
+        <script src="__HTML__/js/bootstrap.min.js" type="text/javascript"></script>
 
     </body>
 </html>

@@ -3447,11 +3447,21 @@ function updatekpi($month,$user,$year=''){
                             $url                    = U('Score/public_partner_satisfaction',array('uid'=>$uid,'month'=>$month,'kpi_quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
                         }
 
-                        //业务岗人员比率(人事部经理)
+                        //业务岗人员占比增长比率(人事部经理)
                         if ($v['quota_id']==230){
-                            $data                   = get_sales_ratio();
-                            $complete               = (round($data['sale_num']/$data['sum_num'],4)*100).'%';
-                            $url                    = U('Kpi/public_sales_ratio',array('ym'=>$v['month'],'sum_ids'=>$data['sum_ids'],'sale_ids'=>$data['sale_ids']));
+                            //业务岗人员比率(人事部经理)
+                            $thisYearSaleRate       = get_sales_ratio();
+                            //$complete               = (round($data['sale_num']/$data['sum_num'],4)*100).'%';
+                            //$url                    = U('Kpi/public_sales_ratio',array('ym'=>$v['month'],'sum_ids'=>$data['sum_ids'],'sale_ids'=>$data['sale_ids']));
+
+                            //业务岗人员占比增长比率
+                            $year                   = $v['year'];
+                            $monon                  = substr($v['month'],-2,2);
+                            $quarter                = get_quarter($monon);
+                            $lastYearSaleRate       = get_last_year_sale_rate($year,$quarter); //上一年数据
+                            $complete               = ((round($thisYearSaleRate['yw_rate_float']/$lastYearSaleRate['yw_rate_float'],4) - 1)*100).'%';
+                            $url                    = U('Kpi/public_sales_ratio',array('year'=>$year,'mon'=>$monon));
+
                         }
 
                         //工作负荷率

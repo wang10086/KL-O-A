@@ -18,30 +18,33 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">月份：{$yearMonth}</h3>&emsp;&emsp;
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">{$year}年{$quarter}季度</h3>&emsp;&emsp;
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <div class="btn-group" id="catfont">
-                                        <a href="{:U('Kpi/public_sales_ratio',array('pin'=>1,'ym'=>$yearMonth,'sum_ids'=>$sum_ids,'sale_ids'=>$sale_ids))}" class="btn <?php if($pin==1){ echo 'btn-info';}else{ echo 'btn-default';} ?>">当月全部人数</a>
-                                        <a href="{:U('Kpi/public_sales_ratio',array('pin'=>2,'ym'=>$yearMonth,'sum_ids'=>$sum_ids,'sale_ids'=>$sale_ids))}" class="btn <?php if($pin==2){ echo 'btn-info';}else{ echo 'btn-default';} ?>">业务人员</a>
-                                    </div>
 								<table class="table table-bordered dataTable fontmini">
                                     <tr role="row">
-                                        <th width="60">ID</th>
-                                        <th>姓名</th>
-                                        <th>所在部门</th>
-                                        <th>岗位</th>
-                                        <th>业务属性</th>
+                                        <th class="taskOptions" width="80">年份</th>
+                                        <th class="taskOptions">公司员工(正式员工)</th>
+                                        <th class="taskOptions">业务岗员工</th>
+                                        <th class="taskOptions">业务岗人员占比</th>
+                                        <th class="taskOptions">业务岗人员占比增长比率</th>
+                                        <th class="taskOptions" width="60">详情</th>
                                     </tr>
-                                    <foreach name="lists" item="row">
-                                        <tr>
-                                            <td>{$row.id}</td>
-                                            <td>{$row.nickname}</td>
-                                            <td>{$row.department}</td>
-                                            <td>{$row.position}</td>
-                                            <td>{$row.isSale}</td>
-                                        </tr>
-                                    </foreach>										
+                                    <tr>
+                                        <td class="taskOptions">{$year - 1}年</td>
+                                        <td class="taskOptions">{$lastYearData.sum_num}</td>
+                                        <td class="taskOptions">{$lastYearData.sale_num}</td>
+                                        <td class="taskOptions">{$lastYearData.yw_rate_str}</td>
+                                        <td class="taskOptions" rowspan="2">{$complete}</td>
+                                        <td class="taskOptions"><a href="{:U('Kpi/public_sales_ratio_detail', array('year'=>$year,'quarter'=>$quarter,'pin'=>2))}" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="taskOptions">{$year}年</td>
+                                        <td class="taskOptions">{$thisYearData.sum_num}</td>
+                                        <td class="taskOptions">{$thisYearData.sale_num}</td>
+                                        <td class="taskOptions">{$thisYearData.yw_rate_str}</td>
+                                        <td class="taskOptions" width="60"><a href="{:U('Kpi/public_sales_ratio_detail', array('year'=>$year,'quarter'=>$quarter,'pin'=>1))}" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
+                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">

@@ -2426,13 +2426,13 @@ function get_yw_department(){
     function get_person_loss($start_time,$end_time){
         /*指标=（重点关注员工）离职人数/所有重点关注员工人数×100%
         重点关注员工是指：上年年末绩效考评结果等级为A、B、C类员工*/
-        $user_names                 = C('NOT_SELECT_USER');
+        //$user_names                 = C('NOT_SELECT_USER');
         //全部人员信息
         $where                      = array();
         $where['a.id']              = array('gt',10);
         $where['a.status']          = array('in',array(0,1));
         $where['a.input_time']      = array('lt',$end_time);
-        $where['nickname']          = array('not in',$user_names);
+        $where['nickname']          = array('notlike','%1%');
         $where['d.grade']           = array('in',array('A','B','C'));
         $sum_lists                  = M()->table('__ACCOUNT__ as a')->join('__ACCOUNT_DETAIL__ as d on d.account_id=a.id','left')->where($where)->order('id asc')->getField('a.id,a.nickname,a.formal,a.status,a.expel,d.grade',true);
 
@@ -2442,7 +2442,7 @@ function get_yw_department(){
         $loss['a.expel']            = 0; //排除公司辞退人员
         $loss['a.formal']           = 1; //正式员工
         $loss['a.end_time']         = array('between',array($start_time,$end_time));
-        $loss['a.nickname']         = array('not in',$user_names);
+        $loss['a.nickname']         = array('notlike','%1%');
         $loss['d.grade']            = array('in',array('A','B','C'));
         $loss_lists                 = M()->table('__ACCOUNT__ as a')->join('__ACCOUNT_DETAIL__ as d on d.account_id=a.id','left')->where($loss)->getField('a.id,a.nickname,a.formal,a.status,a.expel,d.grade',true);
 
@@ -3644,34 +3644,73 @@ function get_res_op_satisfaction($lists,$type,$dimension){
 
     //获取业务人员所占比例
     function get_sales_ratio(){
-        $db                                 = M('account');
-        $not_select_users                   = C('NOT_SELECT_USER');
+        //$not_select_users                   = C('NOT_SELECT_USER');
+        $yw_position_ids                    = get_business_position_ids(); //所有业务岗ID
         //所有人员信息
         $where                              = array();
-        $where['nickname']                  = array('not in',$not_select_users);
+        $where['nickname']                  = array('notlike','%1%');
         $where['id']                        = array('gt',10);
+        $where['formal']                    = 1; //正式员工
         $where['status']                    = 0;
-        $lists                              = $db->field('id,nickname')->where($where)->select();
+        $lists                              = M('account')->where($where)->select();
 
-        //业务人员信息
-        $position_ids                       = M('position')->where(array('code'=>array('like','S%')))->getField('id',true);
-        $where                              = array();
-        $where['nickname']                  = array('not in',$not_select_users);
-        $where['id']                        = array('gt',10);
-        $where['status']                    = 0;
-        $where['position_id']               = array('in',$position_ids);
-        $sale_lists                         = $db->field('id,nickname')->where($where)->select();
-
-        $sum_num                            = count($lists);
-        $sale_num                           = count($sale_lists);
+        $sum_num                            = 0;
+        $sale_num                           = 0;
+        foreach ($lists as $k => $v){
+            if (in_array($v['position_id'],$yw_position_ids)){
+                $sale_num++;
+                $lists[$k]['is_yw']         = 1;
+            }
+            $sum_num++;
+        }
 
         $data                               = array();
         $data['sum_num']                    = $sum_num;
         $data['sale_num']                   = $sale_num;
-        $data['sum_ids']                    = implode(',',array_column($lists,'id'));
-        $data['sale_ids']                   = implode(',',array_column($sale_lists,'id'));
-        $data['sum_lists']                  = $lists;
-        $data['sale_lists']                 = $sale_lists;
+        $data['yw_rate_float']              = round(($data['sale_num']/$data['sum_num']),4);
+        $data['yw_rate_str']                = ($data['yw_rate_float']*100).'%';
+        $data['lists']                      = $lists;
+        return $data;
+    }
+
+    //获取上一年业务人员占比数据
+    function get_last_year_sale_rate($year,$quarter){
+        $lastYearQuarterCycle               = get_quarter_cycle_time($year-1,$quarter);
+        $yw_position_ids                    = get_business_position_ids(); //所有业务岗ID
+        //求去年同期的人员信息
+        //①求入职时间在周期结束时间前90天(90天转正)入职的员工
+        $where1                             = array();
+        $where1['id']                       = array('gt',10);
+        $where1['formal']                   = 1; //正式员工
+        $where1['entry_time']               = array('lt',$lastYearQuarterCycle['begin_time']);
+        $where1['status']                   = 0; //正常
+        $where1['nickname']                 = array('notlike','%1%');
+        $lists1                             = M('account')->where($where1)->select();
+        //②求去年同期在职,今年已离职的人员信息
+        $where2                             = array();
+        $where2['id']                       = array('gt',10);
+        $where2['formal']                   = 1; //正式员工
+        $where2['entry_time']               = array('gt',$lastYearQuarterCycle['end_time']);
+        $where2['status']                   = array('neq',0); //离职
+        $where2['nickname']                 = array('notlike','%1%');
+        $lists2                             = M('account')->where($where2)->select();
+        $lists                              = array_merge((array)$lists1,(array)$lists2);
+
+        $sum_num                            = 0;
+        $sale_num                           = 0;
+        foreach ($lists as $k => $v){
+            if (in_array($v['position_id'],$yw_position_ids)){
+                $sale_num++;
+                $lists[$k]['is_yw']         = 1;
+            }
+            $sum_num++;
+        }
+        $data                               = array();
+        $data['sale_num']                   = $sale_num;
+        $data['sum_num']                    = $sum_num;
+        $data['yw_rate_float']              = round(($data['sale_num']/$data['sum_num']),4);
+        $data['yw_rate_str']                = ($data['yw_rate_float']*100).'%';
+        $data['lists']                      = $lists;
         return $data;
     }
 
