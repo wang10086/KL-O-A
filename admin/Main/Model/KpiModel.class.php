@@ -214,7 +214,7 @@ class KpiModel extends Model
             $num = 8;
         }elseif (in_array($userinfo['postid'],array(70))) { // 70=>资源管理部经理，李徵红
             $num = 9;
-        }elseif (in_array($userinfo['postid'],array(85,1))) { // 85=>人资综合部部经理，王茜,1=>安全品控部经理,李岩
+        }elseif (in_array($userinfo['postid'],array(85,1,88))) { // 85=>人资综合部部经理，王茜,1=>安全品控部经理,李岩,88=>财务部经理,程小平
             $num = 10;
 
         }
@@ -241,7 +241,7 @@ class KpiModel extends Model
             $data = $this->get_yfbjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==9){ // 资源管理部经理
             $data = $this->get_zybjl_encourage_data($userid, $year, $month);
-        }elseif ($encourage_type ==10){ // 人资综合部经理
+        }elseif ($encourage_type ==10){ // 人资综合部经理,安全品控部经理,财务部经理
             $data = $this->get_rzzhbjl_encourage_data($userid, $year, $month);
         }
         return $data;
