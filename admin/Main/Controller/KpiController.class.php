@@ -2817,7 +2817,8 @@ class KpiController extends BaseController {
 
 
     public function aaa(){
-        set_after_salary_kpi(201906);
+        //set_after_salary_kpi(201906);
+        set_after_salary_kpi(201912);
     }
 
     public function test(){
