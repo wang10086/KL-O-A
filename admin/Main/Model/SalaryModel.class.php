@@ -576,6 +576,11 @@ class SalaryModel extends Model
         $f      = $use2+$use3;//获得总分    品质检查+kpi从绩效工资取值
         $fpdca  = $use1;
 
+        //2020年2、3月份不发绩效工资，4月份删除以下内容
+        /*****************start******************/
+        $f      = -100;
+        /*******************end****************/
+
         $balance1                           = round(($money/$branch*$f),2); //绩效工资余额
         $balance2                           = round(($base_money/$branch*$fpdca),2);    //基本工资余额
 
