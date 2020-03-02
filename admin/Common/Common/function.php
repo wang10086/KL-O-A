@@ -3668,9 +3668,9 @@ function updatekpi($month,$user,$year=''){
 
                             $ys                         = $ys ? $ys : 0; //预算  其他费用
                             $sett                       = $department['公司']['money']; //实际发生"其他"费用
-                            $ra                         = (round($sett/$ys,4) - 1); //季度费用控制率=（季度实际费用支出/季度费用预算支出-1）*100%
+                            $ra                         = (sprintf("%.2f",$sett/$ys) - 1); //季度费用控制率=（季度实际费用支出/季度费用预算支出-1）*100%
                             //1.实际值≤0时，得100分；2.实际值＞0时，得分=100-实际值/10%
-                            $complete                   = $ra <= 0 ? 100 : ((100 - $ra*10)/100).'%';
+                            $complete                   = $ra <= 0 ? '100%' : ((100 - $ra*10)/100).'%';
                             $url                        = U('Manage/public_Manage_quarter',array('year'=>$year,'quart'=>$quart));
                         }
 
