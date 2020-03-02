@@ -26,7 +26,7 @@
                                         <th class="taskOptions">预算费用</th>
                                         <th class="taskOptions">实际发生费用</th>
                                         <th class="taskOptions">季度费用控制率</th>
-                                        <th class="taskOptions">公司费用控制率</th>
+                                        <th class="taskOptions">本指标得分</th>
                                         <th class="taskOptions" width="60">详情</th>
                                     </tr>
                                     <tr>

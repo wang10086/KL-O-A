@@ -693,7 +693,8 @@ class ManageController extends ChartController {
         $rate_str                   = ($rate_float*100).'%';
 
         //1.实际值≤0时，得100分；2.实际值＞0时，得分=100-实际值/10%
-        $complete                   = $rate_float <= 0 ? '100%' : (100 - $rate_float*0.1).'%';
+        $score                      = $rate_float <= 0 ? '100' : (100 - $rate_float*0.1);
+        $complete                   = $score < 0 ? '0%' : $score.'%';
 
         $this->year                 = $year;
         $this->ys                   = $ys;
