@@ -659,4 +659,46 @@ class ManageController extends ChartController {
         $this->display('kpi_person_cost_rate');
     }
 
+    //程小平KPI
+    public function public_Manage_quarter(){
+        $this->title('公司费用控制率-财务经理');
+        $year                       = I('year');
+        $quart                      = I('quart');
+        $mod                        = D('Manage');
+        // 季度经营报表
+        $quart                      = quarter_month1($quart);//获取季度月份
+        $quarter                    = get_quarter($quart);
+
+        // 季度预算报表
+        $datetime['year']           = $year;
+        $datetime['type']           = $quart;//获取季度预算
+        $manage                     = $mod->get_checked_lists($year,$quarter); //季度预算
+        foreach ($manage as $kk =>$vv){
+            if ($vv['logged_department'] == '公司'){
+                $ys                 = $vv['other_expenses'];
+            }
+        }
+
+        $times                      = getQuarterlyCicle($year,$quart);  //获取季度周期
+        $ymd[0]                     = date("Ymd",$times['begin_time']);
+        $ymd[1]                     = date("Ymd",$times['end_time']);
+        $mon                        = $mod->not_team($ymd[0],$ymd[1]);//季度其他费用取出数据(不分摊)
+        $mon_share                  = $mod->not_team_share($ymd[0],$ymd[1]);//季度其他费用取出数据(分摊)
+        $department                 = $mod->department_data($mon,$mon_share);//季度其他费用部门数据
+
+
+        $ys                         = $ys ? $ys : 0; //预算  其他费用
+        $sett                       = $department['公司']['money']; //实际发生"其他"费用
+        $ra                         = (sprintf("%.2f",$sett/$ys) - 1); //季度费用控制率=（季度实际费用支出/季度费用预算支出-1）*100%
+        //1.实际值≤0时，得100分；2.实际值＞0时，得分=100-实际值/10%
+        $complete                   = $ra <= 0 ? '100%' : ((100 - $ra*10)/100).'%';
+
+        $this->year                 = $year;
+        $this->ys                   = $ys;
+        $this->sett                 = $sett;
+        $this->ra                   = $ra;
+        $this->complete             = $complete;
+        $this->display('kpi_manage_quarter');
+    }
+
  }
