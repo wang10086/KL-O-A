@@ -708,7 +708,8 @@ class ChartController extends BaseController {
         $where['id']    = array('in',$yw_departs);
         $departments    = M('salary_department')->field('id,department')->where($where)->select();
         //预算及结算分部门汇总
-        $listdatas      = $this->count_lists($departments,$year,$month,$pin);
+        $mod            = D('Chart');
+        $listdatas      = $mod->count_lists($departments,$year,$month,$pin);
         $heji           = $listdatas['heji'];
         $dj_heji        = $listdatas['dj_heji'];
         unset($listdatas['dj_heji']);  //注意顺序
@@ -723,32 +724,6 @@ class ChartController extends BaseController {
         $this->nextyear	= $year+1;
         $this->pin      = $pin?$pin:0;
         $this->display();
-    }
-
-    //统计部门数据(月度)
-    public function count_lists($departments,$year,$month='',$pin=0,$quarter=''){
-        $yearBegin      			        = ($year-1).'1226';
-        $yearEnd        			        = $year.'1226';
-        $yeartimes					        = array();
-        $yeartimes['yearBeginTime']         = strtotime($yearBegin);
-        $yeartimes['yearEndTime']           = strtotime($yearEnd);
-        $yearMonth                          = $month?$year.$month:'';
-        $quartertimes                       = set_quarter($year,$quarter);
-        $userlists      			        = array();
-        foreach ($departments as $k=>$v){
-            $userlists[$v['id']]['users']   = M('account')->where(array('departmentid'=>$v['id']))->getField('id',true);
-            $userlists[$v['id']]['id']      = $v['id'];
-            $userlists[$v['id']]['depname'] = $v['department'];
-        }
-
-        if ($pin == 0){
-            //预算及结算分部门汇总
-            $lists                          = D('Chart')->ysjs_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
-        }else{
-            //结算分部门汇总
-            $lists                          = D('Chart')->js_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
-        }
-        return $lists;
     }
 
     /**
@@ -820,7 +795,8 @@ class ChartController extends BaseController {
         $where['id']    = array('in',$yw_departs);
         $departments    = M('salary_department')->field('id,department')->where($where)->select();
         //预算及结算分部门汇总
-        $listdatas      = $this->count_lists($departments,$year,'',$pin,$quarter);
+        $mod            = D('Chart');
+        $listdatas      = $mod->count_lists($departments,$year,'',$pin,$quarter);
         $heji           = $listdatas['heji'];
         $dj_heji        = $listdatas['dj_heji'];
         unset($listdatas['dj_heji']);  //注意顺序
@@ -1030,4 +1006,3 @@ class ChartController extends BaseController {
     }
 
 }
-	

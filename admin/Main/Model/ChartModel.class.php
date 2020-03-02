@@ -11,6 +11,31 @@ use Sys\P;
 
 class ChartModel extends Model
 {
+    //统计部门数据(月度)
+    public function count_lists($departments,$year,$month='',$pin=0,$quarter=''){
+        $yearBegin      			        = ($year-1).'1226';
+        $yearEnd        			        = $year.'1226';
+        $yeartimes					        = array();
+        $yeartimes['yearBeginTime']         = strtotime($yearBegin);
+        $yeartimes['yearEndTime']           = strtotime($yearEnd);
+        $yearMonth                          = $month?$year.$month:'';
+        $quartertimes                       = set_quarter($year,$quarter);
+        $userlists      			        = array();
+        foreach ($departments as $k=>$v){
+            $userlists[$v['id']]['users']   = M('account')->where(array('departmentid'=>$v['id']))->getField('id',true);
+            $userlists[$v['id']]['id']      = $v['id'];
+            $userlists[$v['id']]['depname'] = $v['department'];
+        }
+
+        if ($pin == 0){
+            //预算及结算分部门汇总
+            $lists                          = D('Chart')->ysjs_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
+        }else{
+            //结算分部门汇总
+            $lists                          = D('Chart')->js_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
+        }
+        return $lists;
+    }
 
     /**
      * 已结算分部门汇总

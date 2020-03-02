@@ -1544,6 +1544,97 @@ class ManageModel extends Model{
         return $lists;
     }
 
+    /**
+     * not_team 非团支出报销（其他费用）(不分摊)
+     * $ymd1 开始时间 20180626
+     * $ymd2 结束时间 20180726
+     */
+    /*public function not_team($ymd1,$ymd2){
+
+        $ymd1                   =  strtotime($ymd1);
+        $ymd2                   =  strtotime($ymd2);
+        $map['bx_time']         = array(array('gt',$ymd1),array('lt',$ymd2));//开始结束时间
+        $map['bxd_type']        = array(array('gt',1),array('lt',4));//2 非团借款报销 3直接报销
+        $map['audit_status']    = array('eq',1);//审核通过
+        $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
+        return  $money;
+    }*/
+    public function not_team($ymd1,$ymd2){
+
+        $ymd1                   =  strtotime($ymd1);
+        $ymd2                   =  strtotime($ymd2);
+        $map['bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
+        $map['bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
+        $map['audit_status']    = array('eq',1);    //审核通过
+        $map['share']           = array('neq',1);   //不分摊
+        $otherExpensesKinds     = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+        $map['bxd_kind']        = array('in',$otherExpensesKinds);
+        $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
+        return  $money;
+    }
+
+    /**
+     * 非团支出报销(其他费用)(分摊)
+     * @param $ymd1
+     * @param $ymd2
+     * @return mixed
+     */
+    public function not_team_share($ymd1,$ymd2){
+
+        $ymd1                       =  strtotime($ymd1);
+        $ymd2                       =  strtotime($ymd2);
+        $where                      = array();
+        $where['b.bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
+        $where['b.bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
+        $where['b.audit_status']    = array('eq',1);    //审核通过
+        $otherExpensesKinds         = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+        $where['b.bxd_kind']        = array('in',$otherExpensesKinds);
+        $money                      = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where($where)->select();
+        return  $money;
+    }
+
+    /**  monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
+     * @param $year
+     * @param $yms
+     */
+    public function get_business($year,$yms){
+        $info                   = array();
+        foreach ($yms as $v){
+            $month              = substr($v,4,2);
+            $info[]             = $this->business($year,$month,1);
+        }
+
+        $sum                    = array();
+        foreach ($info as $key=>$value){
+            foreach ($value as $k=>$v){
+                if ($k == 'heji') $v['depname']     = '公司';
+                if ($k == 'dj_heji') $v['depname']  = '地接合计';
+                $sum[$v['depname']]['monthzsr']     += $v['monthzsr'];
+                $sum[$v['depname']]['monthzml']     += $v['monthzml'];
+                $sum[$v['depname']]['monthmll']     = $sum[$v['depname']]['monthzsr'] ? round($sum[$v['depname']]['monthzml']/$sum[$v['depname']]['monthzsr'],4)*100 : '0%';
+            }
+        }
+        return $sum;
+    }
+
+    /**
+     * business 营业收入 营业毛利 营业毛利率
+     * $year 年 $month月
+     * $pin 1 结算 0预算
+     */
+    public function  business($year,$month,$type){
+        $chartMod                    = D('Chart');
+        if (strlen($month)<2) $month = str_pad($month,2,'0',STR_PAD_LEFT);
+        $times                       = $year.$month;
+        $yw_departs                  = C('YW_DEPARTS');  //业务部门id
+        $where                       = array();
+        $where['id']                 = array('in',$yw_departs);
+        $departments                 = M('salary_department')->field('id,department')->where($where)->select();
+        //预算及结算分部门汇总
+        $listdatas                   = $chartMod->count_lists($departments,$year,$month,$type);//1 结算 0预算
+        return $listdatas;
+    }
+
 }
 
 ?>
