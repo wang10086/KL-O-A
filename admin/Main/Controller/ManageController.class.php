@@ -687,16 +687,18 @@ class ManageController extends ChartController {
         $department                 = $mod->department_data($mon,$mon_share);//季度其他费用部门数据
 
 
-        $ys                         = $ys ? $ys : 0; //预算  其他费用
+        $ys                         = (int)$ys ? $ys : 1; //预算  其他费用
         $sett                       = $department['公司']['money']; //实际发生"其他"费用
-        $ra                         = (sprintf("%.2f",$sett/$ys) - 1); //季度费用控制率=（季度实际费用支出/季度费用预算支出-1）*100%
+        $rate_float                 = (sprintf("%.2f",$sett/$ys) - 1); //季度费用控制率=（季度实际费用支出/季度费用预算支出-1）*100%
+        $rate_str                   = ($rate_float*100).'%';
+
         //1.实际值≤0时，得100分；2.实际值＞0时，得分=100-实际值/10%
-        $complete                   = $ra <= 0 ? '100%' : ((100 - $ra*10)/100).'%';
+        $complete                   = $rate_float <= 0 ? '100%' : (100 - $rate_float*0.1).'%';
 
         $this->year                 = $year;
         $this->ys                   = $ys;
         $this->sett                 = $sett;
-        $this->ra                   = $ra;
+        $this->rate                 = $rate_str;
         $this->complete             = $complete;
         $this->display('kpi_manage_quarter');
     }

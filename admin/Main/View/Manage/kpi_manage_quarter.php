@@ -32,7 +32,7 @@
                                     <tr>
                                         <td class="taskOptions">{$ys}</td>
                                         <td class="taskOptions">{$sett}</td>
-                                        <td class="taskOptions">{$ra}</td>
+                                        <td class="taskOptions">{$rate}</td>
                                         <td class="taskOptions">{$complete}</td>
                                         <td class="taskOptions"><a href="{:U('Manage/Manage_quarter', array('year'=>$year,'quart'=>$quart))}" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
                                     </tr>
