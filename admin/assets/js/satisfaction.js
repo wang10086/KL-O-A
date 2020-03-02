@@ -368,8 +368,8 @@ function change_score_content() {
                         }else if(account_id == 55){ //财务经理(程小平)
                             var content = '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="info[dimension]" value="4"> <!--考核维度-->'+
-                                '<input type="hidden" name="data[AA]" value="及时性">'+
-                                '<label>及时性：</label>'+
+                                '<input type="hidden" name="data[AA]" value="服务与支持">'+
+                                '<label>服务与支持：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
@@ -379,8 +379,8 @@ function change_score_content() {
                                 '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
-                                '<input type="hidden" name="data[BB]" value="态度">'+
-                                '<label>态度：</label>'+
+                                '<input type="hidden" name="data[BB]" value="工作态度">'+
+                                '<label>工作态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
                                 '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
