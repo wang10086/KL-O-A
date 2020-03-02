@@ -36,6 +36,9 @@
                                         <td class="taskOptions">{$complete}</td>
                                         <td class="taskOptions"><a href="{:U('Manage/Manage_quarter', array('year'=>$year,'quart'=>$quart))}" class="btn btn-smsm btn-info" title="详情"><i class="fa fa-bars"></i></a></td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="5">注：预算费用按上季度末月26日0时前在”财务管理-经营管理-季度经营”页面中录入的《季度预算报表》中公司“其他费用”取值。上季度末月26日0时前未录入数值时，系统取值“1”。</td>
+                                    </tr>
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
