@@ -548,7 +548,7 @@
                         </li>
                         </if>
 
-                        <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist','Finance/payment','Finance/costlabour','Finance/sign','Finance/jiekuan','Finance/jk_detail','Finance/loan_nopjk','Finance/loan'))">
+                        <if condition="rolemenu(array('Finance/costacclist','Finance/budget','Finance/settlementlist','Finance/payment','Finance/costlabour','Finance/sign','Finance/jiekuan','Finance/jk_detail','Finance/loan_nopjk','Finance/loan','Finance/timely'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Finance')} {:ison(CONTROLLER_NAME, 'Manage')}">
                             <a href="javascript:;">
                                 <i class="fa  fa-yen"></i>
@@ -657,8 +657,12 @@
                                     </ul>
                                 </li>
 
+                                <if condition="rolemenu(array('Finance/timely'))">
+                                    <li class="{:on('Finance/timely')}"><a href="{:U('Finance/timely')}"><i class="fa fa-angle-right"></i> 财务工作及时率</a></li>
+                                </if>
+
                                 <if condition="rolemenu(array('Finance/costlabour'))">
-                                    <li><a href="{:U('Finance/costlabour')}"><i class="fa fa-angle-right"></i> 劳务费用</a></li>
+                                    <li class="{:on('Finance/costlabour')}"><a href="{:U('Finance/costlabour')}"><i class="fa fa-angle-right"></i> 劳务费用</a></li>
                                 </if>
 
                                 <if condition="rolemenu(array('Finance/sign'))">

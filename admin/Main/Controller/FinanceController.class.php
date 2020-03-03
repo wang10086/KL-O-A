@@ -2206,6 +2206,29 @@ class FinanceController extends BaseController {
                     $this->success('数据保存成功');
                 }
             }
+
+            //保存财务操作及时率指标
+            if ($savetype==21){
+                $db                         = M('quota');
+                $id                         = I('id');
+                $info                       = I('info');
+                $info['title']              = htmlspecialchars(trim($info['title']));
+                $info['content']            = htmlspecialchars(trim($info['content']));
+                $info['rules']              = htmlspecialchars(trim($info['rules']));
+                $info['type']               = 5; //5=>财务工作及时率
+                if (!$info['title'])        $this->error('指标标题不能为空');
+
+                if ($id){
+                $where                  = array();
+                $where['id']            = $id;
+                $res                    = $db->where($where)->save($info);
+                }else{
+                $res                    = $db->add($info);
+                }
+
+                echo '<script>window.top.location.reload();</script>';
+
+            }
         }
     }
 
@@ -3128,6 +3151,65 @@ class FinanceController extends BaseController {
             ->select();
         $this->lists                        = $lists;
         $this->display();
+    }
+
+    //财务工作及时性
+    public function timely(){
+        $this->title('财务工作及时率');
+        $year		                = I('year',date('Y'));
+        $month		                = I('month',date('m'));
+        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
+        $yearMonth                  = $year.$month;
+        $times                      = get_cycle($yearMonth);
+        $mod                        = D('Sale');
+        //$data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
+        //$sum_data                   = $mod->get_sum_timely($data);
+
+        $this->sum                  = $sum_data;
+        $this->lists                = $data;
+        $this->year 	            = $year;
+        $this->month 	            = $month;
+        $this->prveyear             = $year-1;
+        $this->nextyear             = $year+1;
+
+        $this->display();
+    }
+
+
+    //财务及时率考核指标
+    public function timely_list(){
+        $this->title('及时率指标管理');
+        $lists                      = get_timely(5);
+
+        $this->lists                = $lists;
+        $this->display();
+    }
+
+    //配置财务及时率考核指标
+    public function timely_edit(){
+        $db                         = M('quota');
+        $id                         = I('id','');
+        if ($id){
+            $list                   = $db->find($id);
+            $list['title']          = htmlspecialchars_decode($list['title']);
+            $list['content']        = htmlspecialchars_decode($list['content']);
+            $list['rules']          = htmlspecialchars_decode($list['rules']);
+            $this->list             = $list;
+        }
+
+        $this->display();
+    }
+
+    //删除
+    public function timely_del(){
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $res                        = timely_quota_del($id);
+        if ($res){
+            $this->success('删除成功');
+        }else{
+            $this->error('删除失败');
+        }
     }
 
 }
