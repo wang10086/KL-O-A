@@ -2713,6 +2713,7 @@ function get_yw_department(){
         $where['b.audit_status']                = 1;
         $where['l.req_type']                    = 801;
         $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
+        $where['o.add_group']                   = array('neq',1); //排除拼团的项目
         if ($sale_uid) $where['o.create_user']  = $sale_uid;
         if ($jd_uid) $where['l.req_uid']        = $jd_uid;
         if ($addr) $where['o.destination']      = array('like', $addr.'%');

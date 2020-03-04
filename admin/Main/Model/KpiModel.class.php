@@ -266,14 +266,14 @@ class KpiModel extends Model
         //业绩
         $quarter_cycle          = getQuarterlyCicle($year,$month);
         $yearBeginTime          = get_year_settlement_start_time($year);
-        //$maoli                  = get_settlement_maoli($userid); //当季度业绩
-        $maoli_list             = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],0,0,'',$kindid='');
-        //$sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
-        //$sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
-
+        $kindid                 = 87; //单进院所
+        $maoli_list             = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],0,0,'',$kindid); //当季度业绩
+        $sum_maoli_list         = get_settlement_list($yearBeginTime,$quarter_cycle['end_time'],0,0,'',$kindid); //累计业绩
+        $maoli                  = array_sum(array_column($maoli_list,'maoli'));
+        $sum_maoli              = array_sum(array_column($sum_maoli_list,'maoli'));
 
         //业绩提成
-        $royaltyData            = $this -> get_royalty_data($target , $sum_maoli , $sum_partner_money);
+        $royaltyData            = $this -> get_zy_royalty_data($target , $sum_maoli);
 
         //业务岗累计已发放提成	当季度发放提成
         $salary_months          = $this->get_salary_months($year);
@@ -284,21 +284,46 @@ class KpiModel extends Model
         $data['complete']       = $maoli; //当季度业绩
         $data['sum_target']     = $target; //累计目标值
         $data['sum_complete']   = $sum_maoli; //累计业绩
-        //P($data);
-        //$data['quarter_partner_money'] = $partner_money; //当季度城市合伙人押金
-        //$data['sum_partner_money'] = $sum_partner_money; //累计城市合伙人押金
-        //$data['royalty5']       = $royaltyData['royalty5']; //5%部分业绩提成
-        //$data['royalty10']      = $royaltyData['royalty20']; //20%部分业绩提成
-        //$data['royaltySum']     = $royaltyData['royaltySum']; //全部业绩提成
-        //$data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发提成
-        //$data['quarter_should_royalty'] = $data['royaltySum'] - $data['sum_royalty_payoff']; //当季度应发提成 = 全部业绩提成 - 累计已发提成;
+        $data['royalty5']       = $royaltyData['royalty5']; //5%部分业绩提成
+        $data['royalty10']      = $royaltyData['royalty10']; //10%部分业绩提成
+        $data['royaltySum']     = $royaltyData['royaltySum']; //全部业绩提成
+        $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发提成
+        $data['quarter_should_royalty'] = $data['royaltySum'] - $data['sum_royalty_payoff']; //当季度应发提成 = 全部业绩提成 - 累计已发提成;
 
         $info                   = array();
         $info['account_id']     = $userid;
         $info['sum']            = $data['quarter_should_royalty'];
-        //$data['info']           = $info;
+        $data['info']           = $info;
         return $data;
 
+    }
+
+    //资源专员提成
+    private function get_zy_royalty_data($target , $sum_maoli){
+        $royalty5               = 0; //5%提成部分
+        $royalty10              = 0; //10%提成部分
+
+        switch ($target){
+            case $sum_maoli <= $target:
+                $royalty5       += 0;
+                $royalty10      += 0;
+                break;
+            case $sum_maoli > $target && $sum_maoli <= $target*2:
+                $royalty5       += ($sum_maoli - $target)*0.05;
+                $royalty10      += 0;
+                break;
+            case $sum_maoli > $target*2:
+            $royalty5           += ($target*2 - $target)*0.05;
+            $royalty10          += ($sum_maoli - $target*2)*0.1;
+                break;
+        }
+
+        $data                       = array();
+        $royaltySum                 = $royalty5 + $royalty10;
+        $data['royalty5']           = $royalty5;
+        $data['royalty10']          = $royalty10;
+        $data['royaltySum']         = $royaltySum;
+        return $data;
     }
 
     //人资综合部经理激励机制数据
