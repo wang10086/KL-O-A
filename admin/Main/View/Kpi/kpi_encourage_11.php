@@ -6,11 +6,6 @@
     </div><!-- /.box-header -->
     <div class="box-body">
         <div class="content">
-            <!--<span class="rtxt" style="margin-top:-10px;">
-            月份：{$kpi.month} &nbsp;&nbsp;&nbsp;&nbsp;
-            被考评人：{:username($kpi['user_id'])} &nbsp;&nbsp;&nbsp;&nbsp;
-            考评得分：{$kpi.score} &nbsp;&nbsp;&nbsp;&nbsp;
-            </span>-->
 
             <div class="box-body table-responsive no-padding">
                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">

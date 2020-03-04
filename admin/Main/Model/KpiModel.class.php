@@ -253,6 +253,51 @@ class KpiModel extends Model
 
     //资源管理部资源专员
     public function get_zybzy_encourage_data($userid, $year, $month){
+        //任务系数
+        $quarter                = get_quarter($month);
+        $lastQuarterMonth       = $quarter == 1 ? getQuarterMonths($quarter,$year) : getQuarterMonths($quarter-1,$year); //上季度月份
+        $quarterMonth           = getQuarterMonths($quarter,$year); //本季度月份
+        $lastYearMonth          = substr($lastQuarterMonth,-6); //上季度最后一个月
+        $endYearMonth           = substr($quarterMonth,-6); //本季度最后一个月
+        $quota_id               = 238; //单进院所业务月度累计毛利额-资源专员
+        $lastTarget             = $quarter == 1 ? 0 : M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>$quota_id,'month'=>$lastYearMonth))->getField('target'); //上季度累计任务系数
+        $target                 = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>$quota_id,'month'=>$endYearMonth))->getField('target'); //(本季度)累计任务系数
+
+        //业绩
+        $quarter_cycle          = getQuarterlyCicle($year,$month);
+        $yearBeginTime          = get_year_settlement_start_time($year);
+        //$maoli                  = get_settlement_maoli($userid); //当季度业绩
+        $maoli_list             = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],0,0,'',$kindid='');
+        //$sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
+        //$sum_maoli              = get_settlement_maoli($userid,$yearBeginTime,$quarter_cycle['end_time']); //累计业绩
+
+
+        //业绩提成
+        $royaltyData            = $this -> get_royalty_data($target , $sum_maoli , $sum_partner_money);
+
+        //业务岗累计已发放提成	当季度发放提成
+        $salary_months          = $this->get_salary_months($year);
+        $sum_royalty_salary     = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('total');
+
+        $data                   = array();
+        $data['target']         = $target - $lastTarget; //当季度任务指标 = 累计任务指标 - 上季度任务指标
+        $data['complete']       = $maoli; //当季度业绩
+        $data['sum_target']     = $target; //累计目标值
+        $data['sum_complete']   = $sum_maoli; //累计业绩
+        //P($data);
+        //$data['quarter_partner_money'] = $partner_money; //当季度城市合伙人押金
+        //$data['sum_partner_money'] = $sum_partner_money; //累计城市合伙人押金
+        //$data['royalty5']       = $royaltyData['royalty5']; //5%部分业绩提成
+        //$data['royalty10']      = $royaltyData['royalty20']; //20%部分业绩提成
+        //$data['royaltySum']     = $royaltyData['royaltySum']; //全部业绩提成
+        //$data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发提成
+        //$data['quarter_should_royalty'] = $data['royaltySum'] - $data['sum_royalty_payoff']; //当季度应发提成 = 全部业绩提成 - 累计已发提成;
+
+        $info                   = array();
+        $info['account_id']     = $userid;
+        $info['sum']            = $data['quarter_should_royalty'];
+        //$data['info']           = $info;
+        return $data;
 
     }
 
