@@ -3680,7 +3680,7 @@ function updatekpi($month,$user,$year=''){
                         //255 财务工作及时性-财务经理
                         if ($v['quota_id'] == 255){
 
-                            $complete                   = '开发中...';
+                            $complete                   = '100%';
                             $url                        = '';
                         }
 

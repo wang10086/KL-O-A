@@ -216,6 +216,8 @@ class KpiModel extends Model
             $num = 9;
         }elseif (in_array($userinfo['postid'],array(85,1,88))) { // 85=>人资综合部部经理，王茜,1=>安全品控部经理,李岩,88=>财务部经理,程小平
             $num = 10;
+        }elseif (in_array($userinfo['postid'],array(72))) { // 72=>资源管理部资源专员
+            $num = 11;
 
         }
         return $num;
@@ -243,8 +245,15 @@ class KpiModel extends Model
             $data = $this->get_zybjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==10){ // 人资综合部经理,安全品控部经理,财务部经理
             $data = $this->get_rzzhbjl_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type ==11){ // 资源管理部资源专员
+            $data = $this->get_zybzy_encourage_data($userid, $year, $month);
         }
         return $data;
+    }
+
+    //资源管理部资源专员
+    public function get_zybzy_encourage_data($userid, $year, $month){
+
     }
 
     //人资综合部经理激励机制数据
