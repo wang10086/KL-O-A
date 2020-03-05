@@ -3020,57 +3020,6 @@ function get_res_op_satisfaction($lists,$type,$dimension){
     }
 
     /**
-     * @param $startTime
-     * @param $endTime
-     * @param string $title
-     * @param string $content
-     * @param string $uid
-     * @return array
-     */
-    function get_huikuan_sure_timely_data($startTime,$endTime,$title='',$content='',$uid=''){
-        $budget_list                        = get_budget_list($startTime,$endTime,'',$uid);
-        $ok_list                            = array();
-        $sum_num                            = 0;
-        $ok_num                             = 0;
-
-        foreach ($budget_list as $k=>$v){
-            $sum_num++;
-            $ok_time                        = $v['req_time'] + (3*24*3600); //req_time 提交时间
-            $budget_list[$k]['ok_time']     = $ok_time;
-            $budget_list[$k]['type']        = $title;
-            if ($v['dep_time'] >= $ok_time){
-                $v['ok_time']               = $ok_time;
-                $ok_list[]                  = $v;
-                $budget_list[$k]['is_ok']   = 1;
-                $v['is_ok']                 = 1;
-                $ok_num++;
-            }
-
-            if ((($v['dep_time'] -$v['confirm_time']) < 666*24*3600) && !$v['is_ok']){ //出团前4天紧急成团的团
-                $ok_time                        = $v['confirm_time'] + (1*24*3600); //提交成团确认时间
-                $budget_list[$k]['ok_time']     = $ok_time;
-                $budget_list[$k]['type']        = $title;
-                if ($v['req_time'] <= $ok_time){ //$v['req_time'] 提交时间
-                    $v['ok_time']               = $ok_time;
-                    $ok_list[]                  = $v;
-                    $budget_list[$k]['is_ok']   = 1;
-                    $v['is_ok']                 = 1;
-                    $ok_num++;
-                }
-            }
-        }
-        $data                               = array();
-        $data['title']                      = $title;
-        $data['content']                    = $content;
-        /*$data['sum_num']                    = $sum_num;
-        $data['ok_num']                     = $ok_num;
-        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
-        $data['sum_list']                   = $budget_list;
-        $data['ok_list']                    = $ok_list;*/
-        return $data;
-    }
-
-    /**
      * 获取该周期预算的团
      * @param $begin_time
      * @param $end_time
@@ -3089,6 +3038,60 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         $op_budget_list                         = M()->table('__OP_BUDGET__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=b.op_id','left')->where($where)->select();
         return $op_budget_list;
     }
+
+/**
+ * @param $startTime
+ * @param $endTime
+ * @param string $title
+ * @param string $content
+ * @param string $uid
+ * @return array
+ */
+function get_huikuan_sure_timely_data($startTime,$endTime,$title='',$content=''){
+    $huikuan_list                       = get_huikuan_list($startTime,$endTime);
+    $ok_list                            = array();
+    $sum_num                            = 0;
+    $ok_num                             = 0;
+
+    foreach ($huikuan_list as $k=>$v){
+        $sum_num++;
+        $ok_time                        = $v['req_time'] + (3*24*3600); //req_time 提交时间
+        $huikuan_list[$k]['ok_time']    = $ok_time;
+        $huikuan_list[$k]['type']       = $title;
+        if ($v['audit_time'] <= $ok_time){
+            $v['ok_time']               = $ok_time;
+            $ok_list[]                  = $v;
+            $huikuan_list[$k]['is_ok']  = 1;
+            $v['is_ok']                 = 1;
+            $ok_num++;
+        }
+    }
+    $data                               = array();
+    $data['title']                      = $title;
+    $data['content']                    = $content;
+    $data['sum_num']                    = $sum_num;
+    $data['ok_num']                     = $ok_num;
+    $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+    $data['sum_list']                   = $huikuan_list;
+    $data['ok_list']                    = $ok_list;
+    return $data;
+}
+
+/**
+ * 获取该周期回款申请记录
+ * @param $begin_time
+ * @param $end_time
+ * @return mixed
+ */
+function get_huikuan_list($begin_time,$end_time){
+    $where                                  = array();
+    //$where['b.audit_status']                = 1;
+    $where['l.req_type']                    = 802; //回款申请
+    $where['l.audit_time']                  = array('between', "$begin_time,$end_time");
+    $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,l.req_uid,l.req_uname,l.req_time,l.audit_time,l.audit_uid,l.audit_uname'; //获取所有该周期预算的团
+    $op_huikuan_list                         = M()->table('__OP_HUIKUAN__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+    return $op_huikuan_list;
+}
 
     /**
      *  获取本周期结算及时性

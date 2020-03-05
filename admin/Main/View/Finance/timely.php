@@ -18,23 +18,23 @@
                         <div class="col-xs-12">
 
                             <div class="btn-group" id="catfont" style="padding-bottom:20px;">
-                                <?php if($prveyear>2017){ ?>
-                                    <a href="{:U('Finance/timely',array('year'=>$prveyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
+                                <?php if($prveyear>2019){ ?>
+                                    <a href="{:U('Finance/public_timely',array('year'=>$prveyear,'quarter'=>'1'))}" class="btn btn-default" style="padding:8px 18px;">上一年</a>
                                 <?php } ?>
                                 <?php
-                                    for($i=1;$i<13;$i++){
+                                    for($i=1;$i<5;$i++){
                                         $par            = array();
                                         $par['year']    = $year;
-                                        $par['month']   = str_pad($i,2,"0",STR_PAD_LEFT);
-                                        if($month==$i){
-                                            echo '<a href="'.U('Finance/timely',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'月</a>';
+                                        $par['quarter'] = $i;
+                                        if($quarter==$i){
+                                            echo '<a href="'.U('Finance/public_timely',$par).'" class="btn btn-info" style="padding:8px 18px;">'.$i.'季度</a>';
                                         }else{
-                                            echo '<a href="'.U('Finance/timely',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'月</a>';
+                                            echo '<a href="'.U('Finance/public_timely',$par).'" class="btn btn-default" style="padding:8px 18px;">'.$i.'季度</a>';
                                         }
                                     }
                                 ?>
                                 <?php if($year<date('Y')){ ?>
-                                    <a href="{:U('Finance/timely',array('year'=>$nextyear,'month'=>'01'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
+                                    <a href="{:U('Finance/public_timely',array('year'=>$nextyear,'quarter'=>'1'))}" class="btn btn-default" style="padding:8px 18px;">下一年</a>
                                 <?php } ?>
                             </div>
 

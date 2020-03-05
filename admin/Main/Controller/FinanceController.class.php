@@ -3154,25 +3154,23 @@ class FinanceController extends BaseController {
     }
 
     //财务工作及时性
-    public function timely(){
+    public function public_timely(){
         $this->title('财务工作及时率');
         $year		                = I('year',date('Y'));
-        $month		                = I('month',date('m'));
-        if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
-        $yearMonth                  = $year.$month;
-        $times                      = get_cycle($yearMonth);
+        $quarter                    = I('quarter',get_quarter(date('m')));
+        $times                      = get_quarter_cycle_time($year,$quarter);
         $mod                        = D('Finance');
-        $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
-        //$sum_data                   = $mod->get_sum_timely($data);
+        $data                       = $mod->get_timely_data($times['begin_time'],$times['end_time']);
+        $sum_data                   = $mod->get_sum_timely($data);
 
         $this->sum                  = $sum_data;
         $this->lists                = $data;
         $this->year 	            = $year;
-        $this->month 	            = $month;
+        $this->quarter	            = $quarter;
         $this->prveyear             = $year-1;
         $this->nextyear             = $year+1;
 
-        $this->display();
+        $this->display('timely');
     }
 
 
@@ -3210,6 +3208,30 @@ class FinanceController extends BaseController {
         }else{
             $this->error('删除失败');
         }
+    }
+
+    //详情页
+    public function public_timely_detail(){
+        $this->title('财务工作及时率');
+        $mod                        = D('Finance');
+        $timely                     = get_timely(5);
+        $timely                     = array_column($timely,'title');
+        $title                      = trim(I('tit'));
+        $title                      = ($title == '合计')?$timely[0]:$title;
+        $year                       = I('year',date('Y'));
+        $quarter                    = I('quarter',get_quarter(date('m')));
+        $uid                        = I('uid','');
+        $times                      = get_quarter_cycle_time($year,$quarter);
+        $data                       = $mod->get_timely_type($title,$times['begin_time'],$times['end_time'],$uid);
+
+        $this->uid                  = $uid;
+        $this->timely               = $timely;
+        $this->lists                = $data;
+        $this->title                = $title;
+        $this->year                 = $year;
+        $this->month                = $month;
+        $this->title($title);
+        $this->display('timely_detail');
     }
 
 }

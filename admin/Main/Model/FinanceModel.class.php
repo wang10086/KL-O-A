@@ -281,7 +281,7 @@ class FinanceModel extends Model{
     public function get_timely_data($startTime,$endTime,$uid=''){
         $timely                         = get_timely(5); //5=>财务操作及时性
 
-        $huikuan_data                   = get_huikuan_sure_timely_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content'],$uid); //回款确认及时性
+        $huikuan_data                   = get_huikuan_sure_timely_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content']); //回款确认及时性
         //$budget_data                    = get_budget_data($startTime,$endTime,$timely[1]['title'],$timely['1']['content'],$uid); //报销支付及时性
         //$settlement_data                = get_settlement_data($startTime,$endTime,$timely[2]['title'],$timely['2']['content'],$uid); //项目财务决算及时性
 
@@ -289,6 +289,40 @@ class FinanceModel extends Model{
         //$data[]                         = $budget_data;
         //$data[]                         = $settlement_data;
 
+        return $data;
+    }
+
+    //获取财务及时率合计
+    public function get_sum_timely($data){
+        $sum_num                        = array_sum(array_column($data,'sum_num'));
+        $ok_num                         = array_sum(array_column($data,'ok_num'));
+        $average                        = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $info                           = array();
+        $info['title']                  = '合计';
+        $info['sum_num']                = $sum_num;
+        $info['ok_num']                 = $ok_num;
+        $info['average']                = $average;
+        return $info;
+    }
+
+    //计调及时率详情
+    public function get_timely_type($title,$startTime,$endTime,$uid=0,$group_id=''){
+        $timely                         = get_timely(5); //5=>财务工作及时性
+        $timely_column                  = array_column($timely,'content','title');
+        switch ($title){
+            case $timely[0]['title']: //回款确认及时性
+                $info                   = get_huikuan_sure_timely_data($startTime,$endTime,$title,$timely_column[$title],$uid);
+                $data                   = $info['sum_list'];
+                break;
+            /*case $timely[1]['title']: //报销支付及时性
+                $info                   = get_budget_data($startTime,$endTime,$title,$timely_column[$title],$uid);
+                $data                   = $info['sum_list'];
+                break;
+            case $timely[2]['title']: //项目财务决算及时性
+                $info                   = get_settlement_data($startTime,$endTime,$title,$timely_column[$title],$uid);
+                $data                   = $info['sum_list'];
+                break;*/
+        }
         return $data;
     }
 }

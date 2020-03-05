@@ -3680,22 +3680,12 @@ function updatekpi($month,$user,$year=''){
                         //255 财务工作及时性-财务经理
                         if ($v['quota_id'] == 255){
                             $monon                      = substr($v['month'],4,2);
+                            $quarter                    = get_quarter($monon);
                             $mod                        = D('Finance');
                             $data                       = $mod->get_timely_data($v['start_date'],$v['end_date'],$v['user_id']);
-
-
-
-                            $complete                   = '100%';
-                            $url                        = '';
-
-                            /*
-                             * $monon                          = substr($v['month'],4,2);
-                            $mod                            = D('Sale');
-                            $data                           = $mod->get_timely_data($v['start_date'],$v['end_date'],$v['user_id']);
-                            $sum_data                       = $mod->get_sum_timely($data);
-                            $complete                       = $sum_data['average'];
-                            $url                            = U('Sale/operator_timely',array('year'=>$v['year'],'month'=>$monon));
-                            */
+                            $sum_data                   = $mod->get_sum_timely($data);
+                            $complete                   = $sum_data['average'];
+                            $url                        = U('Finance/public_timely',array('year'=>$v['year'],'quarter'=>$quarter));
                         }
 
                    /* }*/

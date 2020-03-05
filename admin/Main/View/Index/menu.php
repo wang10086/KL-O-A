@@ -658,7 +658,7 @@
                                 </li>
 
                                 <if condition="rolemenu(array('Finance/timely'))">
-                                    <li class="{:on('Finance/timely')}"><a href="{:U('Finance/timely')}"><i class="fa fa-angle-right"></i> 财务工作及时率</a></li>
+                                    <li class="{:on('Finance/public_timely')} {:on('Finance/public_timely_detail')} {:on('Finance/timely_list')}"><a href="{:U('Finance/public_timely')}"><i class="fa fa-angle-right"></i> 财务工作及时率</a></li>
                                 </if>
 
                                 <if condition="rolemenu(array('Finance/costlabour'))">
