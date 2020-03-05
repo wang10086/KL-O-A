@@ -1187,8 +1187,10 @@ class ProductController extends BaseController {
         $apply_time                     = $app_time['atime'];
 
         $where                          = array();
-        if ($apply_year) $where['apply_year'] = $apply_year;
-        if ($apply_time) $where['apply_time'] = $apply_time;
+        //if ($apply_year) $where['apply_year'] = $apply_year;
+        //if ($apply_time) $where['apply_time'] = $apply_time;
+        if ($apply_year) $where['apply_year'] = array('in',array(0,$apply_year));
+        if ($apply_time) $where['apply_time'] = array('in',array(0,$apply_time));
         if ($tit) $where['title']       = array('like','%'.$tit.'%');
         if ($kind) $where['business_dept'] = array('like','%'.$kind.'%');
 

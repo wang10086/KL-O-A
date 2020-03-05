@@ -219,6 +219,9 @@ class KpiModel extends Model
         }elseif (in_array($userinfo['postid'],array(72))) { // 72=>资源管理部资源专员
             $num = 11;
 
+        }elseif (in_array($userinfo['postid'],array(73))) { // 73=>老科学家演讲团教务专员
+            $num = 12;
+
         }
         return $num;
     }
@@ -247,8 +250,14 @@ class KpiModel extends Model
             $data = $this->get_rzzhbjl_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==11){ // 资源管理部资源专员
             $data = $this->get_zybzy_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type ==12){ // 老科学家演讲团教务专员
+            $data = $this->get_zybyjt_encourage_data($userid, $year, $month);
         }
         return $data;
+    }
+
+    public function get_zybyjt_encourage_data($userid, $year, $month){
+
     }
 
     //资源管理部资源专员
