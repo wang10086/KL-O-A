@@ -3161,8 +3161,8 @@ class FinanceController extends BaseController {
         if (strlen($month)<2) $month= str_pad($month,2,'0',STR_PAD_LEFT);
         $yearMonth                  = $year.$month;
         $times                      = get_cycle($yearMonth);
-        $mod                        = D('Sale');
-        //$data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
+        $mod                        = D('Finance');
+        $data                       = $mod->get_timely_data($times['begintime'],$times['endtime']);
         //$sum_data                   = $mod->get_sum_timely($data);
 
         $this->sum                  = $sum_data;

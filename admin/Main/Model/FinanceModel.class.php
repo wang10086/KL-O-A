@@ -276,4 +276,19 @@ class FinanceModel extends Model{
         $audit_uid                          = $list['audit_uid'];
         return $audit_uid;
     }
+
+    //获取财务的及时率
+    public function get_timely_data($startTime,$endTime,$uid=''){
+        $timely                         = get_timely(5); //5=>财务操作及时性
+
+        $huikuan_data                   = get_huikuan_sure_timely_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content'],$uid); //回款确认及时性
+        //$budget_data                    = get_budget_data($startTime,$endTime,$timely[1]['title'],$timely['1']['content'],$uid); //报销支付及时性
+        //$settlement_data                = get_settlement_data($startTime,$endTime,$timely[2]['title'],$timely['2']['content'],$uid); //项目财务决算及时性
+
+        $data[]                         = $huikuan_data;
+        //$data[]                         = $budget_data;
+        //$data[]                         = $settlement_data;
+
+        return $data;
+    }
 }

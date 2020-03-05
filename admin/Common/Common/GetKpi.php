@@ -3020,6 +3020,57 @@ function get_res_op_satisfaction($lists,$type,$dimension){
     }
 
     /**
+     * @param $startTime
+     * @param $endTime
+     * @param string $title
+     * @param string $content
+     * @param string $uid
+     * @return array
+     */
+    function get_huikuan_sure_timely_data($startTime,$endTime,$title='',$content='',$uid=''){
+        $budget_list                        = get_budget_list($startTime,$endTime,'',$uid);
+        $ok_list                            = array();
+        $sum_num                            = 0;
+        $ok_num                             = 0;
+
+        foreach ($budget_list as $k=>$v){
+            $sum_num++;
+            $ok_time                        = $v['req_time'] + (3*24*3600); //req_time 提交时间
+            $budget_list[$k]['ok_time']     = $ok_time;
+            $budget_list[$k]['type']        = $title;
+            if ($v['dep_time'] >= $ok_time){
+                $v['ok_time']               = $ok_time;
+                $ok_list[]                  = $v;
+                $budget_list[$k]['is_ok']   = 1;
+                $v['is_ok']                 = 1;
+                $ok_num++;
+            }
+
+            if ((($v['dep_time'] -$v['confirm_time']) < 666*24*3600) && !$v['is_ok']){ //出团前4天紧急成团的团
+                $ok_time                        = $v['confirm_time'] + (1*24*3600); //提交成团确认时间
+                $budget_list[$k]['ok_time']     = $ok_time;
+                $budget_list[$k]['type']        = $title;
+                if ($v['req_time'] <= $ok_time){ //$v['req_time'] 提交时间
+                    $v['ok_time']               = $ok_time;
+                    $ok_list[]                  = $v;
+                    $budget_list[$k]['is_ok']   = 1;
+                    $v['is_ok']                 = 1;
+                    $ok_num++;
+                }
+            }
+        }
+        $data                               = array();
+        $data['title']                      = $title;
+        $data['content']                    = $content;
+        /*$data['sum_num']                    = $sum_num;
+        $data['ok_num']                     = $ok_num;
+        $data['average']                    = $sum_num ? (round($ok_num/$sum_num,4)*100).'%' : '100%';
+        $data['sum_list']                   = $budget_list;
+        $data['ok_list']                    = $ok_list;*/
+        return $data;
+    }
+
+    /**
      * 获取该周期预算的团
      * @param $begin_time
      * @param $end_time
