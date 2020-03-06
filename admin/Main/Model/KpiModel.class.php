@@ -256,8 +256,44 @@ class KpiModel extends Model
         return $data;
     }
 
+    //资源管理部   老科学家演讲团教务专员
     public function get_zybyjt_encourage_data($userid, $year, $month){
+        $quarter                    = get_quarter($month);
+        $quarter_cycle              = get_quarter_cycle_time($year,$quarter);
+        $year_cycle                 = get_year_cycle($year);
+        $gec_lists                  = $this->get_my_customer_gec($userid);
+        $gec_data                   = array_column($gec_lists,'company_name');
+        $otherWhere                 = array();
+        $otherWhere['o.customer']   = array('in',$gec_data);
+        $quarter_settlement_lists   = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],'','','','','',$otherWhere);
+        $year_settlement_lists      = get_settlement_list($year_cycle['beginTime'],$quarter_cycle['end_time'],'','','','','',$otherWhere);
 
+        //累计已发奖金
+        $sum_royalty_salary         = $this->get_sum_royalty_salary($year,$userid);
+
+        $data                       = array();
+        $data['complete']           = $quarter_settlement_lists ? array_sum(array_column($quarter_settlement_lists,'maoli')) : 0; //转交客户当季度毛利
+        $data['sum_complete']       = $year_settlement_lists ? array_sum(array_column($year_settlement_lists,'maoli')) : 0; //累计业绩
+        $data['quarter_should_royalty'] = $data['complete'] * 0.02; //当季转交客户应发奖金 = 当季度毛利 * 2%
+        $data['sum_should_royalty']     = $data['sum_complete'] * 0.02; //累计应发转交客户奖金
+        $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
+
+        $info                       = array();
+        $info['account_id']         = $userid;
+        $info['sum']                = $data['quarter_should_royalty'];
+        $data['info']               = $info;
+        return $data;
+    }
+
+    //获取某个人2年内招募的客户信息
+    private function get_my_customer_gec($userid){
+        $db                     = M('customer_gec');
+        $time                   = strtotime('-2 year') - (90*24*2600);
+        $where                  = array();
+        $where['create_user_id']= $userid;
+        $where['create_time']   = array('gt',$time);
+        $lists                  = $db->where($where)->select();
+        return $lists;
     }
 
     //资源管理部资源专员
@@ -948,7 +984,8 @@ class KpiModel extends Model
     public function get_jd_encourage_data($userid,$year,$month){
         $year_cycle             = get_year_cycle($year);
         $quarter_cycle          = getQuarterlyCicle($year,$month); //当季度周期
-        $year_settlement_lists  = get_settlement_list($year_cycle['beginTime'],$year_cycle['endTime'],'',$userid);
+        //$year_settlement_lists  = get_settlement_list($year_cycle['beginTime'],$year_cycle['endTime'],'',$userid);
+        $year_settlement_lists  = get_settlement_list($year_cycle['beginTime'],$quarter_cycle['end_time'],'',$userid);
         $quarter_settlement_lists = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],'',$userid);
 
         //累计已发操作奖金

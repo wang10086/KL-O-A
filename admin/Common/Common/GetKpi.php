@@ -2706,9 +2706,10 @@ function get_yw_department(){
      * @param $addr 实施地点
      * @param $kindid 项目类型
      * @param $saleUids 多个销售人员 array
+     * @param $otherWhere 其他条件
      * @return mixed
      */
-    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0,$addr='',$kindid='',$saleUids=''){
+    function get_settlement_list($begin_time,$end_time,$sale_uid=0,$jd_uid=0,$addr='',$kindid='',$saleUids='',$otherWhere=''){
         $where                                  = array();
         $where['b.audit_status']                = 1;
         $where['l.req_type']                    = 801;
@@ -2719,6 +2720,7 @@ function get_yw_department(){
         if ($addr) $where['o.destination']      = array('like', $addr.'%');
         if ($kindid) $where['o.kind']           = $kindid;
         if ($saleUids) $where['o.create_user']  = array('in',$saleUids);
+        if ($otherWhere) $where                 = array_merge($where,(array)$otherWhere);
         $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.destination,o.kind,o.standard,o.in_dijie,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
         $op_settlement_list                     = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
         return $op_settlement_list;
