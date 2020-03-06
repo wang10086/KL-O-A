@@ -2502,7 +2502,7 @@ function get_yw_department(){
             if ($v['BB']) $dimension_num++;
             if ($v['CC']) $dimension_num++;
             if ($v['DD']) $dimension_num++;
-            if ($v['DD']) $dimension_num++;
+            if ($v['EE']) $dimension_num++;
             $score_num              += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'];
             $number++;
         }
