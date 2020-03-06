@@ -1437,7 +1437,7 @@ class ManageModel extends Model{
     }
 
     /**
-     * not_team 非团支出报销（其他费用）(不分摊)
+     * not_share_list 非团支出报销（其他费用）(不分摊)
      * $ymd1 开始时间 20180626
      * $ymd2 结束时间 20180726
      */
@@ -1567,7 +1567,8 @@ class ManageModel extends Model{
         $map['bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
         $map['audit_status']    = array('eq',1);    //审核通过
         $map['share']           = array('neq',1);   //不分摊
-        $otherExpensesKinds     = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+        $otherExpensesKindData  = $this->getOtherExpensesKinds();
+        $otherExpensesKinds     = $otherExpensesKindData['ids'];
         $map['bxd_kind']        = array('in',$otherExpensesKinds);
         $money                  = M('baoxiao')->where($map)->select();//日期内所有数据
         return  $money;
@@ -1587,10 +1588,20 @@ class ManageModel extends Model{
         $where['b.bx_time']         = array('between',"$ymd1,$ymd2");//开始结束时间
         $where['b.bxd_type']        = array('in',array(2,3));//2 非团借款报销 3直接报销
         $where['b.audit_status']    = array('eq',1);    //审核通过
-        $otherExpensesKinds         = M('bxd_kind')->where(array('pid'=>2))->getField('id',true);
+        $otherExpensesKindData      = $this->getOtherExpensesKinds();
+        $otherExpensesKinds         = $otherExpensesKindData['ids'];
         $where['b.bxd_kind']        = array('in',$otherExpensesKinds);
         $money                      = M()->table('__BAOXIAO_SHARE__ as s')->field('b.bxd_kind,s.*')->join('__BAOXIAO__ as b on b.id=s.bx_id','left')->where($where)->select();
         return  $money;
+    }
+
+    //获取其他费用类型(不包含代收代付)
+    public function getOtherExpensesKinds(){
+        $kind                       = M('bxd_kind')->where(array('pid'=>2,'name'=>array('neq','代收代付')))->getField('id,name',true);
+        $data                       = array();
+        $data['kind']               = $kind;
+        $data['ids']                = array_keys($kind);
+        return $data;
     }
 
     /**  monthzsr 收入合计   monthzml 毛利合计  monthmll 毛利率
