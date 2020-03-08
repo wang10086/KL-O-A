@@ -14,38 +14,36 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <if condition="C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('userid'),array(11,77))">
-                        <form action="{:U('File/companyFile')}" method="post">
-                            <div class="col-xs-12 content-neck">
-                                <div class="content-neck-body">
-                                    <lebal>部门</lebal>&emsp14;
-                                    <select name="department" onchange="get_depart()" id="department">
-                                        <option value="" selected disabled>请选择</option>
-                                        <foreach name="departments" key="k" item="v">
-                                            <option value="{$k}" <?php if ($department==$k) echo "selected"; ?>>{$v}</option>
-                                        </foreach>
-                                    </select>
-                                </div>
-
-                                <div class="content-neck-body">
-                                    <lebal>岗位</lebal>&emsp14;
-                                    <select name="posts" id="posts">
-                                        <?php if ($department){ ?>
-                                            <script type="text/javascript">
-                                                $(function () {
-                                                    get_depart();
-                                                })
-                                            </script>
-                                        <?php }else{ ?>
-                                            <option value="">请先选择部门</option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-
-                                <input type="submit" class="btn btn-info search-btn" value="确定">
+                    <form action="{:U('File/companyFile')}" method="post">
+                        <div class="col-xs-12 content-neck">
+                            <div class="content-neck-body">
+                                <lebal>部门</lebal>&emsp14;
+                                <select name="department" onchange="get_depart()" id="department">
+                                    <option value="" selected disabled>请选择</option>
+                                    <foreach name="departments" key="k" item="v">
+                                        <option value="{$k}" <?php if ($department==$k) echo "selected"; ?>>{$v}</option>
+                                    </foreach>
+                                </select>
                             </div>
-                        </form>
-                    </if>
+
+                            <div class="content-neck-body">
+                                <lebal>岗位</lebal>&emsp14;
+                                <select name="posts" id="posts">
+                                    <?php if ($department){ ?>
+                                        <script type="text/javascript">
+                                            $(function () {
+                                                get_depart();
+                                            })
+                                        </script>
+                                    <?php }else{ ?>
+                                        <option value="">请先选择部门</option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <input type="submit" class="btn btn-info search-btn" value="确定">
+                        </div>
+                    </form>
 
                     <div class="row">
                         <div class="col-xs-12">

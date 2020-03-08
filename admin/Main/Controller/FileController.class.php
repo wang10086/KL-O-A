@@ -210,7 +210,7 @@ class FileController extends BasepubController {
         $where['file_type']             = 1; //文件
         $where['file_tag']              = array('like','%['.$pin.']%');
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
-        if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
+        /*if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             $new_department             = $department ? '['.$department.']' : '['.session('department').']';
             $new_posts                  = $posts ? '['.$posts.']' : '['.session('posts').']';
             $where['_string']           = "(department like '%$new_department%') OR ( posts like '%$new_posts%')";
@@ -218,7 +218,10 @@ class FileController extends BasepubController {
             $new_department             = '['.session('department').']';
             $new_posts                  = '['.session('posts').']';
             $where['_string']           = "(department like '%$new_department%') OR ( posts like '%$new_posts%')";
-        }
+        }*/
+        $new_department             = $department ? '['.$department.']' : '['.session('department').']';
+        $new_posts                  = $posts ? '['.$posts.']' : '['.session('posts').']';
+        $where['_string']           = "(department like '%$new_department%') OR ( posts like '%$new_posts%')";
 
         $pagecount                      = $db->where($where)->count();
         $page                           = new Page($pagecount, P::PAGE_SIZE);
@@ -251,13 +254,15 @@ class FileController extends BasepubController {
         $where['file_type']             = 1; //文件
         $where['file_tag']              = array('like','%['.$pin.']%');
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
-        if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
+        /*if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             $new_department                 = $department ? '['.$department.']' : '['.session('department').']';
             $where['department']            = array('like','%'.$new_department.'%');
         }else{
             $new_department                 = '['.session('department').']';
             $where['department']            = array('like','%'.$new_department.'%');
-        }
+        }*/
+        $new_department                 = $department ? '['.$department.']' : '['.session('department').']';
+        $where['department']            = array('like','%'.$new_department.'%');
 
         $pagecount                      = $db->where($where)->count();
         $page                           = new Page($pagecount, P::PAGE_SIZE);
@@ -290,17 +295,16 @@ class FileController extends BasepubController {
         $where['file_type']             = 1; //文件
         $where['file_tag']              = array('like','%['.$pin.']%');
         if ($fileName) $where['file_name']  = array('like','%'.$fileName.'%');
-        if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
-            //$department                     = $department ? '['.$department.']' : '['.session('department').']';
-            //$where['department']            = array('like','%'.$department.'%');
+        /*if (in_array(cookie('userid'),array(11,77)) || C('RBAC_SUPER_ADMIN')==cookie('username')){
             $new_posts                      = $posts ? '['.$posts.']' : '['.session('posts').']';
             $where['posts']                 = array('like','%'.$new_posts.'%');
         }else{
-            //$department                     = '['.session('department').']';
-            //$where['department']            = array('like','%'.$department.'%');
             $new_posts                      = '['.session('posts').']';
             $where['posts']                 = array('like','%'.$new_posts.'%');
-        }
+        }*/
+
+        $new_posts                      = $posts ? '['.$posts.']' : '['.session('posts').']';
+        $where['posts']                 = array('like','%'.$new_posts.'%');
 
         $pagecount                      = $db->where($where)->count();
         $page                           = new Page($pagecount, P::PAGE_SIZE);
