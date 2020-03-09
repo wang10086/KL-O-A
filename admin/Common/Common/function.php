@@ -3138,7 +3138,7 @@ function updatekpi($month,$user,$year=''){
                                 $score      = (round($average*100/90,2))*100;
                                 $complete   = $average > 0.9 ? 100 : $score;
                             }
-                            $url            = '';
+                            $url            = U('Kpi/public_guide_score',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
                         }
 
                         //业绩贡献度

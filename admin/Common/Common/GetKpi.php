@@ -706,7 +706,7 @@ function get_op_guide($userid,$beginTime,$endTime){
     $where                  = array();
     $where['s.input_time']	= array('between',array($tcsBeginTime,$tcsEndTime));
     $where['o.op_id']       = array('in',$op_ids);
-    $score_lists            = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.input_time,o.kind,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
+    $score_lists            = M()->table('__TCS_SCORE__ as s')->field('u.op_id,s.input_time,o.kind,o.project,o.group_id,o.create_user_name,s.id as sid,s.before_sell,s.new_media,s.stay,s.travel,s.content,s.food,s.bus,s.driver,s.guide,s.teacher,s.depth,s.major,s.interest,s.material,s.late,s.manage,s.morality,s.cas_time,s.cas_complete,s.cas_addr')->join('join __TCS_SCORE_USER__ as u on u.id = s.uid','left')->join('__OP__ as o on o.op_id = u.op_id','left')->where($where)->select();
     $data                   = array();
     $data['num']            = $num;
     $data['lists']          = $score_lists;

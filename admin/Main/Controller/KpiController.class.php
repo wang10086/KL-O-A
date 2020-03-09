@@ -2815,6 +2815,33 @@ class KpiController extends BaseController {
         $this->display('kpi_standard_rate');
     }
 
+    //专家实施客户满意度
+    public function public_guide_score(){
+        $this->title('专家实施客户满意度');
+        $st                                 = I('st');
+        $et                                 = I('et');
+        $uid                                = I('uid');
+
+        $data                               = get_op_guide($uid,$st,$et);  //获取该用户本周期所带团评分信息
+        $num                                = $data['num'];                //负责项目数
+        $list                               = $data['lists'];               //评分列表
+        $average                            = get_manyidu($data['lists']); //满意度平均值
+
+        if (!$num || !$list){
+            //本月度无负责实施项目的，本项100分
+            $complete                       = '100%';
+        }else{
+            //平均得分(如果得分>90%,得分100, 如果小于90%,以90%作为满分求百分比)
+            $score                          = (round($average*100/90,2))*100;
+            $complete                       = $average > 0.9 ? '100%' : $score.'%';
+        }
+
+        $this->lists                        = $data['lists'];
+        $this->num                          = $data['lists'] ? count($data['lists']) : 0;
+        $this->complete                     = $complete;
+        $this->display('kpi_guide_score');
+    }
+
 
     public function aaa(){
         //set_after_salary_kpi(201906);
