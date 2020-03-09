@@ -932,7 +932,7 @@ class KpiModel extends Model
         $data['year_maoli_up']          = $data['year_maoli'] - $data['last_year_maoli']; //累计毛利增长
         $data['year_should_royalty_up'] = round($data['year_maoli_up'] * 0.005 , 2); //累计毛利增长奖金 = 累计增长业绩* 0.5%
         $data['year_royalty_payoff_up'] = $this -> get_payoff_quarterRoyalty($userid,$year,'AA_num'); //累计已发毛利增长奖金
-        $data['quarter_should_royalty_up'] = $data['year_should_royalty_up'] - $data['year_royalty_payoff_up']; //当季度应发毛利增长奖金 = 累计毛利增长奖金 - 累计已发毛利增长奖金
+        $data['quarter_should_royalty_up'] = ($data['year_should_royalty_up'] - $data['year_royalty_payoff_up']) > 0 ? round($data['year_should_royalty_up'] - $data['year_royalty_payoff_up'],2) : 0; //当季应发毛利增长奖金 = 累计毛利增长奖金 - 累计已发毛利增长奖金
         $data['quarter_maoli_op']       = $op_data['complete']; //当季度操作毛利
         $data['quarter_should_royalty_op'] = $op_data['quarter_should_royalty']; //当季度应发操作奖金
         $data['year_maoli_op']          = $op_data['sum_complete']; //累计操作毛利
@@ -996,8 +996,8 @@ class KpiModel extends Model
         $data                   = array();
         $data['complete']       = $quarter_settlement_lists ? array_sum(array_column($quarter_settlement_lists,'maoli')) : 0; //当季度业绩
         $data['sum_complete']   = $year_settlement_lists ? array_sum(array_column($year_settlement_lists,'maoli')) : 0; //累计业绩
-        $data['quarter_should_royalty'] = $data['complete'] * 0.01; //当季度应发操作奖金 = 当季度操作毛利 * 1%
-        $data['sum_should_royalty']     = $data['sum_complete'] * 0.01; //累计应发操作奖金
+        $data['quarter_should_royalty'] = round($data['complete'] * 0.01,2); //当季度应发操作奖金 = 当季度操作毛利 * 1%
+        $data['sum_should_royalty']     = round($data['sum_complete'] * 0.01,2); //累计应发操作奖金
         $data['sum_royalty_payoff']     = $sum_royalty_salary ? $sum_royalty_salary : 0; //累计已发操作奖金
 
         $info                   = array();
