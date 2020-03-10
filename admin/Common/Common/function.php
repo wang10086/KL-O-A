@@ -3066,8 +3066,8 @@ function updatekpi($month,$user,$year=''){
                             $url                    = '';
                         }
 
-                        //工单满意度 151工=>作质量('平面设计') 158=>业务部门定制产品内部满意度 162=>研发专员对产品研发专业支持满意度 232=>工单满意度
-                        if (in_array($v['quota_id'],array(151,158,162,232))){
+                        //工单满意度 151工=>作质量('平面设计') 158=>业务部门定制产品内部满意度 232=>工单满意度
+                        if (in_array($v['quota_id'],array(151,158,232))){
                             //及时率
                             $uids                   = array($user);
                             $lists                  = get_count_worder_lists($v['month']);
@@ -3362,7 +3362,8 @@ function updatekpi($month,$user,$year=''){
                         //129=>业务人员满意度(研发质量)(魏春竹)
                         //182=>资源协调支撑工作满意度-资源专员(吕严)
                         //92=> 计调人员对采购满意度-采购主管(杨晓旺)
-                        if (in_array($v['quota_id'],array(92,129,155,168,193,206,214,212,218,219,182))){
+                        //162=>产品研发专业支持内部满意度(戴明，黄鑫磊)
+                        if (in_array($v['quota_id'],array(92,129,155,162,168,193,206,214,212,218,219,182))){
                             $data                   = get_company_satisfaction($v);
 
                             $complete               = $data['sum_average'];
