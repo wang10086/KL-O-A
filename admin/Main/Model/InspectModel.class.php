@@ -264,7 +264,7 @@ class InspectModel extends Model{
     }
 
     //获取内部满意度需评分人员
-    private function get_satisfaction_user($type=0){
+    public function get_satisfaction_user($type=0){
         $db                             = M('Satisfaction_user');
         if ($type){
             $data                       = $db->where(array('type'=>$type))->getField('account_id,account_name',true);
