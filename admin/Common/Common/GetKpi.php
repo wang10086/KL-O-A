@@ -5230,3 +5230,34 @@ function get_profit_up_rate_target($uid,$year,$month,$quota_id){
     return $data;
 }
 
+//获取由研发专家协助的标准化产品
+function get_expert_producted_data($uid){
+    $lists                                  = M('producted')->where(array('expert_uid'=>$uid,'audit_status'=>1))->field('id,title,expert_uid,expert_weight')->select();
+    $data                                   = array();
+    $data['producted_ids']                  = array_column($lists,'id');
+    $data['expert_weight']                  = array_column($lists,'expert_weight','id');
+    $data['lists']                          = $lists;
+    return $data;
+}
+
+//
+function get_expert_producted_gross_profit_op($startTime,$endTime,$producted_ids=array(),$expert_weight=''){
+    $field                                  = 'o.op_id,o.project,o.group_id,o.create_user,o.create_user_name,o.kind,o.standard,o.sale_user,o.producted_id,b.budget,b.shouru,b.maoli,b.untraffic_shouru,l.req_uid,l.req_uname,l.req_time,l.audit_time'; //获取所有该季度结算的团
+    $where                                  = array();
+    $where['b.audit_status']                = 1;
+    $where['l.req_type']                    = 801;
+    $where['l.audit_time']                  = array('between', "$startTime,$endTime");
+    //$where['o.standard']                    = 1; //标准化
+    //$where['o.producted_id']                = array('in',$producted_ids);
+    $lists                                  = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+
+    foreach ($lists as $k=>$v){
+        $lists[$k]['expert_weight']         = $expert_weight[$v['producted_id']]/10;
+        $lists[$k]['expert_weight_maoli']   = round($v['maoli']*$lists[$k]['expert_weight'],2);
+    }
+    $data                                   = array();
+    $data['sum_profit']                     = array_sum(array_column($lists,'expert_weight_maoli'));
+    $data['lists']                          = $lists;
+    return $data;
+}
+
