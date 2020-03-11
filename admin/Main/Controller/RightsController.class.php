@@ -7,15 +7,15 @@ use Sys\P;
 
 // @@@NODE-2###Rights###申请和审批###
 class RightsController extends BaseController {
-    
+
     protected $_pagetitle_ = '审批和申请';
     protected $_pagedesc_  = '';
- 
+
     // @@@NODE-3###index###审批数据列表###
     public function index ()
     {
         $this->title('待审批列表');
-        
+
         $this->req_types = C('REQ_TYPES');
         $this->status    = I('status','-1');
 		$where = '';
@@ -27,16 +27,16 @@ class RightsController extends BaseController {
         $adb = M('audit_log');
         $cfgdb = M('audit_field');
         $resdb = M();
-        
+
 		$pagecount = $adb->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-		
+
 
         $rs = $adb->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('req_time'))->select();
-		
-		
-                
+
+
+
         foreach ($rs as $k => $row) {
             $cfg = $cfgdb->where('req_type='.$row['req_type'])->find();
             $res = $resdb->table('__' . strtoupper($cfg['table']) . '__')->field($cfg['field'])->find($row['req_id']);
@@ -57,10 +57,10 @@ class RightsController extends BaseController {
             //$budget             = M('op_huikuan')->find($fid);
             $budget             = M("$row[req_table]")->find($fid);
             $opid               = $budget['op_id'];
-            $rs[$k]['group_id']    = M('op')->where(array('op_id'=>$opid))->getfield('group_id');
+            $rs[$k]['group_id'] = M('op')->where(array('op_id'=>$opid))->getfield('group_id');
 
             //回款金额
-            $rs[$k]['amount'] 	    = M('op_huikuan')->where(array('id'=>$row['req_id']))->getfield('huikuan');
+            $rs[$k]['amount']   = $row['req_type'] == 802 ?  M('op_huikuan')->where(array('id'=>$row['req_id']))->getfield('huikuan') : '';
 
             //计调人员
             $rs[$k]['jidiao'] = M()->table('__OP__ as o')->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where("o.op_id = $opid")->getfield('a.nickname');
@@ -69,7 +69,7 @@ class RightsController extends BaseController {
 
         $this->lists = $rs;
 
-		
+
          $this->audit_status = array (
                 P::AUDIT_STATUS_NOT_AUDIT  => '未审核',
                 P::AUDIT_STATUS_PASS       => '<span class="green">审核通过</span>',
@@ -78,33 +78,33 @@ class RightsController extends BaseController {
 
         $this->display('index');
     }
-    
-    
+
+
     // @@@NODE-3###myreq###我的申请列表###
     public function myreq ()
     {
         $this->title('我的申请列表');
-    
+
         $this->req_types = C('REQ_TYPES');
-    
+
         $where = " req_uid = ". session('userid') ;
         $adb = M('audit_log');
         $cfgdb = M('audit_field');
         $resdb = M();
-		
+
 		$pagecount = $adb->where($where)->count();
 		$page = new Page($pagecount, P::PAGE_SIZE);
 		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-    
+
         $rs = $adb->where($where)->limit($page->firstRow . ',' . $page->listRows)
         ->order('req_time DESC')->select();
-    
+
         foreach ($rs as $k => $row) {
             $cfg = $cfgdb->where('req_type='.$row['req_type'])->find();
             $res = $resdb->table('__' . strtoupper($cfg['table']) . '__')->field($cfg['field'])->find($row['req_id']);
             $rs[$k]['cfgdata'] = $cfg;
             $rs[$k]['resdata'] = $res;
-    
+
             $field = explode(',', $cfg['field']);
             $title = explode(',', $cfg['title']);
             $other = '';
@@ -113,30 +113,30 @@ class RightsController extends BaseController {
             }
             $rs[$k]['other'] = $other;
             $rs[$k]['req_type_name'] = $cfg['name'];
-    
+
         }
-    
+
         $this->lists = $rs;
         $this->audit_status = array (
                 P::AUDIT_STATUS_NOT_AUDIT  => '未审核',
                 P::AUDIT_STATUS_PASS       => '审核通过',
                 P::AUDIT_STATUS_NOT_PASS   => '未通过',
         );
-    
+
         $this->display('myreq');
     }
-    
+
     // @@@NODE-3###audit_page###申请权限###
     public function audit_req ()
     {
         $id = I('id');
         $req_type = I('req_type');
         $info = I('info');
-        
+
         if (isset($_POST['dosubmit'])) {
 
             $rs = $this->request_audit($req_type, $id, $info['req_reason']);
-            
+
             if ($rs == P::ERROR) {
                 $this->msg = "状态不符，操作失败！";
             } else {
@@ -153,7 +153,7 @@ class RightsController extends BaseController {
             }
         }
     }
-   
+
     // @@@NODE-3###audit_apply###审批操作###
     public function audit_apply () {
         $id = I('id');
@@ -170,7 +170,7 @@ class RightsController extends BaseController {
             }
             $this->display('audit_ok');
         } else {
-            
+
             $this->id   = I('id');
             $list       = M('audit_log')->where("id=".$this->id)->find();
             $this->req_type = $list['req_type'];

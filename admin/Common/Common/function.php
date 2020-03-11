@@ -3162,6 +3162,12 @@ function updatekpi($month,$user,$year=''){
                             $complete               = ($wanchenglv*100).'%';
                             $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));*/
 
+                            $start_time             = $v['start_date'];
+                            $end_time               = $v['end_date'];
+                            // 具体指非标准化产品线路发布人和标准化产品研发设计人为其的项目毛利
+                            $data                   = get_cpjl_gross_profit_op($v['user_id'],$start_time,$end_time);
+
+
                             $complete               = '开发中...';
                             $url                    = '';
                         }
