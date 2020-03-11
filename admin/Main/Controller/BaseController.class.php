@@ -494,6 +494,18 @@ class BaseController extends Controller {
             record($record);
         }
 
+        //新标准产品审核
+        if ($row['req_type'] == P::REQ_TYPE_PRODUCTED){
+            $expert                 = I('expert');
+            if ($expert['producted_id'] && $expert['expert_uid'] && $expert['expert_weight']){
+                $producted                  = array();
+                $producted['expert_uid']    = $expert['expert_uid'];
+                $producted['expert_weight'] = trim($expert['expert_weight']);
+                if ((int)$expert['expert_weight'] < 0 || (int)$expert['expert_weight'] > 10){ $this->error('实施专家参与权重填写错误'); }
+                M('producted')->where(array('id'=>$expert['producted_id']))->save($producted);
+            }
+        }
+
         return M('audit_log')->where('id='.$id)->save($data);
     }
 

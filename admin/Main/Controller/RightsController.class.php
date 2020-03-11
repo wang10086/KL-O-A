@@ -156,9 +156,9 @@ class RightsController extends BaseController {
 
     // @@@NODE-3###audit_apply###审批操作###
     public function audit_apply () {
-        $id = I('id');
-        $info = I('info');
-        $req_type = I('req_type');
+        $id         = I('id');
+        $info       = I('info');
+        //$req_type   = I('req_type');
 
         if (isset($_POST['dosubmit'])) {
             $rs = $this->do_audit($id, $info['audit_reason'], $info['dst_status'], $info['param']);
@@ -173,7 +173,6 @@ class RightsController extends BaseController {
 
             $this->id   = I('id');
             $list       = M('audit_log')->where("id=".$this->id)->find();
-            $this->req_type = $list['req_type'];
 
             if (in_array($list['req_type'],array(P::REQ_TYPE_BUDGET,P::REQ_TYPE_SETTLEMENT))){
                 $return_list                = M("$list[req_table]")->where(array('id'=>$list['req_id']))->find();
@@ -198,6 +197,11 @@ class RightsController extends BaseController {
                 }
 
             }
+            $this->producted                = $list['req_type'] == 106 ? M('producted')->find($list['req_id']) : '';
+            $this->expert                   = C('EXPERT');
+            $this->expertids                = array_keys(C('EXPERT'));
+            $this->req_type                 = $list['req_type'];
+            $this->req_id                   = $list['req_id'];
             $this->display('audit_apply');
         }
     }

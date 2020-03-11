@@ -2,9 +2,9 @@
 		<script type="text/javascript">
         window.gosubmint= function(){
 			$('#myform').submit();
-		 } 
+		 }
         </script>
-       
+
         <section class="content">
             <div class="row">
                 <form action="{:U('Rights/audit_apply')}" method="post" name="myform" id="myform">
@@ -21,15 +21,35 @@
                         <?php } ?>
                         <input type="radio" name="info[dst_status]" value="<?php echo P::AUDIT_STATUS_PASS ;?>"> 审批通过 &nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="radio" name="info[dst_status]" value="<?php echo P::AUDIT_STATUS_NOT_PASS ;?>"> 审批不通过
-                        
+
                     </div>
-                    <?php
-                    if ($req_type == P::REQ_TYPE_PRICE) {
-                    ?>
+                    <?php if ($req_type == P::REQ_TYPE_PRICE) { ?>
                     <div class="form-group box-float-12">
                         <label>修改团费单价为</label>
                         <input name="info[audit_param]" class="form-control" value="" />
                     </div>
+                    <?php } elseif ($req_type == P::REQ_TYPE_PRODUCTED && $producted && !in_array($producted['auth_id'],$expertids)) { //106 新标准产品审核 非研发实施专家录入的标准化产品 ?>
+
+
+                        <div class="form-group box-float-12" style="clear: both">
+                            <input type="hidden" name="expert[producted_id]" value="{$req_id}">
+                            <div style="display: inline-block; width: 45%; float: left;">
+                                <label>是否研发部实施专家介入：</label>
+                                <select  class="form-control"  name="expert[expert_uid]">
+                                    <option value="">无研发部实施专家介入</option>
+                                    <foreach name="expert" key="k" item="v">
+                                        <option value="{$k}">{$v}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+
+                            <div style="display: inline-block; width: 45%; float: right;">
+                                <label>研发部实施专家介入权重<span class="red">(0-10)</span>：</label>
+                                <input type="text" class="form-control" name="expert[expert_weight]" value="0" />
+                            </div>
+                        </div>
+
+
                     <?php } else { ?>
                          <input type="hidden" name="info[audit_param]" value="" />
                     <?php } ?>
@@ -40,6 +60,6 @@
 
             </div>
         </section>
-        
+
 
 <include file="Index:footer" />
