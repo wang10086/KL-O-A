@@ -3141,15 +3141,29 @@ function updatekpi($month,$user,$year=''){
                             $url            = U('Kpi/public_guide_score',array('st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
                         }
 
+                        //实施专家业绩贡献度
+                        /*if ($v['quota_id']==156){
+                            $experts                = array_keys(C('EXPERT'));
+                            $data                   = get_sum_gross_profit($experts,$v['start_date'],$v['end_date']);
+                            //$sum_profit             = $data['sum_profit'];      //毛利总和
+                            //$sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
+
+                            $complete               = $data['complete'];
+                            $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
+                        }*/
+
                         //业绩贡献度
                         if ($v['quota_id']==163){
-                            $maoli_data             = get_gross_profit($user,$v['start_date'],$v['end_date']);
+                            /*$maoli_data             = get_gross_profit($user,$v['start_date'],$v['end_date']);
                             $maoli                  = $maoli_data['sum'];
                             $wages_info             = get_wages_info($user);                                    //获取该员工岗位薪资信息
                             $one_point_five_wages   = $wages_info['otherWages'];                                //1.5倍薪资
                             $wanchenglv             = round($maoli/$one_point_five_wages,2);
                             $complete               = ($wanchenglv*100).'%';
-                            $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
+                            $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));*/
+
+                            $complete               = '开发中...';
+                            $url                    = '';
                         }
 
                         //客户对公司产品满意度(研发经理)
@@ -3162,18 +3176,6 @@ function updatekpi($month,$user,$year=''){
                             $company_data               = get_type_user_company_sum_statis($departments,$yearMonth,'yf'); //公司合计
                             $complete                   = $company_data['month_score_average'];
                             $url                        = U('Inspect/public_user_kpi_statis',array('year'=>$year,'month'=>$monon,'ut'=>'yf'));
-                        }
-
-
-                        //实施专家业绩贡献度
-                        if ($v['quota_id']==156){
-                            $experts                = array_keys(C('EXPERT'));
-                            $data                   = get_sum_gross_profit($experts,$v['start_date'],$v['end_date']);
-                            //$sum_profit             = $data['sum_profit'];      //毛利总和
-                            //$sum_base_wages         = $data['sum_base_wages'];  //1.5倍薪资岗位薪资总和
-
-                            $complete               = $data['complete'];
-                            $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
                         }
 
                         //所负责标准化产品的客户满意度 1大类 线路=> 王新月 , 2大类 课程=>彭白鸽 3大类 其他=>秦鸣
@@ -3692,7 +3694,7 @@ function updatekpi($month,$user,$year=''){
                    /* }*/
 
                     //已实现自动获取指标值
-                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,156,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255);
+                    $auto_quta	= array(1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,44,45,46,47,48,49,52,53,54,55,56,57,58,59,62,63,64,65,66,67,79,80,81,82,83,84,85,86,87,89,90,91,92,94,95,96,99,100,102,103,106,107,108,110,111,112,113,114,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,143,144,145,146,147,148,149,150,151,154,155,158,160,161,162,163,165,167,168,179,180,182,183,184,185,186,193,194,195,204,205,206,210,212,213,214,215,216,217,218,219,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255);
 
                     //计算完成率并保存数据
                     if(in_array($v['quota_id'],$auto_quta)){
@@ -3729,16 +3731,16 @@ function get_cost_save_type($month){
 
 function get_kpi_data($v,$complete,$url=''){
     $otherQuota     = array(127); //人事费用率(超过值扣分)
-    $gt100          = array(163);
+    //$gt100          = array(163);
     $plus_minus     = array(125); //分正负情况,季度利润总额目标完成率
     if (in_array($v['quota_id'],$otherQuota)){
         //不超过既得满分的指标 不能按照 实际/计划计算得分
         $target     = (float)$v['target'];
         $comp       = (float)$complete;
         $rate       = get_rsfyl_rate($target,$comp);
-    }elseif(in_array($v['quota_id'],$gt100)){
+    //}elseif(in_array($v['quota_id'],$gt100)){
         //实际kpi总得分可大于100分
-        $rate       = (float)$complete;
+       // $rate       = (float)$complete;
     }elseif(in_array($v['quota_id'],$plus_minus)){
         $target     = $v['target']; //目标
         $comp       = $v['complete'];

@@ -714,19 +714,19 @@ function get_op_guide($userid,$beginTime,$endTime){
 }
 
 /**
- * 获取该用户的薪资信息
+ * 获取该用户的薪资信息    bak 20200311
  * @param $userid
  */
-function get_wages_info($userid){
+/*function get_wages_info($userid){
     $where                  = array();
     $where['account_id']    = $userid;
     $info                   = M('salary')->where($where)->order('id DESC')->find();
     $info['otherWages']     = $info['standard_salary']*1.5;
     return $info;
-}
+}*/
 
-//研发专家业绩贡献度
-function get_gross_profit($userid,$beginTime,$endTime){
+//研发专家业绩贡献度    bak 20200311
+/*function get_gross_profit($userid,$beginTime,$endTime){
     //个人立项毛利部分(结算)
     $all_op_lists           = array();
     $selfSumGrossProfit     = 0;
@@ -787,10 +787,10 @@ function get_gross_profit($userid,$beginTime,$endTime){
     $data['sum']                = $data['self'] + $data['other'];
     $data['lists']              = $all_op_lists;
     return $data;
-}
+}*/
 
-//研发专家毛利总额 和 基本工资总和
-function get_sum_gross_profit($userids,$beginTime,$endTime){
+//研发专家毛利总额 和 基本工资总和  bak20200311
+/*function get_sum_gross_profit($userids,$beginTime,$endTime){
     $lists                      = array();
     $base_wages                 = array();
     $userdata                   = array();
@@ -818,7 +818,7 @@ function get_sum_gross_profit($userids,$beginTime,$endTime){
     $data['complete']           = $complete;
     $data['userdata']           = $userdata;
     return $data;
-}
+}*/
 
     /**
      * 获取销售当月任务季度系数
