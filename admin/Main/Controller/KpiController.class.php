@@ -2109,7 +2109,7 @@ class KpiController extends BaseController {
     }
 
     //实施专家业绩贡献度(kpi)
-    public function public_expert_achivement(){
+    /*public function public_expert_achivement(){
         $year                   = I('year');
         $month                  = I('month');
         $start_time             = trim(I('st'));
@@ -2136,6 +2136,37 @@ class KpiController extends BaseController {
         $this->month            = substr($month,4,2);
         $this->st               = $start_time;
         $this->et               = $end_time;
+        $this->title            = '实施专家业绩贡献度';
+        $this->display('expert_achivement');
+    }*/
+    public function public_expert_achivement(){
+        $year                   = I('year');
+        $month                  = I('month');
+        $start_time             = trim(I('st'));
+        $end_time               = trim(I('et'));
+        $user_id                = I('uid');
+        $pin                    = I('pin',1);
+
+        // 具体指非标准化产品线路发布人和标准化产品研发设计人为其的项目毛利
+        $data                   = get_cpjl_gross_profit_op($user_id,$start_time,$end_time);
+        $sum_profit1            = $data['sum_profit'] ? $data['sum_profit'] : 0;
+
+        //非本人主导研发产品但本人设计产品中专业内容的，按本人对产品专业内容发挥作用在产品审核时，由研发部经理确认本人专业作用所占比例，此类产品产生毛利按其发挥作用比例计算。
+        $producted_data         = get_expert_producted_data($user_id);
+        $producted_ids          = $producted_data['producted_ids'];
+        $expert_weight          = $producted_data['expert_weight'];
+        $data2                  = $producted_ids ? get_expert_producted_gross_profit_op($start_time,$end_time,$producted_ids,$expert_weight) : '';
+        $sum_profit2            = $data2['sum_profit'] ? $data2['sum_profit'] : 0;
+
+        $this->lists            = $pin == 2 ? $data2['lists'] : $data['lists'];
+        $this->sum_profit       = $pin == 2 ? $sum_profit2 : $sum_profit1;
+        $this->userinfo         = M('account')->where(array('id'=>$user_id))->field('id,nickname')->find();
+        $this->year             = $year;
+        $this->month            = $month;
+        $this->st               = $start_time;
+        $this->et               = $end_time;
+        $this->uid              = $user_id;
+        $this->pin              = $pin;
         $this->title            = '实施专家业绩贡献度';
         $this->display('expert_achivement');
     }

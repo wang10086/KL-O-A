@@ -3162,6 +3162,7 @@ function updatekpi($month,$user,$year=''){
                             $complete               = ($wanchenglv*100).'%';
                             $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$v['month'],'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));*/
 
+                            $monon                  = substr($v['month'],4,2);
                             $start_time             = $v['start_date'];
                             $end_time               = $v['end_date'];
                             // 具体指非标准化产品线路发布人和标准化产品研发设计人为其的项目毛利
@@ -3176,7 +3177,7 @@ function updatekpi($month,$user,$year=''){
                             $sum_profit2            = $data2['sum_profit'] ? $data2['sum_profit'] : 0;
 
                             $complete               = $sum_profit1 + $sum_profit2;
-                            $url                    = '';
+                            $url                    = U('Kpi/public_expert_achivement',array('year'=>$v['year'],'month'=>$monon,'st'=>$v['start_date'],'et'=>$v['end_date'],'uid'=>$v['user_id']));
                         }
 
                         //客户对公司产品满意度(研发经理)

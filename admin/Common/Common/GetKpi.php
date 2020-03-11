@@ -5193,6 +5193,7 @@ function get_cpjl_gross_profit_op($uid,$startTime,$endTime){
     $where['o.standard']                    = 1; //标准化
     $where['o.producted_id']                = array('in',$standardProductIds);
     $standard_op_lists                      = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+    $count1                                 = $standard_op_lists ? count($standard_op_lists) : 0;
 
     //使用其上传的线路的团
     $where                                  = array();
@@ -5202,10 +5203,11 @@ function get_cpjl_gross_profit_op($uid,$startTime,$endTime){
     $where['o.standard']                    = array('neq',1); //非标准化
     $where['o.line_id']                     = array('in',$lineIds);
     $line_op_lists                          = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
+    $count2                                 = count($line_op_lists);
     $lists                                  = array_merge((array)$standard_op_lists,(array)$line_op_lists);
     $data                                   = array();
-    $data['sum_profit']                     = array_sum(array_column($lists,'maoli'));
-    $data['lists']                          = $lists;
+    $data['sum_profit']                     = array_sum(array_column($lists,'maoli'))>0 ? array_sum(array_column($lists,'maoli')) : 0;
+    $data['lists']                          = ($count1 + $count2) > 0 ? $lists : '';
     return $data;
 }
 
@@ -5248,7 +5250,7 @@ function get_expert_producted_gross_profit_op($startTime,$endTime,$producted_ids
     $where['l.req_type']                    = 801;
     $where['l.audit_time']                  = array('between', "$startTime,$endTime");
     //$where['o.standard']                    = 1; //标准化
-    //$where['o.producted_id']                = array('in',$producted_ids);
+    $where['o.producted_id']                = array('in',$producted_ids);
     $lists                                  = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where)->select();
 
     foreach ($lists as $k=>$v){
@@ -5256,7 +5258,7 @@ function get_expert_producted_gross_profit_op($startTime,$endTime,$producted_ids
         $lists[$k]['expert_weight_maoli']   = round($v['maoli']*$lists[$k]['expert_weight'],2);
     }
     $data                                   = array();
-    $data['sum_profit']                     = array_sum(array_column($lists,'expert_weight_maoli'));
+    $data['sum_profit']                     = array_sum(array_column($lists,'expert_weight_maoli')) > 0 ? array_sum(array_column($lists,'expert_weight_maoli')) : 0;
     $data['lists']                          = $lists;
     return $data;
 }
