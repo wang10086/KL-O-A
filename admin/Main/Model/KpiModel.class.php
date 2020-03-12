@@ -218,10 +218,10 @@ class KpiModel extends Model
             $num = 10;
         }elseif (in_array($userinfo['postid'],array(72))) { // 72=>资源管理部资源专员
             $num = 11;
-
         }elseif (in_array($userinfo['postid'],array(73))) { // 73=>老科学家演讲团教务专员
             $num = 12;
-
+        }elseif (in_array($userinfo['postid'],array(63))) { // 63=>研发部实施专家
+            $num = 13;
         }
         return $num;
     }
@@ -252,6 +252,8 @@ class KpiModel extends Model
             $data = $this->get_zybzy_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==12){ // 老科学家演讲团教务专员
             $data = $this->get_zybyjt_encourage_data($userid, $year, $month);
+        }elseif ($encourage_type ==13){ // 研发部实施专家
+            //$data = $this->get_zybyjt_encourage_data($userid, $year, $month);
         }
         return $data;
     }
