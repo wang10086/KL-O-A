@@ -24,7 +24,7 @@
                             <div class="box-body">
                                 <div class="content">
 
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-12">
                                         <label>项目名称(学校名称 + 地点 + 项目类型)：</label><input type="text" name="info[project]" class="form-control" required />
                                     </div>
 
@@ -100,18 +100,18 @@
                                         </datalist>
                                     </div>
 
-                                    <div class="form-group col-md-4" style="padding: 0">
+                                    <!--<div class="form-group col-md-4" style="padding: 0">
                                         <div class="col-md-12"  style="padding-right: 0">
                                             <span class="lm_c">协助销售实施专家：</span>
                                             <foreach name="expert" key="k" item="v">
                                                 <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}"> {$v}</span>
                                             </foreach>
                                         </div>
-                                        <!--<div class="col-md-12"  style="padding-right: 0">
+                                        <div class="col-md-12"  style="padding-right: 0">
                                             <span class="lm_c">背景提升产品负责人：</span>
                                             <span class="lm_c"><input type="checkbox" name="expert[]" value="202"> 于洵</span>
-                                        </div>-->
-                                    </div>
+                                        </div>
+                                    </div>-->
 
                                     <div class="form-group col-md-4">
                                         <label>是否本公司其他项目部地接</label>
@@ -164,7 +164,7 @@
             </section><!-- /.content -->
 
         </aside><!-- /.right-side -->
-			
+
   </div>
 </div>
 
