@@ -275,7 +275,8 @@ class KpiModel extends Model
         $year_profit                = $this->get_yfsszj_complete($userid,$thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time']); //年初累计至本季度末完成业绩
 
         //本人岗位薪酬标准
-        $salary                     = $this->get_my_salary($userid,$year.$month);
+        $salary                     = $this->get_base_salary($userid,$year.$month);
+
 
 
         $data                       = array();
@@ -283,12 +284,22 @@ class KpiModel extends Model
         $data['year_target']        = $year_target; //累计业绩目标
         $data['quarter_profit']     = $quarter_profit; //本季度完成业绩
         $data['year_profit']        = $year_profit; //年初累计至本季度末完成业绩
+        $data['sum_yj_royalty']     = $data['year_target'] ? (round($data['year_profit']/$data['year_target'],2) - 1) * 0.6 * $salary : 0; //累计业绩贡献奖金 = (年初累计至本季度末完成业绩/累计业绩目标 -1) * 60% * 本人岗位薪酬标准
+        $data['paid_yj_royalty']    = $this->get_payoff_quarterRoyalty($userid, $year, 'AA_num');; //已发业绩贡献奖金
+        $data['quarter_should_yj_royalty'] = ($data['sum_yj_royalty'] - $data['paid_yj_royalty']) > 0 ? ($data['sum_yj_royalty'] - $data['paid_yj_royalty']) : 0; //本季度应发业绩贡献奖金
+
+
+        $info                           = array();
+        $info['account_id']             = $userid;
+        $info['sum']                    = $data['quarter_should_royalty'];
+        $info['AA_tit']                 = "本季度应发业绩贡献奖金";
+        $info['AA_num']                 = $data[''];
+        //$data['info']                   = $info;
         return $data;
     }
 
     //获取岗位薪酬标准
-    private function get_my_salary($userid,$yearMmonth){
-        $userid                     = 140;
+    private function get_base_salary($userid,$yearMmonth){
         $payed_salary               = M('salary_wages_month')->where(array('account_id'=>$userid,'datetime'=>$yearMmonth))->find();
 
         $salary_list                = M('salary')->where(array('account_id'=>$userid))->order('id desc')->find();
@@ -505,6 +516,11 @@ class KpiModel extends Model
         $data['department_sum_royalty_payoff'] = $department_sum_royalty_payoff; //本部门季度累计已发奖励
         $data['department_should_royalty'] = $data['departmentSumEncourage'] - $data['department_sum_royalty_payoff'];
         $data['quarter_should_royalty'] = round(($data['department_should_royalty']/$data['member_weight']) * $my_member_weight,2);
+
+        $info                       = array();
+        $info['account_id']         = $userid;
+        $info['sum']                = $data['quarter_should_royalty'];
+        $data['info']               = $info;
         return $data;
     }
 

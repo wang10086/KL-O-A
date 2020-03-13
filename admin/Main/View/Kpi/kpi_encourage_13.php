@@ -10,13 +10,13 @@
             <div class="box-body table-responsive no-padding">
                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                     <tr role="row" class="orders" >
-                        <th class="taskOptions">本季度业绩目标1</th>
-                        <th class="taskOptions">本季度贡献业绩2</th>
-                        <th class="taskOptions">累计业绩目标3</th>
-                        <th class="taskOptions">累计贡献业绩4</th>
-                        <th class="taskOptions">累计业绩贡献奖金5</th>
-                        <th class="taskOptions">已发业绩贡献奖金6</th>
-                        <th class="taskOptions">本季度应发业绩贡献奖金7</th>
+                        <th class="taskOptions">本季度业绩目标</th>
+                        <th class="taskOptions">本季度贡献业绩</th>
+                        <th class="taskOptions">累计业绩目标</th>
+                        <th class="taskOptions">累计贡献业绩</th>
+                        <th class="taskOptions">累计业绩贡献奖金</th>
+                        <th class="taskOptions">已发业绩贡献奖金</th>
+                        <th class="taskOptions">本季度应发业绩贡献奖金</th>
                         <th class="taskOptions">本季度业务转交毛利8</th>
                         <th class="taskOptions">本季度业务转交毛利奖金9</th>
                         <th class="taskOptions">已发业务转交毛利奖金10</th>
@@ -29,9 +29,9 @@
                         <td class="taskOptions">{$encourage_data.quarter_profit}</td>
                         <td class="taskOptions">{$encourage_data.year_target}</td>
                         <td class="taskOptions">{$encourage_data.year_profit}</td>
-                        <td class="taskOptions">{$encourage_data.}5</td>
-                        <td class="taskOptions">{$encourage_data.}6</td>
-                        <td class="taskOptions">{$encourage_data.}7</td>
+                        <td class="taskOptions">{$encourage_data.sum_yj_royalty}</td>
+                        <td class="taskOptions">{$encourage_data.paid_yj_royalty}</td>
+                        <td class="taskOptions">{$encourage_data.quarter_should_yj_royalty}</td>
                         <td class="taskOptions">{$encourage_data.}8</td>
                         <td class="taskOptions">{$encourage_data.}9</td>
                         <td class="taskOptions">{$encourage_data.}10</td>
