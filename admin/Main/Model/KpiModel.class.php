@@ -276,8 +276,15 @@ class KpiModel extends Model
 
         //本人岗位薪酬标准
         $salary                     = $this->get_base_salary($userid,$year.$month);
-
-
+        //本季度业务转交毛利 本人拼团所分割毛利 + 其移交的客户毛利之和
+        $add_group_op_list          = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],$userid);
+        $add_group_maoli            = $add_group_op_list ? array_sum(array_column($add_group_op_list,'maoli')) : 0; //本人拼团所分割毛利
+        $customers                  = $this->get_change_customers($userid);
+        $otherWhere                 = array();
+        $otherWhere['o.customer']   = array('in',$customers);
+        $customer_lists             = get_settlement_list($quarter_cycle['begin_time'],$quarter_cycle['end_time'],'','','','','',$otherWhere);
+        $change_customer_maoli      = $customer_lists ? array_sum(array_column($customer_lists,'maoli')) : 0;
+        $quarter_maoli              = $add_group_maoli + $change_customer_maoli;
 
         $data                       = array();
         $data['quarter_target']     = $quarter_target; //本季度业绩目标
@@ -287,14 +294,29 @@ class KpiModel extends Model
         $data['sum_yj_royalty']     = $data['year_target'] ? (round($data['year_profit']/$data['year_target'],2) - 1) * 0.6 * $salary : 0; //累计业绩贡献奖金 = (年初累计至本季度末完成业绩/累计业绩目标 -1) * 60% * 本人岗位薪酬标准
         $data['paid_yj_royalty']    = $this->get_payoff_quarterRoyalty($userid, $year, 'AA_num');; //已发业绩贡献奖金
         $data['quarter_should_yj_royalty'] = ($data['sum_yj_royalty'] - $data['paid_yj_royalty']) > 0 ? ($data['sum_yj_royalty'] - $data['paid_yj_royalty']) : 0; //本季度应发业绩贡献奖金
-
+        $data['quarter_maoli']      = $quarter_maoli; //本季度业务转交毛利
+        $data['quarter_maoli_royalty'] = round($data['quarter_maoli'] * 0.05 , 2); //本季度业务转交毛利奖金 = 本季度业务转交毛利 * 5%
+        $data['paid_maoli_royalty'] = $this->get_payoff_quarterRoyalty($userid, $year, 'BB_num');; //已发业务转交毛利奖金
+        $data['quarter_should_maoli_royalty'] = $data['quarter_maoli_royalty'] - $data['paid_maoli_royalty']; //本季度应发业务转交毛利奖金
+        $data['quarter_should_royalty'] = $data['quarter_should_yj_royalty'] + $data['quarter_should_maoli_royalty']; //本季度应发业绩贡献奖金 + 本季度应发业务转交毛利奖金
 
         $info                           = array();
         $info['account_id']             = $userid;
         $info['sum']                    = $data['quarter_should_royalty'];
         $info['AA_tit']                 = "本季度应发业绩贡献奖金";
-        $info['AA_num']                 = $data[''];
-        //$data['info']                   = $info;
+        $info['AA_num']                 = $data['quarter_should_yj_royalty'];
+        $info['BB_tit']                 = "";
+        $info['BB_num']                 = $data['quarter_should_maoli_royalty'];
+        $data['info']                   = $info;
+        return $data;
+    }
+
+    //获取其转交的所有客户信息
+    private function get_change_customers($userid){
+        $where                      = array();
+        $where['create_user_id']    = $userid; //招募人
+        $where['cm_id']             = array('neq',$userid); //维护人
+        $data                       = M('customer_gec')->where($where)->getField('id,company_name',true);
         return $data;
     }
 
