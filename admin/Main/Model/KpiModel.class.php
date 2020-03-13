@@ -253,9 +253,72 @@ class KpiModel extends Model
         }elseif ($encourage_type ==12){ // 老科学家演讲团教务专员
             $data = $this->get_zybyjt_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==13){ // 研发部实施专家
-            //$data = $this->get_zybyjt_encourage_data($userid, $year, $month);
+            $data = $this->get_yfsszj_encourage_data($userid, $year, $month);
         }
         return $data;
+    }
+
+    //研发实施专家
+    public function get_yfsszj_encourage_data($userid, $year, $month){
+        $quarter                    = get_quarter($month);
+        $quarter_cycle              = get_quarter_cycle_time($year,$quarter);
+        //$year_cycle                 = get_year_cycle($year);
+        $thisYearTimeCycle          = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
+        $quarterMonth               = getQuarterMonths($quarter,$year); //本季度月份
+        $endYearMonth               = substr($quarterMonth,-6); //本季度最后一个月
+        $quota_id                   = 163; //单进院所业务月度累计毛利额-资源专员
+        $quarter_target             = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>$quota_id,'month'=>$endYearMonth))->getField('target'); //(本季度)任务系数
+        $year_target                = $this->get_year_sum_target($year,$month,$userid,$quota_id); //累计业绩目标
+
+        //完成业绩
+        $quarter_profit             = $this->get_yfsszj_complete($userid,$quarter_cycle['begin_time'],$quarter_cycle['end_time']); //本季度完成业绩
+        $year_profit                = $this->get_yfsszj_complete($userid,$thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time']); //年初累计至本季度末完成业绩
+
+        //本人岗位薪酬标准
+        $salary                     = $this->get_my_salary($userid,$year.$month);
+
+
+        $data                       = array();
+        $data['quarter_target']     = $quarter_target; //本季度业绩目标
+        $data['year_target']        = $year_target; //累计业绩目标
+        $data['quarter_profit']     = $quarter_profit; //本季度完成业绩
+        $data['year_profit']        = $year_profit; //年初累计至本季度末完成业绩
+        return $data;
+    }
+
+    //获取岗位薪酬标准
+    private function get_my_salary($userid,$yearMmonth){
+        $userid                     = 140;
+        $payed_salary               = M('salary_wages_month')->where(array('account_id'=>$userid,'datetime'=>$yearMmonth))->find();
+
+        $salary_list                = M('salary')->where(array('account_id'=>$userid))->order('id desc')->find();
+        $salary2                    = ($salary_list['standard_salary']/10) * $salary_list['basic_salary'];
+        $salary                     = $payed_salary ? $payed_salary['basic_salary'] : ($salary2 ? $salary2 : 0);
+        return $salary;
+    }
+
+    //研发实施专家完成业绩
+    private function get_yfsszj_complete($userid,$startTime,$endTime){
+        // 具体指非标准化产品线路发布人和标准化产品研发设计人为其的项目毛利
+        $data                   = get_cpjl_gross_profit_op($userid,$startTime,$endTime);
+        $sum_profit1            = $data['sum_profit'] ? $data['sum_profit'] : 0;
+
+        //非本人主导研发产品但本人设计产品中专业内容的，按本人对产品专业内容发挥作用在产品审核时，由研发部经理确认本人专业作用所占比例，此类产品产生毛利按其发挥作用比例计算。
+        $producted_data         = get_expert_producted_data($userid);
+        $producted_ids          = $producted_data['producted_ids'];
+        $expert_weight          = $producted_data['expert_weight'];
+        $data2                  = $producted_ids ? get_expert_producted_gross_profit_op($startTime,$endTime,$producted_ids,$expert_weight) : '';
+        $sum_profit2            = $data2['sum_profit'] ? $data2['sum_profit'] : 0;
+        $complete               = $sum_profit1 + $sum_profit2;
+        return $complete;
+    }
+
+    //获取研发实施专家全年累计目标
+    private function get_year_sum_target($year,$month,$userid,$quota_id){
+        $yearMonths                 = get_to_now_months($year,$month);
+        $lists                      = M('kpi_more')->where(array('user_id'=>$userid,'quota_id'=>$quota_id,'month'=>array('in',$yearMonths)))->select(); //累计目标值
+        $sum_target                 = array_sum(array_column($lists,'target'));
+        return $sum_target;
     }
 
     //资源管理部   老科学家演讲团教务专员

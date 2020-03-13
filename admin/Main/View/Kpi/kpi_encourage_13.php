@@ -25,10 +25,10 @@
 
                     </tr>
                     <tr>
-                        <td class="taskOptions">{$encourage_data.}1</td>
-                        <td class="taskOptions">{$encourage_data.}2</td>
-                        <td class="taskOptions">{$encourage_data.}3</td>
-                        <td class="taskOptions">{$encourage_data.}4</td>
+                        <td class="taskOptions">{$encourage_data.quarter_target}</td>
+                        <td class="taskOptions">{$encourage_data.quarter_profit}</td>
+                        <td class="taskOptions">{$encourage_data.year_target}</td>
+                        <td class="taskOptions">{$encourage_data.year_profit}</td>
                         <td class="taskOptions">{$encourage_data.}5</td>
                         <td class="taskOptions">{$encourage_data.}6</td>
                         <td class="taskOptions">{$encourage_data.}7</td>
