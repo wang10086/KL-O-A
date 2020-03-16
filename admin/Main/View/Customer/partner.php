@@ -59,7 +59,7 @@
                                     <foreach name="lists" item="row">
                                     <tr>
                                         <td>{$row.id}</td>
-                                        <td align="center"><a href="{:U('Customer/partner_detail',array('id'=>$row['id']))}" title="详情">{$row.name}</a><?php if (in_array($row['id'],$score_partner_ids)){ echo "<i class='fa  fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick='get_qrcode(`/index.php?m=Main&c=Kpi&a=public_qrcode&uid=$row[user_id]&tit=$row[quota_title]&kpi_quota_id=$row[quota_id]`)'></i>"; } ?></td>
+                                        <td align="center"><a href="{:U('Customer/partner_detail',array('id'=>$row['id']))}" title="详情">{$row.name}</a><?php if (in_array($row['id'],$score_partner_ids)){ echo "<i class='fa  fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick='get_qrcode(`/index.php?m=Main&c=Kpi&a=public_qrcode&uid=$kpi_more[user_id]&tit=$kpi_more[quota_title]&kpi_quota_id=$kpi_more[quota_id]&partner_id=$row[id]`)'></i>"; } ?></td>
                                         <!--<td>{$row.manager}</td>
                                         <td>{$row.contacts}</td>
                                         <td>{$row.contacts_phone}</td>-->

@@ -52,6 +52,7 @@
     var opid        = <?php echo $opid?$opid:0; ?>;
     var scoreMobile = <?php echo $scoreMobile?$scoreMobile:0; ?>;
     var host        = "<?php echo $_SERVER['SERVER_NAME']; ?>";
+    let partner_id  = <?php echo $partner_id?$partner_id:0; ?>;
     var dimension   = $('input[name="info[dimension]"]').val();
     $(function () {
         if(dimension == 5) { init_score_5(); }
@@ -71,7 +72,7 @@
     function con_sure(host){
         var a       = confirm('为了防止刷票,请您先使用手机号注册登陆!');
         if (a==true){
-            window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=login&uid='+uid+'&kpi_quota_id='+quota_id+'&tit='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid;
+            window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=login&uid='+uid+'&kpi_quota_id='+quota_id+'&tit='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid+'&partner_id='+partner_id;
         }else{
             window.location.href = 'http://'+host+'/index.php?m=Main&c=Score&a=noScore';
         }

@@ -30,6 +30,7 @@
             <input type="hidden" name="kpi_quota_id" value="{$quota_id}">
             <input type="hidden" name="yearMonth" value="{$yearMonth}">
             <input type="hidden" name="opid" value="{$opid}">
+            <input type="hidden" name="partner_id" value="{$partner_id}">
             <input type="hidden" name="guide_id" value="{$guide_id}">
             <div class="sco-box-body">
                 <div class="mob-loginfrom gbg">
@@ -69,6 +70,7 @@
             ym              = <?php echo $ym?$ym:0; ?>;
             guide_id        = <?php echo $guide_id?$guide_id:0; ?>;
             opid            = <?php echo $opid?$opid:0; ?>;
+            partner_id      = <?php echo $partner_id?$partner_id:0 ?>;
             title           = "<?php echo $title; ?>";
 
         $(function(){
@@ -86,7 +88,7 @@
                     var obj = eval(data);
                     if(obj.status == 'y'){
                         showmsg('提示', obj.info);
-                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&kpi_quota_id='+quota_id+'&tit='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid",1500);
+                        setTimeout("window.location.href='/index.php?m=Main&c=Score&a=kpi_score&uid='+uid+'&kpi_quota_id='+quota_id+'&tit='+title+'&ym='+ym+'&guide_id='+guide_id+'&opid='+opid+'&partner_id='+partner_id",1500);
                     }else{
                         showmsg('提示',obj.info);
                     }

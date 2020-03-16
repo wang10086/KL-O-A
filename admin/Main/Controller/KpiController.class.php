@@ -2236,13 +2236,14 @@ class KpiController extends BaseController {
         $uid                                = I('uid');
         $title                              = trim(I('tit'));
         $quota_id                           = I('kpi_quota_id');
+        $partner_id                         = I('partner_id');
         //赵冬
         $ym                                 = I('ym','');
         $guide_id                           = I('guide_id',0);
         $opid                               = I('opid','');
 
         $server_name                        = $_SERVER['SERVER_NAME'];
-        $this->url                          = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title,'kpi_quota_id'=>$quota_id,'ym'=>$ym,'guide_id'=>$guide_id,'opid'=>$opid));
+        $this->url                          = "http://".$server_name.U('Score/kpi_score',array('uid'=>$uid,'tit'=>$title,'kpi_quota_id'=>$quota_id,'ym'=>$ym,'guide_id'=>$guide_id,'opid'=>$opid,'partner_id'=>$partner_id));
         $this->title                        = $title;
         $this->display('qrcode');
     }

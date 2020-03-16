@@ -28,6 +28,7 @@ class ScoreController extends BasepubController {
             $monthly                    = $yearMonth ? $yearMonth : get_kpi_yearMonth(date('Y'),date('m'));
             $guide_id                   = I('guide_id',0);
             $opid                       = I('opid','');
+            $partner_id                 = I('partner_id',0);
 
             //验证手机验证码
             if ($mobile_code != session('code')) {
@@ -73,11 +74,13 @@ class ScoreController extends BasepubController {
             $ym                     = I('ym');
             $guide_id               = I('guide_id');
             $opid                   = I('opid');
+            $partner_id             = I('partner_id');
             $this->uid              = $uid;
             $this->quota_id         = $quota_id;
             $this->ym               = $ym;
             $this->guide_id         = $guide_id;
             $this->opid             = $opid;
+            $this->partner_id       = $partner_id;
             $this->title            = $title;
             $this->token            = make_token();
             $this->display('mob-login');
@@ -105,6 +108,7 @@ class ScoreController extends BasepubController {
         $ym                         = I('ym','');
         $guide_id                   = I('guide_id',0);
         $opid                       = I('opid','');
+        $partner_id                 = I('partner_id',0);
 
         $this->uid                  = $uid;
         $this->token                = make_token();
@@ -114,6 +118,7 @@ class ScoreController extends BasepubController {
         $this->ym                   = $ym;
         $this->guide_id             = $guide_id;
         $this->opid                 = $opid;
+        $this->partner_id           = $partner_id;
         $this->SYSTEM_NAME          = '客户满意度';
         $this->display('kpi_score');
     }
