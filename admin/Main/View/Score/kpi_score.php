@@ -13,6 +13,7 @@
                 <div class="content" style="padding: 5px;">
                     <input type="hidden" name="dosubmint" value="1">
                     <input type="hidden" name="token" value="{$token}">
+                    <input type="hidden" name="info[partner_id]" value="{$partner_id}">
                     <!--<input type="hidden" name="info[quota_id]" value="{$quota_id}">-->
 
                     <?php if ($quota_id == 180){ ?>
