@@ -3448,8 +3448,7 @@ function updatekpi($month,$user,$year=''){
                         //227 => 城市合伙人-满意度
                         //180 => 院内资源满意度 - 资源管理部经理
                         //185 => 日常服务工作满意度-老科学家演讲团教务专员
-                        //252 => 城市合伙人满意度
-                        if(in_array($v['quota_id'],array(227,180,185,252))){
+                        if(in_array($v['quota_id'],array(227,180,185))){
                             $uid                    = $v['user_id'];
                             $month                  = $v['month'];
                             /*$year                   = $v['year'];
@@ -3641,6 +3640,13 @@ function updatekpi($month,$user,$year=''){
 
                             $complete                   = $data['up_rate'];
                             $url                        = U('Kpi/public_kpi_settlement_maoli_up_rate',array('year'=>$v['year'],'quarter'=>$quarter,'kid'=>$kindid));
+                        }
+
+                        //252 => 城市合伙人满意度
+                        if ($v['quota_id']==252){
+
+                            $complete                   = '';
+                            $url                        = '';
                         }
 
                         //253 部门接待实施产品累计标准化率
