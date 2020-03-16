@@ -5263,3 +5263,17 @@ function get_expert_producted_gross_profit_op($startTime,$endTime,$producted_ids
     return $data;
 }
 
+//获取需要满意度评分的城市合伙人
+function get_need_score_partner($year='',$month=''){
+    $year                                   = $year ? $year : date('Y');
+    $month                                  = $month ? str_pad($month,2,'0',STR_PAD_LEFT) : date('m');
+    $time                                   = strtotime($year.$month.'26');
+    $where                                  = array();
+    $where['del_stu']                       = 0;
+    $where['audit_stu']                     = 2; //审核通过
+    $where['start_date']                    = array('lt',$time - 30*24*3600);
+    $where['end_date']                      = array('gt',$time);
+    $list                                   = M('customer_partner')->where($where)->select();
+    return $list;
+}
+

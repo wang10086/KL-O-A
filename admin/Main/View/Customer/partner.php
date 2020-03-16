@@ -56,10 +56,10 @@
                                             <span  style=" border: solid 1px #00acd6; padding: 0 5px; border-radius: 5px; background-color: #00acd6; color: #ffffff; margin-left: 20px" onClick="open_change()" title="交接维护人" class="">交接维护人</span>
                                         <?php } ?>
                                     -->
-                                    <foreach name="lists" item="row"> 
+                                    <foreach name="lists" item="row">
                                     <tr>
                                         <td>{$row.id}</td>
-                                        <td align="center"><a href="{:U('Customer/partner_detail',array('id'=>$row['id']))}" title="详情">{$row.name}</a></td>
+                                        <td align="center"><a href="{:U('Customer/partner_detail',array('id'=>$row['id']))}" title="详情">{$row.name}</a><?php if (in_array($row['id'],$score_partner_ids)){ echo "<i class='fa  fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick='get_qrcode(`/index.php?m=Main&c=Kpi&a=public_qrcode&uid=$row[user_id]&tit=$row[quota_title]&kpi_quota_id=$row[quota_id]`)'></i>"; } ?></td>
                                         <!--<td>{$row.manager}</td>
                                         <td>{$row.contacts}</td>
                                         <td>{$row.contacts_phone}</td>-->
@@ -89,7 +89,7 @@
                                             </td>
                                         </if>
                                     </tr>
-                                    </foreach>					
+                                    </foreach>
                                 </table>
                                 </div><!-- /.box-body -->
                                  <div class="box-footer clearfix">
@@ -102,14 +102,14 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
-            
+
+
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Customer">
                 <input type="hidden" name="a" value="partner">
-                
+
                 <div class="form-group col-md-6">
                     <input type="text" class="form-control" name="keywords" placeholder="合作伙伴名称">
                 </div>
@@ -117,7 +117,7 @@
                 <div class="form-group col-md-6">
                     <input type="text" class="form-control" name="keywords" placeholder="联系人">
                 </div>
-                
+
                 <div class="form-group col-md-6">
                 	<input type="text" class="form-control" name="province" placeholder="省份">
                 </div>
@@ -125,7 +125,7 @@
                 <div class="form-group col-md-6">
                     <input type="text" class="form-control" name="keywords" placeholder="维护人">
                 </div>
-                
+
                 </form>
             </div>
 
@@ -150,9 +150,21 @@
             }
         });
     }
+
+    //获取评分二维码
+    function get_qrcode(url) {
+        art.dialog.open(url,{
+            id:'qrcode',
+            lock:true,
+            title: '二维码',
+            width:600,
+            height:400,
+            fixed: true,
+        });
+    }
 </script>
-            
-            
+
+
 			<include file="Index:footer2" />
-            
-            
+
+

@@ -598,6 +598,16 @@ class CustomerController extends BaseController {
             $lists[$k]['money']     = $money;
         }
 
+        //获取需要满意度评分的城市合伙人
+        $score_partners             = get_need_score_partner();
+        $score_partner_ids          = array_column($score_partners,'id');
+        $quota_id                   = 252; //城市合伙人满意度
+        $time_data                  = get_this_month();
+        $yearMonth                  = $time_data['year'].$time_data['month'];
+        $kpi_more                   = M('kpi_more')->where(array('month'=>array('like','%'.$yearMonth.'%'),'quota_id'=>$quota_id))->find();
+
+        $this->kpi_more             = $kpi_more;
+        $this->score_partner_ids    = $score_partner_ids;
         $this->audit_stu            = $this->partner_audit_status();
         $this->lists                = $lists;
         $this->citys                = $citys_db->getField('id,name',true);
