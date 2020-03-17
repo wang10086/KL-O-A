@@ -2890,11 +2890,11 @@ class KpiController extends BaseController {
     }
 
     public function public_score_detail(){
-        $id                                 = I('id','');
+        $id                                 = I('id',0);
         $db                                 = M('partner_satisfaction');
         if ($id){
             $list                           = $db->where(array('id'=>$id))->find();
-            $list['average']                = (round(($list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'])/($list['dimension']*5),4)*100).'%';
+            if ($list) $list['average']     = (round(($list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'])/($list['dimension']*5),4)*100).'%';
             $this->list                     = $list;
         }
         $this->display('score_detail');
