@@ -2874,6 +2874,21 @@ class KpiController extends BaseController {
         $this->display('kpi_guide_score');
     }
 
+    public function public_partner_score(){
+        $uid                                = I('uid');
+        $months                             = I('mon');
+        $quota_id                           = I('quota_id');
+        $title                              = I('tit');
+        //获取需要满意度评分的城市合伙人
+        $score_partners                     = get_need_score_partner();
+        $data                               = get_partner_score_data($uid,$months,$quota_id,$score_partners);
+        $this->lists                        = $data['lists'];
+        $this->data                         = $data;
+        $this->months                       = $months;
+        $this->title($title);
+        $this->display('kpi_partner_score');
+    }
+
 
     public function aaa(){
         //set_after_salary_kpi(201906);

@@ -5277,3 +5277,65 @@ function get_need_score_partner($year='',$month=''){
     return $list;
 }
 
+
+/**
+ * 城市合伙人满意度评分
+ * @param $uid
+ * @param $month
+ * @param int $quota_id
+ * @param $partner_lists 应评分的城市合伙人列表
+ * @return array
+ */
+function get_partner_score_data($uid,$month,$quota_id=0,$partner_lists=''){
+    $month                      = explode(',',$month);
+    $db                         = M('partner_satisfaction');
+    $where                      = array();
+    $where['account_id']        = $uid;
+    $where['monthly']           = array('in',$month);
+    $where['status']            = 1; //已评分
+    $where['quota_id']          = $quota_id;
+    $dimension                  = $db->where($where)->order('id desc')->getField('dimension');
+
+    $should_score_num           = 0; //应评分次数
+    $score_num                  = 0; //已评分次数
+    $should_score_sum           = 0; //应评分总分
+    $score_sum                  = 0; //已评分得分
+    $dimension_num              = 0; //已评分维度合计
+    foreach ($partner_lists as $key=>$value){
+        $where['partner_id']    = $value['id'];
+        $list                   = $db->where($where)->order('id desc')->find();
+        if ($list){
+            $score_num++;
+            $score_sum          += $list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'];
+            if ($value['AA'])   $dimension_num++;
+            if ($value['BB'])   $dimension_num++;
+            if ($value['CC'])   $dimension_num++;
+            if ($value['DD'])   $dimension_num++;
+            if ($value['EE'])   $dimension_num++;
+            $partner_lists[$key]['is_score'] = "<span class='green'>已评分</span>";
+            $partner_lists[$key]['average']  = (round(($list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'])/($dimension*5),4)*100).'%';
+            $partner_lists[$key]['sid']      = $list['id'];
+            $partner_lists[$key]['smobile']  = $list['mobile'];
+        }else{
+            $score_sum          += ($dimension * 5)/2;
+            $partner_lists[$key]['is_score'] = "<span class='red'>未评分</span>";
+            $partner_lists[$key]['average']  = '50%';
+        }
+        $should_score_num++;
+        $should_score_sum       += $dimension * 5;
+    }
+
+    $scored_sum                  = $dimension_num * 5;
+    $average                    = $should_score_num ? (round($score_sum/$should_score_sum,4)*100).'%' : '100%';
+
+    $data                       = array();
+    $data['should_score_num']   = $should_score_num;
+    $data['score_num']          = $score_num;
+    $data['should_score_sum']   = $should_score_sum;
+    $data['score_sum']          = $score_sum;
+    $data['scored_sum']         = $scored_sum;
+    $data['average']            = $average;
+    $data['lists']              = $partner_lists;
+    return $data;
+}
+

@@ -3644,9 +3644,14 @@ function updatekpi($month,$user,$year=''){
 
                         //252 => 城市合伙人满意度
                         if ($v['quota_id']==252){
+                            //获取需要满意度评分的城市合伙人
+                            $score_partners         = get_need_score_partner();
 
-                            $complete                   = '';
-                            $url                        = '';
+                            $uid                    = $v['user_id'];
+                            $month                  = $v['month'];
+                            $data                   = get_partner_score_data($uid,$month,$v['quota_id'],$score_partners);
+                            $complete               = $data['average'];
+                            $url                    = U('Kpi/public_partner_score',array('uid'=>$uid,'mon'=>$month,'quota_id'=>$v['quota_id'],'tit'=>$v['quota_title']));
                         }
 
                         //253 部门接待实施产品累计标准化率
