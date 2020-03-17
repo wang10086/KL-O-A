@@ -2889,6 +2889,17 @@ class KpiController extends BaseController {
         $this->display('kpi_partner_score');
     }
 
+    public function public_score_detail(){
+        $id                                 = I('id','');
+        $db                                 = M('partner_satisfaction');
+        if ($id){
+            $list                           = $db->where(array('id'=>$id))->find();
+            $list['average']                = (round(($list['AA'] + $list['BB'] + $list['CC'] + $list['DD'] + $list['EE'])/($list['dimension']*5),4)*100).'%';
+            $this->list                     = $list;
+        }
+        $this->display('score_detail');
+    }
+
 
     public function aaa(){
         //set_after_salary_kpi(201906);

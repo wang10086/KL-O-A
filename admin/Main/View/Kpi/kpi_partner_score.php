@@ -38,7 +38,7 @@
                                             <td>{$row.start_date|date='Y-m-d',###} - {$row.end_date|date='Y-m-d',###}</td>
                                             <td>{$row.is_score}</td>
                                             <td>{$row.smobile}</td>
-                                            <td>{$row.average}</td>
+                                            <td><a onClick="javascript:show_detail({$row.sid});" title="详情">{$row.average}</a></td>
                                         </tr>
                                         </foreach>
                                     </table>
@@ -148,4 +148,16 @@
             $('.accessdata').iCheck('uncheck');
         });
     });
+
+    //得分详情
+    function show_detail(sid) {
+        art.dialog.open('index.php?m=Main&c=Kpi&a=public_score_detail&id='+sid,{
+            lock:true,
+            title: '得分详情',
+            width:600,
+            height:400,
+            fixed: true,
+
+        });
+    }
 </script>
