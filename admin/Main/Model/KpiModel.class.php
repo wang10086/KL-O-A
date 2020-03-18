@@ -214,7 +214,7 @@ class KpiModel extends Model
             $num = 8;
         }elseif (in_array($userinfo['postid'],array(70))) { // 70=>资源管理部经理，李徵红
             $num = 9;
-        }elseif (in_array($userinfo['postid'],array(85,1,88,64))) { // 85=>人资综合部部经理，王茜,1=>安全品控部经理,李岩,88=>财务部经理,程小平, 64=>研发部研发专员 王新月
+        }elseif (in_array($userinfo['postid'],array(85,1,88,64,89))) { // 85=>人资综合部部经理，王茜,1=>安全品控部经理,李岩,88=>财务部经理,程小平, 64=>研发部研发专员 王新月, 89=>财务部出纳员
             $num = 10;
         }elseif (in_array($userinfo['postid'],array(72))) { // 72=>资源管理部资源专员
             $num = 11;

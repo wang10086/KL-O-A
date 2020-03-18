@@ -22,7 +22,7 @@
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12">
-                            
+
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">新建工作记录</h3>
@@ -35,9 +35,9 @@
                                                 <p>在记录前请务必跟当事人员核实，记录如果有误请您及时撤销，以免影响当事人绩效考核</p>
                                             </div>
                                         </div>
-                                    
+
                                         <div class="form-group col-md-3">
-                                            <label>工作人员：</label><input type="text" name="info[user_name]" class="form-control keywords_user"  value="{$rec.user_name}" />
+                                            <label>工作人员(选择匹配内容)：</label><input type="text" name="info[user_name]" class="form-control keywords_user"  value="{$rec.user_name}" />
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label>工作月份：</label><input type="text" name="info[month]" class="form-control monthly"  value="{$rec.month}" />
@@ -51,21 +51,21 @@
                                                 </foreach>
                                             </select>
                                         </div>
-                                        
+
                                         <div class="form-group col-md-3">
                                             <label>具体类型：</label>
                                             <select class="form-control" name="info[typeinfo]" id="kindinfo">
                                             	<option value="0">请选择</option>
-                                            	<?php 
+                                            	<?php
 												foreach($kindinfo as $k=>$v){
 													foreach($v as $kk=>$vv){
-														echo '<option value="'.$kk.'"  class="form-control selectkey" data="'.$k.'" style=" display:none;" > '.$vv.'</option>';	
-													}	
+														echo '<option value="'.$kk.'"  class="form-control selectkey" data="'.$k.'" style=" display:none;" > '.$vv.'</option>';
+													}
 												}
 												?>
                                             </select>
                                         </div>
-                                        
+
                                         <div class="form-group col-md-12">
                                             <label>记录标题：</label><input type="text" name="info[title]" class="form-control" value="{$rec.title}" />
                                         </div>
@@ -73,12 +73,12 @@
                                             <label>具体内容：</label>
                                             <textarea name="info[content]"  class="form-control">{$rec.content}</textarea>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
-                            
-                            
+
+
                             <div style="width:100%; text-align:center; margin-top:30px;">
                             <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
                             </div>
@@ -86,9 +86,9 @@
                     </div>   <!-- /.row -->
                     </form>
                 </section><!-- /.content -->
-                
+
             </aside><!-- /.right-side -->
-			
+
   </div>
 </div>
 
@@ -97,7 +97,7 @@
 <script>
 	$(document).ready(function(e) {
 		var keywords = <?php echo $userkey; ?>;
-		
+
 		$(".keywords_user").autocomplete(keywords, {
 			 matchContains: true,
 			 highlightItem: false,
@@ -112,21 +112,20 @@
 		   $('#dept_id').val(item.role);
 		   $('#dept_name').val(item.role_name);
 		});
-		
+
 	})
-	
-	
+
+
 	function selectkinds(obj){
 		var k = $(obj).val();
 		$('#kindinfo').val('请选择');
 		$('.selectkey').each(function(index, element) {
             if($(this).attr('data') == k){
-				$(this).show();	
+				$(this).show();
 			}else{
-				$(this).hide();	
+				$(this).hide();
 			}
-        });	
+        });
 	}
-	
+
 </script>
-		
