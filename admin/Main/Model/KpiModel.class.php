@@ -214,7 +214,7 @@ class KpiModel extends Model
             $num = 8;
         }elseif (in_array($userinfo['postid'],array(70))) { // 70=>资源管理部经理，李徵红
             $num = 9;
-        }elseif (in_array($userinfo['postid'],array(85,1,88))) { // 85=>人资综合部部经理，王茜,1=>安全品控部经理,李岩,88=>财务部经理,程小平
+        }elseif (in_array($userinfo['postid'],array(85,1,88,64))) { // 85=>人资综合部部经理，王茜,1=>安全品控部经理,李岩,88=>财务部经理,程小平, 64=>研发部研发专员 王新月
             $num = 10;
         }elseif (in_array($userinfo['postid'],array(72))) { // 72=>资源管理部资源专员
             $num = 11;
@@ -222,9 +222,9 @@ class KpiModel extends Model
             $num = 12;
         }elseif (in_array($userinfo['postid'],array(63))) { // 63=>研发部实施专家
             $num = 13;
-        }elseif (in_array($userinfo['postid'],array(64))) { // 63=>研发部研发专员
+        }/*elseif (in_array($userinfo['postid'],array(64))) { // 63=>研发部研发专员
             $num = 14;
-        }
+        }*/
         return $num;
     }
 
@@ -256,14 +256,14 @@ class KpiModel extends Model
             $data = $this->get_zybyjt_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==13){ // 研发部实施专家
             $data = $this->get_yfsszj_encourage_data($userid, $year, $month);
-        }elseif ($encourage_type ==14){ // 研发部研发专员
-            $data = $this->get_yfzy_encourage_data($userid, $year, $month);
-        }
+        }/*elseif ($encourage_type ==14){ // 研发部研发专员
+            //$data = $this->get_yfzy_encourage_data($userid, $year, $month);
+            $data = $this->get_rzzhbjl_encourage_data($userid, $year, $month);
+        }*/
         return $data;
     }
 
-    //研发部研发专员
-    public function get_yfzy_encourage_data($userid, $year, $month){
+    /*public function get_yfzy_encourage_data($userid, $year, $month){
         $quarter                        = get_quarter($month);
         $thisYearTimeCycle              = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
         //$lastYearTimeCycle              = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
@@ -325,19 +325,19 @@ class KpiModel extends Model
         $data['jiguan_bonus']           = $jiguan_bonus; //机关奖金包
         $data['jiguan_sum_salary_bag']  = $data['shouldHrCost'] + $data['Insurance_up_data'] + $data['jiguan_bonus']; //当年机关季度累计薪酬包 = 当年度机关累计人力成本额度 + 机关五险一金增量 + 机关奖金包
         $data['totalSalaryBagLeftOver'] = $data['jiguan_sum_salary_bag'] - $data['thisYearHrCost']; //当年机关季度累计薪酬包结余 = 当年机关季度累计薪酬包 - 机关累计发生人力成本(当年)
-        //$data['satisfaction_weight']    = $satisfaction_weight['weigh_str']; //本部门经理内部满意度权重
-        //$data['member_weight']          = $department_member_weight; //本部门核定权重人数12
-        //$data['departmentSumEncourage'] = round(($data['totalSalaryBagLeftOver'] * $satisfaction_weight['weigh_floot'] * $data['member_weight'])/$jiguan_member_weight,2); //本部门季度累计奖励13 = (当年机关季度累计薪酬包结余 * 本部门经理内部满意度权重 * 本部门核定权重人数)/机关各部门所有权重人数
-        //$data['department_sum_royalty_payoff'] = $department_sum_royalty_payoff; //本部门季度累计已发奖励
-        //$data['department_should_royalty'] = $data['departmentSumEncourage'] - $data['department_sum_royalty_payoff'];
-        //$data['quarter_should_royalty'] = round(($data['department_should_royalty']/$data['member_weight']) * $my_member_weight,2);
+        $data['satisfaction_weight']    = $satisfaction_weight['weigh_str']; //本部门经理内部满意度权重
+        $data['member_weight']          = $department_member_weight; //本部门核定权重人数12
+        $data['departmentSumEncourage'] = round(($data['totalSalaryBagLeftOver'] * $satisfaction_weight['weigh_floot'] * $data['member_weight'])/$jiguan_member_weight,2); //本部门季度累计奖励13 = (当年机关季度累计薪酬包结余 * 本部门经理内部满意度权重 * 本部门核定权重人数)/机关各部门所有权重人数
+        $data['department_sum_royalty_payoff'] = $department_sum_royalty_payoff; //本部门季度累计已发奖励
+        $data['department_should_royalty'] = $data['departmentSumEncourage'] - $data['department_sum_royalty_payoff'];
+        $data['quarter_should_royalty'] = round(($data['department_should_royalty']/$data['member_weight']) * $my_member_weight,2);
 
         $info                       = array();
         $info['account_id']         = $userid;
         $info['sum']                = $data['quarter_should_royalty'];
         $data['info']               = $info;
         return $data;
-    }
+    }*/
 
     //研发实施专家
     public function get_yfsszj_encourage_data($userid, $year, $month){
@@ -688,6 +688,9 @@ class KpiModel extends Model
      * @return array
      */
     private function get_jiguan_satisfaction_weight($userid,$year,$month,$quarter){
+        $department_data            = $this->get_department_manager_uid();
+        $user_department_id         = M('account')->where(array('id'=>$userid))->getField('departmentid');
+        $manager_id                 = $department_data[$user_department_id]['manager_id'];
         $manager_uids               = array(12,13,26,39,55,77,204); //机关部门经理 12=>秦鸣,13=>杜莹,26=>李岩,39=>孟华,55=>程小平,77=>王茜,204=>李徵红
         $yearMonths                 = get_quarter_yearMonths($year,$quarter);
         $inspectMod                 = D('inspect');
@@ -696,14 +699,13 @@ class KpiModel extends Model
         $sumLists                   = array();
         foreach ($yearMonths as $yearMonth){
             $lists                  = $inspectMod -> get_satisfaction_list($yearMonth,1);
-
             foreach ($lists as $v){
                 if (in_array($v['account_id'],$manager_uids)){
                     if ($v['sum_average'] != '50%'){
                         $float_avg  = (str_replace('%','',$v['sum_average']))/100;
                         $sumscore   += $float_avg;
                         $sumLists[] = $v;
-                        if ($v['account_id'] == $userid){
+                        if ($v['account_id'] == $manager_id){
                             $userscore += $float_avg;
                         }
                     }
@@ -715,6 +717,19 @@ class KpiModel extends Model
         $data                       = array();
         $data['weigh_str']          = ($weight*100).'%';
         $data['weigh_floot']        = $weight;
+        return $data;
+    }
+
+    //获取各部门负责人
+    private function get_department_manager_uid(){
+        $manager_uids               = array(12,13,26,39,55,77,204); //机关部门经理 12=>秦鸣,13=>杜莹,26=>李岩,39=>孟华,55=>程小平,77=>王茜,204=>李徵红
+        $departments                = M('salary_department')->field('id,department,manager_id,manager_name')->select();
+        $data                       = array();
+        foreach ($departments as $v){
+            if (in_array($v['manager_id'],$manager_uids)){
+                $data[$v['id']]     = $v;
+            }
+        }
         return $data;
     }
 
