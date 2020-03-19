@@ -648,7 +648,7 @@ class WorderController extends BaseController{
     }
 
     /*审核工作记录*/
-    public function verify_record(){
+    /*public function verify_record(){
 
         $db             = M('work_record');
         if(isset($_POST['dosubmint'])){
@@ -698,7 +698,7 @@ class WorderController extends BaseController{
             $this->info     = $info;
             $this->display();
         }
-    }
+    }*/
 
     //更改工单计划完成时间
     public function public_change_plan_time(){
