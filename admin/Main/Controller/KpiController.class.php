@@ -2900,6 +2900,33 @@ class KpiController extends BaseController {
         $this->display('score_detail');
     }
 
+    //工作准确性-财务出纳员 KPI 详情
+    public function public_work_record(){
+        $months                             = I('mon');
+        $uid                                = I('uid');
+        $tit                                = I('tit');
+        $target                             = I('tg', 0); //目标值
+        $weight                             = I('wg'); //权重
+        $lists                              = get_work_record_list($uid, $months);
+        $complete                           = count($lists);
+
+        $rate1                              = (1 - (($complete - $target) / ($weight / 2))) < 0 ? 0 : (1 - (($complete - $target) / ($weight / 2)));
+        $rate_str                           = $complete == 0 ? '100%' : ($rate1 * 100) . '%';
+        $rate_float                         = $complete == 0 ? '100%' : $rate1;
+        $score                              = $weight * $rate_float;
+
+        $this->target                       = $target;
+        $this->weight                       = $weight;
+        $this->complete                     = $complete;
+        $this->rate                         = $rate_str;
+        $this->score                        = $score;
+        $this->lists                        = $lists;
+        $this->type                         = C('REC_TYPE');
+        $this->type_info                    = C('REC_TYPE_INFO');
+        $this->title($tit);
+        $this->display('kpi_work_record');
+    }
+
 
     public function aaa(){
         //set_after_salary_kpi(201906);

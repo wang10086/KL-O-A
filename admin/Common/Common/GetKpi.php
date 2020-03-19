@@ -5339,3 +5339,15 @@ function get_partner_score_data($uid,$month,$quota_id=0,$partner_lists=''){
     return $data;
 }
 
+//获取工作记录条数
+function get_work_record_list($uid,$monthth){
+    $months                     = explode(',',$monthth);
+    $db                         = M('work_record');
+    $where                      = array();
+    $where['user_id']           = $uid;
+    $where['month']             = array('in',$months);
+    $where['status']            = 1;
+    $lists                      = $db->where($where)->select();
+    return $lists;
+}
+

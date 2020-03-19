@@ -3314,10 +3314,10 @@ function updatekpi($month,$user,$year=''){
 
                         //工作准确性-财务出纳员
                         if ($v['quota_id'] == 202){
+                            $lists                  = get_work_record_list($v['user_id'],$v['month']);
 
-
-                            $complete               = '开发中';
-                            $url                    = '';
+                            $complete               = count($lists);
+                            $url                    = U('Kpi/public_work_record',array('mon'=>$v['month'],'uid'=>$v['user_id'],'tit'=>$v['quota_title'],'tg'=>$v['target'],'wg'=>$v['weight']));
                         }
 
                         //人事费用率控制
@@ -3805,7 +3805,12 @@ function get_kpi_data($v,$complete,$url=''){
         $rate = str_replace('%', '', $complete);
     }elseif ($v['quota_id']==245){ // 各业务类型最低毛利率设置合理性
         $rate = $complete;
-    } else{
+    }elseif ($v['quota_id']==202){ //工作准确性-财务出纳员
+        $target     = $v['target'];
+        $weight     = $v['weight'];
+        $rate1      = (1-(($complete - $target)/($weight/2))) < 0 ? 0 : (1-(($complete - $target)/($weight/2)));
+        $rate       = $complete == 0 ? '100%' : $rate1 * 100;
+    }else{
         $rate       = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
         $rate       = $rate>100 ? 100 : $rate;
     }
