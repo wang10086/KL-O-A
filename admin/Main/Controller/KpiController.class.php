@@ -2912,7 +2912,7 @@ class KpiController extends BaseController {
 
         $rate1                              = (1 - (($complete - $target) / ($weight / 2))) < 0 ? 0 : (1 - (($complete - $target) / ($weight / 2)));
         $rate_str                           = $complete == 0 ? '100%' : ($rate1 * 100) . '%';
-        $rate_float                         = $complete == 0 ? '100%' : $rate1;
+        $rate_float                         = $complete == 0 ? '1' : $rate1;
         $score                              = $weight * $rate_float;
 
         $this->target                       = $target;

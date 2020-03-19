@@ -3809,7 +3809,7 @@ function get_kpi_data($v,$complete,$url=''){
         $target     = $v['target'];
         $weight     = $v['weight'];
         $rate1      = (1-(($complete - $target)/($weight/2))) < 0 ? 0 : (1-(($complete - $target)/($weight/2)));
-        $rate       = $complete == 0 ? '100%' : $rate1 * 100;
+        $rate       = $complete == 0 ? '100' : $rate1 * 100;
     }else{
         $rate       = $v['target'] ? round(($complete / $v['target'])*100,2) : 100;
         $rate       = $rate>100 ? 100 : $rate;

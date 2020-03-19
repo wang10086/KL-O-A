@@ -36,7 +36,7 @@ class WorkController extends BasepubController{
 		if($rname)			$where['rec_user_name']			= array('like','%'.$rname.'%');
 		if($com==1) 		$where['user_id']				= cookie('userid');
 		if($com==2) 		$where['rec_user_id']			= cookie('userid');
-		//if($status)  	    $where['status']			    = $status;
+		$where['status']			                        = array('neq','-1');
 
 		//分页
 		$pagecount		= $db->where($where)->count();
@@ -234,7 +234,7 @@ class WorkController extends BasepubController{
 
 
 		if(!$rec || !$recid)		$this->error('记录不存在' . $db->getError());
-		if($rec['status']==1)		$this->error('记录已经撤销' . $db->getError());
+		if($rec['status']==-1)		$this->error('记录已经撤销' . $db->getError());
 
 		if($rec['rec_user_id'] == cookie('userid')  || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10 || cookie('roleid')==13 || cookie('roleid')==14 || cookie('roleid')==54){
 
