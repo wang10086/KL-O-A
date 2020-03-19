@@ -193,7 +193,7 @@ class WorkController extends BasepubController{
     }
 
 	//详情
-    public function public_work_detail(){
+    public function work_detail(){
         $id                     = I('id',0);
         if (!$id) $this->error('获取数据错误');
         $db                     = M('work_record');

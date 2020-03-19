@@ -32,7 +32,7 @@
                                     <foreach name="lists" key="k" item="row">
                                         <tr>
                                             <td class="taskOptions">{$k+1}</td>
-                                            <td class="taskOptions"><a href="{:U('Work/public_work_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
+                                            <td class="taskOptions"><a href="{:U('Work/work_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
                                             <td class="taskOptions">{$row['month']}</td>
                                             <td class="taskOptions">{$type[$row['type']]}</td>
                                             <td class="taskOptions">{$type_info[$row['type']][$row['typeinfo']]}</td>

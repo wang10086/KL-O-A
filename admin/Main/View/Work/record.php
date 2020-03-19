@@ -62,7 +62,7 @@
                                             <td>系统自动生成</td>
                                         </if>
                                         <td class="taskOptions">
-                                            <button onClick="javascript:window.location.href='{:U('Work/public_work_detail',array('id'=>$row['id']))}';" title="审核" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></button>
+                                            <button onClick="javascript:window.location.href='{:U('Work/work_detail',array('id'=>$row['id']))}';" title="审核" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></button>
                                         </td>
                                         <if condition="rolemenu(array('Work/verify_record_TEST'))">
                                             <!--<td class="taskOptions">
