@@ -3316,7 +3316,7 @@ function updatekpi($month,$user,$year=''){
                         if ($v['quota_id'] == 202){
 
 
-                            $complete               = '';
+                            $complete               = '开发中';
                             $url                    = '';
                         }
 
