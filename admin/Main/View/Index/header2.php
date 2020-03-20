@@ -102,6 +102,8 @@
                 <div class="navbar-btn-div">
                     <a href="{:U('Index/index')}" class="btn <?php if (in_array(CONTROLLER_NAME,$controller_names)){ echo "btn-primary"; }else{ echo "btn-info"; } ?>">门户</a>
                     <a href="{:U('Zindex/index')}" class="btn <?php if (!in_array(CONTROLLER_NAME,$controller_names)){ echo "btn-primary"; }else{ echo "btn-info"; } ?> navbar-btn-r">流程</a>
+                    <!--<a href="{:U('Index/index')}" class="btn btn-info">门户</a>
+                    <a href="{:U('Zindex/index')}" class="btn btn-info navbar-btn-r">流程</a>-->
                 </div>
 
                 <div class="navbar-right">
@@ -147,4 +149,9 @@
 
 <div class="wrapper row-offcanvas row-offcanvas-left">
 
-            <include file="Zindex:menu" />
+    <?php if (in_array(CONTROLLER_NAME,$controller_names)){ ?>
+        <include file="Index:menu" />
+    <?php }else{ ?>
+        <include file="Zindex:menu" />
+    <?php } ?>
+
