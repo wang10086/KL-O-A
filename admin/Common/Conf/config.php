@@ -348,6 +348,8 @@ $config = array(
         '6'         => '品质检查'
     ),
 
+    'OA_CONTROLLER_NAMES'=>array('Index','Approval','Attachment','Chart','Contract','Cour','Customer','Export','File','Files','Finance','GuideRes','Inspect','Kpi','Minange','Material','Message','Op','Product','Project','Rbac','Rights','Salary','Sale','ScienceRes','Staff','SupplierRes','User','Wages','Worder','Work'),
+
     /*//工作记录类型  bak_20200318
     'REC_TYPE' => array('1'=>'工作不及时','2'=>'工作不合格','3'=>'工作不满意','4'=>'工作未完成'),
 

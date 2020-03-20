@@ -15,7 +15,7 @@ a:focus {
   outline: none;
   text-decoration: none;
   color: #72afd2;
-  
+
 }
 
 /* Layouts */
@@ -739,7 +739,7 @@ body > .header .logo .icon {
     left: 0px;
   }
 }
-/* 
+/*
     Dropdown menus
 ----------------------------
 */
@@ -1117,7 +1117,7 @@ body > .header .logo .icon {
     left: auto;
   }
 }
-/* 
+/*
    All form elements including input, select, textarea etc.
 -----------------------------------------------------------------
 */
@@ -1171,7 +1171,7 @@ body > .header .logo .icon {
 .radio {
   padding-left: 0;
 }
-/* 
+/*
     Compenent: Progress bars
 --------------------------------
 */
@@ -1438,7 +1438,7 @@ body > .header .logo .icon {
   font-weight: 800;
   float: left;
   cursor: default;
-  
+
 }
 .box .box-header a {
   color: #ffffff;
@@ -2035,7 +2035,7 @@ Component: timeline
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-/* 
+/*
     Component: callout
 ------------------------
 */
@@ -2075,7 +2075,7 @@ Component: timeline
 .callout.callout-info h4 {
   color: #3A87AD;
 }
-/* 
+/*
     Component: alert
 ------------------------
 */
@@ -2460,7 +2460,7 @@ Component: timeline
     width: 90%;
   }
 }
-/* 
+/*
     Page: 404 and 500 error pages
 ------------------------------------
 */
@@ -2510,7 +2510,7 @@ Component: timeline
 .error-page:after {
   clear: both;
 }
-/* 
+/*
     Page: Invoice
 */
 .invoice {
@@ -2543,12 +2543,12 @@ Component: timeline
     white-space: normal!important;
   }
 }
-/* 
+/*
     Skins
     -----
 */
-/* 
-    Skin Blue 
+/*
+    Skin Blue
     ---------
 */
 /* skin-blue navbar */
@@ -3610,8 +3610,8 @@ input{ font-family:'微软雅黑';}
 a.iclose:hover {background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;height:30px;display: block;float: left; padding:0; margin:0;cursor: pointer; overflow:hidden;text-decoration:none; opacity:0.8;}
 a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;height:30px;display: block;float: left; padding:0; margin:0;cursor: pointer; overflow:hidden;text-decoration:none;}
 .imgdiv{ width:80px;height:60px; text-align:center; vertical-align:middle; position:relative;display: table-cell; overflow:hidden;}
-.imgdiv .outline { *position:absolute; top:50%; } 
-.imgdiv .outline img { *position:relative; top:-50%; left:-50%; } 
+.imgdiv .outline { *position:absolute; top:50%; }
+.imgdiv .outline img { *position:relative; top:-50%; left:-50%; }
 .imgs_show table{ margin-top:5px;}
 .imgs_show table tr td{ padding:5px 5px 0 0;}
 
@@ -3709,7 +3709,7 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #mingdan .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #mingdan .input-group span.rr{margin-left:-1px;}
 #mingdan .input-group span input{ margin-left:5px;}
-#mingdan .btn{ padding:7px 12px; font-size:12px;} 
+#mingdan .btn{ padding:7px 12px; font-size:12px;}
 #mingdan td{ line-height:34px;}
 .form-group{ border-radius:4px;}
 #mingdanmin{ padding:0 15px;}
@@ -3724,7 +3724,7 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #pretium .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #pretium .input-group span.rr{margin-left:-1px;}
 #pretium .input-group span input{ margin-left:5px;}
-#pretium .btn{ padding:7px 12px; font-size:12px;} 
+#pretium .btn{ padding:7px 12px; font-size:12px;}
 #pretium td{ line-height:34px;}
 #pretium_val{ display:none}
 #pretium .lp_remark{ width: 280px;}
@@ -3751,7 +3751,7 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 #costacc .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #costacc .input-group span.rr{margin-left:-1px;}
 #costacc .input-group span input{ margin-left:5px;}
-#costacc .btn{ padding:7px 12px; font-size:12px;} 
+#costacc .btn{ padding:7px 12px; font-size:12px;}
 #costacc td{ line-height:34px;}
 #costacc_val{ display:none}
 #costacc .total{ color:#333333; font-size:14px;}
@@ -3822,23 +3822,23 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 
 #useraddbtns{ margin-top:15px; padding-left:0;}
 #pro_detail{ display:none;}
-#pro_detail .form-group{ margin-bottom:0;} 
+#pro_detail .form-group{ margin-bottom:0;}
 #guidelist{ padding:0 30px;}
 #guidelist td{ line-height:34px;}
 
 #pro_detail h3{ font-family:'微软雅黑'; padding:0; margin:0; margin-left:0px; font-size:16px; height:20px; line-height:20px; border-left:4px solid #06E0F3; padding-left:10px; margin-bottom:15px; }
 #guidelist h3{ font-family:'微软雅黑'; padding:0; margin:0; font-size:16px; height:20px; line-height:20px; border-left:4px solid #06E0F3; padding-left:10px; margin-top:15px; margin-left:-15px; }
 #guidelist{ display:none;}
-#guidelist .btn{ padding:7px 12px; font-size:12px;} 
+#guidelist .btn{ padding:7px 12px; font-size:12px;}
 #supplierlist{ display:none;padding:0 30px; margin-top:10px; padding-bottom:20px;}
 #supplierlist td{ line-height:34px;}
 #supplierlist h3{ font-family:'微软雅黑'; padding:0; margin:0; font-size:16px; height:20px; line-height:20px; border-left:4px solid #06E0F3; padding-left:10px; margin-top:15px; margin-left:-15px;}
-#supplierlist .btn{ padding:7px 12px; font-size:12px;} 
+#supplierlist .btn{ padding:7px 12px; font-size:12px;}
 
 #opmaterial{ display:none;padding:0 30px; margin-top:10px; padding-bottom:20px;}
 #opmaterial td{ line-height:34px;}
 #opmaterial h3{ font-family:'微软雅黑'; padding:0; margin:0; font-size:16px; height:20px; line-height:20px; border-left:4px solid #06E0F3; padding-left:10px; margin-top:15px; margin-left:-15px;}
-#opmaterial .btn{ padding:7px 12px; font-size:12px;} 
+#opmaterial .btn{ padding:7px 12px; font-size:12px;}
 
 #formsbtn{width:100%; text-align:center;}
 #lrpd{ padding-left:100px; padding-right:100px;}
@@ -3849,7 +3849,7 @@ a.iclose{background:url(../img/btn/min_icon.png) no-repeat 0px -30px;width:30px;
 a.task_blue{width: 100%;
   overflow: hidden;
   height: 23px;
-  line-height: 22px; 
+  line-height: 22px;
   background: #00c0ef;
   border-radius: 4px;
   border: 1px solid #FFF;
@@ -3857,7 +3857,7 @@ a.task_blue{width: 100%;
   color: #FFF;
   padding: 0 2px;
   cursor: pointer;}
-  
+
 .pads{ padding:10px 0;}
 .mores{ width:200px; height:14px; overflow:hidden;}
 .min_input{ float:left; width:80px;}
@@ -3932,11 +3932,11 @@ th{ font-weight:normal;}
 #pdcalist .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #pdcalist .input-group span.rr{margin-left:-1px;}
 #pdcalist .input-group span input{ margin-left:5px;}
-#pdcalist .btn{ padding:7px 12px; font-size:12px;} 
+#pdcalist .btn{ padding:7px 12px; font-size:12px;}
 #pdcalist td{ line-height:34px;}
 #pdcalist_val{ display:none}
 #pdcalist .longinput{ width:120px;}
-#pdcalist .pdcalist_name{ width:160px}  
+#pdcalist .pdcalist_name{ width:160px}
 #pdcalist .stock{ width:60px; text-align:left; float:left; line-height:34px;}
 
 #pdcalist .line2{ line-height:18px; padding:15px 8px;text-align:center; }
@@ -3981,7 +3981,7 @@ th{ font-weight:normal;}
 #qaqclist .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #qaqclist .input-group span.rr{margin-left:-1px;}
 #qaqclist .input-group span input{ margin-left:5px;}
-#qaqclist .btn{ padding:7px 12px; font-size:12px;} 
+#qaqclist .btn{ padding:7px 12px; font-size:12px;}
 #qaqclist td{ line-height:34px;}
 #qaqclist_val{ display:none}
 
@@ -4017,7 +4017,7 @@ th{outline: none;}
 #payment .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #payment .input-group span.rr{margin-left:-1px;}
 #payment .input-group span input{ margin-left:5px;}
-#payment .btn{ padding:7px 12px; font-size:12px;} 
+#payment .btn{ padding:7px 12px; font-size:12px;}
 #payment td{ line-height:34px;}
 #payment_val{ display:none}
 
@@ -4043,7 +4043,7 @@ th{outline: none;}
 #newlistbox .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
 #newlistbox .input-group span.rr{margin-left:-1px;}
 #newlistbox .input-group span input{ margin-left:5px;}
-#newlistbox .btn{ padding:7px 12px; font-size:12px;} 
+#newlistbox .btn{ padding:7px 12px; font-size:12px;}
 #newlistbox td{ line-height:34px;}
 #newlistbox_val{ display:none}
 
@@ -4249,4 +4249,5 @@ th{outline: none;}
 .line-bottom-box-gray{border-bottom: 2px solid #cccccc; }
 .input_ratio{height: 34px; width: 47%; padding: 6px 12px; font-size: 14px; line-height: 1.428571429; color: #555; vertical-align: middle; background-color: #fff; border: 1px solid #ccc;}
 
-
+.navbar-btn-div{ display: inline-block; margin-left: 1rem; line-height: 50px; padding: 0 1rem; }
+.navbar-btn-r{ margin-left: 1rem; }

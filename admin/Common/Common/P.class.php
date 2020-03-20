@@ -4,21 +4,22 @@ namespace Sys;
 final class P {
     // 防止创建实例
     private function __construct () { }
-   
+
     // 版本定义
-    // 系统版本号定义：x.y.z   
+    // 系统版本号定义：x.y.z
     // x:大版本，功能、UI、数据结构有重大改动时变更
     // y:增加或删除功能模块时变更
     // x:小功能变更，批量BUG修复时变更
     // 其他：alpha 开发预览版本  beta 上线公测版本  release最终确定版本
 	const  VERSION         =   "v2.2.0";
+	const  ZVERSION        =   "v1.0.0";
 	const  VERSION_CODE    =   "20180107";
 	const  VERSION_NAME    =   "";
 	const  SYSTEM_NAME     =   "中科科行OA系统";
-    //const  SYS_NAME        =   "中科科行";
-    const  SYS_NAME        =   "";
+    const  SYS_NAME        =   "中科科行";
+    //const  SYS_NAME        =   "";
 
-    
+
     // 常用参数定义
     const  YES            =    1;   // 是
     const  NO             =    0;   // 否
@@ -26,46 +27,46 @@ final class P {
     const  DISABLE        =    0;   // 不可用，未开启
     const  SUCCESS        =    0;   // 成功
     const  ERROR          =    -1;  // 失败
-    
+
     // 性别常量
     const  SEX_MALE       =    1;   // 性别 男
     const  SEX_FAMALE     =    2;   // 性别 女
     const  SEX_UNKOWN     =    0;   // 性别 未知
-    
+
     // 页面
     const  PAGE_SIZE      =    20;  //每页记录条数
-    
-    
+
+
     // 用户状态
     const USER_STATUS_NORMAL   = 0;
     const USER_STATUS_DELETED  = -1;  //已删除或停用
     const USER_STATUS_UNAUDIT  = 2;   //未审核
     const USER_STATUS_EXPIRE   = 9;  //临时用户已到期
-        
-    
+
+
     const AUDIT_STATUS_NOT_AUDIT  = 0;  //待审批
     const AUDIT_STATUS_PASS       = 1;  //审批通过
 	const AUDIT_STATUS_NOT_PASS   = 2;  //审批不通过
     const AUDIT_STATUS_MORE_AUDIT = 3;  //第一次审核通过,待复审
-	
+
 	const USER_TYPE_TEMP       = 2;  //临时用户
 	const USER_TYPE_PART       = 1;  //兼职用户
 	const USER_TYPE_FORMAL     = 0;  //正式员工、用户
-	
+
 	const RES_TYPE_SCIENCE     = 1;  //资源类型：科普资源
 	const RES_TYPE_SUPPLIER    = 2;  //资源类型：合格供方资源
 	const RES_TYPE_GUIDE       = 3;  //资源类型：导游辅导员
-	
-	
+
+
 	const REQ_TYPE_PROJECT_NEW        = 99;   // 新项目审核
 	const REQ_TYPE_PRODUCT_NEW        = 100;  // 新产品审核
 	const REQ_TYPE_PRODUCT_V          = 101;  // 产品访问权限
 	const REQ_TYPE_PRODUCT_D          = 102;  // 产品下载权限
-	const REQ_TYPE_PRODUCT_U          = 103;  // 产品使用权限	
-	const REQ_TYPE_PRODUCT_LINE       = 104;  // 产品线路审核	
+	const REQ_TYPE_PRODUCT_U          = 103;  // 产品使用权限
+	const REQ_TYPE_PRODUCT_LINE       = 104;  // 产品线路审核
 	const REQ_TYPE_PRODUCT_MODEL      = 105;  // 新产品模板审核
     const REQ_TYPE_PRODUCTED          = 106;  // 新标准产品审核
-	const REQ_TYPE_SCIENCE_RES_NEW    = 200;  // 新科普资源审核  
+	const REQ_TYPE_SCIENCE_RES_NEW    = 200;  // 新科普资源审核
 	const REQ_TYPE_SCIENCE_RES_V      = 201;  // 申请科普资源访问权限
 	const REQ_TYPE_SCIENCE_RES_D      = 202;  // 申请科普资源下载权限
 	const REQ_TYPE_SCIENCE_RES_U      = 203;  // 申请科普资源使用权限
@@ -94,10 +95,10 @@ final class P {
     const WORDER_EXE                  = 12;   //用户执行工单时上传文件
     const WORDER_PROJECT              = 100;  //用户执行工单时上传文件
 
-	
+
 	//错误
-	const NOT_UPLOAD_DATA             =  '2000=未提交数据';   
-	const NOT_DEL_FILE_DATA           =  '2001=未删除任何文件';   
+	const NOT_UPLOAD_DATA             =  '2000=未提交数据';
+	const NOT_DEL_FILE_DATA           =  '2001=未删除任何文件';
 	const NOT_MOVE_FILES_DATA         =  '2002=未移动任何文件';
 	const NOT_AUTH_FILES_DATA         =  '2003=未设置任何权限';
 

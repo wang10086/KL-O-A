@@ -36,6 +36,7 @@ class BasepubController extends Controller {
 		$this->assign('_pagedesc_',  $this->_pagedesc_);
 		$this->assign('_action_',    $this->_action_);
 		$this->assign('_sum_audit',    $this->_sum_audit);
+        $this->assign('controller_names', C('OA_CONTROLLER_NAMES'));
 
 
     }
