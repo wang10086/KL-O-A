@@ -31,11 +31,11 @@
                                     <?php for ($i=0; $i<7; $i++){ ?>
                                         <div class="form-group col-md-3 viwe">
                                             <p class="black border-bottom-gray"><i class="fa fa-caret-right"></i>测试LTC流程{$i+1}{$op.showstatus} <span class="gray-a">({$i+100})</span></p>
-                                            <P>AAAAAAAAAAAAAA</P>
-                                            <P>BBBBBBBBBBBBBB</P>
-                                            <P>CCCCCCCCCCCCCC</P>
-                                            <P>DDDDDDDDDDDDDDDDDD</P>
-                                            <P>EEEEEEEEEEEEE测试测试测试测试</P>
+                                            <a><a href="javascript:;" title="新建">AAAAAAAAAAAAAA</a></P>
+                                            <a><a href="javascript:;" title="新建">BBBBBBBBBBBBBB</a></P>
+                                            <a><a href="javascript:;" title="新建">CCCCCCCCCCCCCC</a></P>
+                                            <a><a href="javascript:;" title="新建">DDDDDDDDDDDDDDDDDD</a></P>
+                                            <a><a href="javascript:;" title="新建">EEEEEEEEEEEEE测试测试测试测试</a></P>
                                         </div>
                                     <?php } ?>
                                     <div class="form-group">&nbsp;</div>
@@ -54,11 +54,11 @@
                                    <?php for ($i=0; $i<3; $i++){ ?>
                                        <div class="form-group col-md-3 viwe">
                                            <p class="black border-bottom-gray"><i class="fa fa-caret-right"></i>测试IPD流程{$i+1}{$op.showstatus} <span class="gray-a">({$i+100})</span></p>
-                                           <P>AAAAAAAAAAAAAA</P>
-                                           <P>BBBBBBBBBBBBBB</P>
-                                           <P>CCCCCCCCCCCCCC</P>
-                                           <P>DDDDDDDDDDDDDDDDDD</P>
-                                           <P>EEEEEEEEEEEEE测试测试测试测试</P>
+                                           <a><a href="javascript:;" title="新建">AAAAAAAAAAAAAA</a></P>
+                                           <a><a href="javascript:;" title="新建">BBBBBBBBBBBBBB</a></P>
+                                           <a><a href="javascript:;" title="新建">CCCCCCCCCCCCCC</a></P>
+                                           <a><a href="javascript:;" title="新建">DDDDDDDDDDDDDDDDDD</a></P>
+                                           <a><a href="javascript:;" title="新建">EEEEEEEEEEEEE测试测试测试测试</a></P>
                                        </div>
                                    <?php } ?>
                                </div>
