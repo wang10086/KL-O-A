@@ -33,7 +33,7 @@
                             <ul class="treeview-menu">
                                 <li><a href="{:U('Zprocess/public_index')}"><i class="fa fa-angle-right"></i> 待办事宜</a></li>
                                 <li><a href="{:U('Zprocess/public_add')}"><i class="fa fa-angle-right"></i> 新建流程</a></li>
-                                <li><a href="{:U('Zprocess/setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>
+                                <li><a href="{:U('Zprocess/public_setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>
                             </ul>
                         </li>
 

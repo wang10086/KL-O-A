@@ -27,10 +27,10 @@ class ZprocessController extends BaseController{
 	}
 
 	//流程类型管理
-    public function setType(){
+    public function public_setType(){
         $this->title('流程类型管理');
 
-        $this->display();
+        $this->display('setType');
     }
 
 }
