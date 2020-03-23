@@ -18,7 +18,7 @@ class FilesController extends BaseController {
         $this->title('文件管理');
 
 		$db                     = M('files');
-        $filename               = I('filename');
+        $filename               = trim(I('filename'));
 
 		//定义配置
 		$this->type             = array('0'=>'文件夹','1'=>'文档');
@@ -28,8 +28,11 @@ class FilesController extends BaseController {
 
 		//查询条件
 		$where = array();
-		$where['pid']           = $this->pid;
-        if ($filename) $where['file_name'] = array('like','%'.$filename.'%');
+        if ($filename){
+            $where['file_name'] = array('like','%'.$filename.'%'); //文件搜索不受文件夹限制
+        }else{
+            $where['pid']       = $this->pid;
+        }
 
 		//权限识别
 		/*
