@@ -37,9 +37,7 @@ class ZprocessController extends BaseController{
         if (isset($_POST['dosubmint'])){
             $id                 = I('id',0);
             $info               = I('info');
-            $newname            = I('newname');
             $fileid             = I('fileid');
-            $resfiles           = I('resfiles');
             $info['title']      = trim($info['title']);
             $info['remark']     = trim($info['remark']);
             $info['fileids']    = $fileid ? implode(',',$fileid) : '';
