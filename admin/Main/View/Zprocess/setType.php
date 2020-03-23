@@ -24,7 +24,7 @@
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
                                          <!--<a href="{:U('Zprocess/addType')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>-->
-                                         <a href="javascript:;" onclick="art_show_msg('开发中...')" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>
+                                         <a href="javascript:;" onclick="add_type()" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -32,38 +32,21 @@
                                     <tr role="row" class="orders" >
                                         <th class="taskOptions" width="60">ID</th>
                                         <th width="">名称</th>
-                                        <th width="">流程说明</th>
+                                        <!--<th width="">流程说明</th>-->
                                         <th class="taskOptions" width="80">操作</th>
                                     </tr>
 
-                                    <tr>
-                                        <td>1</td>
-                                        <td>LTC主干流程 <a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;</td>
-                                        <td>{$row.level}</td>
-                                        <td>
-                                        <a href="javascript:;">修改</a>&nbsp; | &nbsp;
-                                        <a href="javascript:;">删除</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>├ &emsp; 测试流程1 <a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;</td>
-                                        <td>{$row.level}</td>
-                                        <td>
-                                            <a href="javascript:;">修改</a>&nbsp; | &nbsp;
-                                            <a href="javascript:;">删除</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>IPD流程 <a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;</td>
-                                        <td>{$row.level}</td>
-                                        <td>
-                                            <a href="javascript:;">修改</a>&nbsp; | &nbsp;
-                                            <a href="javascript:;">删除</a>
-                                        </td>
-                                    </tr>
-
+                                    <foreach name="lists" key="k" item="v">
+                                        <tr>
+                                            <td>{$v.id}</td>
+                                            <td>{$v.title} <!--<a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;--></td>
+                                            <!--<td>{$row.level}</td>-->
+                                            <td>
+                                                <a href="javascript:;" onclick="add_type({$v.id})">修改</a>&nbsp; | &nbsp;
+                                                <a href="javascript:;" onclick="ConfirmDel(`/index.php?m=Main&c=Zprocess&a=delType&id=`+{$v.id})">删除</a>
+                                            </td>
+                                        </tr>
+                                    </foreach>
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
@@ -80,3 +63,26 @@
             </aside><!-- /.right-side -->
 
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+    function add_type (id) {
+        art.dialog.open('/index.php?m=Main&c=Zprocess&a=addType&id='+id, {
+            lock:true,
+            id: 'audit_win',
+            title: '编辑流程类型',
+            width:500,
+            height:200,
+            okVal: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                parent.art.dialog.list["audit_win"].close();
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {},
+            close : function () {
+                location.reload();
+            }
+        });
+    }
+</script>
