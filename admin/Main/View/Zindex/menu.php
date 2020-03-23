@@ -24,19 +24,20 @@
                             </li>
                         </if>
 
-                        <!--<li class="treeview {:ison(CONTROLLER_NAME,'Chart')} {:on('Kpi/kpiChart')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME,'Zprocess')}">
                             <a href="javascript:;">
-                                <i class="fa fa-signal"></i>
-                                <span>绩效排行</span>
+                                <i class="fa fa-list-ol"></i>
+                                <span>流程</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="{:U('Chart/pplist')}"><i class="fa fa-angle-right"></i> 业绩排行</a></li>
-                                <li><a href="{:U('Kpi/kpiChart')}"><i class="fa fa-angle-right"></i> KPI排行</a></li>
+                                <li><a href="{:U('Zprocess/public_index')}"><i class="fa fa-angle-right"></i> 待办事宜</a></li>
+                                <li><a href="{:U('Zprocess/public_add')}"><i class="fa fa-angle-right"></i> 新建流程</a></li>
+                                <li><a href="{:U('Zprocess/setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>
                             </ul>
                         </li>
 
-                        <if condition="rolemenu(array('Op/index','Op/plans','Project/kind','Op/relpricelist'))">
+                        <!--<if condition="rolemenu(array('Op/index','Op/plans','Project/kind','Op/relpricelist'))">
                         <li class="treeview {:ison(CONTROLLER_NAME,'Op')} {:on('Project/addkind')}">
                             <a href="javascript:;">
                                 <i class="fa fa-shopping-cart"></i>
