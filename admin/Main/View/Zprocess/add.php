@@ -5,7 +5,7 @@
             <section class="content-header">
                 <h1>{$_action_}</h1>
                 <ol class="breadcrumb">
-                    <li><a href="{:U('Zindex/index')}"><i class="fa fa-home"></i> 首页</a></li>
+                    <li><a href="{:U('Zprocess/public_index')}"><i class="fa fa-home"></i> 首页</a></li>
                     <li><a href="javascript:;">{$_action_}</a></li>
                 </ol>
             </section>
@@ -23,45 +23,45 @@
                             </div><!-- /.box-header -->
                             <div class="box-body">
                                 <div class="content">
-                                    <div class="form-group col-md-12">
-                                        <label>标题：</label><input type="text" name="info[title]" class="form-control" required />
-                                    </div>
-
                                     <div class="form-group col-md-6">
-                                        <label>主干流程类型：</label>
-                                        <select  class="form-control"  name="info[kind]" id="kind"  required>
-                                            <option value="" selected disabled>请选择主干流程类型</option>
-                                            <option value="{$v.id}" >{:tree_pad($v['level'], true)} LTC主干流程</option>
-                                            <option value="{$v.id}" >{:tree_pad($v['level'], true)} IPD主干流程</option>
-                                        </select>
+                                        <label>标题：</label><input type="text" name="info[title]" class="form-control" required />
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label>流程类型：</label>
                                         <select  class="form-control"  name="info[kind]" id="kind"  required>
                                             <option value="" selected disabled>请选择流程类型</option>
+                                            <option value="{$v.id}" >{:tree_pad($v['level'], true)} LTC主干流程</option>
+                                            <option value="{$v.id}" >{:tree_pad($v['level'], true)} IPD主干流程</option>
                                         </select>
                                     </div>
 
-                                    <div class="form-group col-md-6">
+                                    <!--<div class="form-group col-md-6">
+                                        <label>流程类型：</label>
+                                        <select  class="form-control"  name="info[kind]" id="kind"  required>
+                                            <option value="" selected disabled>请选择流程类型</option>
+                                        </select>
+                                    </div>-->
+
+                                    <!--<div class="form-group col-md-4">
                                         <label>申请人：</label><input type="text" name="info[number]" class="form-control" required />
                                     </div>
 
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label>所在部门：</label><input type="text" name="info[number]" class="form-control" required />
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group col-md-12">
                                         <label>备注：</label><textarea class="form-control"  name="info[context]" id="context"></textarea>
                                         <span id="contextTip"></span>
                                     </div>
 
-                                    <div class="form-group col-md-12">
+                                    <!--<div class="form-group col-md-12">
                                         <div class="callout callout-danger">
                                             <h4>流程说明：</h4>
                                             <p>此数据根据选择流程种类自动获取说明信息!</p>
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                     <div class="form-group col-md-12">
                                         <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 上传附件</a>

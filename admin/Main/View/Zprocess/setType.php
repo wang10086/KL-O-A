@@ -8,7 +8,7 @@
                         <small>{$_action_}</small>
                     </h1>
                     <ol class="breadcrumb">
-                        <li><a href="{:U('Zindex/index')}"><i class="fa fa-home"></i> 首页</a></li>
+                        <li><a href="{:U('Zprocess/public_index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
                         <li class="active">{$_action_}</li>
                     </ol>
@@ -38,7 +38,7 @@
 
                                     <tr>
                                         <td>1</td>
-                                        <td>LTC主干流程 </td>
+                                        <td>LTC主干流程 <a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;</td>
                                         <td>{$row.level}</td>
                                         <td>
                                         <a href="javascript:;">修改</a>&nbsp; | &nbsp;
@@ -47,7 +47,7 @@
                                     </tr>
                                     <tr>
                                         <td>3</td>
-                                        <td>├ &emsp; 测试流程1</td>
+                                        <td>├ &emsp; 测试流程1 <a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;</td>
                                         <td>{$row.level}</td>
                                         <td>
                                             <a href="javascript:;">修改</a>&nbsp; | &nbsp;
@@ -56,7 +56,7 @@
                                     </tr>
                                     <tr>
                                         <td>2</td>
-                                        <td>IPD流程 </td>
+                                        <td>IPD流程 <a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;</td>
                                         <td>{$row.level}</td>
                                         <td>
                                             <a href="javascript:;">修改</a>&nbsp; | &nbsp;
