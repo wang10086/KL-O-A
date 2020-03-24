@@ -12,8 +12,9 @@
 
             <!-- Main content -->
             <section class="content">
-            <form method="post" action="{:U('Zprocess/addProcess')}" name="myform" id="save_plans">
+            <form method="post" action="{:U('Zprocess/addProcess')}" name="myform">
             <input type="hidden" name="dosubmint" value="1">
+            <input type="hidden" name="id" value="{$list.id}">
                 <div class="row">
                      <!-- right column -->
                     <div class="col-md-12">
@@ -24,39 +25,23 @@
                             <div class="box-body">
                                 <div class="content">
                                     <div class="form-group col-md-6">
-                                        <label>标题：</label><input type="text" name="info[title]" class="form-control" required />
+                                        <label>标题：</label><input type="text" name="info[title]" class="form-control" value="{$list.title}" required />
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label>流程类型：</label>
                                         <select  class="form-control"  name="info[type]"  required>
                                             <option value="" selected disabled>请选择流程类型</option>
-                                            <foreach name="typeLists" item="v">
-                                                <option value="{$v.id}" >{:tree_pad($v['level'], true)} {$v.title}</option>
+                                            <foreach name="typeLists" item="vv">
+                                                <option value="{$vv.id}" <?php if ($vv['id'] == $list['type']) echo "selected"; ?> >{:tree_pad($vv['level'], true)} {$vv.title}</option>
                                             </foreach>
                                         </select>
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <label>备注：</label><textarea class="form-control"  name="info[remark]"></textarea>
+                                        <label>备注：</label><textarea class="form-control"  name="info[remark]">{$list.remark}</textarea>
                                         <span id="contextTip"></span>
                                     </div>
-
-                                    <!--<div class="form-group col-md-12">
-                                        <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 上传附件</a>
-                                        <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于10M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
-
-                                        <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
-                                            <tr>
-                                                <th align="left" width="">文件名称</th>
-                                                <th align="left" width="100">大小</th>
-                                                <th align="left" width="30%">上传进度</th>
-                                                <th align="left" width="60">操作</th>
-                                            </tr>
-
-                                        </table>
-                                        <div id="container" style="display:none;"></div>
-                                    </div>-->
 
                                     <div class="form-group col-md-12">
                                         <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
@@ -70,20 +55,26 @@
                                                 <th align="left" width="60">操作</th>
                                             </tr>
 
-                                            <?php if ($file){ ?>
-                                                <tr id="{$file['id']}"  valign="middle" class="un_upload">
-                                                    <td class="iptval">
-                                                        <input type="text" name="newname[{$file['id']}]" value="{$file['newFileName']}" class="form-control file_val" />
-                                                        <input type="hidden" name="fileid[{$file['id']}]" value="{$file['id']}">
-                                                    </td>
-                                                    <td> <?php echo round($file[file_size]/1024,2); ?>Kb</td>
-                                                    <td>
-                                                        <div class="progress sm">
-                                                            <div class="progress-bar progress-bar-aqua" rel="{$file['id']}"  role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                                                        </div>
-                                                    </td>
-                                                    <td><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile({$file['id']});"><i class="fa fa-times"></i>删除</a></td>
-                                                </tr>
+                                            <?php if($files){?>
+                                                <foreach name="files" key="k" item="v">
+                                                    <tr id="<?php echo $v['id']?>"  valign="middle" class="un_upload" >
+                                                        <td class="iptval">
+                                                            <input type="text" name="newname[{$v['id']}]" value="<?php echo $v['filename'];?>" class="form-control file_val" />
+                                                            <input type="hidden" name="fileid[{$v['id']}]" value="{$v['id']}">
+                                                        </td>
+                                                        <td> <?php echo $v['filesize'];?></td>
+                                                        <td>
+                                                            <div class="progress sm">
+                                                                <div class="progress-bar progress-bar-aqua" rel="o_1d1aj6qv6hneji21v471vah17u1c" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(<?php echo $v['id']?>)">
+                                                                <i class="fa fa-times"></i>删除
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </foreach>
                                             <?php } ?>
 
                                         </table>

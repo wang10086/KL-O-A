@@ -52,15 +52,32 @@ class ZprocessController extends BaseController{
                 $res            = $db -> add($info);
                 $msg            = '添加';
             }
-            $res ? $this->success($msg.'数据成功') : $this->error($msg.'数据失败');
+            $res ? $this->success($msg.'数据成功',) : $this->error($msg.'数据失败');
         }else{
             $this->title('新建流程');
             $type_db            = M('process_type');
             $typeLists          = $type_db ->where(array('status'=>array('neq', '-1'))) -> select();
+            $id                 = I('id',0);
+            $processList        = $id ? M('process')->where(array('id'=>$id))->find() : '';
+            $fileids            = $processList['fileids'] ? explode(',',$processList['fileids']) : '';
+            $files              = $fileids ? M('attachment')->where(array('id'=>array('in',$fileids)))->select() : '';
+            $this->files        = $files ? $files : '';
+            $this->list         = $processList;
             $this->typeLists    = $typeLists;
             $this->display('addProcess');
         }
 	}
+
+	//删除流程
+    public function delProcess(){
+        $id                     = I('id',0);
+        if (!$id) $this->error('获取数据失败');
+        $db                     = M('process');
+        $data                   = array();
+        $data['status']         = '-1';
+        $res                    = $db->where(array('id'=>$id))->save($data);
+        $res ? $this->success('删除成功') : $this->error('删除失败');
+    }
 
 	//流程类型管理
     public function setType(){

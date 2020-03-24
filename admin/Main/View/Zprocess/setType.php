@@ -23,8 +23,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                         <!--<a href="{:U('Zprocess/addType')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>-->
+                                        <if condition="rolemenu(array('Zprocess/addType'))">
                                          <a href="javascript:;" onclick="add_type()" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增</a>
+                                        </if>
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -42,8 +43,12 @@
                                             <td>{$v.title} <!--<a class="pull-right" href="javascript:;"><i class="fa fa-plus"></i> 子类型</a>&nbsp;--></td>
                                             <!--<td>{$row.level}</td>-->
                                             <td>
+                                                <if condition="rolemenu(array('Zprocess/addType'))">
                                                 <a href="javascript:;" onclick="add_type({$v.id})">修改</a>&nbsp; | &nbsp;
+                                                </if>
+                                                <if condition="rolemenu(array('Zprocess/delType'))">
                                                 <a href="javascript:;" onclick="ConfirmDel(`/index.php?m=Main&c=Zprocess&a=delType&id=`+{$v.id})">删除</a>
+                                                </if>
                                             </td>
                                         </tr>
                                     </foreach>

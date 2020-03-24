@@ -10,50 +10,11 @@
                 </ol>
             </section>
 
-            <style>
-                .gray-a{ color: #cccccc; }
-                .gray-b{ color: #7f7f7f; }
-            </style>
-
             <!-- Main content -->
             <section class="content">
                 <div class="row">
                      <!-- right column -->
                     <div class="col-md-12" style="padding-bottom:200px;">
-                        <!--<div class="box box-success" style="margin-top:15px;">
-                            <div class="box-header">
-                                <h3 class="box-title">LTC主干流程<span class="gray-a">(6)</span></h3>
-                                <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
-                            </div>
-                            <div class="box-body">
-                                <div class="content">
-                                    <?php /*for ($i=1; $i<7; $i++){ */?>
-                                        <div class="form-group col-md-3 viwe" style="display: inline-block;">
-                                            <i class="fa fa-caret-right"></i> &nbsp; <a href="javascript:;" title="新建">测试数据测试数据</a>
-                                        </div>
-                                    <?php /*} */?>
-                                    <div class="form-group">&nbsp;</div>
-                                </div>
-                            </div>
-                        </div>
-
-                       <div class="box box-success">
-                           <div class="box-header">
-                               <h3 class="box-title">IPD主干流程<span style="color: #7f7f7f">(3)</span></h3>
-                               <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
-                           </div>
-
-                           <div class="box-body">
-                               <div class="content">
-                                   <?php /*for ($i=1; $i<4; $i++){ */?>
-                                       <div class="form-group col-md-3 viwe" style="display: inline-block;">
-                                           <i class="fa fa-caret-right"></i> &nbsp; <a href="javascript:;" title="新建">测试数据测试数据</a>
-                                       </div>
-                                   <?php /*} */?>
-                                   <div class="form-group">&nbsp;</div>
-                               </div>
-                           </div>
-                       </div>-->
                         <foreach name="lists" key="k" item="v">
                             <div class="box box-success">
                                 <div class="box-header">
@@ -65,7 +26,13 @@
                                     <div class="content">
                                         <?php foreach ($v['lists'] as $value){ ?>
                                         <div class="form-group col-md-3 viwe" style="display: inline-block;">
-                                            <i class="fa fa-caret-right"></i> &nbsp; <a href="javascript:;" title="新建">{$value.title}</a>
+                                            <i class="fa fa-caret-right"></i> &nbsp; <a href="javascript:;" title="新建">{$value.title}</a> &nbsp;&nbsp;
+                                            <if condition="rolemenu(array('Zprocess/addProcess'))">
+                                            <a href="{:U('Zprocess/addProcess',array('id'=>$value['id']))}" title="编辑"><i class="fa fa-pencil"></i></a> &nbsp;| &nbsp;
+                                            </if>
+                                            <if condition="rolemenu(array('Zprocess/delProcess'))">
+                                            <a href="javascript:;" onclick="ConfirmDel(`{:U('Zprocess/delProcess',array('id'=>$value['id']))}`)" title="删除"><i class="fa fa-times"></i></a>
+                                            </if>
                                         </div>
                                         <?php } ?>
                                         <div class="form-group">&nbsp;</div>
