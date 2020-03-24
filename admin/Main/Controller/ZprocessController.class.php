@@ -52,7 +52,7 @@ class ZprocessController extends BaseController{
                 $res            = $db -> add($info);
                 $msg            = '添加';
             }
-            $res ? $this->success($msg.'数据成功',) : $this->error($msg.'数据失败');
+            $res ? $this->success($msg.'数据成功',U('Zprocess/public_index')) : $this->error($msg.'数据失败');
         }else{
             $this->title('新建流程');
             $type_db            = M('process_type');
