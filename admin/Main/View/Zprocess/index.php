@@ -22,7 +22,7 @@
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
                                 </div>
 
-                                <div class="box-body">
+                                <div class="box-body" style="padding: 0;">
                                     <div class="content">
                                         <?php foreach ($v['lists'] as $value){ ?>
                                         <div class="form-group col-md-3 viwe" style="display: inline-block;">
