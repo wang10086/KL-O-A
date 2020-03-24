@@ -27,15 +27,15 @@
                                         <?php foreach ($v['lists'] as $value){ ?>
                                         <div class="form-group col-md-3 viwe" style="display: inline-block;">
                                             <i class="fa fa-caret-right"></i> &nbsp; <a href="javascript:;" title="新建">{$value.title}</a> &nbsp;&nbsp;
-                                            <if condition="rolemenu(array('Zprocess/addProcess'))">
+                                            <!--<if condition="rolemenu(array('Zprocess/addProcess'))">
                                             <a href="{:U('Zprocess/addProcess',array('id'=>$value['id']))}" title="编辑"><i class="fa fa-pencil"></i></a> &nbsp;| &nbsp;
                                             </if>
                                             <if condition="rolemenu(array('Zprocess/delProcess'))">
                                             <a href="javascript:;" onclick="ConfirmDel(`{:U('Zprocess/delProcess',array('id'=>$value['id']))}`)" title="删除"><i class="fa fa-times"></i></a>
-                                            </if>
+                                            </if>-->
                                         </div>
                                         <?php } ?>
-                                        <div class="form-group">&nbsp;</div>
+                                        <!--<div class="form-group">&nbsp;</div>-->
                                     </div>
                                 </div>
                             </div>

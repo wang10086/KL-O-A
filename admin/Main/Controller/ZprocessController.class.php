@@ -52,7 +52,7 @@ class ZprocessController extends BaseController{
                 $res            = $db -> add($info);
                 $msg            = '添加';
             }
-            $res ? $this->success($msg.'数据成功',U('Zprocess/public_index')) : $this->error($msg.'数据失败');
+            $res ? $this->success($msg.'数据成功',U('Zprocess/process')) : $this->error($msg.'数据失败');
         }else{
             $this->title('新建流程');
             $type_db            = M('process_type');
@@ -67,6 +67,32 @@ class ZprocessController extends BaseController{
             $this->display('addProcess');
         }
 	}
+
+	//流程管理
+    public function process(){
+        $this->title('流程管理');
+        $db                     = M('process');
+        $type_db                = M('process_type');
+        $pin                    = I('pin',0);
+        $typeLists              = $type_db ->where(array('status'=>array('neq', '-1'))) -> getField('id,title',true);
+
+        $where                  = array();
+        if ($pin) $where['type']= $pin;
+        $where['status']        = array('neq','-1');
+
+        //分页
+        $pagecount		        = $db->where($where)->count();
+        $page			        = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $processLists           = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->select();
+
+        $this->lists            = $processLists;
+        $this->typeLists        = $typeLists;
+        $this->pin              = $pin;
+
+        $this->display();
+
+    }
 
 	//删除流程
     public function delProcess(){
