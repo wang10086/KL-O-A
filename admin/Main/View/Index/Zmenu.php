@@ -34,21 +34,21 @@
                                 <li><a href="javascript:;" onclick="art_show_msg('开发中...',3)"><i class="fa fa-angle-right"></i> 待办事宜</a></li>
                                 <li><a href="{:U('Zprocess/public_index')}"><i class="fa fa-angle-right"></i> 新建流程</a></li>
 
-                                <li class="treeview {:on('Zprocess/public_add')} {:on('Zprocess/public_setType')}">
-                                    <if condition="rolemenu(array('Product/standard_product','Product/standard_module'))">
+                                <li class="treeview {:on('Zprocess/addProcess')} {:on('Zprocess/setType')}">
+                                    <if condition="rolemenu(array('Zprocess/addProcess','Zprocess/setType'))">
                                         <a href=""><i class="fa  fa-pencil"></i> 录入流程</a>
                                     </if>
                                     <ul class="treeview-menu">
                                         <if condition="rolemenu(array('Zprocess/addProcess'))">
                                             <li class="{:on('Zprocess/addProcess')}"><a href="{:U('Zprocess/addProcess')}"><i class="fa fa-angle-right"></i> 录入流程</a></li>
                                         </if>
-                                        <if condition="rolemenu(array('Zprocess/public_setType'))">
-                                            <li class="{:on('Zprocess/public_setType')}"><a href="{:U('Zprocess/public_setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>
+                                        <if condition="rolemenu(array('Zprocess/setType'))">
+                                            <li class="{:on('Zprocess/setType')}"><a href="{:U('Zprocess/setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>
                                         </if>
                                     </ul>
                                 </li>
                                 <!--<li><a href="{:U('Zprocess/addProcess')}"><i class="fa fa-angle-right"></i> 新建流程</a></li>
-                                <li><a href="{:U('Zprocess/public_setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>-->
+                                <li><a href="{:U('Zprocess/setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>-->
                             </ul>
                         </li>
 

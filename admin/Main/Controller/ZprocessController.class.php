@@ -63,7 +63,7 @@ class ZprocessController extends BaseController{
 	}
 
 	//流程类型管理
-    public function public_setType(){
+    public function setType(){
         $this->title('流程类型管理');
         $db                     = M('process_type');
         $lists                  = $db ->where(array('status'=>array('neq', '-1'))) -> select();
