@@ -80,7 +80,8 @@
             okVal: '提交',
             ok: function () {
                 this.iframe.contentWindow.gosubmint();
-                parent.art.dialog.list["audit_win"].close();
+                setTimeout("parent.art.dialog.list['audit_win'].close()",1500);
+                //parent.art.dialog.list["audit_win"].close();
                 return false;
             },
             cancelVal:'取消',

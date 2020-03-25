@@ -125,7 +125,9 @@ class ZprocessController extends BaseController{
             $data               = array();
             $data['title']      = $title;
             $res                = $id ? $db -> where(array('id'=>$id))->save($data) : $db->add($data);
-            $res ? $this->success('编辑成功') : $this->error('数据保存失败');
+            //$res ? $this->success('编辑成功') : $this->error('数据保存失败');
+            $this->msg          = $res ? '编辑成功' : '数据保存失败';
+            $this->display("Index:public_audit");
         }else{
             $id                 = I('id',0);
             if ($id){
