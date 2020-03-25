@@ -2927,6 +2927,20 @@ class KpiController extends BaseController {
         $this->display('kpi_work_record');
     }
 
+    //public_huikuan_sure_timely
+    public function public_huikuan_sure_timely(){
+        $st                                 = I('st');
+        $et                                 = I('et');
+        $month                              = I('month');
+        $data                               = get_huikuan_sure_timely_data($st,$et);
+
+        $this->lists                        = $data['sum_list'];
+        $this->data                         = $data;
+        $this->month                        = $month;
+        $this->title('回款确认及时性-财务出纳员');
+        $this->display('kpi_huikuan_sure_timely');
+    }
+
 
     public function aaa(){
         //set_after_salary_kpi(201906);

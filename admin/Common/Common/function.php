@@ -3314,8 +3314,9 @@ function updatekpi($month,$user,$year=''){
 
                         //回款确认及时性-财务出纳员
                         if ($v['quota_id'] == 199){
-                            $complete               = '100%(开发中...)';
-                            $url                    = '';
+                            $data                   = get_huikuan_sure_timely_data($v['start_date'],$v['end_date']);
+                            $complete               = $data['average'];
+                            $url                    = U('Kpi/public_huikuan_sure_timely',array('st'=>$v['start_date'],'et'=>$v['end_date'],'month'=>$v['month']));
                         }
 
                         //工作准确性-财务出纳员
