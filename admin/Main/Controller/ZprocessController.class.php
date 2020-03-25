@@ -27,6 +27,8 @@ class ZprocessController extends BaseController{
             $typeLists[$k]['lists']     = $processLists;
         }
 
+        $ids                    = array(1);
+        $this->ids              = $ids;
         $this->lists            = $typeLists;
 		$this->display('index');
     }
@@ -147,6 +149,17 @@ class ZprocessController extends BaseController{
         $data['status']         = '-1';
         $res                    = $db->where(array('id'=>$id))->save($data);
         $res ? $this->success('删除成功') : $this->error('删除失败');
+    }
+
+    //创建流程表单
+    public function form(){
+        $id                     = I('id',0);
+        if (!$id){ $this->error('获取数据失败'); }
+        $process_db             = M('process');
+        $list                   = $process_db->find($id);
+
+        $this->list             = $list;
+        $this->display('form'.$id);
     }
 
 }

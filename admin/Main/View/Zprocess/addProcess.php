@@ -44,8 +44,9 @@
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 选择文件</a>
-                                        <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于10M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>
+                                        <a href="javascript:;" id="pickupfile" class="btn btn-success btn-sm" style="margin-top:15px; float:left;"><i class="fa fa-upload"></i> 流程图</a>
+                                        <!--<span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于10M的文件，支持JPG / GIF / PNG / DOC / XLS / PDF / ZIP / RAR文件类型</span>-->
+                                        <span style="line-height:30px; float:left;margin-left:15px; margin-top:15px; color:#999999;">请选择小于10M的流程图，支持JPG / PNG 等图片文件</span>
 
                                         <table id="flist" class="table" style="margin-top:15px; float:left; clear:both; border-top:1px solid #dedede;">
                                             <tr>
@@ -115,7 +116,12 @@
             },
 
             filters : {
-                max_file_size : '10mb',
+                mime_types : [ //只允许上传图片和zip文件
+                    { title : "Image files", extensions : "jpg,gif,png,JPG,GIF,PNG" }
+                    //{ title : "Zip files", extensions : "zip" }
+                ],
+                max_file_size : '10mb', //最大只能上传400kb的文件
+                prevent_duplicates : true //不允许选取重复文件
             },
 
             init: {

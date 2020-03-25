@@ -4251,3 +4251,42 @@ th{outline: none;}
 
 .navbar-btn-div{ display: inline-block; margin-left: 1rem; line-height: 50px; padding: 0 1rem; }
 .navbar-btn-r{ margin-left: 1rem; }
+
+/*流程管理*/
+.content-header .page-title-box{ height: 50px; display: inline-block; margin-left: 10px; }
+.content-header .page-title{ font-size: 20px; font-weight: bold; }
+.content-header .page-title-breadcrumb{ margin-top: -5px; }
+.menu-font-color{ color: #777777; }
+.zbox {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #dedede;
+  margin-bottom: 20px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  width: 100%;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.zbox .box-header {
+  position: relative;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom: 1px solid #dedede;
+  color: #444;
+}
+
+.zpage-title{
+  margin-bottom: 20px; height: 40px; line-height: 40px; text-align: center; font-size: 24px; font-weight: 500; color: #0070c0;
+}
