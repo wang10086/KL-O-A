@@ -212,7 +212,7 @@ class ZprocessController extends BaseController{
         $processId              = I('id');
         if (!$processId) $this->error('获取数据错误');
         $list                   = M('process')->where(array('id'=>$processId))->find();
-        $lists                  = M('process_node')->where(array('processId'=>$processId))->select();
+        $lists                  = M('process_node')->where(array('processId'=>$processId))->order('id asc')->select();
 
         $this->lists            = $lists;
         $this->list             = $list;

@@ -13,6 +13,7 @@
                     <div class="content">
                         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                             <tr role="row" class="orders" >
+                                <th class="taskOptions" width="60">序号</th>
                                 <th class="taskOptions">工作事项</th>
                                 <th class="taskOptions">责任人</th>
                                 <th class="taskOptions">所需天数</th>
@@ -24,12 +25,13 @@
                                 <th class="taskOptions">完成后反馈对象</th>
                                 <th class="taskOptions">备注</th>
                             </tr>
-                            <foreach name="lists" item="row">
+                            <foreach name="lists" key="k" item="row">
                                 <tr>
+                                    <td class="taskOptions">{$k + 1}</td>
                                     <td><a href="javascript:;">{$row.title}</a></td>
                                     <td>{$row.job}（{$row.blame_name}）</td>
                                     <td>{$row.day}</td>
-                                    <td><div class="tdbox_long">{$row.time_data}</div></td>
+                                    <td><div class="tdbox_long" title="{$row.time_data}">{$row.time_data}</div></td>
                                     <td>{$row.OK_data}</td>
                                     <td>{$row['before_remind']?'提醒':'不提醒'}</td>
                                     <td>{$row['after_remind']?'提醒':'不提醒'}</td>

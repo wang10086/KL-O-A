@@ -29,6 +29,7 @@
                                 <div class="box-body">
                                 <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                     <tr role="row" class="orders" >
+                                        <th class="taskOptions" width="60">ID</th>
                                         <th class="sorting" data="title">工作事项</th>
                                         <th class="sorting" data="job">责任人职务</th>
                                         <th class="sorting" data="blame_uid">责任人</th>
@@ -51,11 +52,12 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
+                                        <td class="taskOptions">{$row.id}</td>
                                         <td><a href="javascript:;">{$row.title}</a></td>
                                         <td>{$row.job}</td>
                                         <td>{$row.blame_name}</td>
                                         <td>{$row.day}</td>
-                                        <td><div class="tdbox_long">{$row.time_data}</div></td>
+                                        <td><div class="tdbox_long" title="{$row.time_data}">{$row.time_data}</div></td>
                                         <td>{$row.OK_data}</td>
                                         <td>{$row['before_remind']?'提醒':'不提醒'}</td>
                                         <td>{$row['after_remind']?'提醒':'不提醒'}</td>
