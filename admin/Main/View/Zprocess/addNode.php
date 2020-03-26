@@ -24,8 +24,28 @@
                             </div><!-- /.box-header -->
                             <div class="box-body">
                                 <div class="content">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
                                         <label>工作事项：</label><input type="text" name="info[title]" class="form-control" value="{$list.title}" required />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>流程类型：</label>
+                                        <select  class="form-control"  name="info[processTypeId]"  required id="processTypeId">
+                                            <option value="" selected disabled>请选择流程类型</option>
+                                            <foreach name="types" key="k" item="v">
+                                                <option value="{$k}" <?php if ($list['processTypeId'] == $k) echo "selected"; ?>>{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>所属流程：</label>
+                                        <select  class="form-control"  name="info[processId]" id="processId"  required>
+                                            <option value="" selected disabled>请先选择流程类型</option>
+                                            <foreach name="processIds" key="k" item="v">
+                                                <option value="{$k}" <?php if ($list['processId'] == $k) echo "selected"; ?>>{$v}</option>
+                                            </foreach>
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -107,6 +127,39 @@
     $(document).ready(function(e){
         autocomplete_id('blame_name','blame_uid',keywords);
         autocomplete_id('feedback_name','feedback_uid',keywords);
+    })
+
+    //二级联动 , 获取流程列表
+    $('#processTypeId').change(function () {
+        var typeId    = $(this).val();
+        console.log(typeId);
+        if (typeId){
+            $.ajax({
+                type : 'POST',
+                url : "<?php echo U('Ajax/get_process'); ?>",
+                dataType : 'JSON',
+                data : {typeId:typeId},
+                success : function (msg) {
+                    console.log(msg);
+                    $("#processId").empty();
+                    if (msg.length>0){
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        b+='<option value="" disabled selected>请选择</option>';
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].title+"</option>";
+                        }
+                    }else{
+                        var b="";
+                        b+='<option value="" disabled selected>暂无数据</option>';
+                    }
+                    $("#processId").append(b);
+                }
+            })
+        }else{
+            art_show_msg('省份信息错误',3);
+        }
     })
 </script>
 

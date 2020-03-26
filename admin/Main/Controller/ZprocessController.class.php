@@ -190,7 +190,9 @@ class ZprocessController extends BaseController{
             if ($id){
                 $list           = $db -> where(array('id'=>$id))->find();
                 $this->list     = $list;
+                $this->processIds = M('process')->where(array('status'=>array('neq','-1')))->getField('id,title',true);
             }
+            $this->types        = M('process_type')->where(array('status'=>array('neq','-1')))->getField('id,title',true);
             $this->display();
         }
     }

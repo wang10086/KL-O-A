@@ -9,34 +9,34 @@ ulib('Pinyin');
 use Sys\Pinyin;
 // @@@NODE-2###Material###物资管理###
 class AjaxController extends Controller {
-	
+
 	public function material(){
-		
+
 		$db = M('material_into');
-		
+
 		$keywords = I('keywords');
-		
+
 		if($keywords){
 			$data = $db->field('unit_price as cost')->where(array('material'=>$keywords,'audit_status'=>1))->order('into_time DESC')->find();
 			$mate = M('material')->field('id,stock')->where(array('material'=>$keywords))->find();
 			$data['stock'] = $mate['stock'];
 			$data['id'] = $mate['id'];
-			
+
 			echo  json_encode($data);
 		}
-		
+
 	}
-    
-	
+
+
 	public function userkey(){
 		//整理关键字
 		$role = M('role')->GetField('id,role_name',true);
 		$user =  M('account')->select();
 		$key = array();
 		foreach($user as $k=>$v){
-			
+
 			$text = $v['nickname'].'-'.$role[$v['roleid']];
-			
+
 			$key[$k]['id']         = $v['id'];
 			$key[$k]['user_name']  = $v['nickname'];
 			$key[$k]['pinyin']     = strtopinyin($text);
@@ -45,26 +45,26 @@ class AjaxController extends Controller {
 			$key[$k]['role_name']  = $role[$v['roleid']];
 			//$key[$k]['post']       = $post;
 		}
-		
-		echo json_encode($key);	
+
+		echo json_encode($key);
 	}
-   
-  	
-	
+
+
+
 	public function customer(){
-		
+
 		$nm = I('nm');
-		
+
 		$db = M('customer_gec');
-		
+
 		$where = array();
 		$where['cm_name']  = $nm;
-		
+
         $lists = $db->where($where)->select();
-		
+
 		$html = '';
 		foreach($lists as $k=>$v){
-			
+
 			$html .= '<tr>';
 			$html .= '<td><input type="checkbox" checked name="gec[]" value="'.$v['id'].'"></td>';
 			$html .= '<td>'.$v['id'].'</td>';
@@ -76,35 +76,35 @@ class AjaxController extends Controller {
 			$html .= '<td>'.$v['qianli'].'</td>';
 			$html .= '<td>'.$v['level'].'</td>';
 			$html .= '</tr>';
-			
+
 		}
-		
-		echo $html;	
+
+		echo $html;
 	}
-    
-	
+
+
 	// @@@NODE-3###updatekpi###更新KPI数据###
 	public function updatekpi(){
-		
+
 		$month  = I('month','');
 		$user   = I('uid',cookie('userid'));
-		
+
 		if($month && $user){
 			updatekpi($month,$user);
 			$this->success('获取完毕!');
 		}else{
-			$this->error('请求数据不正确');			
+			$this->error('请求数据不正确');
 		}
-		
+
 	}
-	
-	
-	
+
+
+
 	// @@@NODE-3###getop###获取项目数据###
 	public function getop(){
-		
+
 		$gid	                = I('gid','');
-		
+
 		$where	                = array();
 		$where['o.group_id']	= trim($gid);
 
@@ -115,7 +115,7 @@ class AjaxController extends Controller {
         $op['ret_time']         = $op['ret_time']?date('Y-m-d',$op['ret_time']):'';
 
 		echo json_encode($op,true);
-		
+
 	}
 
 	//工单管理获取当前worder_dept工单项信息
@@ -424,7 +424,7 @@ class AjaxController extends Controller {
             $add['year_leave']          = code_number(trim($_POST['year_leave']));//北京最低工资标准;//年假
             $add['createtime']          = time();
             $withdrawing                = code_number(trim($_POST['withdrawing']));//传过来的总价格
-            
+
             $account_r                  = M('salary_attendance')->field('id,status')->where($user)->order('id desc')->find();
             $salary                     = M('salary')->where($user)->order('id desc')->find();
 
@@ -2031,6 +2031,13 @@ class AjaxController extends Controller {
             $data['op_id']          = $op['op_id'];
             M('op_auth')->add($data);
         }
+    }
+
+    //获取流程
+    public function get_process(){
+        $typeId                     = I('typeId',0);
+        $lists                      = M('process')->where(array('status'=>array('neq','-1'),'type'=>$typeId))->field('id,title')->select();
+        $this->ajaxReturn($lists);
     }
 }
 
