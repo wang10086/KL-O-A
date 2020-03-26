@@ -34,8 +34,8 @@
 
                                     <div class="form-group col-md-4">
                                         <label>责任人：</label><font color="#999">(点击匹配到的人员)</font>
-                                        <input type="text" name="info[blame_name]" value="{$resource['blame_name']}" class="form-control" placeholder="责任人" id="blame_name" required />
-                                        <input type="hidden" name="info[blame_uid]" value="{$resource['blame_uid']}" class="form-control" id="blame_uid" />
+                                        <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="责任人" id="blame_name" required />
+                                        <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -76,8 +76,8 @@
 
                                     <div class="form-group col-md-4">
                                         <label>反馈至人员：</label><font color="#999">(点击匹配到的人员)</font>
-                                        <input type="text" name="info[feedback_name]" value="{$resource['feedback_name']}" class="form-control" placeholder="反馈至人员" id="feedback_name" required />
-                                        <input type="hidden" name="info[feedback_uid]" value="{$resource['feedback_uid']}" class="form-control" id="feedback_uid" />
+                                        <input type="text" name="info[feedback_name]" value="{$list['feedback_name']}" class="form-control" placeholder="反馈至人员" id="feedback_name" required />
+                                        <input type="hidden" name="info[feedback_uid]" value="{$list['feedback_uid']}" class="form-control" id="feedback_uid" />
                                     </div>
 
                                     <div class="form-group col-md-12">

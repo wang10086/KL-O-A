@@ -168,30 +168,6 @@ class ZprocessController extends BaseController{
     //添加节点
     public function addNode(){
         $this->title('编辑节点');
-        /**
-         * Array
-        (
-        [dosubmint] => 1
-        [id] =>
-        [info] => Array
-        (
-        [title] => qqqqqqqqqqqqqqqqqqq
-        [job] => 经理
-        [blame_name] => 王超
-        [blame_uid] => 140
-        [day] => 5
-        [time_data] => 完成时点aaaa
-        [OK_data] => 完成依据aaa
-        [before_remind] => 1
-        [after_remind] => 1
-        [ok_feedback] => 1
-        [feedback_name] => 乔峰
-        [feedback_uid] => 11
-        [remark] => cesibei注测试备注
-        )
-
-        )
-         */
         $db                     = M('process_node');
         if (isset($_POST['dosubmint'])){
             $id                 = I('id',0);
@@ -206,7 +182,7 @@ class ZprocessController extends BaseController{
             if (!$info['blame_uid']){ $this->error('责任人信息错误'); }
             if ($info['ok_feedback'] && !$info['blame_uid']){ $this->error('反馈至人员信息错误'); }
             $res                = $id ? $db -> where(array('id'=>$id))->save($info) : $db->add($info);
-            $res ? $this->success('编辑成功') : $this->error('数据保存失败');
+            $res ? $this->success('编辑成功',U('Zprocess/node')) : $this->error('数据保存失败');
         }else{
             //人员名单关键字
             $this->userkey      = get_username();
@@ -217,6 +193,15 @@ class ZprocessController extends BaseController{
             }
             $this->display();
         }
+    }
+
+    //删除流程节点
+    public function delNode(){
+        $id                     = I('id',0);
+        if (!$id) $this->error('获取数据失败');
+        $db                     = M('process_node');
+        $res                    = $db->where(array('id'=>$id))->delete();
+        $res ? $this->success('删除成功') : $this->error('删除失败');
     }
 
     //创建流程表单
