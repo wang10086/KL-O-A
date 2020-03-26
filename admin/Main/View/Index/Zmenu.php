@@ -32,7 +32,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="javascript:;" onclick="art_show_msg('开发中...',3)"><i class="fa fa-angle-right"></i> 待办事宜</a></li>
-                                <li><a href="{:U('Zprocess/public_index')}"><i class="fa fa-angle-right"></i> 新建流程</a></li>
+                                <li class="{:on('Zprocess/public_index')} {:on('Zprocess/public_form')} {:on('Zprocess/public_nodeList')} {:on('Zprocess/public_status')}"><a href="{:U('Zprocess/public_index')}"><i class="fa fa-angle-right"></i> 新建流程</a></li>
 
                                 <li class="treeview {:on('Zprocess/addProcess')} {:on('Zprocess/setType')} {:on('Zprocess/process')} {:on('Zprocess/node')} {:on('Zprocess/addNode')}">
                                     <if condition="rolemenu(array('Zprocess/addProcess','Zprocess/setType','Zprocess/process'))">

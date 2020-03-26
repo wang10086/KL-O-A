@@ -206,8 +206,32 @@ class ZprocessController extends BaseController{
         $res ? $this->success('删除成功') : $this->error('删除失败');
     }
 
+    //流程节点
+    public function public_nodeList(){
+        $this->title('流程节点');
+        $processId              = I('id');
+        if (!$processId) $this->error('获取数据错误');
+        $list                   = M('process')->where(array('id'=>$processId))->find();
+        $lists                  = M('process_node')->where(array('processId'=>$processId))->select();
+
+        $this->lists            = $lists;
+        $this->list             = $list;
+        $this->display('nodeList');
+    }
+
+    //流程状态
+    public function public_status(){
+        $this->title('节点状态');
+        $processId              = I('id');
+        if (!$processId) $this->error('获取数据错误');
+        $list                   = M('process')->where(array('id'=>$processId))->find();
+
+        $this->list             = $list;
+        $this->display('status');
+    }
+
     //创建流程表单
-    public function form(){
+    public function public_form(){
         $id                     = I('id',0);
         if (!$id){ $this->error('获取数据失败'); }
         $process_db             = M('process');
