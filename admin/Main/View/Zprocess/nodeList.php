@@ -31,7 +31,7 @@
                                     <td><a href="javascript:;">{$row.title}</a></td>
                                     <td>{$row.job}（{$row.blame_name}）</td>
                                     <td>{$row.day}</td>
-                                    <td><div class="tdbox_long" title="{$row.time_data}">{$row.time_data}</div></td>
+                                    <td>{$row.time_data}</td>
                                     <td>{$row.OK_data}</td>
                                     <td>{$row['before_remind']?'提醒':'不提醒'}</td>
                                     <td>{$row['after_remind']?'提醒':'不提醒'}</td>
