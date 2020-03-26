@@ -2,7 +2,7 @@
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="opid" value="{$op.op_id}">
     <input type="hidden" name="savetype" value="10">
-    <div class="form-group col-md-12" >
+    <div class="form-group col-md-4" >
         <label>项目名称：</label><input type="text" name="info[project]"  value="{$op.project}" class="form-control" />
     </div>
 
@@ -11,6 +11,16 @@
         <select  class="form-control"  name="info[kind]" id="kind" required>
             <foreach name="kinds" key="k" item="v">
                 <option value="{$k}" <?php if ($op && ($k == $op['kind'])) echo ' selected'; ?> >{$v}</option>
+            </foreach>
+        </select>
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>适合人群：</label>
+        <select  class="form-control"  name="info[apply_to]" required>
+            <option value="" selected disabled>请选择适合人群</option>
+            <foreach name="apply_to" key="k" item="v">
+                <option value="{$k}" <?php if ($op && ($k == $op['apply_to'])) echo ' selected'; ?> >{$v}</option>
             </foreach>
         </select>
     </div>
@@ -37,16 +47,6 @@
                 <a href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>
             </span>
         <?php } ?>
-    </div>
-
-    <div class="form-group col-md-4">
-        <label>适合人群：</label>
-        <select  class="form-control"  name="info[apply_to]" required>
-            <option value="" selected disabled>请选择适合人群</option>
-            <foreach name="apply_to" key="k" item="v">
-                <option value="{$k}" <?php if ($op && ($k == $op['apply_to'])) echo ' selected'; ?> >{$v}</option>
-            </foreach>
-        </select>
     </div>
 
     <div class="form-group col-md-4">
@@ -84,18 +84,18 @@
         </datalist>
     </div>
 
-    <div class="form-group col-md-4" style="padding: 0">
+    <!--<div class="form-group col-md-4" style="padding: 0">
         <div class="col-md-12"  style="padding-right: 0">
             <span class="lm_c">协助销售实施专家：</span>
             <foreach name="expert" key="k" item="v">
-                <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}" <?php if (in_array($k,$op_expert)) echo "checked"; ?>> {$v}</span>
+                <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}" <?php /*if (in_array($k,$op_expert)) echo "checked"; */?>> {$v}</span>
             </foreach>
         </div>
-        <!--<div class="col-md-12"  style="padding-right: 0">
+        <div class="col-md-12"  style="padding-right: 0">
             <span class="lm_c">背景提升产品负责人：</span>
             <span class="lm_c"><input type="checkbox" name="expert[]" value="202" <?php /*if (in_array(202,$op_expert)) echo "checked"; */?>> 于洵</span>
-        </div>-->
-    </div>
+        </div>
+    </div>-->
 
     <div class="form-group col-md-4">
         <label>是否本公司其他项目部地接</label>
