@@ -34,7 +34,7 @@
                                 <li><a href="javascript:;" onclick="art_show_msg('开发中...',3)"><i class="fa fa-angle-right"></i> 待办事宜</a></li>
                                 <li><a href="{:U('Zprocess/public_index')}"><i class="fa fa-angle-right"></i> 新建流程</a></li>
 
-                                <li class="treeview {:on('Zprocess/addProcess')} {:on('Zprocess/setType')} {:on('Zprocess/process')}">
+                                <li class="treeview {:on('Zprocess/addProcess')} {:on('Zprocess/setType')} {:on('Zprocess/process')} {:on('Zprocess/node')} {:on('Zprocess/addNode')}">
                                     <if condition="rolemenu(array('Zprocess/addProcess','Zprocess/setType','Zprocess/process'))">
                                         <a href=""><i class="fa  fa-pencil"></i> 录入流程</a>
                                     </if>
@@ -47,6 +47,9 @@
                                         </if>
                                         <if condition="rolemenu(array('Zprocess/setType'))">
                                             <li class="{:on('Zprocess/setType')}"><a href="{:U('Zprocess/setType')}"><i class="fa fa-angle-right"></i> 流程类型管理</a></li>
+                                        </if>
+                                        <if condition="rolemenu(array('Zprocess/node'))">
+                                            <li class="{:on('Zprocess/node')} {:on('Zprocess/addNode')}"><a href="{:U('Zprocess/node')}"><i class="fa fa-angle-right"></i> 流程节点管理</a></li>
                                         </if>
                                     </ul>
                                 </li>

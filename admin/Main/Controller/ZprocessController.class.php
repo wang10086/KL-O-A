@@ -151,6 +151,74 @@ class ZprocessController extends BaseController{
         $res ? $this->success('删除成功') : $this->error('删除失败');
     }
 
+    //流程节点管理
+    public function node(){
+        $this->title('流程节点管理');
+        $db                     = M('process_node');
+        //分页
+        $pagecount		        = $db->count();
+        $page			        = new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                  = $db->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+
+        $this->lists            = $lists;
+        $this->display('node');
+    }
+
+    //添加节点
+    public function addNode(){
+        $this->title('编辑节点');
+        /**
+         * Array
+        (
+        [dosubmint] => 1
+        [id] =>
+        [info] => Array
+        (
+        [title] => qqqqqqqqqqqqqqqqqqq
+        [job] => 经理
+        [blame_name] => 王超
+        [blame_uid] => 140
+        [day] => 5
+        [time_data] => 完成时点aaaa
+        [OK_data] => 完成依据aaa
+        [before_remind] => 1
+        [after_remind] => 1
+        [ok_feedback] => 1
+        [feedback_name] => 乔峰
+        [feedback_uid] => 11
+        [remark] => cesibei注测试备注
+        )
+
+        )
+         */
+        $db                     = M('process_node');
+        if (isset($_POST['dosubmint'])){
+            $id                 = I('id',0);
+            $info               = I('info');
+            $info['title']      = trim($info['title']);
+            $info['time_data']  = trim($info['time_data']);
+            $info['OK_data']    = trim($info['OK_data']);
+            $info['remark']     = trim($info['remark']);
+            $info['input_time'] = NOW_TIME;
+            $info['input_uid']  = cookie('userid');
+            if (!$info['title']){ $this->error('类型标题不能为空'); }
+            if (!$info['blame_uid']){ $this->error('责任人信息错误'); }
+            if ($info['ok_feedback'] && !$info['blame_uid']){ $this->error('反馈至人员信息错误'); }
+            $res                = $id ? $db -> where(array('id'=>$id))->save($info) : $db->add($info);
+            $res ? $this->success('编辑成功') : $this->error('数据保存失败');
+        }else{
+            //人员名单关键字
+            $this->userkey      = get_username();
+            $id                 = I('id',0);
+            if ($id){
+                $list           = $db -> where(array('id'=>$id))->find();
+                $this->list     = $list;
+            }
+            $this->display();
+        }
+    }
+
     //创建流程表单
     public function form(){
         $id                     = I('id',0);
