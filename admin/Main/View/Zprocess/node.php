@@ -38,7 +38,6 @@
                                         <th class="sorting" data="OK_data">完成依据</th>
                                         <th class="sorting" data="before_remind">是否提前提醒</th>
                                         <th class="sorting" data="after_remind">是否超时提醒</th>
-                                        <th class="sorting" data="ok_feedback">完成后是否反馈</th>
                                         <th class="sorting" data="feedback_uid">完成后反馈对象</th>
                                         <th class="sorting" data="remark">备注</th>
 
@@ -57,11 +56,11 @@
                                         <td>{$row.job}</td>
                                         <td class="taskOptions">{$row.blame_name}</td>
                                         <td class="taskOptions">{$row.day}</td>
-                                        <td><div class="tdbox_long" title="{$row.time_data}">{$row.time_data}</div></td>
+                                        <!--<td><div class="tdbox_long" title="{$row.time_data}">{$row.time_data}</div></td>-->
+                                        <td>{$row.time_data}</td>
                                         <td>{$row.OK_data}</td>
                                         <td class="taskOptions">{$row['before_remind']?'提醒':'不提醒'}</td>
                                         <td class="taskOptions">{$row['after_remind']?'提醒':'不提醒'}</td>
-                                        <td class="taskOptions">{$row['ok_feedback']?'反馈':'不反馈'}</td>
                                         <td class="taskOptions">{$row.feedback_name}</td>
                                         <td>{$row.remark}</td>
 

@@ -9,43 +9,39 @@
         <div class="zpage-title">{$list.title}</div>
         <div class="row">
             <div class="col-md-12">
-                <div class="zbox">
-                    <div class="content">
-                        <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                            <tr role="row" class="orders" >
-                                <th class="taskOptions" width="60">序号</th>
-                                <th class="taskOptions">工作事项</th>
-                                <th class="taskOptions">责任人</th>
-                                <th class="taskOptions">所需天数</th>
-                                <th class="taskOptions">完成时点</th>
-                                <th class="taskOptions">完成依据</th>
-                                <th class="taskOptions">是否提前提醒</th>
-                                <th class="taskOptions">是否超时提醒</th>
-                                <th class="taskOptions">完成后是否反馈</th>
-                                <th class="taskOptions">完成后反馈对象</th>
-                                <th class="taskOptions">备注</th>
+                <!--<div class="content">-->
+                    <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                        <tr role="row" class="orders" >
+                            <th class="taskOptions" width="60">序号</th>
+                            <th class="taskOptions">工作事项</th>
+                            <th class="taskOptions">责任人</th>
+                            <th class="taskOptions">所需天数</th>
+                            <th class="taskOptions">完成时点</th>
+                            <th class="taskOptions">完成依据</th>
+                            <th class="taskOptions">是否提前提醒</th>
+                            <th class="taskOptions">是否超时提醒</th>
+                            <th class="taskOptions">完成后反馈对象</th>
+                            <th class="taskOptions">备注</th>
+                        </tr>
+                        <foreach name="lists" key="k" item="row">
+                            <tr>
+                                <td class="taskOptions">{$k + 1}</td>
+                                <td><a href="javascript:;">{$row.title}</a></td>
+                                <td class="taskOptions">{$row.job}（{$row.blame_name}）</td>
+                                <td class="taskOptions">{$row.day}</td>
+                                <td>{$row.time_data}</td>
+                                <td>{$row.OK_data}</td>
+                                <td class="taskOptions">{$row['before_remind']?'提醒':'不提醒'}</td>
+                                <td class="taskOptions">{$row['after_remind']?'提醒':'不提醒'}</td>
+                                <td>{$row.feedback_name}</td>
+                                <td>{$row.remark}</td>
                             </tr>
-                            <foreach name="lists" key="k" item="row">
-                                <tr>
-                                    <td class="taskOptions">{$k + 1}</td>
-                                    <td><a href="javascript:;">{$row.title}</a></td>
-                                    <td>{$row.job}（{$row.blame_name}）</td>
-                                    <td>{$row.day}</td>
-                                    <td>{$row.time_data}</td>
-                                    <td>{$row.OK_data}</td>
-                                    <td>{$row['before_remind']?'提醒':'不提醒'}</td>
-                                    <td>{$row['after_remind']?'提醒':'不提醒'}</td>
-                                    <td>{$row['ok_feedback']?'反馈':'不反馈'}</td>
-                                    <td>{$row.feedback_name}</td>
-                                    <td>{$row.remark}</td>
-                                </tr>
-                            </foreach>
-                        </table>
-                        <div class="box-footer clearfix">
-                            <div class="pagestyle">{$pages}</div>
-                        </div>
+                        </foreach>
+                    </table>
+                    <div class="box-footer clearfix">
+                        <div class="pagestyle">{$pages}</div>
                     </div>
-                </div><!-- /.box -->
+                <!--</div>-->
 
 
             </div><!--/.col (right) -->
