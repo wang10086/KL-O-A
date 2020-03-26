@@ -26,11 +26,11 @@
                                     <div class="content">
                                         <?php foreach ($v['lists'] as $value){ ?>
                                         <div class="form-group col-md-3 viwe" style="display: inline-block;">
-                                            <?php if (in_array($value['id'],$ids)){ ?>
+                                            <?php /*if (in_array($value['id'],$ids)){ */?>
                                                 <i class="fa fa-caret-right"></i> &nbsp; <a href="{:U('Zprocess/public_form',array('id'=>$value['id']))}" title="新建">{$value.title}</a> &nbsp;&nbsp;
-                                            <?php }else{ ?>
+                                            <?php /*}else{ */?><!--
                                                 <i class="fa fa-caret-right"></i> &nbsp; <a href="javascript:;" onclick="art_show_msg('开发中...',3)" title="新建">{$value.title}</a> &nbsp;&nbsp;
-                                            <?php } ?>
+                                            --><?php /*} */?>
                                         </div>
                                         <?php } ?>
                                     </div>

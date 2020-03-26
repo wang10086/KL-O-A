@@ -27,7 +27,7 @@ class ZprocessController extends BaseController{
             $typeLists[$k]['lists']     = $processLists;
         }
 
-        $ids                    = array(1);
+        $ids                    = array(); //已有表单页面的process_id
         $this->ids              = $ids;
         $this->lists            = $typeLists;
 		$this->display('index');
@@ -238,7 +238,10 @@ class ZprocessController extends BaseController{
         $list                   = $process_db->find($id);
 
         $this->list             = $list;
-        $this->display('form'.$id);
+
+        $ids                    = array(); //已有表单页面的process_id
+        $formView               = in_array($id,ids) ? 'form'.$id : 'formDefault';
+        $this->display($formView);
     }
 
 }
