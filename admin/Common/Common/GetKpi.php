@@ -5013,8 +5013,9 @@ function get_budget_up_rate($uid,$year,$quarter){
     $departmentid                       = M('account')->where(array('id'=>$uid))->getField('departmentid');
     $department_users                   = get_department_account($departmentid);
     $department_userids                 = array_column($department_users,'id');
-    $last_year_quarter_cycle            = get_quarter_cycle_time($year - 1, $quarter); //上一年季度周期
-    $this_year_quarter_cycle            = get_quarter_cycle_time($year , $quarter); //当年季度周期
+    $last_year_quarter_cycle            = get_year_begin_to_quarter_end_cycle($year - 1, $quarter); //上一年季度周期
+    $this_year_quarter_cycle            = get_year_begin_to_quarter_end_cycle($year , $quarter); //当年季度周期
+
     $last_year_settlement_lists         = get_settlement_list($last_year_quarter_cycle['begin_time'] , $last_year_quarter_cycle['end_time'],'','','','',$department_userids);
     $this_year_settlement_lists         = get_settlement_list($this_year_quarter_cycle['begin_time'] , $this_year_quarter_cycle['end_time'],'','','','',$department_userids);
 
