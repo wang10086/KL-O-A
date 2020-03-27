@@ -50,6 +50,10 @@
                                         <if condition="rolemenu(array('Zprocess/delProcess'))">
                                         <th width="40" class="taskOptions">删除</th>
                                         </if>
+
+                                        <if condition="rolemenu(array('Rbac/node'))">
+                                            <th width="80" class="taskOptions">表单连接</th>
+                                        </if>
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
@@ -68,6 +72,10 @@
                                         <td class="taskOptions">
                                         <button onClick="javascript:ConfirmDel(`{:U('Zprocess/delProcess',array('id'=>$row['id']))}`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                         </td>
+                                        </if>
+
+                                        <if condition="rolemenu(array('Rbac/node'))">
+                                            <td class="taskOptions">{$row.form_url}<br /><a href="javascript:;" onclick= set_url({$row.id})>编辑</a></td>
                                         </if>
                                     </tr>
                                     </foreach>
@@ -132,5 +140,27 @@
             cancel: true //为true等价于function(){}
         });
 
+    }
+
+    function set_url (id) {
+        art.dialog.open('/index.php?m=Main&c=Zprocess&a=setFormUrl&id='+id, {
+            lock:true,
+            id: 'audit_win',
+            title: '编辑流程类型',
+            width:500,
+            height:200,
+            okVal: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                setTimeout("parent.art.dialog.list['audit_win'].close()",1500);
+                //parent.art.dialog.list["audit_win"].close();
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {},
+            close : function () {
+                location.reload();
+            }
+        });
     }
 </script>

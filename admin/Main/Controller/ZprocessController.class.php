@@ -230,6 +230,26 @@ class ZprocessController extends BaseController{
         $this->display('status');
     }
 
+    //设置表单url
+    public function setFormUrl(){
+        $db                     = M('process');
+        if (isset($_POST['dosubmint'])){
+            $id                 = I('id',0);
+            $url                = trim(I('form_url'));
+            if (!$url){ $this->error('地址不能为空'); }
+            $data               = array();
+            $data['form_url']   = $url;
+            $res                = $db -> where(array('id'=>$id))->save($data);
+            $this->msg          = $res ? '编辑成功' : '数据保存失败';
+            $this->display("Index:public_audit");
+        }else{
+            $id                 = I('id',0);
+            $list               = $db -> where(array('id'=>$id))->find();
+            $this->list         = $list;
+            $this->display();
+        }
+    }
+
     //创建流程表单
     public function public_form(){
         $id                     = I('id',0);
