@@ -9,10 +9,17 @@ use Sys\P;
 
 class ZprocessController extends BaseController{
 
-    protected $_pagetitle_ = '流程管理';
+    protected $_pagetitle_ = '流程';
     protected $_pagedesc_  = '';
 
 	// @@@NODE-3###record###待办事宜###
+    public function public_todo(){
+        $this->title('待办事项');
+
+        $this->display('todo');
+    }
+
+    //新建流程
     public function public_index(){
         $this->title('新建流程');
         $db                     = M('process');
