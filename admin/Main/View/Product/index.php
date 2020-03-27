@@ -55,7 +55,7 @@
                                         <th class="sorting" data="p.sales_price">参考成本价</th>
                                         <th class="sorting" data="p.input_uname">研发人员</th>
                                         <th>审批状态</th>
-                                        
+
                                         <if condition="rolemenu(array('Product/add'))">
                                         <th width="50" class="taskOptions">编辑</th>
                                         </if>
@@ -73,7 +73,7 @@
                                             <td>{$row['in_ages']}</td>
                                             <td>
                                                 <?php if ($pro){ ?>
-                                                    {$reckon_mode[$row[reckon_mode]]}
+                                                    {$row['business_dept'] == 60 ? str_replace('100人/批','40人/班',$reckon_mode[$row[reckon_mode]]) : $reckon_mode[$row[reckon_mode]]}
                                                 <?php }else{ ?>
                                                     {$row['dept']}
                                                 <?php } ?>
@@ -85,15 +85,15 @@
                                             <td>{$row.input_uname}</td>
                                             <?php
                                             if($row['audit_status']== P::AUDIT_STATUS_NOT_AUDIT){
-                                                $show  = '<td>等待审批</td>';	
+                                                $show  = '<td>等待审批</td>';
                                             }else if($row['audit_status'] == P::AUDIT_STATUS_PASS){
-                                                $show  = '<td><span class="green">通过</span></td>';	
+                                                $show  = '<td><span class="green">通过</span></td>';
                                             }else if($row['audit_status'] == P::AUDIT_STATUS_NOT_PASS){
-                                                $show  = '<td><span class="red">不通过</span></td>';	
+                                                $show  = '<td><span class="red">不通过</span></td>';
                                             }
                                             echo $show;
                                             ?>
-                                            
+
                                             <if condition="rolemenu(array('Product/add'))">
                                             <td class="taskOptions">
                                             <button onClick="javascript:window.location.href='{:U('Product/add',array('id'=>$row['id'],'business_dept'=>$pro))}';" title="修改" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></button>
@@ -104,9 +104,9 @@
                                             <button onClick="javascript:ConfirmDel('{:U('Product/del',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                             </td>
                                             </if>
-                                            
+
                                         </tr>
-                                    </foreach>										
+                                    </foreach>
                                 </table>
                                 </div><!-- /.box-body -->
                                 <div class="box-footer clearfix">
@@ -119,7 +119,7 @@
 
                 </section><!-- /.content -->
             </aside><!-- /.right-side -->
-            
+
 			<div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
@@ -129,7 +129,7 @@
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="key" placeholder="关键字">
                 </div>
-                
+
                 <div class="form-group col-md-6">
                     <select class="form-control" name="type">
                         <option value="">类别</option>
@@ -156,7 +156,7 @@
                         </foreach>
                     </select>
                 </div>
-                
+
                 <div class="form-group col-md-6">
                     <select class="form-control" name="age">
                         <option value="">适用年龄</option>
@@ -165,7 +165,7 @@
                         </foreach>
                     </select>
                 </div>
-                
+
                 </form>
             </div>
 <include file="Index:footer2" />
