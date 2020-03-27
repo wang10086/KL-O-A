@@ -179,8 +179,8 @@ class ZprocessController extends BaseController{
             $info['input_time'] = NOW_TIME;
             $info['input_uid']  = cookie('userid');
             if (!$info['title']){ $this->error('类型标题不能为空'); }
-            if (!$info['blame_uid']){ $this->error('责任人信息错误'); }
-            if ($info['ok_feedback'] && !$info['blame_uid']){ $this->error('反馈至人员信息错误'); }
+            //if (!$info['blame_uid']){ $this->error('责任人信息错误'); }
+            //if ($info['ok_feedback'] && !$info['blame_uid']){ $this->error('反馈至人员信息错误'); }
             $res                = $id ? $db -> where(array('id'=>$id))->save($info) : $db->add($info);
             $res ? $this->success('编辑成功',U('Zprocess/node')) : $this->error('数据保存失败');
         }else{
