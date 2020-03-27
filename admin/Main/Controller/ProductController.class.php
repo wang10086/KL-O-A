@@ -254,7 +254,8 @@ class ProductController extends BaseController {
             $this->product_type   = C('PRODUCT_TYPE');
             $this->subject_fields = C('SUBJECT_FIELD');
             $this->projects       = M('project')->where(array('status'=>1))->select();
-            $this->kinds          = M('project_kind')->field('id,name')->where(array('pid'=>array('neq',0)))->select();
+            //$this->kinds          = M('project_kind')->field('id,name')->where(array('pid'=>array('neq',0)))->select();
+            $this->kinds          = M('project_kind')->field('id,name')->select();
 
             $this->display('add');
         }
