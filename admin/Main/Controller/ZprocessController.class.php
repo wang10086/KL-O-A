@@ -271,4 +271,10 @@ class ZprocessController extends BaseController{
         $this->display($formView);
     }
 
+    //查看他人
+    public function public_others(){
+
+        $this->display('others');
+    }
+
 }

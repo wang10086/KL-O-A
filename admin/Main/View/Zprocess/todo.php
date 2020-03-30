@@ -54,12 +54,13 @@
                             <div class="box-right-tit-dpd">
                                 <a href="javascript:;">全部(100)</a> &nbsp;|&nbsp;
                                 <a href="javascript:;">未读(100)</a> &nbsp;|&nbsp;
+                                <a href="javascript:;">提醒(100)</a> &nbsp;|&nbsp;
                                 <a href="javascript:;">反馈(100)</a> &nbsp;|&nbsp;
                                 <a href="javascript:;">超时(100)</a> &nbsp;|&nbsp;
                                 <a href="javascript:;">被督办(100)</a> &nbsp;
 
                                 <div class="box-right-tit-butd">
-                                    <input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" value="批量处理">
+                                    <input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" onclick="others()" value="查看他人">
                                     <input type="text" class="" style="height: 30px;" placeholder="搜索关键字">
                                     <input type="button" class="btn btn-default btn-sm" value="提交">
                                 </div>
@@ -100,4 +101,26 @@
 
 
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+    //查看他人
+    function others () {
+        art.dialog.open('<?php echo U('Zprocess/public_others',array()) ?>', {
+            lock:true,
+            id: 'audit_win',
+            title: '输入人员信息',
+            width:500,
+            heigh:180,
+            okVal: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                //location.reload();
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {
+            }
+        });
+    }
+</script>
 
