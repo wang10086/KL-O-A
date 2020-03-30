@@ -683,8 +683,8 @@ class CustomerController extends BaseController {
                 if (!$info['contacts'])     { $msg['num'] = $num; $msg['msg'] = '联系人不能为空'; $this->ajaxReturn($msg); }
                 if (!$info['province'])     { $msg['num'] = $num; $msg['msg'] = '所在省份信息不能为空'; $this->ajaxReturn($msg); }
                 if (!$info['agent_province']){ $msg['num'] = $num; $msg['msg'] = '独家省份信息不能为空'; $this->ajaxReturn($msg); }
-                if (!$info['cm_id'])        { $msg['num'] = $num; $msg['msg'] = '维护人信息有误'; $this->ajaxReturn($msg); }
-                if (!$info['sale_id'])      { $msg['num'] = $num; $msg['msg'] = '销售人信息有误'; $this->ajaxReturn($msg); }
+                if (!$info['cm_id'] || !trim($info['cm_name']))     { $msg['num'] = $num; $msg['msg'] = '维护人信息有误'; $this->ajaxReturn($msg); }
+                if (!$info['sale_id'] || !trim($info['sale_name'])) { $msg['num'] = $num; $msg['msg'] = '销售人信息有误'; $this->ajaxReturn($msg); }
                 if (!trim($info['start_date'])){ $msg['num'] = $num; $msg['msg'] = '合伙开始时间不能为空'; $this->ajaxReturn($msg); }
                 if (!trim($info['end_date'])){ $msg['num'] = $num; $msg['msg'] = '合伙结束时间不能为空'; $this->ajaxReturn($msg); }
 
