@@ -36,7 +36,8 @@
                     <div class="box-left-title">
                         <span class="box-left-titsp"><i class="fa fa-th-list"></i> <span style="margin-left: 3px;">全部类型</span></span>
                     </div>
-                    <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> LTC主干流层(5)</p>
+                    <!--<p class="menu-title-lc"> <i class="fa fa-caret-right"></i> 全部(7)</p>-->
+                    <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> LTC主干流程(5)</p>
                     <p class="menu-title-lc"> &emsp; 发布/获取业务季销售资料(3)</p>
                     <p class="menu-title-lc"> &emsp; 组织培训/学习业务季产品   (2)</p>
                     <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> IPD主干流程(2)</p>
@@ -52,12 +53,12 @@
                         <div class="box-right-tit-d">
                             <p class="box-right-tit-dp">待办事宜</p>
                             <div class="box-right-tit-dpd">
-                                <a href="javascript:;">全部(100)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">未读(100)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">提醒(100)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">反馈(100)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">超时(100)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">被督办(100)</a> &nbsp;
+                                <a href="javascript:;">全部(0)</a> &nbsp;|&nbsp;
+                                <a href="javascript:;">未读(0)</a> &nbsp;|&nbsp;
+                                <a href="javascript:;">事前提醒(0)</a> &nbsp;|&nbsp;
+                                <a href="javascript:;">反馈(0)</a> &nbsp;|&nbsp;
+                                <a href="javascript:;">超时提醒(0)</a> &nbsp;|&nbsp;
+                                <a href="javascript:;">被督办(0)</a> &nbsp;
 
                                 <div class="box-right-tit-butd">
                                     <input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" onclick="others()" value="查看他人">
@@ -74,9 +75,9 @@
                             <th width="">标题</th>
                             <th width="">创建人</th>
                             <th width="">创建时间</th>
-                            <th width="">状态</th>
+                            <!--<th width="">状态</th>
                             <th width="">操作者</th>
-                            <th width="">操作时间</th>
+                            <th width="">操作时间</th>-->
                         </tr>
                         </thead>
                         <tbody>
@@ -86,9 +87,9 @@
                                     <td>{$v.}</td>
                                     <td> {$v.}</td>
                                     <td>{$v.}</td>
-                                    <td> {$v.}</td>
+                                    <!--<td> {$v.}</td>
                                     <td></td>
-                                    <td>{$v.}</td>
+                                    <td>{$v.}</td>-->
                                 </tr>
                             </foreach>
                         </tbody>

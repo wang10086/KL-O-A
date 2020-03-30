@@ -14,7 +14,7 @@ class ZprocessController extends BaseController{
 
 	// @@@NODE-3###record###待办事宜###
     public function public_todo(){
-        $this->title('待办事项');
+        $this->title('待办事宜');
 
         $this->display('todo');
     }
