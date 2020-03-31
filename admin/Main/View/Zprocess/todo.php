@@ -36,12 +36,12 @@
                     <div class="box-left-title">
                         <span class="box-left-titsp"><i class="fa fa-th-list"></i> <span style="margin-left: 3px;">全部类型</span></span>
                     </div>
-                    <!--<p class="menu-title-lc"> <i class="fa fa-caret-right"></i> 全部(7)</p>-->
-                    <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> LTC主干流程(5)</p>
+                    <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> <a href="{:U('Zprocess/public_todo',array('p'=>0,'stu'=>$stu))}" class="{$p==0 ? 'menu-font-color' : ''}">全部(0)</a></p>
+                    <!--<p class="menu-title-lc"> <i class="fa fa-caret-right"></i> LTC主干流程(5)</p>
                     <p class="menu-title-lc"> &emsp; 发布/获取业务季销售资料(3)</p>
                     <p class="menu-title-lc"> &emsp; 组织培训/学习业务季产品   (2)</p>
                     <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> IPD主干流程(2)</p>
-                    <p class="menu-title-lc"> &emsp; 征集业务季产品需求(2)</p>
+                    <p class="menu-title-lc"> &emsp; 征集业务季产品需求(2)</p>-->
                 </div>
 
                 <div class="col-md-9 padding0" style="min-height: 500px;">
@@ -53,17 +53,19 @@
                         <div class="box-right-tit-d">
                             <p class="box-right-tit-dp">待办事宜</p>
                             <div class="box-right-tit-dpd">
-                                <a href="javascript:;">全部(0)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">未读(0)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">事前提醒(0)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">反馈(0)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">超时提醒(0)</a> &nbsp;|&nbsp;
-                                <a href="javascript:;">被督办(0)</a> &nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p))}" class="{$stu==0? 'menu-font-color' : ''}">全部(0)</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_NOREAD))}" class="{$stu==P::PROCESS_STU_NOREAD ? 'menu-font-color' : ''}">未读(0)</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_BEFORE))}" class="{$stu==P::PROCESS_STU_BEFORE ? 'menu-font-color' : ''}">事前提醒(0)</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_FEEDBACK))}" class="{$stu==P::PROCESS_STU_FEEDBACK ? 'menu-font-color' : ''}">反馈(0)</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_TIMEOUT))}" class="{$stu==P::PROCESS_STU_TIMEOUT ? 'menu-font-color' : ''}">超时提醒(0)</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_QUICKLY))}" class="{$stu==P::PROCESS_STU_QUICKLY ? 'menu-font-color' : ''}">被督办(0)</a> &nbsp;
 
                                 <div class="box-right-tit-butd">
                                     <input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" onclick="others()" value="查看他人">
-                                    <input type="text" class="" style="height: 30px;" placeholder="搜索关键字">
-                                    <input type="button" class="btn btn-default btn-sm" value="提交">
+                                    <form action="{:U('Zprocess/public_todo')}" method="post" style="display: inline-block;">
+                                        <input type="text" name="key" class="" style="height: 30px;" placeholder="搜索关键字">
+                                        <input type="submit" class="btn btn-default btn-sm" value="提交">
+                                    </form>
                                 </div>
                             </div>
                         </div>

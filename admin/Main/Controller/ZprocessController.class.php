@@ -15,7 +15,14 @@ class ZprocessController extends BaseController{
 	// @@@NODE-3###record###待办事宜###
     public function public_todo(){
         $this->title('待办事宜');
+        $stu                    = I('stu',0);
+        $p                      = I('p',0);
+        $uid                    = I('uid',cookie('userid'));
+        $key                    = trim(I('key'));
 
+
+        $this->stu              = $stu;
+        $this->p                = $p;
         $this->display('todo');
     }
 
