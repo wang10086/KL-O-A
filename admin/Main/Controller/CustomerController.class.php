@@ -256,7 +256,7 @@ class CustomerController extends BaseController {
 				if($isok){
 				    if (cookie('userid') != 1){ //保存流程->待办事宜
                         $manager_data       = get_manage_uid(cookie('userid'));
-                        save_process_log($process_node,P::PROCESS_STU_NOREAD,'customer_gec','',$manager_data['manager_id'],$manager_data['manager_name']);
+                        save_process_log($process_node,P::PROCESS_STU_NOREAD,'customer_gec',$gec_id,'',$manager_data['manager_id'],$manager_data['manager_name']);
                     }
 
                     //保存操作记录
