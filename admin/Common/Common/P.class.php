@@ -128,6 +128,13 @@ final class P {
     const RECORD_PARTNER            = 3;    //城市合伙人操作记录
     const RECORD_FOCUS_BUY          = 4;    //保存集中采购操作记录
 
+    //流程状态
+    const PROCESS_STU_NOREAD        = 1;    //未读
+    const PROCESS_STU_BEFORE        = 2;    //事前提醒
+    const PROCESS_STU_FEEDBACK      = 3;    //反馈
+    const PROCESS_STU_TIMEOUT       = 4;    //超时提醒
+    const PROCESS_STU_QUICKLY       = 5;    //被督办
+
 }
 
 

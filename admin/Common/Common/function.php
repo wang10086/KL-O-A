@@ -6,6 +6,7 @@ ulib('Pinyin');
 use Sys\Pinyin;
 use Think\CCPRestSmsSDK;
 require_once 'GetKpi.php';
+require_once 'Process.php';
 
 /**
  * @brief  载入第三方类库

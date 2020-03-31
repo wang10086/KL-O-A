@@ -230,6 +230,7 @@ class CustomerController extends BaseController {
 						$this->error('您没有权限修改该用户信息' . $db->getError());
 					}
 					$record_msg         = '编辑客户信息';
+					$process_node       = 11; //维护客户
 
 					//查询有无给相关人员发送客户交接提示
                     if (!$info['cm_id']){
@@ -245,6 +246,7 @@ class CustomerController extends BaseController {
 					$isok               = $db->add($info);
 					$gec_id             = $isok;
 					$record_msg         = '添加客户信息';
+                    $process_node       = 8; //新建客户信息
 
 					if (!$info['cm_id']){ //需要转交维护人
 					    $this->send_GEC_transfer_msg($gec_id);
@@ -252,6 +254,11 @@ class CustomerController extends BaseController {
 				}
 
 				if($isok){
+				    if (cookie('userid') != 1){ //保存流程->待办事宜
+                        $manager_data       = get_manage_uid(cookie('userid'));
+                        save_process_log($process_node,P::PROCESS_STU_NOREAD,'customer_gec','',$manager_data['manager_id'],$manager_data['manager_name']);
+                    }
+
                     //保存操作记录
                     $record             = array();
                     $record['qaqc_id']  = $gec_id;
