@@ -16,14 +16,99 @@ class ZprocessController extends BaseController{
     public function public_todo(){
         $this->title('待办事宜');
         $stu                    = I('stu',0);
-        $p                      = I('p',0);
+        $p                      = I('p',0); // process
+        $t                      = I('t',0); //type
         $uid                    = I('uid',cookie('userid'));
         $key                    = trim(I('key'));
 
+        $where                  = array();
+        $log_lists              = $this->get_todo_data($where,$uid);
 
+        $db                     = M('process');
+        $type_db                = M('process_type');
+        $typeLists              = $type_db ->where(array('status'=>array('neq', '-1'))) -> select();
+        $processLists           = $db->where(array('status'=>array('neq', '-1')))->select();
+
+        $sum                        = count($log_lists);
+        foreach ($typeLists as $k => $v){ //左侧导航栏数量
+            foreach ($processLists as $pk =>$pv){
+                $typeNum            = 0;
+                $tlists             = array();
+                $processNum         = 0;
+                $plists             = array();
+                foreach ($log_lists as $value){
+                    if ($value['ptype_id'] == $v['id']){
+                        $typeNum++;
+                        $tlists[]   = $value;
+                    }
+
+                    if ($value['p_id'] == $pv['id']){
+                        $processNum++;
+                        $plists[]   = $value;
+                    }
+                }
+                $processLists[$pk]['num']   = $processNum;
+                $processLists[$pk]['lists'] = $plists;
+            }
+
+            $typeLists[$k]['num']       = $typeNum;
+            $typeLists[$k]['lists']     = $tlists;
+        }
+
+       $status                          = array_unique(array_column($log_lists,'pro_status'));
+        $stu_arr                        = array();
+        foreach ($status as $vvv){ //状态
+            $vnum                       = 0;
+            foreach ($log_lists as $va){
+                if ($va['pro_status'] == $vvv) $vnum++;
+            }
+            $stu_arr[$vvv]              = $vnum;
+        }
+
+        $lists                  = array();
+        foreach ($log_lists as $v){
+            $v['title'] = M('process_node')->where(array('id'=>$v['pnode_id']))->getField('title');
+            if ($stu && !$t && !$p){
+                if ($v['pro_status'] == $stu) $lists[] = $v;
+            }elseif ($stu && $t && !$p){
+                if ($v['pro_status'] == $stu && $v['ptype_id'] == $t) $lists[] = $v;
+            }elseif ($stu && !$t && $p){
+                if ($v['pro_status'] == $stu && $v['p_id'] == $p) $lists[] = $v;
+            }elseif ($t && !$stu && !$p){
+                if ($v['ptype_id'] == $t) $lists[] = $v;
+            }elseif ($t && !$stu && $p){
+                if ($v['ptype_id'] == $t && $v['p_id']== $p) $lists[] = $v;
+            }elseif ($p && !$stu && !$t){
+                if ($v['p_id'] == $p) $lists[] = $v;
+            }else{
+                $lists[]    = $v;
+            }
+        }
+
+        $this->lists            = $lists;
+        $this->stu_num          = $stu_arr;
+        $this->sum              = $sum;
+        $this->typeLists        = $typeLists;
+        $this->processLists     = $processLists;
         $this->stu              = $stu;
         $this->p                = $p;
+        $this->t                = $t;
         $this->display('todo');
+    }
+
+    //获取每一种类型的待办事宜
+    private function get_todo_data($where=array(),$uid){
+        $postid                 = M('account')->where(array('id'=>$uid))->getField('postid');
+        $db                     = M('process_log');
+        $where['del_status']    = array('neq','-1');
+
+        $map                    = array();
+        $map['to_uid']          = $uid;
+        $map['to_postids']      = array('like','%['.$postid.']%');
+        $map['_logic']          = 'or';
+        $where['_complex']      = $map;
+        $lists                  = $db->where($where)->select();
+        return $lists;
     }
 
     //新建流程

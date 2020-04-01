@@ -36,7 +36,18 @@
                     <div class="box-left-title">
                         <span class="box-left-titsp"><i class="fa fa-th-list"></i> <span style="margin-left: 3px;">全部类型</span></span>
                     </div>
-                    <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> <a href="{:U('Zprocess/public_todo',array('p'=>0,'stu'=>$stu))}" class="{$p==0 ? 'menu-font-color' : ''}">全部(0)</a></p>
+                    <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> <a href="{:U('Zprocess/public_todo',array('p'=>0,'stu'=>$stu))}" class="{$p==0 ? 'menu-font-color' : ''}">全部({$sum})</a></p>
+                    <?php foreach ($typeLists as $v){ ?>
+                        <?php if ($v['num'] != 0){ ?>
+                            <p class="menu-title-lc"> <i class="fa fa-caret-right"></i><a href="{:U('Zprocess/public_todo',array('t'=>$v['id'],'stu'=>$stu))}" class="{$t==$v['id'] ? 'menu-font-color' : ''}"> {$v.title}({$v.num})</a></p>
+                        <?php } ?>
+
+                        <?php foreach ($processLists as $value){ ?>
+                            <?php if ($value['num'] != 0 && $value['type'] == $v['id']){ ?>
+                                <p class="menu-title-lc"> &emsp;  <a href="{:U('Zprocess/public_todo',array('p'=>$value['id'],'stu'=>$stu))}" class="{$p==$value['id'] ? 'menu-font-color' : ''}">{$value.title}({$value.num})</a></p>
+                            <?php } ?>
+                        <?php } ?>
+                    <?php } ?>
                     <!--<p class="menu-title-lc"> <i class="fa fa-caret-right"></i> LTC主干流程(5)</p>
                     <p class="menu-title-lc"> &emsp; 发布/获取业务季销售资料(3)</p>
                     <p class="menu-title-lc"> &emsp; 组织培训/学习业务季产品   (2)</p>
@@ -53,12 +64,12 @@
                         <div class="box-right-tit-d">
                             <p class="box-right-tit-dp">待办事宜</p>
                             <div class="box-right-tit-dpd">
-                                <a href="{:U('Zprocess/public_todo',array('p'=>$p))}" class="{$stu==0? 'menu-font-color' : ''}">全部(0)</a> &nbsp;|&nbsp;
-                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_NOREAD))}" class="{$stu==P::PROCESS_STU_NOREAD ? 'menu-font-color' : ''}">未读(0)</a> &nbsp;|&nbsp;
-                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_BEFORE))}" class="{$stu==P::PROCESS_STU_BEFORE ? 'menu-font-color' : ''}">事前提醒(0)</a> &nbsp;|&nbsp;
-                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_FEEDBACK))}" class="{$stu==P::PROCESS_STU_FEEDBACK ? 'menu-font-color' : ''}">反馈(0)</a> &nbsp;|&nbsp;
-                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_TIMEOUT))}" class="{$stu==P::PROCESS_STU_TIMEOUT ? 'menu-font-color' : ''}">超时提醒(0)</a> &nbsp;|&nbsp;
-                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'stu'=>P::PROCESS_STU_QUICKLY))}" class="{$stu==P::PROCESS_STU_QUICKLY ? 'menu-font-color' : ''}">被督办(0)</a> &nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'t'=>$t))}" class="{$stu==0? 'menu-font-color' : ''}">全部({$sum})</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'t'=>$t,'stu'=>P::PROCESS_STU_NOREAD))}" class="{$stu==P::PROCESS_STU_NOREAD ? 'menu-font-color' : ''}">未读({$stu_num[P::PROCESS_STU_NOREAD] ? $stu_num[P::PROCESS_STU_NOREAD] : 0})</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'t'=>$t,'stu'=>P::PROCESS_STU_BEFORE))}" class="{$stu==P::PROCESS_STU_BEFORE ? 'menu-font-color' : ''}">事前提醒({$stu_num[P::PROCESS_STU_BEFORE] ? $stu_num[P::PROCESS_STU_BEFORE] : 0})</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'t'=>$t,'stu'=>P::PROCESS_STU_FEEDBACK))}" class="{$stu==P::PROCESS_STU_FEEDBACK ? 'menu-font-color' : ''}">反馈({$stu_num[P::PROCESS_STU_FEEDBACK] ? $stu_num[P::PROCESS_STU_FEEDBACK] : 0})</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'t'=>$t,'stu'=>P::PROCESS_STU_TIMEOUT))}" class="{$stu==P::PROCESS_STU_TIMEOUT ? 'menu-font-color' : ''}">超时提醒({$stu_num[P::PROCESS_STU_TIMEOUT] ? $stu_num[P::PROCESS_STU_TIMEOUT] : 0})</a> &nbsp;|&nbsp;
+                                <a href="{:U('Zprocess/public_todo',array('p'=>$p,'t'=>$t,'stu'=>P::PROCESS_STU_QUICKLY))}" class="{$stu==P::PROCESS_STU_QUICKLY ? 'menu-font-color' : ''}">被督办({$stu_num[P::PROCESS_STU_QUICKLY] ? $stu_num[P::PROCESS_STU_QUICKLY] : 0})</a> &nbsp;
 
                                 <div class="box-right-tit-butd">
                                     <input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" onclick="others()" value="查看他人">
@@ -85,10 +96,10 @@
                         <tbody>
                             <foreach name="lists" key="k" item="v">
                                 <tr class="userlist">
-                                    <td><input type="checkbox"></td>
-                                    <td>{$v.}</td>
-                                    <td> {$v.}</td>
-                                    <td>{$v.}</td>
+                                    <td></td>
+                                    <td><a href="">{$v.title}</a></td>
+                                    <td> {$v.req_uname}</td>
+                                    <td>{$v.req_time|date='Y-m-d H:i:s',###}</td>
                                     <!--<td> {$v.}</td>
                                     <td></td>
                                     <td>{$v.}</td>-->
