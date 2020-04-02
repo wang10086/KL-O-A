@@ -5258,7 +5258,7 @@ function get_userkey(){
 }*/
 
     function get_username(){
-        $user       = M('account')->field("id,nickname")->where(array('status'=>0))->select();
+        $user       = M('account')->field("id,nickname")->where(array('status'=>0,'id'=>array('gt',10)))->select();
         $user_key   = array();
         foreach($user as $k=>$v){
             $text                   = $v['nickname'];
