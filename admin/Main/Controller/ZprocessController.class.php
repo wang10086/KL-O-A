@@ -99,6 +99,7 @@ class ZprocessController extends BaseController{
         $this->stu              = $stu;
         $this->p                = $p;
         $this->t                = $t;
+        $this->uid              = $uid;
         $this->display('todo');
     }
 
