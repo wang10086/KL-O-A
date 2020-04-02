@@ -40,6 +40,9 @@
                                         <th class="sorting" data="after_remind">是否超时提醒</th>
                                         <th class="sorting" data="feedback_uid">完成后反馈对象</th>
                                         <th class="sorting" data="remark">备注</th>
+                                        <if condition="rolemenu(array('Rbac/node'))">
+                                            <th width="80" class="taskOptions">URL连接</th>
+                                        </if>
 
                                         <if condition="rolemenu(array('Zprocess/addNode'))">
                                         <th width="40" class="taskOptions">编辑</th>
@@ -63,6 +66,9 @@
                                         <td class="taskOptions">{$row['after_remind']?'提醒':'不提醒'}</td>
                                         <td class="taskOptions">{$row.feedback_name}</td>
                                         <td>{$row.remark}</td>
+                                        <if condition="rolemenu(array('Rbac/node'))">
+                                            <td class="taskOptions">{$row.node_url}<br /><a href="javascript:;" onclick= set_node_url({$row.id})>编辑</a></td>
+                                        </if>
 
                                         <if condition="rolemenu(array('Zprocess/addNode'))">
                                         <td class="taskOptions">
@@ -107,14 +113,7 @@
 
 <script>
 
-    function ConfirmDel(url,msg) {
-        /*
-         if (confirm("真的要删除吗？")){
-         window.location.href=url;
-         }else{
-         return false;
-         }
-         */
+    /*function ConfirmDel(url,msg) {
 
         if(!msg){
             var msg = '真的要删除吗？';
@@ -136,5 +135,26 @@
             cancel: true //为true等价于function(){}
         });
 
+    }*/
+
+    function set_node_url (id) {
+        art.dialog.open('/index.php?m=Main&c=Zprocess&a=setNodeUrl&id='+id, {
+            lock:true,
+            id: 'audit_win',
+            title: '编辑节点连接',
+            width:500,
+            height:200,
+            okVal: '提交',
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                setTimeout("parent.art.dialog.list['audit_win'].close()",1500);
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {},
+            close : function () {
+                location.reload();
+            }
+        });
     }
 </script>

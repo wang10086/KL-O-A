@@ -319,6 +319,26 @@ class ZprocessController extends BaseController{
         $this->display('nodeList');
     }
 
+    //设置节点url
+    public function setNodeUrl(){
+        $db                     = M('process_node');
+        if (isset($_POST['dosubmint'])){
+            $id                 = I('id',0);
+            $url                = trim(I('node_url'));
+            if (!$url){ $this->error('地址不能为空'); }
+            $data               = array();
+            $data['node_url']   = $url;
+            $res                = $db -> where(array('id'=>$id))->save($data);
+            $this->msg          = $res ? '编辑成功' : '数据保存失败';
+            $this->display("Index:public_audit");
+        }else{
+            $id                 = I('id',0);
+            $list               = $db -> where(array('id'=>$id))->find();
+            $this->list         = $list;
+            $this->display();
+        }
+    }
+
     //流程状态
     public function public_status(){
         $this->title('节点状态');
