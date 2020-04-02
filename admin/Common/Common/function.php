@@ -5230,7 +5230,7 @@ function user_table($where,$type=''){//查询用户 1 查询一个 2 查询符�
 function get_userkey(){
     //整理关键字
     $role = M('role')->GetField('id,role_name',true);
-    $user =  M('account')->where(array('status'=>0))->select();
+    $user =  M('account')->where(array('status'=>0,'id'=>array('gt',10)))->select();
     $key = array();
     foreach($user as $k=>$v){
         $text = $v['nickname'].'-'.$role[$v['roleid']];
