@@ -67,7 +67,10 @@ class ZprocessController extends BaseController{
 
         $lists                  = array();
         foreach ($log_lists as $v){
-            $v['title'] = M('process_node')->where(array('id'=>$v['pnode_id']))->getField('title');
+            $nodeData           = M('process_node')->where(array('id'=>$v['pnode_id']))->field('title,node_url')->find();
+            $v['url']           = $nodeData['node_url'];
+            $v['title']         = $v['title'] ? $v['title'] : $nodeData['title'];
+            $v['nodeTitle']     = $nodeData['title'];
             if ($stu && !$t && !$p){
                 if ($v['pro_status'] == $stu) $lists[] = $v;
             }elseif ($stu && $t && !$p){
@@ -80,6 +83,8 @@ class ZprocessController extends BaseController{
                 if ($v['ptype_id'] == $t && $v['p_id']== $p) $lists[] = $v;
             }elseif ($p && !$stu && !$t){
                 if ($v['p_id'] == $p) $lists[] = $v;
+            }elseif ($key){
+                if (strstr($v['title'],$key)) $lists[] = $v;
             }else{
                 $lists[]    = $v;
             }

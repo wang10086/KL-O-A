@@ -87,6 +87,7 @@
                         <tr style="background-color: #f8f8f8;">
                             <th width="60"></th>
                             <th width="">标题</th>
+                            <th width="">节点类型</th>
                             <th width="">创建人</th>
                             <th width="">创建时间</th>
                             <!--<th width="">状态</th>
@@ -98,7 +99,8 @@
                             <foreach name="lists" key="k" item="v">
                                 <tr class="userlist">
                                     <td></td>
-                                    <td><a href="">{$v.title}</a></td>
+                                    <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}">{$v.title}</a></td>
+                                    <td>{$v.nodeTitle}</td>
                                     <td> {$v.req_uname}</td>
                                     <td>{$v.req_time|date='Y-m-d H:i:s',###}</td>
                                     <!--<td> {$v.}</td>

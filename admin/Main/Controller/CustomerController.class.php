@@ -235,6 +235,7 @@ class CustomerController extends BaseController {
 					//查询有无给相关人员发送客户交接提示
                     if (!$info['cm_id']){
                         $send_msg       = $this->get_GEC_transfer_msg($gec_id);
+                        $this->send_process_todo_log($gec_id,$info['company_name']);
                         if (!$send_msg){
                             $this->send_GEC_transfer_msg($gec_id);
                         }
@@ -250,14 +251,15 @@ class CustomerController extends BaseController {
 
 					if (!$info['cm_id']){ //需要转交维护人
 					    $this->send_GEC_transfer_msg($gec_id);
+                        $this->send_process_todo_log($gec_id,$info['company_name']);
                     }
 				}
 
 				if($isok){
 				    if (cookie('userid') != 1){ //保存流程->待办事宜
                         $manager_data       = get_manage_uid(cookie('userid'));
-                        save_process_log($process_node,P::PROCESS_STU_NOREAD,'customer_gec',$gec_id,'',$manager_data['manager_id'],$manager_data['manager_name']);
-                    }
+                        save_process_log($process_node,P::PROCESS_STU_NOREAD,$info['company_name'],$gec_id,'',$manager_data['manager_id'],$manager_data['manager_name']);
+				    }
 
                     //保存操作记录
                     $record             = array();
@@ -287,6 +289,14 @@ class CustomerController extends BaseController {
 
 			$this->display('GEC_edit');
 		}
+    }
+
+    //待办事宜 交接城市合伙人 提示信息
+    private function send_process_todo_log($req_id,$title){
+        $process_node   = 9; //转交客户信息
+        $manager_data   = M('process_node')->where(array('id'=>$process_node))->field('blame_uid as manager_id,blame_name as manager_name')->find();
+        save_process_log($process_node,P::PROCESS_STU_BEFORE,$title,$req_id,'',$manager_data['manager_id'],$manager_data['manager_name']);
+
     }
 
     //给相关人员发送客户交接提示
