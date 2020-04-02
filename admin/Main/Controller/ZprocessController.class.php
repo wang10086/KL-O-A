@@ -85,6 +85,7 @@ class ZprocessController extends BaseController{
             }
         }
 
+        $this->userkey          = get_userkey();
         $this->lists            = $lists;
         $this->stu_num          = $stu_arr;
         $this->sum              = $sum;
@@ -361,12 +362,6 @@ class ZprocessController extends BaseController{
         $ids                    = array(); //已有表单页面的process_id
         $formView               = in_array($id,ids) ? 'form'.$id : 'formDefault';
         $this->display($formView);
-    }
-
-    //查看他人
-    public function public_others(){
-
-        $this->display('others');
     }
 
 }

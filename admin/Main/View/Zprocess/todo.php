@@ -72,7 +72,8 @@
                                 <a href="{:U('Zprocess/public_todo',array('p'=>$p,'t'=>$t,'stu'=>P::PROCESS_STU_QUICKLY))}" class="{$stu==P::PROCESS_STU_QUICKLY ? 'menu-font-color' : ''}">被督办({$stu_num[P::PROCESS_STU_QUICKLY] ? $stu_num[P::PROCESS_STU_QUICKLY] : 0})</a> &nbsp;
 
                                 <div class="box-right-tit-butd">
-                                    <input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" onclick="others()" value="查看他人">
+                                    <!--<input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" onclick="others()" value="查看他人">-->
+                                    <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,180);autocomp('user_name','user_id')"><i class="fa fa-search"></i> 查看他人</a>
                                     <form action="{:U('Zprocess/public_todo')}" method="post" style="display: inline-block;">
                                         <input type="text" name="key" class="" style="height: 30px;" placeholder="搜索关键字">
                                         <input type="submit" class="btn btn-default btn-sm" value="提交">
@@ -116,25 +117,26 @@
 
 <include file="Index:footer2" />
 
+<div id="searchtext">
+    <form action="" method="get" id="searchform">
+        <input type="hidden" name="m" value="Main">
+        <input type="hidden" name="c" value="Zprocess">
+        <input type="hidden" name="a" value="public_todo">
+
+        <div class="form-group col-md-12"></div>
+        <div class="form-group col-md-12">
+            <label>请输入人员信息</label>
+            <input type="text" name="user_name" class="form-control" id="user_name" />
+            <input type="hidden" name="uid" class="form-control" id="user_id" />
+        </div>
+
+    </form>
+</div>
+
 <script type="text/javascript">
-    //查看他人
-    function others () {
-        art.dialog.open('<?php echo U('Zprocess/public_others',array()) ?>', {
-            lock:true,
-            id: 'audit_win',
-            title: '输入人员信息',
-            width:500,
-            heigh:180,
-            okVal: '提交',
-            ok: function () {
-                this.iframe.contentWindow.gosubmint();
-                //location.reload();
-                return false;
-            },
-            cancelVal:'取消',
-            cancel: function () {
-            }
-        });
+    function autocomp(username,userid){
+        let userkey = <?php echo $userkey; ?>;
+        autocomplete_id(username,userid,userkey);
     }
 </script>
 
