@@ -314,7 +314,7 @@
                         <li class="treeview {:on('Customer')}">
                             <a href="javascript:;">
                                 <i class="fa fa-group"></i>
-                                <span>销售管理</span>
+                                <span>市场营销</span>
                                 <if condition="$_no_read_GEC_transfer_"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_GEC_transfer_}</small></if>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
