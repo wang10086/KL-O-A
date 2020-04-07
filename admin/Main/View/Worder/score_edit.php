@@ -14,6 +14,9 @@
                 80=>京区业务中心研发专员
                 -->
                 <include file="score_form_3" />
+            <?php }elseif($post_id == 92){ ?>
+                <!--人资综合部PHP程序员-->
+                <include file="score_form_4" />
             <?php } ?>
 
 

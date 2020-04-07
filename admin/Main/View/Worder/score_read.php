@@ -8,6 +8,9 @@
     <?php }elseif(in_array($post_id,array(63,64,96,80))){ ?>
         <!--研发部实施专家-->
         <include file="score_read_3" />
+    <?php }elseif($post_id == 92){ ?>
+        <!--人资综合部PHP程序员-->
+        <include file="score_form_4" />
     <?php } ?>
 <?php }else{ ?>
     <div class="content" ><span style="padding:20px 0; float:left; clear:both; text-align:center; text-align:center; width:100%;">暂无评分信息</span></div>

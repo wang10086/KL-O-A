@@ -3069,7 +3069,7 @@ function updatekpi($month,$user,$year=''){
                         }
 
                         //工单满意度 151工=>作质量('平面设计') 158=>业务部门定制产品内部满意度 232=>工单满意度,178=>
-                        if (in_array($v['quota_id'],array(151,158,232,1780000))){
+                        if (in_array($v['quota_id'],array(151,158,232,178))){
                             //及时率
                             $uids                   = array($user);
                             $lists                  = get_count_worder_lists($v['month']);
@@ -3234,12 +3234,12 @@ function updatekpi($month,$user,$year=''){
                             $url                    = '';
                         }*/
 
-                        //内部员工满意度-PHP程序员
+                        /*//内部员工满意度-PHP程序员
                         if ($v['quota_id'] == 178){
 
                             $complete               = '测试';
                             $url                    = '';
-                        }
+                        }*/
 
                         //院内接待资源方开发 - 资源管理部经理
                         if ($v['quota_id']==179){

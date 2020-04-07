@@ -4091,7 +4091,7 @@ function get_huikuan_list($begin_time,$end_time){
         $data['sum_num']            = $sum_num;
         $data['ok_num']             = $ok_num;
         $data['average']            = $sum_num>0 ? (round($ok_num/$sum_num,4)*100).'%' : '100%'; //及时率
-        $data['score_avg']          = $sum_num>0 ? (round($sum_defen/$sum_zongfen,4)*100).'%' : '100%'; //已评分满意度
+        $data['score_avg']          = $sum_zongfen>0 ? (round($sum_defen/$sum_zongfen,4)*100).'%' : '100%'; //已评分满意度
         $data['sum_lists']          = $lists;
         return $data;
     }
