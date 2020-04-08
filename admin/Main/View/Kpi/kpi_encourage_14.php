@@ -17,7 +17,7 @@
                     <tr>
                         <td class="taskOptions">{$encourage_data.workLoadHourNum}</td>
                         <td class="taskOptions">{$encourage_data.workHourNumBBBB}</td>
-                        <td class="taskOptions">{$encourage_data.quarter_should_royalty}</td>
+                        <td class="taskOptions">{$encourage_data.quarter_should_royaltyBBBB}</td>
                     </tr>
                 </table>
 
