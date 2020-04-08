@@ -222,9 +222,9 @@ class KpiModel extends Model
             $num = 12;
         }elseif (in_array($userinfo['postid'],array(63))) { // 63=>研发部实施专家
             $num = 13;
-        }/*elseif (in_array($userinfo['postid'],array(64))) { // 63=>研发部研发专员
+        }elseif ($userinfo['postid'] == 92) { // 92=>人资综合部PHP程序员
             $num = 14;
-        }*/
+        }
         return $num;
     }
 
@@ -256,88 +256,50 @@ class KpiModel extends Model
             $data = $this->get_zybyjt_encourage_data($userid, $year, $month);
         }elseif ($encourage_type ==13){ // 研发部实施专家
             $data = $this->get_yfsszj_encourage_data($userid, $year, $month);
-        }/*elseif ($encourage_type ==14){ // 研发部研发专员
-            //$data = $this->get_yfzy_encourage_data($userid, $year, $month);
-            $data = $this->get_rzzhbjl_encourage_data($userid, $year, $month);
-        }*/
+        }elseif ($encourage_type ==14){ // 人资综合部PHP程序员
+            $data = $this->get_php_encourage_data($userid, $year, $month);
+        }
         return $data;
     }
 
-    /*public function get_yfzy_encourage_data($userid, $year, $month){
-        $quarter                        = get_quarter($month);
-        $thisYearTimeCycle              = get_year_begin_to_quarter_end_cycle($year,$quarter); //当年累计至当季度周期
-        //$lastYearTimeCycle              = get_year_begin_to_quarter_end_cycle($year-1, $quarter); //上一年累计至当季度周期
+    public function get_php_encourage_data($userid, $year, $month){
+        $quarter                    = get_quarter($month);
+        $quarter_cycle              = get_quarter_cycle_time($year,$quarter);
 
-        //毛利数据
-        $maoliData                      = get_settlement_maoli_up_rate($year,$quarter);
+        $startTime                  = $quarter_cycle['begin_time'];
+        $endTime                    = $quarter_cycle['end_time'] - 1;
+        $worder_lists               = get_workload_worders($userid,$startTime,$endTime); //求所有响应时间或者计划完成时间在本周期的工单信息
+        $work_day_data              = get_cycle_work_day_data($startTime,$endTime);
+        $workload_data              = get_workload_data($worder_lists,$work_day_data,$startTime,$endTime); //求工时信息
+        $workDayNum                 = $work_day_data['workDayNum'];
+        $workLoadHourNum            = $workload_data['workLoadHourNum'];
 
-        //机关部门累计人力成本
-        $jiguan_users                   = get_jiguan_no_manager_users(); //机关部门人员信息(不包含总经办人员);
-        $uids                           = array_column($jiguan_users,'id');
-        $lastYearSalaryMonths           = get_sum_months($year-1,$month,2); //从年初累计月份
-        $thisYearSalaryMonths           = get_sum_months($year,$month,2); //从年初累计月份
-        $rbacMod                        = D('Rbac');
-        $lastYearSalaryData             = $rbacMod->get_staff_data($lastYearSalaryMonths,'','',$uids);
-        $thisYearSalaryData             = $rbacMod->get_staff_data($thisYearSalaryMonths,'','',$uids);
-        $lastYearSalaryLists            = $lastYearSalaryData['list'];
-        $thisYearSalaryLists            = $thisYearSalaryData['list'];
+        //岗位薪酬标准
+        $salary                     = $this->get_salary_data($userid,$year,$month);
+        $data                       = array();
+        $data['userid']             = $userid;
+        $data['username']           = username($userid);
+        $data['workHourNum']        = $workDayNum * 8; //当周期应工作日*8hours
+        $data['workLoadHourNum']    = $workLoadHourNum; //工单工时
+        $data['complete']           = (round($workLoadHourNum/$data['workHourNum'],4)*100).'%';
 
-        $lastYearSalary_data            = $rbacMod->get_post_salary($lastYearSalaryLists);
-        $thisYearSalary_data            = $rbacMod->get_post_salary($thisYearSalaryLists);
-        //上一年
-        //$lastYearPost_salary_sum        = $lastYearSalary_data['salary']; //岗位薪酬
-        //$lastYearBonus_sum              = $lastYearSalary_data['bonus']; //奖金
-        //$lastYearSubsidy_sum            = $lastYearSalary_data['subsidy']; //补助
-        $lastYearInsurance_sum          = $lastYearSalary_data['insurance']; //公司五险一金
-        //$lastYearSum                    = $lastYearSalary_data['sum']; //合计
-        //当年
-        //$thisYearPost_salary_sum        = $thisYearSalary_data['salary']; //岗位薪酬
-        //$thisYearBonus_sum              = $thisYearSalary_data['bonus']; //奖金
-        //$thisYearSubsidy_sum            = $thisYearSalary_data['subsidy']; //补助
-        $thisYearInsurance_sum          = $thisYearSalary_data['insurance']; //公司五险一金
-        //$thisYearSum                    = $thisYearSalary_data['sum']; //合计
 
-        //机关奖金包
-        $departmentid                   = M('account')->where(array('id'=>$userid))->getField('departmentid');
-        $jiguan_bonus                   = $this->get_departmentBonus($thisYearTimeCycle['begin_time'],$thisYearTimeCycle['end_time'],$departmentid);
-        $satisfaction_weight            = $this->get_jiguan_satisfaction_weight($userid,$year,$month,$quarter); //本部门经理内部满意度权重 = 本部门经理KPI中的内部满意度 / 所有机关部门经理KPI中的内部满意度之和 * 100%
-
-        //本部门核定权重人数
-        $departmentUsers                = get_department_posts_account($departmentid,1,1); //本部门人员
-        $jiguan_uids                    = array_column($jiguan_users,'id');
-        $jiguan_member_weight_users     = $this->get_uids_posts_account($jiguan_uids);
-        $department_member_weight       = $this->get_member_weight($departmentUsers);
-        $jiguan_member_weight           = $this->get_member_weight($jiguan_member_weight_users);
-        $my_info                        = M()->table('__ACCOUNT__ as a')->join('__POSTS__ as p on p.id=a.postid','left')->where(array('a.id'=>$userid))->field('a.id,a.nickname,a.postid,p.post_name')->find();
-        $my_member_weight               = $this->get_member_weight_det($my_info);
-
-        //本部门季度累计已发奖励
-        $department_sum_royalty_payoff  = $this->get_department_sum_royalty_salary($year,$departmentUsers); //获取本部门"部门季度累计已发奖励"
-
-        $data                           = array();
-        $data['lastYearProfit']         = $maoliData['last_year_data']['sum_maoli'];
-        $data['thisYearProfit']         = $maoliData['this_year_data']['sum_maoli'];
-        $data['profit_up_rate']         = $maoliData['up_rate'];
-        $data['lastYearHrCost']         = $lastYearSalary_data['sum'];
-        $data['thisYearHrCost']         = $thisYearSalary_data['sum'];
-        $data['shouldHrCost']           = round($lastYearSalary_data['sum'] * (1 + ($maoliData['up_rate_float']/2)),2);  //当年度机关累计人力成本额度 = 上年机关累计发生人力成本 * (1 + 累计毛利增长比率/2)
-        $data['Insurance_up_data']      = $thisYearInsurance_sum['sum'] - $lastYearInsurance_sum['sum']; //公司五险一金增量
-        $data['jiguan_bonus']           = $jiguan_bonus; //机关奖金包
-        $data['jiguan_sum_salary_bag']  = $data['shouldHrCost'] + $data['Insurance_up_data'] + $data['jiguan_bonus']; //当年机关季度累计薪酬包 = 当年度机关累计人力成本额度 + 机关五险一金增量 + 机关奖金包
-        $data['totalSalaryBagLeftOver'] = $data['jiguan_sum_salary_bag'] - $data['thisYearHrCost']; //当年机关季度累计薪酬包结余 = 当年机关季度累计薪酬包 - 机关累计发生人力成本(当年)
-        $data['satisfaction_weight']    = $satisfaction_weight['weigh_str']; //本部门经理内部满意度权重
-        $data['member_weight']          = $department_member_weight; //本部门核定权重人数12
-        $data['departmentSumEncourage'] = round(($data['totalSalaryBagLeftOver'] * $satisfaction_weight['weigh_floot'] * $data['member_weight'])/$jiguan_member_weight,2); //本部门季度累计奖励13 = (当年机关季度累计薪酬包结余 * 本部门经理内部满意度权重 * 本部门核定权重人数)/机关各部门所有权重人数
-        $data['department_sum_royalty_payoff'] = $department_sum_royalty_payoff; //本部门季度累计已发奖励
-        $data['department_should_royalty'] = $data['departmentSumEncourage'] - $data['department_sum_royalty_payoff'];
         $data['quarter_should_royalty'] = round(($data['department_should_royalty']/$data['member_weight']) * $my_member_weight,2);
 
-        $info                       = array();
+        /*$info                       = array();
         $info['account_id']         = $userid;
         $info['sum']                = $data['quarter_should_royalty'];
-        $data['info']               = $info;
+        $data['info']               = $info;*/
         return $data;
-    }*/
+    }
+
+    //获取岗位薪酬标准
+    private function get_salary_data($userid,$year,$month){
+        $salary1                    = M('salary_wages_month')->where(array('account_id'=>$userid,'datetime'=>$year.$month))->getField('standard');
+        $salary2                    = M('salary')->where(array('account_id'=>$userid))->order('id desc')->getField('standard_salary');
+        $salary                     = $salary1 ? $salary1 : $salary2;
+        return $salary;
+    }
 
     //研发实施专家
     public function get_yfsszj_encourage_data($userid, $year, $month){
