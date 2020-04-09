@@ -961,4 +961,10 @@ class CustomerController extends BaseController {
             $this->display();
         }
     }
+
+    //市场营销首页
+    public function public_index(){
+
+        $this->display('index');
+    }
 }
