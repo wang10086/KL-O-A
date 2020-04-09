@@ -273,9 +273,9 @@ class KpiModel extends Model
         $workload_data              = get_workload_data($worder_lists,$work_day_data,$startTime,$endTime); //求工时信息
         $workDayNum                 = $work_day_data['workDayNum'];
         $workLoadHourNum            = $workload_data['workLoadHourNum'];
+        $sumDays                    = diffBetweenTwoDays($quarter_cycle['begin_time'],$quarter_cycle['end_time']); //本周期总天数
+        $companyWorkLoadHourNum     = $workLoadHourNum > $sumDays*10 ? $sumDays*10 : $workLoadHourNum; //公司规定工单总工时: 当本季度已完成的指派工时之和平均到每天大于 10 小时时，按 10 小时计;
 
-        //岗位薪酬标准
-        $salary                     = $this->get_salary_data($userid,$year,$month);
         $data                       = array();
         $data['userid']             = $userid;
         $data['username']           = username($userid);
@@ -283,8 +283,15 @@ class KpiModel extends Model
         $data['workLoadHourNum']    = $workLoadHourNum; //工单工时
         $data['complete']           = (round($workLoadHourNum/$data['workHourNum'],4)*100).'%';
 
+        //岗位薪酬标准
+        $salary                     = $this->get_salary_data($userid,$year,$month);
+        $royalty                    = (($companyWorkLoadHourNum - $data['workHourNum'])/8 * ($salary/21.75)) < 0 ? 0 : ($companyWorkLoadHourNum - $data['workHourNum'])/8 * ($salary/21.75); //季度奖金=（本季度已完成的指派工时之和-本季度标准工时之和）/8×（岗位薪酬标准/21.75）
+        $data['quarter_should_royalty'] = $royalty; //本季度应发奖金
 
-        $data['quarter_should_royalty'] = round(($data['department_should_royalty']/$data['member_weight']) * $my_member_weight,2);
+        //当季度已发奖金
+        $paid_royalty                   =  $this->get_this_quarter_royalty_salary($year,$month,$userid);
+        $data['quarter_paid_royalty']   = $paid_royalty; //当季度已发奖金
+        $data['quarter_no_pay_royalty'] = $data['quarter_should_royalty'] - $data['quarter_paid_royalty']; //当季度未发奖金
 
         /*$info                       = array();
         $info['account_id']         = $userid;
@@ -363,7 +370,7 @@ class KpiModel extends Model
         return $data;
     }
 
-    //获取岗位薪酬标准
+    //获取岗位薪酬标准(基本工资)
     private function get_base_salary($userid,$yearMmonth){
         $payed_salary               = M('salary_wages_month')->where(array('account_id'=>$userid,'datetime'=>$yearMmonth))->find();
 
@@ -1375,7 +1382,14 @@ class KpiModel extends Model
     private function get_sum_royalty_salary($year,$userid){
         $salary_months              = $this->get_salary_months($year);
         $sum_royalty_salary         = M('salary_wages_month')->where(array('datetime'=>array('in',$salary_months['salary_year_months']),'account_id'=>$userid,'status'=>4))->sum('bonus');
-        return $sum_royalty_salary;
+        return $sum_royalty_salary ? $sum_royalty_salary : 0;
+    }
+
+    //获取当季度已发提成数据 PHP
+    private function get_this_quarter_royalty_salary($year,$month,$userid){
+        $royalty_month              = get_royalty_month($year,$month);
+        $sum_royalty_salary         = M('salary_wages_month')->where(array('datetime'=>$royalty_month,'account_id'=>$userid,'status'=>4))->sum('bonus');
+        return $sum_royalty_salary ? $sum_royalty_salary : 0;
     }
 
 }

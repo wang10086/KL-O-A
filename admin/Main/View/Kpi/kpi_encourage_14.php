@@ -12,12 +12,16 @@
                     <tr role="row" class="orders" >
                         <th class="taskOptions">本季度已完成的指派工时之和</th>
                         <th class="taskOptions">本季度标准工时之和</th>
+                        <th class="taskOptions">当季度已发奖金</th>
+                        <th class="taskOptions">当季度未发奖金</th>
                         <th class="taskOptions">当季度应发奖金</th>
                     </tr>
                     <tr>
                         <td class="taskOptions">{$encourage_data.workLoadHourNum}</td>
-                        <td class="taskOptions">{$encourage_data.workHourNumBBBB}</td>
-                        <td class="taskOptions">{$encourage_data.quarter_should_royaltyBBBB}</td>
+                        <td class="taskOptions">{$encourage_data.workHourNum}</td>
+                        <td class="taskOptions">{$encourage_data.quarter_paid_royalty}</td>
+                        <td class="taskOptions">{$encourage_data.quarter_no_pay_royalty}</td>
+                        <td class="taskOptions">{$encourage_data.quarter_should_royalty}</td>
                     </tr>
                 </table>
 

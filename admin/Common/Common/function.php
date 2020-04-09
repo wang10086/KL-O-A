@@ -6198,3 +6198,17 @@ function get_quarter_yearMonths($year,$quarter){
     }
     return $yearMonths;
 }
+
+/**求两个时间段内(周期)的天数
+ * @param int $time1
+ * @param int $time2
+ * @return float|int
+ */
+function diffBetweenTwoDays ($time1 = 0, $time2 = 0){
+    if ($time2 < $time1) {
+        $tmp = $time1;
+        $time1 = $time2;
+        $time2 = $tmp;
+    }
+    return ($time2 - $time1) / 86400;
+}

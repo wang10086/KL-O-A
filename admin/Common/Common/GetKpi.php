@@ -5352,3 +5352,22 @@ function get_work_record_list($uid,$monthth){
     return $lists;
 }
 
+//获取当季度(奖金)提成月份
+function get_royalty_month($year,$month){
+    switch ($month){
+        case in_array($month, array('01','02','03')):
+            $yearMonth      = $year.'04';
+            break;
+        case in_array($month, array('04','05','06')):
+            $yearMonth      = $year.'07';
+            break;
+        case in_array($month, array('07','08','09')):
+            $yearMonth      = $year.'10';
+            break;
+        case in_array($month, array('10','11','12')):
+            $yearMonth      = ($year+1).'01';
+            break;
+    }
+    return $yearMonth;
+}
+
