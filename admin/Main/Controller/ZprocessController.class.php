@@ -222,6 +222,10 @@ class ZprocessController extends BaseController{
                         if (!$list){
                             $data['title']  = trim($title);
                             $data['pid']    = 0;
+                            $savein         = $fileTypeDb->add($data);
+                            $delid[]        = $savein;
+                            $data['title']  = $v;
+                            $data['pid']    = $list['id'];
                         }else{
                             $data['title']  = $v;
                             $data['pid']    = $list['id'];
