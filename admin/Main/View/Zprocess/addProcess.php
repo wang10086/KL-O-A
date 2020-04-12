@@ -82,6 +82,53 @@
                                         <div id="container" style="display:none;"></div>
                                     </div>
 
+                                    <div class="form-group col-md-12 ml-12" id="is_or_not_file">
+                                        <h2 class="tcs_need_h2">后期是否需要审核文件：</h2>
+                                        <input type="radio" name="need_or_not" value="0"  <?php if(!$fileTypes){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                        <input type="radio" name="need_or_not" value="1"  <?php if($fileTypes){ echo 'checked';} ?>> &#8194;需要
+                                    </div>
+
+                                    <div class="form-group col-md-12 ml-12" id="wonder_department" style="margin-top: -30px;">
+                                    <?php if ($fileTypes){ ?>
+                                        <foreach name="fileTypes" key="k" item="v">
+                                            <?php if ($v['pid'] == 0){ ?>
+                                                <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" />
+                                                <input type="hidden" name="fileTypes[888{$k}][id]" value="{$v.id}" />
+                                                <input type="hidden" name="fileTypes[888{$k}][pid]" value="{$v.pid}" />
+                                            <?php }else{ ?>
+                                                <div class="tasklist worder_box" id="task_ti_{$k}">
+                                                    <a class="worder_close" href="javascript:;" onClick="del_box(`task_ti_{$k}`)">×</a>
+                                                    <div class="col-md-12">
+                                                        <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" />
+                                                        <input type="hidden" name="fileTypes[888{$k}][id]" value="{$v.id}" />
+                                                        <input type="hidden" name="fileTypes[888{$k}][pid]" value="{$v.pid}" />
+                                                        <input type="text" class="form-control" name="fileTypes[888{$k}][title]" value="{$v.title}"  placeholder="请输入文件类型"  style="width:100%; margin-right:10px;"/>
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
+                                        </foreach>
+                                    <?php }else{ ?>
+                                        <div class="tasklist worder_box" id="task_ti_1" >
+                                            <div class="col-md-12">
+                                                <input type="text" class="form-control" name="fileTypes[]"  placeholder="请输入文件类型" />
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                    </div>
+
+                                    <!--<div class="form-group col-md-12 ml-12" id="wonder_department" style="margin-top: -30px;">
+                                        <div class="tasklist worder_box" id="task_ti_1" >
+                                            <div class="col-md-12">
+                                                <input type="text" class="form-control" name="fileTypes[]"  placeholder="请输入文件类型" />
+                                            </div>
+                                        </div>
+                                    </div>-->
+
+                                    <div id="costacc_val">1</div>
+                                    <div class="form-group col-md-12" id="boxaddbtns" style="margin-left:15px;">
+                                        <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_box()"><i class="fa fa-fw fa-plus"></i> 新增文件类型</a>
+                                    </div>
+
                                     <div id="formsbtn">
                                         <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
                                     </div>
@@ -101,6 +148,60 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
+    let fileTypes = <?php echo $fileTypes ? 1 : 0; ?>;
+    if (fileTypes == 0){
+        $('#wonder_department').hide();
+        $('#boxaddbtns').hide();
+    }
+
+    $(function () {
+        let html = '<div class="tasklist worder_box" id="task_ti_1" >';
+            html +='<div class="col-md-12">';
+            html +='<input type="text" class="form-control" name="fileTypes[]"  placeholder="请输入文件类型" />';
+            html +='</div></div>';
+        //后期是否需要审核文件
+        $('#is_or_not_file').find('ins').each(function (index,ele) {
+            $(this).click(function () {
+                var is_worder   = $(this).prev('input[name="need_or_not"]').val();
+                if (is_worder == 1){    //需要
+                    $('#wonder_department').show();
+                    $('#boxaddbtns').show();
+                    $('#wonder_department').html(html);
+                }else{
+                    $('#wonder_department').hide();
+                    $('#boxaddbtns').hide();
+                    $('input[name="exe_user_id[]"]').parent('div').removeClass('checked');
+                }
+            })
+        })
+    })
+
+    function add_box(){
+        var i = parseInt($('#costacc_val').text())+1;
+        var html = '<div class="tasklist worder_box" id="task_ti_'+i+'">';
+        html += '<a class="worder_close" href="javascript:;" onClick="del_box(`task_ti_'+i+'`)">×</a>';
+        html += '<div class="col-md-12">';
+        html += '<input type="text" class="form-control" name="fileTypes[]"  placeholder="请输入文件类型"  style="width:100%; margin-right:10px;"/>';
+        html += '</div></div>';
+
+        $('#wonder_department').append(html);
+        $('#costacc_val').html(i);
+        //orderno();
+    }
+
+    //编号
+    function orderno(){
+        $('#wonder_department').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
+    }
+
+    //移除
+    function del_box(obj){
+        $('#'+obj).remove();
+        //orderno();
+    }
+
     $(document).ready(function(e) {
         //主文件
         var uploader = new plupload.Uploader({

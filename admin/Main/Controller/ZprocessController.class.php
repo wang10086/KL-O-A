@@ -151,16 +151,29 @@ class ZprocessController extends BaseController{
             $info['fileids']    = $fileid ? implode(',',$fileid) : '';
             $info['input_time'] = NOW_TIME;
             $info['input_uid']  = cookie('userid');
+            $needFile           = I('need_or_not'); //是否需要文件
+            $fileTypes          = I('fileTypes');
+            $resid              = I('resid');
             if (!$info['title']) $this->error('流程标题不能为空');
             if (!$info['type']) $this->error('流程类型不能为空');
+
             if ($id){
                 $res            = $db -> where(array('id'=>$id))->save($info);
                 $msg            = '修改';
             }else{
                 $res            = $db -> add($info);
+                $id             = $res;
                 $msg            = '添加';
             }
-            $res ? $this->success($msg.'数据成功',U('Zprocess/process')) : $this->error($msg.'数据失败');
+
+            if ($res){
+                //保存文件类型
+                $this->save_approval_file_type($id,$info['title'],$resid,$fileTypes);
+                $this->success($msg.'数据成功',U('Zprocess/process'));
+            }else{
+                $this->error($msg.'数据失败');
+            }
+            //$res ? $this->success($msg.'数据成功',U('Zprocess/process')) : $this->error($msg.'数据失败');
         }else{
             $this->title('新建流程');
             $type_db            = M('process_type');
@@ -172,9 +185,59 @@ class ZprocessController extends BaseController{
             $this->files        = $files ? $files : '';
             $this->list         = $processList;
             $this->typeLists    = $typeLists;
+            $fileType_lists     = M('approval_file_type')->where(array('process_id'=>$id))->select();
+            $this->fileTypes    = $fileType_lists ? $fileType_lists : 0;
             $this->display('addProcess');
         }
 	}
+
+    /**
+     * @param $id
+     * @param $title
+     * //@param int $needFile 0=>不需要 , 1=>需要
+     * @param array $resid
+     * @param array $fileTypes
+     */
+	private function save_approval_file_type($id,$title,$resid='',$fileTypes=''){
+        $fileTypeDb             = M('approval_file_type');
+        /*if ($needFile == 0){ //不需要
+            $where              = array();
+            $where['process_id']= $id;
+            $where['pid']       = $id;
+            $where['_logic']    = 'or';
+            $fileTypeDb -> where($where)->delete();
+        }else{*/
+            $delid                      = array();
+            if ($fileTypes){
+                foreach ($fileTypes as $k => $v){
+                    if($resid && $resid[$k]['id']){
+                        $data           = array();
+                        $data['title']  = $v['pid'] == 0 ? trim($title) : trim($v['title']);
+                        $edits          = $fileTypeDb->data($data)->where(array('id'=>$resid[$k]['id']))->save();
+                        $delid[]        = $resid[$k]['id'];
+                    }else{
+                        $list           = $fileTypeDb->where(array('process_id'=>$id,'pid'=>0))->find();
+                        $data           = array();
+                        $data['process_id'] = $id;
+                        if (!$list){
+                            $data['title']  = trim($title);
+                            $data['pid']    = 0;
+                        }else{
+                            $data['title']  = $v;
+                            $data['pid']    = $list['id'];
+                        }
+                        $savein         = $fileTypeDb->add($data);
+                        $delid[]        = $savein;
+                    }
+                }
+            }
+
+        $where              = array();
+        $where['process_id']= $id;
+        $where['id']        = array('not in',$delid);
+        $fileTypeDb -> where($where)->delete();
+       /* }*/
+    }
 
 	//流程管理
     public function process(){
