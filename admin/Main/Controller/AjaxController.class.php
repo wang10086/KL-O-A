@@ -2039,5 +2039,12 @@ class AjaxController extends Controller {
         $lists                      = M('process')->where(array('status'=>array('neq','-1'),'type'=>$typeId))->field('id,title')->select();
         $this->ajaxReturn($lists);
     }
+
+    //获取流转文件类型详情
+    public function get_approval_file_type_info(){
+        $type                       = I('type',0);
+        $lists                      = M('approval_file_type')->where(array('pid'=>$type))->select();
+        $this->ajaxReturn($lists);
+    }
 }
 

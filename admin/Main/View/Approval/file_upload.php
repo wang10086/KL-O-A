@@ -22,21 +22,43 @@
                             <input type="hidden" name="saveType" value="1">
                             <input type="hidden" name="id" value="{$list.id}">
 
-                            <div class="form-group box-float-4">
+                            <div class="form-group box-float-3">
                                 <label>文件上传人</label>：
                                 <input type="text" name="info[create_user_name]" value="<?php echo $row['create_user_name'] ? $row['create_user_name'] : session('nickname'); ?>" class="form-control" readonly />
                                 <input type="hidden" name="info[create_user]" value="<?php echo $row['create_user'] ? $row['create_user'] : session('userid'); ?>" class="form-control" readonly />
                             </div>
-                            <div class="form-group box-float-4">
+                            <div class="form-group box-float-3">
                                 <label>审核所需工作日（单位：天）</label>：
                                 <input type="text" name="info[day]" value="{$list.day}" class="form-control" />
                             </div>
 
-                            <div class="form-group box-float-4">
+                            <!--<div class="form-group box-float-4">
                                 <label>文件类型</label>：
                                 <select class="form-control" name="info[type]">
-                                    <option value="1" <?php if ($list['type'] == 1){ echo "selected"; }?>>新编</option>
-                                    <option value="2" <?php if ($list['type'] == 2){ echo "selected"; }?>>修改</option>
+                                    <option value="1" <?php /*if ($list['type'] == 1){ echo "selected"; }*/?>>新编</option>
+                                    <option value="2" <?php /*if ($list['type'] == 2){ echo "selected"; }*/?>>修改</option>
+                                </select>
+                            </div>-->
+
+                            <div class="form-group box-float-3">
+                                <label>文件类型</label>：
+                                <select class="form-control" name="info[type]" id="type">
+                                    <foreach name="types" item="v">
+                                        <option value="{$v.id}" <?php if ($list['type'] == $v['id']){ echo "selected"; }?>>{$v.title}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+
+                            <div class="form-group box-float-3">
+                                <label>文件类型详情</label>：
+                                <select class="form-control" name="info[typeInfo]" id="typeInfo">
+                                    <?php if ($fileTypes){ ?>
+                                        <foreach name="fileTypes" item="v">
+                                            <option class="form-control" value="{$v.id}" <?php if ($list['typeInfo'] == $v['id']) echo "selected"; ?>>{$v['title']}</option>
+                                        </foreach>
+                                    <?php }else{ ?>
+                                        <option class="form-control" value="">请先选择文件类型</option>
+                                    <?php } ?>
                                 </select>
                             </div>
 
@@ -367,6 +389,36 @@
         });
     }
 
+    //文件类型(二级联动)
+    $('#type').change(function () {
+        var type    = $(this).val();
+        if (type){
+            $.ajax({
+                type : 'POST',
+                url : "<?php echo U('Ajax/get_approval_file_type_info'); ?>",
+                dataType : 'JSON',
+                data : {type:type},
+                success : function (msg) {
+                    $("#typeInfo").empty();
+                    if (msg.length>0){
+                        var count = msg.length;
+                        var i= 0;
+                        var b="";
+                        b+='<option value="" disabled selected>请选择</option>';
+                        for(i=0;i<count;i++){
+                            b+="<option value='"+msg[i].id+"'>"+msg[i].title+"</option>";
+                        }
+                    }else{
+                        var b="";
+                        b+='<option value="" disabled selected>暂无数据</option>';
+                    }
+                    $("#typeInfo").append(b);
+                }
+            })
+        }else{
+            art_show_msg('文件类型错误',2);
+        }
+    })
 
 
 </script>

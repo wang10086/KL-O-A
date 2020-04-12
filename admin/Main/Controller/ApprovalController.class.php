@@ -46,10 +46,10 @@ class ApprovalController extends BaseController {
             $this->file             = $file; //主文件
             $this->annex_files      = $annex_files; //附件
             $this->audit_users      = $audit_users;
+            $this->fileTypes        = M('approval_file_type')->where(array('pid'=>$list['type']))->select();
         }
         $this->userkey              = get_username();
-
-        //P($list);
+        $this->types                = M('approval_file_type')->where(array('pid'=>0))->select();
         $this->display();
     }
 
@@ -170,6 +170,7 @@ class ApprovalController extends BaseController {
         $this->all_audit_users              = $this->get_audit_users($all_users); //全部人员信息
         $this->audit_users                  = $this->get_audit_users($list['audit_uids']); //未审核人员信息
         $this->audited_users                = $this->get_audit_users($list['audited_uids']); //已审核人员信息
+        $this->fileTypes                    = M('approval_file_type')->getField('id,title',true);
         $this->display();
     }
 
@@ -260,6 +261,7 @@ class ApprovalController extends BaseController {
                 $save['create_user']        = $info['create_user'];
                 $save['create_user_name']   = $info['create_user_name'];
                 $save['type']               = $info['type'];
+                $save['typeInfo']           = $info['typeInfo'];
                 $save['status']             = 0; //未提交
                 if ($id){
                     $res                    = $db->where(array('id'=>$id))->save($save);
