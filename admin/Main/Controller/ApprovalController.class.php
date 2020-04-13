@@ -485,7 +485,7 @@ class ApprovalController extends BaseController {
                 $res                        = $db->where(array('id'=>$appid))->save($data);
 
                 if ($res){
-                    $list                   = $db->find($id);
+                    $list                   = $db->find($appid);
                     //给发布者发送系统消息
                     $uid                    = cookie('userid');
                     $title                  = '关于文件流转终审结果的反馈!';
@@ -493,6 +493,10 @@ class ApprovalController extends BaseController {
                     $url                    = U('Approval/file_detail',array('id'=>$appid));
                     $user                   = '['.$list['create_user'].']';
                     send_msg($uid,$title,$content,$url,$user,'');
+
+                    if ($list['type'] > 1){ //直接上传文件至文件管理->销售资料文件夹
+                        $this->save_file_data($list['id']);
+                    }
 
                     $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
                     $this->success('保存成功');
@@ -511,6 +515,37 @@ class ApprovalController extends BaseController {
                 $this->success('保存成功');
             }
         }
+    }
+
+    //直接保存文件至"文件管理->销售资料"文件夹
+    private function save_file_data($approval_id){
+        $approval_list              = M()->table('__APPROVAL__ as a')->join('__APPROVAL_FILES__ as f on f.id = a.file_id','left')->field('a.*,f.filepath,f.filesize,f.fileext,f.fileType,f.userid,f.uploadtime,f.uploadip,f.hashcode')->where(array('a.id' =>$approval_id))->find();
+        $atta                       = array();
+        $atta['filename']           = $approval_list['file_name'];
+        $atta['filepath']           = $approval_list['filepath'];
+        $atta['filesize']           = $approval_list['filesize'];
+        $atta['fileext']            = $approval_list['fileext'];
+        $atta['userid']             = $approval_list['userid'];
+        $atta['uploadtime']         = $approval_list['uploadtime'];
+        $atta['uploadip']           = $approval_list['uploadip'];
+        $atta['hashcode']           = $approval_list['hashcode'];
+        $atta_res                   = M('attachment')->add($atta);
+        if ($atta_res){
+            $file                   = array();
+            $file['file_name']      = $approval_list['file_name'];
+            $file['file_type']      = 1; //文件
+            $file['file_size']      = $approval_list['filesize'];
+            $file['file_ext']       = $approval_list['fileext'];
+            $file['file_path']      = $approval_list['filepath'];
+            $file['file_id']        = $atta_res;
+            $file['est_time']       = NOW_TIME;
+            $file['est_user']       = cookie('nickname');
+            $file['est_user_id']    = cookie('userid');
+            $file['pid']            = 595;
+            $file['level']          = 2;
+            M('files')->add($file);
+        }
+
     }
 
     /**
