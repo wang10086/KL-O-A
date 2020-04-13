@@ -964,7 +964,23 @@ class CustomerController extends BaseController {
 
     //市场营销首页
     public function public_index(){
+        $customer_files             = M('customer_files')->order('id desc')->limit(5)->select(); //销售资料下载
 
+
+        $this->customer_files       = $customer_files;
         $this->display('index');
+    }
+
+    //更多销售资料下载
+    public function moreCustomerFiles(){
+        $key                        = trim(I('key'));
+        $db                         = M('customer_files');
+        $where                      = array();
+        if ($key) $where['file_name'] = array('like', '%'.$key.'%');
+        $pagecount                  = $db->where($where)->count();
+        $page                       = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('id desc')->select();
+        $this->display();
     }
 }

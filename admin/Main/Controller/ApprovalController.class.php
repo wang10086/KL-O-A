@@ -546,6 +546,16 @@ class ApprovalController extends BaseController {
             M('files')->add($file);
         }
 
+        //保存销售资料下载
+        $cust                       = array();
+        $cust['file_name']          = $approval_list['file_name'];
+        $cust['file_size']          = $approval_list['filesize'];
+        $cust['file_path']          = $approval_list['filepath'];
+        $cust['file_id']            = $atta_res;
+        $cust['create_time']        = NOW_TIME;
+        $cust['create_user']        = cookie('nickname');
+        $cust['create_user_id']     = cookie('userid');
+        M('customer_files')->add($cust);
     }
 
     /**

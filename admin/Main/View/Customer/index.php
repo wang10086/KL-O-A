@@ -32,13 +32,13 @@
 
                     <div class="cus-box">
                         <div class="cus-box-title">销售资料下载
-                            <a href="javascript:;"><div class="cus-box-more">更多>></div></a>
+                            <a href="javascript:;"><div class="cus-box-more"><a  href="javascript:;" onClick="moreCustomerFiles()">更多>></a></div></a>
                         </div>
-                        <p class="cus-list">销售资料下载销售资料下载1 <span class="cus-list-time">2020-04-09</span></p>
-                        <p class="cus-list">销售资料下载销售资料下载2 <span class="cus-list-time">2020-04-09</span></p>
-                        <p class="cus-list">销售资料下载销售资料下载3 <span class="cus-list-time">2020-04-09</span></p>
-                        <p class="cus-list">销售资料下载销售资料下载4 <span class="cus-list-time">2020-04-09</span></p>
-                        <p class="cus-list">销售资料下载销售资料下载5 <span class="cus-list-time">2020-04-09</span></p>
+                        <foreach name="customer_files" item="v">
+                            <p class="cus-list"><a href="{$v.file_path}" target="_blank"> {$v.file_name} </a> <span class="cus-list-time">{$v.create_time|date='Y-m-d',###}</span></p>
+                        </foreach>
+                        <!--<p class="cus-list">销售资料下载销售资料下载1 <span class="cus-list-time">2020-04-09</span></p>
+                        <p class="cus-list">销售资料下载销售资料下载2 <span class="cus-list-time">2020-04-09</span></p>-->
                     </div>
 
                     <div class="cus-box">
@@ -98,3 +98,21 @@
 
 
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+    //更多销售资料下载
+    function moreCustomerFiles() {
+        art.dialog.open('<?php echo U('Customer/moreCustomerFiles'); ?>',{
+            lock:true,
+            title: '销售资料下载',
+            width:1000,
+            height:500,
+            okVal: '提交',
+            fixed: true,
+            ok: function () { },
+            cancelValue:'取消',
+            cancel: function () {
+            }
+        });
+    }
+</script>
