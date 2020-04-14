@@ -185,8 +185,8 @@ class ZprocessController extends BaseController{
             $this->files        = $files ? $files : '';
             $this->list         = $processList;
             $this->typeLists    = $typeLists;
-            $fileType_lists     = M('approval_file_type')->where(array('process_id'=>$id))->select();
-            $this->fileTypes    = $fileType_lists ? $fileType_lists : 0;
+            $fileType_lists     = $id ? M('approval_file_type')->where(array('process_id'=>$id))->select() : '';
+            $this->fileTypes    = $fileType_lists ? $fileType_lists : '';
             $this->display('addProcess');
         }
 	}
