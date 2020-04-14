@@ -27,7 +27,7 @@
                                         <?php foreach ($v['lists'] as $value){ ?>
                                         <div class="form-group col-md-3 viwe" style="display: inline-block;">
                                             <?php /*if (in_array($value['id'],$ids)){ */?>
-                                                <i class="fa fa-caret-right"></i> &nbsp; <a href="{:U('Zprocess/public_nodeList',array('id'=>$value['id']))}" title="新建">{$value.title}</a> &nbsp;&nbsp;
+                                                <i class="fa fa-caret-right"></i> &nbsp; <a href="{:U('Zprocess/public_nodeList',array('process_id'=>$value['id']))}" title="新建">{$value.title}</a> &nbsp;&nbsp;
                                             <?php /*}else{ */?><!--
                                                 <i class="fa fa-caret-right"></i> &nbsp; <a href="javascript:;" onclick="art_show_msg('开发中...',3)" title="新建">{$value.title}</a> &nbsp;&nbsp;
                                             --><?php /*} */?>
