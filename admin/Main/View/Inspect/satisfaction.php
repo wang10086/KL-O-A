@@ -86,11 +86,23 @@
                                     <tr>
                                         <td class="taskOptions">{$yearMonth}</td>
                                         <td class="taskOptions">{$row.account_name}</td>
-                                        <td class="taskOptions">{$row.sum_average}</td>
+                                        <td class="taskOptions">
+                                            <?php if (date('Ym')==$yearMonth && ($row['unscore_users'] && in_array(date('d'),array(20,21,22,23,24)))){ ?>
+                                                ***
+                                            <?php }else{ ?>
+                                            {$row.sum_average}
+                                            <?php } ?>
+                                        </td>
                                         <td class="taskOptions">{$row.score_accounts}</td>
                                         <td class="taskOptions">{$row.unscore_users}</td>
                                         <if condition="rolemenu(array('Inspect/satisfaction_detail'))">
-                                            <td class="taskOptions"><button onClick="javascript:show_detail({$row.account_id},{$row.monthly});" title="得分详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button></td>
+                                            <td class="taskOptions">
+                                                <?php if (date('Ym')==$yearMonth && ($row['unscore_users'] && in_array(date('d'),array(20,21,22,23,24)))){ ?>
+                                                    <button onClick="javascript:art_show_msg('评分完成后方可查看评分结果',2);" title="得分详情" class="btn btn-default btn-smsm"><i class="fa fa-search-plus"></i></button>
+                                                <?php }else{ ?>
+                                                    <button onClick="javascript:show_detail({$row.account_id},{$row.monthly});" title="得分详情" class="btn btn-info btn-smsm"><i class="fa fa-search-plus"></i></button>
+                                                <?php } ?>
+                                            </td>
                                         </if>
                                         <if condition="rolemenu(array('Inspect/satisfaction_info'))">
                                             <td class="taskOptions">

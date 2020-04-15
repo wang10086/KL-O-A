@@ -967,12 +967,12 @@ class InspectController extends BaseController{
     private function get_one_sattisfaction_average($info){
         $get_score                  = $info['AA'] + $info['BB'] + $info['CC'] + $info['DD'] + $info['EE'] + $info['FF']; //得分
         $sum_score                  = 0; //总分
-        if ($info['AA']) $sum_score += 5;
-        if ($info['BB']) $sum_score += 5;
-        if ($info['CC']) $sum_score += 5;
-        if ($info['DD']) $sum_score += 5;
-        if ($info['EE']) $sum_score += 5;
-        if ($info['FF']) $sum_score += 5;
+        if ($info['AA']) $sum_score += 10;
+        if ($info['BB']) $sum_score += 10;
+        if ($info['CC']) $sum_score += 10;
+        if ($info['DD']) $sum_score += 10;
+        if ($info['EE']) $sum_score += 10;
+        if ($info['FF']) $sum_score += 10;
         $average                    = (round($get_score/$sum_score,2)*100).'%';
         return $average;
     }

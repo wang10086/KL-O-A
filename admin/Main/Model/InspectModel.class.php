@@ -35,28 +35,28 @@ class InspectModel extends Model{
             $get_score_DD               += $v['DD'];
             $get_score_EE               += $v['EE'];
             $get_score_FF               += $v['FF'];
-            if($v['AA']){ $sum_score_AA += 5; $sum_score_total+= 5; }
-            if($v['BB']){ $sum_score_BB += 5; $sum_score_total+= 5; }
-            if($v['CC']){ $sum_score_CC += 5; $sum_score_total+= 5; }
-            if($v['DD']){ $sum_score_DD += 5; $sum_score_total+= 5; }
-            if($v['EE']){ $sum_score_EE += 5; $sum_score_total+= 5; }
-            if($v['FF']){ $sum_score_FF += 5; $sum_score_total+= 5; }
+            if($v['AA']){ $sum_score_AA += 10; $sum_score_total+= 10; }
+            if($v['BB']){ $sum_score_BB += 10; $sum_score_total+= 10; }
+            if($v['CC']){ $sum_score_CC += 10; $sum_score_total+= 10; }
+            if($v['DD']){ $sum_score_DD += 10; $sum_score_total+= 10; }
+            if($v['EE']){ $sum_score_EE += 10; $sum_score_total+= 10; }
+            if($v['FF']){ $sum_score_FF += 10; $sum_score_total+= 10; }
             $get_score_total            += $v['AA'] + $v['BB'] + $v['CC'] + $v['DD'] + $v['EE'] + $v['FF'];
         }
 
         foreach ($unscore_userids as $kk=>$vv){ //未评分部分,每项只得50%分数
-            if ($get_score_AA){ $get_score_AA += 2.5; $get_score_total += 2.5; } //得分
-            if ($get_score_BB){ $get_score_BB += 2.5; $get_score_total += 2.5; }
-            if ($get_score_CC){ $get_score_CC += 2.5; $get_score_total += 2.5; }
-            if ($get_score_DD){ $get_score_DD += 2.5; $get_score_total += 2.5; }
-            if ($get_score_EE){ $get_score_EE += 2.5; $get_score_total += 2.5; }
-            if ($get_score_FF){ $get_score_FF += 2.5; $get_score_total += 2.5; }
-            if ($sum_score_AA){ $sum_score_AA += 5;   $sum_score_total += 5; } //总分
-            if ($sum_score_BB){ $sum_score_BB += 5;   $sum_score_total += 5; }
-            if ($sum_score_CC){ $sum_score_CC += 5;   $sum_score_total += 5; }
-            if ($sum_score_DD){ $sum_score_DD += 5;   $sum_score_total += 5; }
-            if ($sum_score_EE){ $sum_score_EE += 5;   $sum_score_total += 5; }
-            if ($sum_score_FF){ $sum_score_FF += 5;   $sum_score_total += 5; }
+            if ($get_score_AA){ $get_score_AA += 5; $get_score_total += 5; } //得分
+            if ($get_score_BB){ $get_score_BB += 5; $get_score_total += 5; }
+            if ($get_score_CC){ $get_score_CC += 5; $get_score_total += 5; }
+            if ($get_score_DD){ $get_score_DD += 5; $get_score_total += 5; }
+            if ($get_score_EE){ $get_score_EE += 5; $get_score_total += 5; }
+            if ($get_score_FF){ $get_score_FF += 5; $get_score_total += 5; }
+            if ($sum_score_AA){ $sum_score_AA += 10;   $sum_score_total += 10; } //总分
+            if ($sum_score_BB){ $sum_score_BB += 10;   $sum_score_total += 10; }
+            if ($sum_score_CC){ $sum_score_CC += 10;   $sum_score_total += 10; }
+            if ($sum_score_DD){ $sum_score_DD += 10;   $sum_score_total += 10; }
+            if ($sum_score_EE){ $sum_score_EE += 10;   $sum_score_total += 10; }
+            if ($sum_score_FF){ $sum_score_FF += 10;   $sum_score_total += 10; }
         }
 
         $data                           = array();

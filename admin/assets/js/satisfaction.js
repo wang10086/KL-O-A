@@ -2,19 +2,65 @@
 function pingfen(id,score) {
     $('#'+id+'_num').val(score);
     $('#'+id).raty({
+        number: 10, //星星数量
         score: score ,
         click: function(score, evt) {
             //alert('ID: ' + $(this).attr('id') + "\nscore: " + score + "\nevent: " + evt.type)
             $('#'+id+'_num').val(score); //改变星星
-
             $('#'+id).parent('.score').next('.star_div').find('input').each(function (index,ele) {
                 var input_val = $(this).val();
-                if (input_val == score){
+                /*if (input_val == score){
                     $(this).attr('checked',true);
                     $(this).addClass('checked');
                 }else{
                     $(this).attr('checked',false);
                     $(this).removeClass('checked');
+                }*/
+                if (in_array(score, Array(1,2))){
+                    if (in_array(input_val, Array(1,2))){
+                        $(this).attr('checked',true);
+                        $(this).addClass('checked');
+                        $(this).val(score);
+                    }else{
+                        $(this).attr('checked',false);
+                        $(this).removeClass('checked');
+                    }
+                }else if (in_array(score, Array(3,4))){
+                    if (in_array(input_val, Array(3,4))){
+                        $(this).attr('checked',true);
+                        $(this).addClass('checked');
+                        $(this).val(score);
+                    }else{
+                        $(this).attr('checked',false);
+                        $(this).removeClass('checked');
+                    }
+                }else if (in_array(score, Array(5,6))){
+                    if (in_array(input_val, Array(5,6))){
+                        $(this).attr('checked',true);
+                        $(this).addClass('checked');
+                        $(this).val(score);
+                    }else{
+                        $(this).attr('checked',false);
+                        $(this).removeClass('checked');
+                    }
+                }else if (in_array(score, Array(7,8))){
+                    if (in_array(input_val, Array(7,8))){
+                        $(this).attr('checked',true);
+                        $(this).addClass('checked');
+                        $(this).val(score);
+                    }else{
+                        $(this).attr('checked',false);
+                        $(this).removeClass('checked');
+                    }
+                }else if (in_array(score, Array(9,10))){
+                    if (in_array(input_val, Array(9,10))){
+                        $(this).attr('checked',true);
+                        $(this).addClass('checked');
+                        $(this).val(score);
+                    }else{
+                        $(this).attr('checked',false);
+                        $(this).removeClass('checked');
+                    }
                 }
             });
         }
@@ -58,55 +104,55 @@ function change_score_content() {
                                 '<label>及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="态度">'+
                                 '<label>态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="品控公正性及合理性">'+
                                 '<label>品控公正性及合理性：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常公正合理</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;较公正合理</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不公正合理</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不公正合理</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常公正合理</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;较公正合理</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不公正合理</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不公正合理</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="流程优化有效性">'+
                                 '<label>流程优化有效性：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常有效</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;有效</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;无效</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;负效果</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常有效</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;有效</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;无效</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;负效果</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[EE]" value="培训与指导">'+
                                 '<label>培训与指导：</label>'+
                                 '<div class="demo score inline-block"><div id="EE"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -128,44 +174,44 @@ function change_score_content() {
                                             '<label>及时性：</label>'+
                                             '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[BB]" value="态度">'+
                                             '<label>态度：</label>'+
                                             '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[CC]" value="集中采购性价比">'+
                                             '<label>集中采购性价比：</label>'+
                                             '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;很高</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;高</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;低</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;很低</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;很高</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;高</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;低</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;很低</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[DD]" value="培训及指导">'+
                                             '<label>培训及指导：</label>'+
                                             '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>';
                                         var html = content + textarea;
                                         $('#satisfaction_content').html(html);
@@ -180,55 +226,55 @@ function change_score_content() {
                                             '<label>及时性：</label>'+
                                             '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[BB]" value="态度">'+
                                             '<label>态度：</label>'+
                                             '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[CC]" value="集中采购性价比">'+
                                             '<label>集中采购性价比：</label>'+
                                             '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;很高</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;高</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;低</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;很低</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;很高</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;高</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;低</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;很低</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[DD]" value="培训及指导">'+
                                             '<label>培训及指导：</label>'+
                                             '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[EE]" value="预算准确度">'+
                                             '<label>预算准确度：</label>'+
                                             '<div class="demo score inline-block"><div id="EE"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[EE] value="5">&nbsp;非常准确</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;准确</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[EE] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;不准确</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[EE] value="1">&nbsp;很不准确</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[EE] value="10">&nbsp;非常准确</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[EE] value="8">&nbsp;准确</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[EE] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;不准确</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;很不准确</span>'+
                                             '</div></div>';
                                         var html = content + textarea;
                                         $('#satisfaction_content').html(html);
@@ -246,66 +292,66 @@ function change_score_content() {
                                 '<label>工作及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="工作态度">'+
                                 '<label>工作态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="培训及指导">'+
                                 '<label>培训及指导：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="招聘人员符合度">'+
                                 '<label>招聘人员符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;很差</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[EE]" value="办公环境需求符合度">'+
                                 '<label>办公环境需求符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="EE"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[EE] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[EE] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[FF]" value="企业文化及氛围">'+
                                 '<label>企业文化及氛围：</label>'+
                                 '<div class="demo score inline-block"><div id="FF"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[FF] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[FF] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[FF] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[FF] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[FF] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[FF] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -320,44 +366,44 @@ function change_score_content() {
                                 '<label>对外销售资料发布：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="宣传及品牌建设">'+
                                 '<label>宣传及品牌建设：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="市场调研分析">'+
                                 '<label>市场调研分析：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="市场营销及推广">'+
                                 '<label>市场营销及推广：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -372,44 +418,44 @@ function change_score_content() {
                                 '<label>服务与支持：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="工作态度">'+
                                 '<label>工作态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="培训及指导">'+
                                 '<label>培训及指导：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="工作要求准确性">'+
                                 '<label>工作要求准确性：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常准确</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;准确</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不准确</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;多次反复</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常准确</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;准确</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不准确</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;多次反复</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -424,44 +470,44 @@ function change_score_content() {
                                 '<label>及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="态度">'+
                                 '<label>态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="培训及指导">'+
                                 '<label>培训及指导：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="宣传及文案需求符合度">'+
                                 '<label>宣传及文案需求符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;很差</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -476,44 +522,44 @@ function change_score_content() {
                                 '<label>及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="态度">'+
                                 '<label>态度：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="培训及指导">'+
                                 '<label>培训及指导：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="资源提供符合度">'+
                                 '<label>资源提供符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;很差</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -535,44 +581,44 @@ function change_score_content() {
                                             '<label>支撑服务及时性：</label>'+
                                             '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[BB]" value="支撑服务态度">'+
                                             '<label>支撑服务态度：</label>'+
                                             '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[CC]" value="培训及指导">'+
                                             '<label>培训及指导：</label>'+
                                             '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[DD]" value="标准化产品需求符合度">'+
                                             '<label>标准化产品需求符合度：</label>'+
                                             '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;符合</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常符合</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;符合</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不符合</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;很差</span>'+
                                             '</div></div>';
                                         var html = content + textarea;
                                         $('#satisfaction_content').html(html);
@@ -587,44 +633,44 @@ function change_score_content() {
                                             '<label>支撑服务及时性：</label>'+
                                             '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[BB]" value="支撑服务态度">'+
                                             '<label>支撑服务态度：</label>'+
                                             '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[CC]" value="培训及指导">'+
                                             '<label>培训及指导：</label>'+
                                             '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                             '</div></div>'+
                                             '<div class="form-group col-md-6">'+
                                             '<input type="hidden" name="data[DD]" value="产品研发符合度">'+
                                             '<label>产品研发符合度：</label>'+
                                             '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                             '<div class="form-control no-border star_div">'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;符合</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
-                                            '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常符合</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;符合</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不符合</span>&emsp;&emsp;'+
+                                            '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;很差</span>'+
                                             '</div></div>';
                                         var html = content + textarea;
                                         $('#satisfaction_content').html(html);
@@ -642,44 +688,44 @@ function change_score_content() {
                                 '<label>支撑服务质量：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="成本要素性价比">'+
                                 '<label>成本要素性价比：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="支撑服务及时性">'+
                                 '<label>支撑服务及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="产品需求符合度">'+
                                 '<label>产品需求符合度：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不符合</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;很差</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不符合</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;很差</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -694,33 +740,33 @@ function change_score_content() {
                                 '<label>资源对接及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="困难及问题协调效果">'+
                                 '<label>困难及问题协调效果：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="资源培训及辅导效果">'+
                                 '<label>资源培训及辅导效果：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -736,44 +782,44 @@ function change_score_content() {
                                 '<label>采购质量：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="采购价格">'+
                                 '<label>采购价格：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="及时性">'+
                                 '<label>及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="交接及问题处理">'+
                                 '<label>交接及问题处理：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);
@@ -788,44 +834,44 @@ function change_score_content() {
                                 '<label>产品中专业内容质量：</label>'+
                                 '<div class="demo score inline-block"><div id="AA"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[AA] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[AA] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[BB]" value="及时性">'+
                                 '<label>及时性：</label>'+
                                 '<div class="demo score inline-block"><div id="BB"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;较满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[BB] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="8">&nbsp;较满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[BB] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[CC]" value="服务态度">'+
                                 '<label>服务态度：</label>'+
                                 '<div class="demo score inline-block"><div id="CC"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[CC] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[CC] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>'+
                                 '<div class="form-group col-md-6">'+
                                 '<input type="hidden" name="data[DD]" value="专业培训支持">'+
                                 '<label>专业培训支持：</label>'+
                                 '<div class="demo score inline-block"><div id="DD"></div></div>'+
                                 '<div class="form-control no-border star_div">'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="5">&nbsp;非常满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="3">&nbsp;一般</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;不满意</span>&emsp;&emsp;'+
-                                '<span class="sco-star"><input type="radio" name=info[DD] value="1">&nbsp;非常不满意</span>'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="10">&nbsp;非常满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="8">&nbsp;满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="6">&nbsp;一般</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="4">&nbsp;不满意</span>&emsp;&emsp;'+
+                                '<span class="sco-star"><input type="radio" name=info[DD] value="2">&nbsp;非常不满意</span>'+
                                 '</div></div>';
                             var html = content + textarea;
                             $('#satisfaction_content').html(html);

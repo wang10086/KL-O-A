@@ -78,11 +78,11 @@
             pingfen('DD',res.DD);
             pingfen('EE',res.EE);
         }else{
-            pingfen('AA',5);
-            pingfen('BB',5);
-            pingfen('CC',5);
-            pingfen('DD',5);
-            pingfen('EE',5);
+            pingfen('AA',10);
+            pingfen('BB',10);
+            pingfen('CC',10);
+            pingfen('DD',10);
+            pingfen('EE',10);
         }
     }
 
@@ -98,10 +98,10 @@
             pingfen('CC',res.CC);
             pingfen('DD',res.DD);
         }else{
-            pingfen('AA',5);
-            pingfen('BB',5);
-            pingfen('CC',5);
-            pingfen('DD',5);
+            pingfen('AA',10);
+            pingfen('BB',10);
+            pingfen('CC',10);
+            pingfen('DD',10);
         }
     }
 
@@ -116,9 +116,9 @@
             pingfen('BB',res.BB);
             pingfen('CC',res.CC);
         }else{
-            pingfen('AA',5);
-            pingfen('BB',5);
-            pingfen('CC',5);
+            pingfen('AA',10);
+            pingfen('BB',10);
+            pingfen('CC',10);
         }
     }
 
@@ -137,12 +137,12 @@
             pingfen('EE',res.EE);
             pingfen('FF',res.FF);
         }else{
-            pingfen('AA',5);
-            pingfen('BB',5);
-            pingfen('CC',5);
-            pingfen('DD',5);
-            pingfen('EE',5);
-            pingfen('FF',5);
+            pingfen('AA',10);
+            pingfen('BB',10);
+            pingfen('CC',10);
+            pingfen('DD',10);
+            pingfen('EE',10);
+            pingfen('FF',10);
         }
     }
 
@@ -155,7 +155,7 @@
         var FF_num      = parseInt($('#FF_num').val());
         var content     = $('#content').val();
         var problem     = $('#problem').val();
-        var arr         = Array(1,2,3);
+        var arr         = Array(1,2,3,4,5);
         var AA_res      = in_array(AA_num,arr);
         var BB_res      = in_array(BB_num,arr);
         var CC_res      = in_array(CC_num,arr);
@@ -163,7 +163,7 @@
         var EE_res      = in_array(EE_num,arr);
         var FF_res      = in_array(FF_num,arr);
         if ((AA_res || BB_res || CC_res || DD_res || EE_res || FF_res) && (!content || !problem)){
-            art_show_msg('单项评分低于3分时,必须填写相关问题及改进意见',3);
+            art_show_msg('单项评分低于5分时,必须填写相关问题及改进意见',3);
             return false;
         }
 
@@ -184,8 +184,6 @@
         }
         return false;
     }
-
-
 </script>
 
 
