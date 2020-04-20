@@ -4000,13 +4000,17 @@ th{outline: none;}
 #payment{ padding:0 0px;}
 #payment .f_10{ width:10%; float:left; border-radius:0; padding-right:20px;}
 #payment .f_15{ width:15%; float:left; border-radius:0; padding-right:20px;}
+#payment .f_18{ width:18%; float:left; border-radius:0; padding-right:20px;}
 #payment .f_20{ width:20%; float:left; border-radius:0; padding-right:20px;}
+#payment .f_23{ width:23%; float:left; border-radius:0; padding-right:20px;}
 #payment .f_25{ width:25%; float:left; border-radius:0; padding-right:20px;}
 #payment .f_40{ width:40%; float:left;border-radius:0;padding-right:20px;}
 #payment .f_60{ width:60%; float:left;border-radius:0;padding-right:20px;}
 #payment .unitbox_10{ width:10%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_15{ width:15%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#payment .unitbox_18{ width:18%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_20{ width:20%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#payment .unitbox_23{ width:23%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_25{ width:25%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_40{ width:40%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_60{ width:60%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
@@ -4287,6 +4291,8 @@ th{outline: none;}
   color: #444;
 }
 
-.zpage-title{
-  margin-bottom: 20px; height: 40px; line-height: 40px; text-align: center; font-size: 24px; font-weight: 500; color: #0070c0;
-}
+.zpage-title{ margin-bottom: 20px; height: 40px; line-height: 40px; text-align: center; font-size: 24px; font-weight: 500; color: #0070c0; }
+.border-bottom-line{ font-size:14px; border-bottom:2px solid #dedede; padding-bottom:10px; }
+.user-box{ display: inline-block; width: 60px; text-align: center; height: 35px; line-height: 35px; border: 1px solid darkgray; margin: 0 10px 10px 0; }
+
+

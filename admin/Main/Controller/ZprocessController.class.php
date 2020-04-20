@@ -342,30 +342,70 @@ class ZprocessController extends BaseController{
     public function addNode(){
         $this->title('编辑节点');
         $db                     = M('process_node');
+        $time_db                = M('process_node_time');
         if (isset($_POST['dosubmint'])){
             $id                 = I('id',0);
             $info               = I('info');
+            $payment            = I('payment','');
+            $userids            = I('userids','');
             $info['title']      = trim($info['title']);
             $info['time_data']  = trim($info['time_data']);
             $info['OK_data']    = trim($info['OK_data']);
             $info['remark']     = trim($info['remark']);
             $info['input_time'] = NOW_TIME;
             $info['input_uid']  = cookie('userid');
+            $info['feedback_uids'] = $userids ? implode(',',$userids) : '';
+
             if (!$info['title']){ $this->error('类型标题不能为空'); }
             //if (!$info['blame_uid']){ $this->error('责任人信息错误'); }
             //if ($info['ok_feedback'] && !$info['blame_uid']){ $this->error('反馈至人员信息错误'); }
-            $res                = $id ? $db -> where(array('id'=>$id))->save($info) : $db->add($info);
-            $res ? $this->success('编辑成功',U('Zprocess/node')) : $this->error('数据保存失败');
+            $num                = 0;
+            if ($id){
+                $res            = $db -> where(array('id'=>$id))->save($info);
+            }else{
+                $res            = $db->add($info);
+                $id             = $res;
+            }
+            if ($res) $num++;
+
+            foreach ($payment as $v){ //保存完成时间点详情
+                $title                  = trim($v['title']);
+                if ($title){
+                    $data               = array();
+                    $data['nodeId']     = $id;
+                    $data['title']      = trim($v['title']);
+                    $data['st_month']   = $v['st_month'];
+                    $data['st_day']     = $v['st_day'];
+                    $data['et_month']   = $v['et_month'];
+                    $data['et_day']     = $v['et_day'];
+                    if ($v['reset_id']){
+                        $res            = $time_db->where(array('id'=>$v['reset_id']))->save($data);
+                        $del_id[]       = $v['reset_id'];
+                    }else{
+                        $res            = $time_db -> add($data);
+                        $del_id[]       = $res;
+                    }
+                    if ($res) $num++;
+                }
+            }
+            $res                        = $time_db -> where(array('nodeId'=>$id,'id'=>array('not in', $del_id)))->delete();
+            if ($res) $num++;
+            $num ? $this->success('编辑成功',U('Zprocess/node')) : $this->error('数据保存失败');
         }else{
             //人员名单关键字
-            $this->userkey      = get_username();
-            $id                 = I('id',0);
+            $this->userkey          = get_username();
+            $id                     = I('id',0);
             if ($id){
-                $list           = $db -> where(array('id'=>$id))->find();
-                $this->list     = $list;
-                $this->processIds = M('process')->where(array('status'=>array('neq','-1')))->getField('id,title',true);
+                $list               = $db -> where(array('id'=>$id))->find();
+                $this->list         = $list;
+                $this->processIds   = M('process')->where(array('status'=>array('neq','-1')))->getField('id,title',true);
+                $this->userIds      = $list['feedback_uids'] ? explode(',',$list['feedback_uids']) : '';
+                $this->userNames    = M('account')->where(array('id'=>array('in',$this->userIds)))->getField('nickname',true);
+                $this->timeLists    = M('process_node_time')->where(array('nodeId'=>$id))->select();
+
             }
-            $this->types        = M('process_type')->where(array('status'=>array('neq','-1')))->getField('id,title',true);
+            $this->types            = M('process_type')->where(array('status'=>array('neq','-1')))->getField('id,title',true);
+            $this->users            = M('account')->where(array('status'=>0,'id'=>array('gt',10),'nickname'=>array('notlike','%1')))->order('id asc')->field('id,nickname')->select();
             $this->display();
         }
     }
