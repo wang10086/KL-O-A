@@ -64,6 +64,9 @@
 
                                         <div class="form-group col-md-4 viwe">上传时间：{$list.create_time|date='Y-m-d H:i',###}</div>
                                         <div class="form-group col-md-4 viwe">计划结束时间：{$list.plan_time|date='Y-m-d H:i',###}</div>
+                                        <?php if ($list['year']){ ?>
+                                        <div class="form-group col-md-4 viwe">文件适用时间：{$list.year}年{$timeType[$list['timeType']]}</div>
+                                        <?php } ?>
 
                                         <div class="form-group col-md-12" style="margin-top:20px;">
                                             <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">文件说明</label>

@@ -43,6 +43,7 @@
                             <div class="form-group box-float-3">
                                 <label>文件类型</label>：
                                 <select class="form-control" name="info[type]" id="type">
+                                    <option value="">请选择文件类型</option>
                                     <foreach name="types" item="v">
                                         <option value="{$v.id}" <?php if ($list['type'] == $v['id']){ echo "selected"; }?>>{$v.title}</option>
                                     </foreach>
@@ -59,6 +60,26 @@
                                     <?php }else{ ?>
                                         <option class="form-control" value="">请先选择文件类型</option>
                                     <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group box-float-6" id="year">
+                                <label>文件适用年份</label>：
+                                <select class="form-control" name="info[year]">
+                                    <option value="">请选择</option>
+                                        <?php for ($i=date('Y'); $i <= date('Y')+2; $i++){ ?>
+                                            <option value="{$i}" <?php if ($list['year'] == $i){ echo "selected"; }?>>{$i}年</option>
+                                        <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group box-float-6" id="timeType">
+                                <label>文件适用周期</label>：
+                                <select class="form-control" name="info[timeType]">
+                                    <option value="">请选择</option>
+                                    <foreach name="timeType" key="k" item="v">
+                                        <option value="{$k}" <?php if ($list['timeType'] == $k){ echo "selected"; }?>>{$v}</option>
+                                    </foreach>
                                 </select>
                             </div>
 
@@ -189,6 +210,19 @@
     $(document).ready(function(e) {
         $('#write_user_div').hide();
         autocomplete_id('username','userid',keywords);
+
+        //文件适用年份
+        let year = {$list['year'] ? $list['year'] : 0};
+        let timeType = {$list['timeType'] ? $list['timeType'] : 0};
+        if (Number(year) > 0) {
+            $('#year').show();
+            $('#timeType').show();
+        }else {
+            $('#year').hide();
+            $('#timeType').hide();
+            $('select[name="info[year]"]').val('');
+            $('select[name="info[timeType]"]').val('');
+        }
 
         //主文件
         var uploader = new plupload.Uploader({
@@ -392,6 +426,7 @@
     //文件类型(二级联动)
     $('#type').change(function () {
         var type    = $(this).val();
+        check_file_type(type);
         if (type){
             $.ajax({
                 type : 'POST',
@@ -419,6 +454,19 @@
             art_show_msg('文件类型错误',2);
         }
     })
+
+    function check_file_type(type) {
+        let arr = [5]; //5=>发布/获取业务季销售资料
+        if (in_array(type,arr)) {
+            $('#year').show();
+            $('#timeType').show();
+        }else {
+            $('#year').hide();
+            $('#timeType').hide();
+            $('select[name="info[year]"]').val('');
+            $('select[name="info[timeType]"]').val('');
+        }
+    }
 
 
 </script>

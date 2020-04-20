@@ -48,6 +48,7 @@ class ApprovalController extends BaseController {
             $this->audit_users      = $audit_users;
             $this->fileTypes        = M('approval_file_type')->where(array('pid'=>$list['type']))->select();
         }
+        $this->timeType             = C('timeType');
         $this->userkey              = get_username();
         $this->types                = M('approval_file_type')->where(array('pid'=>0))->select();
         $this->display();
@@ -171,6 +172,7 @@ class ApprovalController extends BaseController {
         $this->audit_users                  = $this->get_audit_users($list['audit_uids']); //未审核人员信息
         $this->audited_users                = $this->get_audit_users($list['audited_uids']); //已审核人员信息
         $this->fileTypes                    = M('approval_file_type')->getField('id,title',true);
+        $this->timeType                     = C('timeType');
         $this->display();
     }
 
@@ -256,6 +258,8 @@ class ApprovalController extends BaseController {
                 $save['sfile_annex_ids']    = '';
                 $save['content']            = trim($info['content']);
                 $save['day']                = $day ? $day : 3;
+                $save['year']               = $info['year'];
+                $save['timeType']           = $info['timeType'];
                 $save['plan_time']          = strtotime(getAfterWorkDay($save['day']));
                 $save['audit_uids']         = $audit_uids;
                 $save['create_user']        = $info['create_user'];
