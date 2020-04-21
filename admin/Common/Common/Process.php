@@ -70,8 +70,9 @@ function process_node_to_log(){
 
                     //提前提醒
                     if ($v['before_remind'] == 1){
+                        $day                    = $v['day'] ? $v['day'] : 3;
                         $pro_status             = 2; //事前提醒
-                        $st_time                = $time1 + 3*24*3600; //默认提前3天提醒
+                        $st_time                = $time1 + $day*24*3600;
                         $et_time                = $time1;
                         $log_list               = get_process_log($v['processId'], $v['id'], $v['processTypeId'], $year, $vv['timeType'], $pro_status); //是否已生成记录
                         if (NOW_TIME > $st_time && NOW_TIME < $et_time && !$log_list){ //生成通知记录
