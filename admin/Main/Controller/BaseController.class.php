@@ -66,6 +66,7 @@ class BaseController extends Controller {
         $this->_no_read_audit_file      = $this->get_no_read_res(P::UNREAD_AUDIT_FILE); //文件流转
         $this->_no_read_GEC_transfer_   = $this->get_no_read_res(P::UNREAD_GEC_TRANSFER); //客户交接
         save_audit_file_stu(); //自动更新文件审核状态
+        process_node_to_log(); //流程节点自动生成相关提示信息
 
         $this->assign('_pagetitle_', $this->_pagetitle_);
 		$this->assign('_pagedesc_',  $this->_pagedesc_);
