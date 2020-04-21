@@ -13,23 +13,6 @@
         </ol>
     </section>
 
-    <style>
-        .padding0{padding: 0;}
-        .box-left-3{border-right: 1px solid #999; min-height: 800px;}
-        .box-left-title{height: 45px; line-height: 45px; background-color: #f5f5f5;}
-        .box-left-titsp{font-weight: 500; font-size: 20px; margin-left: 5px;}
-        .menu-title-lc{height: 40px; line-height: 40px; margin-bottom: 0; margin-left: 5px; }
-
-        .box-right-title{height: 80px; line-height: 80px;}
-        .box-right-fa{ font-size: 50px; color: #fff;  }
-        .box-right-tit-logo{float: left; height: 100%; width: 6%; display: inline-block;}
-        .box-right-tit-logo .faspan{display: inline-block; height: 57px; line-height: 57px; width: 57px; background-color: #9031af; padding: 3px; border-radius: 5px; margin: 12px 0 0 5px;}
-        .box-right-tit-d{float: right; height: 100%; width: 94%; }
-        .box-right-tit-dp{font-size: 22px; height: 40px; line-height: 40px; margin: 0 0 0 5px; }
-        .box-right-tit-dpd{ height: 30px; line-height: 30px; margin-left: 5px; margin-bottom: 15px; }
-        .box-right-tit-butd{float: right; padding-right: 20px; clear: both;}
-    </style>
-
     <section class="content padding0">
             <div class="col-md-12 padding0">
                 <div class="col-md-3 box-left-3 padding0">
@@ -88,7 +71,7 @@
                             <th width="60"></th>
                             <th width="">标题</th>
                             <th width="">节点类型</th>
-                            <th width="">创建人</th>
+                            <!--<th width="">创建人</th>-->
                             <th width="">创建时间</th>
                             <!--<th width="">状态</th>
                             <th width="">操作者</th>
@@ -99,9 +82,9 @@
                             <foreach name="lists" key="k" item="v">
                                 <tr class="userlist">
                                     <td></td>
-                                    <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}">{$v.title}</a></td>
+                                    <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}"></a>{$v.title}</td>
                                     <td>{$v.nodeTitle}</td>
-                                    <td> {$v.req_uname}</td>
+                                    <!--<td> {$v.req_uname}</td>-->
                                     <td>{$v.req_time|date='Y-m-d H:i:s',###}</td>
                                     <!--<td> {$v.}</td>
                                     <td></td>
@@ -127,7 +110,7 @@
 
         <div class="form-group col-md-12"></div>
         <div class="form-group col-md-12">
-            <label>请输入人员信息</label>
+            <label>请输入人员信息 <font color="#999">(点击匹配到的内容)</font> </label>
             <input type="text" name="user_name" class="form-control" id="user_name" />
             <input type="hidden" name="uid" class="form-control" id="user_id" />
         </div>
