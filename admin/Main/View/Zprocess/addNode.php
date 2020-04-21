@@ -110,12 +110,12 @@
                                         <P class="border-bottom-line"> 完成时点详情</P>
                                         <div class="form-group col-md-12" id="payment">
                                             <div class="userlist">
-                                                <div class="unitbox_23">完成时点说明</div>
-                                                <div class="unitbox_18">开始月份</div>
-                                                <div class="unitbox_18">开始日期</div>
-                                                <div class="unitbox_18">结束月份</div>
-                                                <div class="unitbox_18">结束日期</div>
-                                                <!--<div class="unitbox_25">备注</div>-->
+                                                <div class="unitbox_15">完成时点说明</div>
+                                                <div class="unitbox_15">开始月份</div>
+                                                <div class="unitbox_15">开始日期</div>
+                                                <div class="unitbox_15">结束月份</div>
+                                                <div class="unitbox_15">结束日期</div>
+                                                <div class="unitbox_20">备注</div>
                                             </div>
                                             <?php if($timeLists){ ?>
                                                 <foreach name="timeLists" key="kk" item="pp">
@@ -123,10 +123,16 @@
                                                         <span class="title"><?php echo $kk+1; ?></span>
                                                         <input type="hidden" name="payment[8888{$pp.id}][reset_id]" value="{$pp.id}">
 
-                                                        <div class="f_23">
-                                                            <input type="text" class="form-control" name="payment[8888{$pp.id}][title]" value="{$pp.title}">
+                                                        <div class="f_15">
+                                                            <!--<input type="text" class="form-control" name="payment[8888{$pp.id}][title]" value="{$pp.title}">-->
+                                                            <select class="form-control" name="payment[8888{$pp.id}][timeType]">
+                                                            <option value="">请选择</option>
+                                                            <?php foreach ($timeType as $tk =>$tv){ ?>
+                                                                <option value="{$tk}" <?php if ($pp['timeType'] == $tk) echo "selected"; ?>>{$tv}</option>
+                                                            <?php } ?>
+                                                            </select>
                                                         </div>
-                                                        <div class="f_18">
+                                                        <div class="f_15">
                                                             <select class="form-control" name="payment[8888{$pp.id}][st_month]">
                                                                 <option value="">请选择</option>
                                                                 <?php for ($i=1; $i<=12; $i++){ ?>
@@ -134,7 +140,7 @@
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <div class="f_18">
+                                                        <div class="f_15">
                                                             <select class="form-control" name="payment[8888{$pp.id}][st_day]">
                                                                 <option value="">请选择</option>
                                                                 <?php for ($i=1; $i<=31; $i++){ ?>
@@ -142,7 +148,7 @@
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <div class="f_18">
+                                                        <div class="f_15">
                                                             <select class="form-control" name="payment[8888{$pp.id}][et_month]">
                                                                 <option value="">请选择</option>
                                                                 <?php for ($i=1; $i<=12; $i++){ ?>
@@ -150,7 +156,7 @@
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <div class="f_18">
+                                                        <div class="f_15">
                                                             <select class="form-control" name="payment[8888{$pp.id}][et_day]">
                                                                 <option value="">请选择</option>
                                                                 <?php for ($i=1; $i<=31; $i++){ ?>
@@ -158,9 +164,9 @@
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
-                                                        <!--<div class="f_25">
-                                                            <input type="text" class="form-control" name="payment[8888{$pp.id}][remarks]" value="">
-                                                        </div>-->
+                                                        <div class="f_25">
+                                                            <input type="text" class="form-control" name="payment[8888{$pp.id}][remark]" value="{$pp.remark}">
+                                                        </div>
 
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
 
@@ -170,10 +176,17 @@
                                                 <div class="userlist" id="pretium_id">
                                                     <span class="title">1</span>
                                                     <!--<input type="hidden" name="payment[1][no]" class="payno" value="1">-->
-                                                    <div class="f_23">
-                                                        <input type="text" class="form-control" name="payment[1][title]" value="">
+                                                    <div class="f_15">
+                                                        <!--<input type="text" class="form-control" name="payment[1][title]" value="">-->
+                                                        <select class="form-control" name="payment[1][timeType]">
+                                                        <option value="">请选择</option>
+                                                        <?php foreach ($timeType as $tk =>$tv){ ?>
+                                                            <option value="{$tk}" <?php if ($pp['timeType'] == $tk) echo "selected"; ?>>{$tv}</option>
+                                                        <?php } ?>
+                                                        </select>
                                                     </div>
-                                                    <div class="f_18">
+
+                                                    <div class="f_15">
                                                         <select class="form-control" name="payment[1][st_month]">
                                                             <option value="">请选择</option>
                                                             <?php for ($i=1; $i<=12; $i++){ ?>
@@ -181,7 +194,7 @@
                                                             <?php } ?>
                                                         </select>
                                                     </div>
-                                                    <div class="f_18">
+                                                    <div class="f_15">
                                                         <select class="form-control" name="payment[1][st_day]">
                                                             <option value="">请选择</option>
                                                             <?php for ($i=1; $i<=31; $i++){ ?>
@@ -189,7 +202,7 @@
                                                             <?php } ?>
                                                         </select>
                                                     </div>
-                                                    <div class="f_18">
+                                                    <div class="f_15">
                                                         <select class="form-control" name="payment[1][et_month]">
                                                             <option value="">请选择</option>
                                                             <?php for ($i=1; $i<=12; $i++){ ?>
@@ -197,7 +210,7 @@
                                                             <?php } ?>
                                                         </select>
                                                     </div>
-                                                    <div class="f_18">
+                                                    <div class="f_15">
                                                         <select class="form-control" name="payment[1][et_day]">
                                                             <option value="">请选择</option>
                                                             <?php for ($i=1; $i<=31; $i++){ ?>
@@ -205,9 +218,9 @@
                                                             <?php } ?>
                                                         </select>
                                                     </div>
-                                                    <!--<div class="f_25">
-                                                        <input type="text" class="form-control" name="payment[1][remarks]" value="">
-                                                    </div>-->
+                                                    <div class="f_25">
+                                                        <input type="text" class="form-control" name="payment[1][remark]" value="">
+                                                    </div>
 
                                                     <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
                                                 </div>
@@ -314,11 +327,13 @@
         var html = '<div class="userlist" id="pretium_'+i+'">';
         html += '<span class="title"></span>';
         /*html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';*/
-        html += '<div class="f_23"><input type="text" class="form-control" name="payment['+i+'][title]" value=""> </div>';
-        html += '<div class="f_18"><select class="form-control" name="payment['+i+'][st_month]"> <option value="">请选择</option><?php for ($mm=1; $mm<=12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
-        html += '<div class="f_18"><select class="form-control" name="payment['+i+'][st_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?> <option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
-        html += '<div class="f_18"><select class="form-control" name="payment['+i+'][et_month]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
-        html += '<div class="f_18"><select class="form-control" name="payment['+i+'][et_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?><option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
+        /*html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][title]" value=""> </div>';*/
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][timeType]"> <option value="">请选择</option><?php foreach ($timeType as $tk =>$tv) { ?><option value="{$tk}">{$tv}</option><?php } ?></select></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][st_month]"> <option value="">请选择</option><?php for ($mm=1; $mm<=12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][st_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?> <option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][et_month]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
+        html += '<div class="f_15"><select class="form-control" name="payment['+i+'][et_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?><option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
+        html += '<div class="f_25"><input type="text" class="form-control" name="payment['+i+'][remark]" value=""> </div>';
         html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
         html += '</div>';
         $('#payment').append(html);

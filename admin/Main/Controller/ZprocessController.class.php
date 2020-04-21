@@ -369,15 +369,16 @@ class ZprocessController extends BaseController{
             if ($res) $num++;
 
             foreach ($payment as $v){ //保存完成时间点详情
-                $title                  = trim($v['title']);
-                if ($title){
+                $timeType               = $v['timeType'];
+                if ($timeType){
                     $data               = array();
                     $data['nodeId']     = $id;
-                    $data['title']      = trim($v['title']);
+                    $data['timeType']   = trim($v['timeType']);
                     $data['st_month']   = $v['st_month'];
                     $data['st_day']     = $v['st_day'];
                     $data['et_month']   = $v['et_month'];
                     $data['et_day']     = $v['et_day'];
+                    $data['remark']     = trim($v['remark']);
                     if ($v['reset_id']){
                         $res            = $time_db->where(array('id'=>$v['reset_id']))->save($data);
                         $del_id[]       = $v['reset_id'];
@@ -406,6 +407,7 @@ class ZprocessController extends BaseController{
             }
             $this->types            = M('process_type')->where(array('status'=>array('neq','-1')))->getField('id,title',true);
             $this->users            = M('account')->where(array('status'=>0,'id'=>array('gt',10),'nickname'=>array('notlike','%1')))->order('id asc')->field('id,nickname')->select();
+            $this->timeType         = C('timeType');
             $this->display();
         }
     }
