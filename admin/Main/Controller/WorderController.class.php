@@ -709,9 +709,7 @@ class WorderController extends BaseController{
             $db                 = M('worder');
             $info               = array();
             $info['plan_complete_time'] = strtotime($plan_complete_time);
-            //if (!in_array(cookie('userid'),array(1,11))){
-                $info['upd_num']= 1;
-           // }
+            $info['upd_num']    = 1;
             $res                = $db ->where(array('id'=>$id))->save($info);
             if ($res){
                 //工单操作记录

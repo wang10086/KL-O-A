@@ -12,7 +12,7 @@
 
         <!-- Main content -->
         <section class="content">
-        
+
             <div class="row"><!-- right column -->
                 <div class="col-md-12">
                      <div class="box box-warning" style="margin-top:15px;">
@@ -76,7 +76,7 @@
                                         <tr><td colspan="3">执行人完成工单回复：{$info.exe_complete_content}</td></tr>
                                     </if>
                                 </div>
-                                
+
                                 <div class="form-group col-md-12">
                                     <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;">相关文件</h2>
                                 </div>
@@ -119,7 +119,7 @@
                                 </div>
 
                             </div>
-                            
+
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->
                 </div><!--/.col (right) -->
@@ -235,7 +235,7 @@
 							<?php } ?>
 
                             <div class="form-group">&nbsp;</div>
-                                   
+
                         </div>
                     </div><!-- /.box -->
                     <?php } ?>
@@ -375,11 +375,11 @@
                 </div>
 
             </div>   <!-- /.row -->
-            
+
         </section><!-- /.content -->
-        
+
     </aside><!-- /.right-side -->
-			
+
   </div>
 </div>
 
@@ -456,12 +456,14 @@
             okValue: '提交',
             ok: function () {
                 this.iframe.contentWindow.gosubmint();
-                location.reload();
+                setTimeout(function(){
+                    parent.art.dialog.list["change"].close();
+                    location.reload();
+                }, 1500);
                 return false;
             },
             cancelValue:'取消',
-            cancel: function () {
-            }
+            cancel: function () {}
         });
     }
 </script>

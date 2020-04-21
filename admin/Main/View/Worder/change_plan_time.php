@@ -2,9 +2,9 @@
 		<script type="text/javascript">
         window.gosubmint= function(){
 			$('#myform').submit();
-		 } 
+		 }
         </script>
-       
+
         <section class="content">
             <div class="row">
                 <div class="form-group col-md-12">
@@ -22,17 +22,16 @@
                     <input type="hidden" name="oldTime" value="{$list.plan_complete_time}">
                     <div class="form-group box-float-12">
                         <label>计划完成时间</label>
-                        <input type="text" name="plan_complete_time" class="form-control inputdate" value="{$list.plan_complete_time|date='Y-m-d',###}" />
+                        <input type="text" name="plan_complete_time" class="form-control inputdatetime" value="{$list.plan_complete_time|date='Y-m-d H:i:s',###}" />
                     </div>
                 </form>
             </div>
         </section>
-        
+
 
 <include file="Index:footer" />
 
 <script type="text/javascript">
     var newjs   = "__HTML__/js/public.js";
-    console.log(newjs);
     reload_jsFile(newjs,'reload_public'); //重新加载public.js文件
 </script>
