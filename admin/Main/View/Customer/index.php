@@ -5,16 +5,6 @@
         <include file="Index:ZcontentHeaderFile" />
     </section>-->
 
-    <style>
-        .cus-div-left{ width: 60%; float: left; padding-right: 10px; }
-        .cus-div-right{ width: 40%; float: right; }
-        .cus-box{ width: 100%; margin-top: 5px; border-top:2px solid #eeeeee; min-height: 150px; }
-        .cus-box-title{ height: 55px; line-height: 55px; border-bottom: 1px solid #999; font-size: 22px; }
-        .cus-box-more{height: 30px; line-height: 30px; margin-top: 25px; float: right; font-size: 14px; color: #999;}
-        .cus-list{ height: 30px; line-height: 30px; padding-left: 3px; }
-        .cus-list-time{ display: inline-block; float: right; }
-    </style>
-
     <section class="content">
         <div class="row">
             <div class="col-md-12" style="overflow: hidden;">
