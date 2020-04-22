@@ -3999,6 +3999,7 @@ th{outline: none;}
 
 #payment{ padding:0 0px;}
 #payment .f_10{ width:10%; float:left; border-radius:0; padding-right:20px;}
+#payment .f_12{ width:12%; float:left; border-radius:0; padding-right:20px;}
 #payment .f_15{ width:15%; float:left; border-radius:0; padding-right:20px;}
 #payment .f_18{ width:18%; float:left; border-radius:0; padding-right:20px;}
 #payment .f_20{ width:20%; float:left; border-radius:0; padding-right:20px;}
@@ -4007,6 +4008,7 @@ th{outline: none;}
 #payment .f_40{ width:40%; float:left;border-radius:0;padding-right:20px;}
 #payment .f_60{ width:60%; float:left;border-radius:0;padding-right:20px;}
 #payment .unitbox_10{ width:10%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#payment .unitbox_12{ width:12%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_15{ width:15%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_18{ width:18%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
 #payment .unitbox_20{ width:20%;float:left; clear:none; border:none; padding:0; padding-right:20px;}

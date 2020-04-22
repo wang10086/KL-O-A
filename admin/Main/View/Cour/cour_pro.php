@@ -17,98 +17,238 @@
 
                             <include file="Cour:cour_navigate" />
 
-                            <!--<div class="box box-warning mt20">
+                            <div class="box box-success mt20">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
-                                    <div class="box-tools pull-right">
-                                        <if condition="rolemenu(array('Op/plans'))">
-                                        <a href="{:U('')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增培训计划</a>
-                                        </if>
-                                    </div>
-                                </div>
-
+                                </div><!-- /.box-header -->
                                 <div class="box-body">
-                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
-                                    <tr role="row" class="orders" >
-                                        <th class="sorting" width="60" data="">编号</th>
-                                        <th class="sorting" data="">培训标题</th>
-                                        <th class="sorting" data="">计划时间</th>
-                                        <th class="sorting" data="">培训负责人</th>
-                                        <th class="sorting" data="">培训类型</th>
-                                        <th class="sorting" data="">培训对象</th>
-                                        <th class="sorting" data="">培训费用(元)</th>
-                                        <th class="sorting" data="">培训方案(按钮,点击查看方案)</th>
-                                        <if condition="rolemenu(array('Op/plans_info'))">
-                                        <th width="40" class="taskOptions">编辑</th>
-                                        </if>
+                                    <div class="content">
+                                        <div class="form-group col-md-12">
+                                            <label>培训标题：</label><input type="text" name="info[title]" class="form-control" value="{$list.title}" required />
+                                        </div>
 
-                                        <if condition="rolemenu(array('Op/delpro'))">
-                                        <th width="40" class="taskOptions">删除</th>
-                                        </if>
-                                    </tr>
-                                    <foreach name="lists" item="row">
-                                    <tr>
-                                        <td>{$row.op_id}</td>
-                                        <td>{$row.group_id}<?php /*if ($row['has_qrcode']){ echo "<i class='fa  fa-qrcode' title='获取满意度二维码' style='color:#3CF; margin-left:8px; cursor:pointer;' onClick=\"get_qrcode(`/index.php?m=Main&c=Op&a=qrcode&opid=$row[op_id]`)\"></i>"; } */?></td>
-                                        <td><div class="tdbox_long"><a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a></div></td>
-                                        <td>{$row.number}人</td>
-                                        <td><?php /*echo $row['dep_time'] ? date('Y-m-d',$row['dep_time']) : "<font color='#999'>$row[departure]</font>"; */?></td>
-                                        <td>{$row.days}天</td>
-                                        <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.destination}</div></td>
-                                        <td><div class="tdbox_long" style="width:80px" title="<?php /*echo $kinds[$row['kind']]; */?>"><?php /*echo $kinds[$row['kind']]; */?></div></td>
-                                        <if condition="rolemenu(array('Op/plans_follow'))">
-                                        <td class="taskOptions">
-                                        <a href="{:U('Op/plans_follow',array('opid'=>$row['op_id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
-                                        </td>
-                                        </if>
-                                        <if condition="rolemenu(array('Op/delpro'))">
-                                        <td class="taskOptions">
-                                        <button onClick="javascript:has_jiekuan('{$row.op_id}','{$row.id}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
-                                        </td>
-                                        </if>
-                                    </tr>
-                                    </foreach>
-                                </table>
-                                </div>
+                                        <div class="form-group col-md-4">
+                                            <label>计划时间：</label><input type="text" name="info[time]" class="form-control inputdate" value="{$list.time}" required />
+                                        </div>
 
-                                 <div class="box-footer clearfix">
-                                	<div class="pagestyle">{$pages}</div>
-                                </div>
-                            </div>-->
+                                        <!--<div class="form-group col-md-4">
+                                        <label>所属流程：</label>
+                                        <select  class="form-control"  name="info[processId]" id="processId"  required>
+                                            <option value="" selected disabled>请先选择流程类型</option>
+                                            <foreach name="processIds" key="k" item="v">
+                                                <option value="{$k}" <?php /*if ($list['processId'] == $k) echo "selected"; */?>>{$v}</option>
+                                            </foreach>
+                                        </select>
+                                    </div>-->
 
+                                        <div class="form-group col-md-4">
+                                            <label>培训负责人：</label><font color="#999">(点击匹配到的人员)</font>
+                                            <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="培训负责人" id="blame_name" />
+                                            <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>培训类型：</label><input type="text" name="info[day]" class="form-control" value="{$list.day}" required />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>培训对象：</label><input type="text" name="info[time_data]" class="form-control" value="{$list.time_data}" required />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>培训费用：</label><input type="text" name="info[OK_data]" class="form-control" value="{$list.OK_data}" required />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>培训方案：</label>
+                                            <select  class="form-control"  name="info[before_remind]"  required>
+                                                <option value=""></option>
+                                                <!--<option value="1">提醒</option>
+                                                <option value="0">不提醒</option>-->
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group col-md-12"></div>
+
+                                        <div class="form-group col-md-12">
+                                            <!--<P class="border-bottom-line"> 完成时点详情</P>-->
+                                            <div class="form-group col-md-12" id="payment">
+                                                <div class="userlist">
+                                                    <div class="unitbox_12">培训时间</div>
+                                                    <div class="unitbox_12">培训地点</div>
+                                                    <div class="unitbox_12">培训对象</div>
+                                                    <div class="unitbox_12">培训人</div>
+                                                    <div class="unitbox_23">培训内容</div>
+                                                    <div class="unitbox_12">培训时长</div>
+                                                    <div class="unitbox_12">培训课件</div>
+                                                </div>
+                                                <?php if($timeLists){ ?>
+                                                    <foreach name="timeLists" key="kk" item="pp">
+                                                        <div class="userlist" id="pretium_8888{$pp.id}">
+                                                            <span class="title"><?php echo $kk+1; ?></span>
+                                                            <input type="hidden" name="payment[8888{$pp.id}][reset_id]" value="{$pp.id}">
+
+                                                            <div class="f_12">
+                                                                <!--<input type="text" class="form-control" name="payment[8888{$pp.id}][title]" value="{$pp.title}">-->
+                                                                <select class="form-control" name="payment[8888{$pp.id}][timeType]">
+                                                                    <option value="">请选择</option>
+                                                                    <?php foreach ($timeType as $tk =>$tv){ ?>
+                                                                        <option value="{$tk}" <?php if ($pp['timeType'] == $tk) echo "selected"; ?>>{$tv}</option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="f_12">
+                                                                <select class="form-control" name="payment[8888{$pp.id}][st_month]">
+                                                                    <option value="">请选择</option>
+                                                                    <?php for ($i=1; $i<=12; $i++){ ?>
+                                                                        <option value="{$i}" <?php if ($pp['st_month'] == $i) echo "selected"; ?>>{$i}月</option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="f_12">
+                                                                <select class="form-control" name="payment[8888{$pp.id}][st_day]">
+                                                                    <option value="">请选择</option>
+                                                                    <?php for ($i=1; $i<=31; $i++){ ?>
+                                                                        <option value="{$i}" <?php if ($pp['st_day'] == $i) echo "selected"; ?>>{$i}日</option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="f_12">
+                                                                <select class="form-control" name="payment[8888{$pp.id}][et_month]">
+                                                                    <option value="">请选择</option>
+                                                                    <?php for ($i=1; $i<=12; $i++){ ?>
+                                                                        <option value="{$i}" <?php if ($pp['et_month'] == $i) echo "selected"; ?>>{$i}月</option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="f_12">
+                                                                <select class="form-control" name="payment[8888{$pp.id}][et_day]">
+                                                                    <option value="">请选择</option>
+                                                                    <?php for ($i=1; $i<=31; $i++){ ?>
+                                                                        <option value="{$i}" <?php if ($pp['et_day'] == $i) echo "selected"; ?>>{$i}日</option>
+                                                                    <?php } ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="f_25">
+                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][remark]" value="{$pp.remark}">
+                                                            </div>
+
+                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
+
+                                                        </div>
+                                                    </foreach>
+                                                <?php }else{ ?>
+                                                    <div class="userlist" id="pretium_id">
+                                                        <span class="title">1</span>
+                                                        <!--<input type="hidden" name="payment[1][no]" class="payno" value="1">-->
+                                                        <div class="f_12">
+                                                            <input type="text" class="form-control inputdate" name="payment[1][time]" value="">
+                                                        </div>
+
+                                                        <div class="f_12">
+                                                            <input type="text" class="form-control" name="payment[1][addr]" value="">
+                                                        </div>
+
+                                                        <div class="f_12">
+                                                            <input type="text" class="form-control" name="payment[1][obj]" value="">
+                                                        </div>
+                                                        <div class="f_12">
+                                                            <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" id="blame_name" />
+                                                            <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
+                                                        </div>
+                                                        <div class="f_23">
+                                                            <input type="text" class="form-control" name="payment[1][content]" value="">
+                                                            <!--<select class="form-control" name="payment[1][et_day]">
+                                                            <option value="">请选择</option>
+                                                            <?php /*for ($i=1; $i<=31; $i++){ */?>
+                                                                <option value="{$i}">{$i}日</option>
+                                                            <?php /*} */?>
+                                                        </select>-->
+                                                        </div>
+                                                        <div class="f_12">
+                                                            <input type="text" class="form-control" name="payment[1][long]" value="">
+                                                        </div>
+
+                                                        <div class="f_12">
+                                                            <input type="text" class="form-control" name="payment[1][pro]" value="">
+                                                        </div>
+
+                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                            <div id="payment_val">1</div>
+                                            <div class="form-group col-md-12" id="useraddbtns">
+                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_payment()"><i class="fa fa-fw fa-plus"></i> 增加时点数据</a>
+                                            </div>
+                                        </div>
+
+                                        <div id="formsbtn">
+                                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                        </div>
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div>
                         </div>
                      </div>
 
                 </section>
             </aside>
 
-
-            <!--<div id="searchtext">
-                <form action="" method="get" id="searchform">
-                <input type="hidden" name="m" value="Main">
-                <input type="hidden" name="c" value="Op">
-                <input type="hidden" name="a" value="index">
-                <input type="hidden" name="pin" value="{$pin}">
-
-                <div class="form-group col-md-12">
-                    <input type="text" class="form-control" name="title" placeholder="项目名称">
-                </div>
-
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="id" placeholder="编号">
-                </div>
-
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="oid" placeholder="团号">
-                </div>
-
-                 <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="dest" placeholder="目的地">
-                </div>
-
-                </form>
-            </div>-->
-
 <include file="Index:footer2" />
+
+<script type="text/javascript">
+    const keywords = <?php echo $userkey; ?>;
+    $(document).ready(function(e){
+        autocomplete_id('blame_name','blame_uid',keywords);
+    })
+
+    //编号
+    function orderno(){
+        $('#payment').find('.title').each(function(index, element) {
+            $(this).text(parseInt(index)+1);
+        });
+        $('#payment').find('.payno').each(function(index, element) {
+            $(this).val(parseInt(index)+1);
+        });
+    }
+
+    //移除
+    function delbox(obj){
+        $('#'+obj).remove();
+        orderno();
+    }
+
+    //新增
+    function add_payment(){
+        var i = parseInt($('#payment_val').text())+1;
+
+        var html = '<div class="userlist" id="pretium_'+i+'">';
+        html += '<span class="title"></span>';
+        /*html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';*/
+        /*html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][title]" value=""> </div>';*/
+        /*html += '<div class="f_12"><select class="form-control" name="payment['+i+'][timeType]"> <option value="">请选择</option><?php foreach ($timeType as $tk =>$tv) { ?><option value="{$tk}">{$tv}</option><?php } ?></select></div>';
+        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][st_month]"> <option value="">请选择</option><?php for ($mm=1; $mm<=12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
+        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][st_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?> <option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
+        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][et_month]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
+        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][et_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?><option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
+        html += '<div class="f_25"><input type="text" class="form-control" name="payment['+i+'][remark]" value=""> </div>';
+        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
+        html += '</div>';*/
+
+        html += '<div class="f_12"><input type="text" class="form-control inputdate" name="payment['+i+'][time]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][addr]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][obj]" value=""></div>';
+        html += '<div class="f_12"><input type="text" name="info[blame_name]" value="{$list[\'blame_name\']}" class="form-control" id="blame_name" /><input type="hidden" name="info[blame_uid]" value="{$list[\'blame_uid\']}" class="form-control" id="blame_uid" /></div>';
+        html += '<div class="f_23"><input type="text" class="form-control" name="payment['+i+'][content]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][long]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][pro]" value=""></div>';
+        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_\'+i+\')">删除</a>';
+        $('#payment').append(html);
+        $('#payment_val').html(i);
+        orderno();
+        relaydate();
+    }
+</script>
 
 

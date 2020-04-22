@@ -390,9 +390,17 @@ class CourController extends BaseController {
 
 	//培训计划
     public function courPlan(){
-	    $this->title('公司培训');
+	    $this->title('培训计划');
 
 	    $this->display('cour_plan');
+    }
+
+    public function add_plan(){
+	    $this->title('编辑培训计划');
+
+        //人员名单关键字
+        $this->userkey          = get_username();
+	    $this->display();
     }
 
     //培训需求
@@ -406,6 +414,8 @@ class CourController extends BaseController {
     public function courPro(){
         $this->title('培训方案');
 
+        //人员名单关键字
+        $this->userkey          = get_username();
         $this->display('cour_pro');
     }
 
