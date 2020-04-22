@@ -2021,6 +2021,7 @@ class ProductController extends BaseController {
     public function public_view(){
 
 
+        $this->display();
     }
 
 }
