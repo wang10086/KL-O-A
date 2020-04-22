@@ -699,7 +699,7 @@
 <!--                        </li>-->
 <!--                        </if>-->
 
-                        <if condition="rolemenu(array('Cour/courlist','Cour/courtype','Cour/pptlist'))">
+                        <if condition="rolemenu(array('Cour/courPlan','Cour/courNeed','Cour/courPro','Cour/courRecord','Cour/courlist','Cour/courtype','Cour/pptlist'))">
                             <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">
                                 <a href="javascript:;">
                                     <i class="fa fa-file-text"></i>
@@ -707,6 +707,10 @@
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </a>
                                 <ul class="treeview-menu">
+                                    <if condition="rolemenu(array('Cour/courPlan','Cour/courNeed','Cour/courPro','Cour/courRecord'))">
+                                        <li><a href="{:U('Cour/courPlan')}"><i class="fa fa-angle-right"></i> 公司培训</a></li>
+                                    </if>
+
                                     <if condition="rolemenu(array('Cour/courlist'))">
                                         <li><a href="{:U('Cour/courlist')}"><i class="fa fa-angle-right"></i> 培训课件</a></li>
                                     </if>
