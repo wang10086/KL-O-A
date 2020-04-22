@@ -23,52 +23,54 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <div class="form-group col-md-12">
-                                            <label>培训标题：</label><input type="text" name="info[title]" class="form-control" value="{$list.title}" required />
+                                        <div class="form-group col-md-6">
+                                            <label>培训标题：</label><!--<input type="text" name="info[title]" class="form-control" value="{$list.title}" required />-->
+                                            <select class="form-control" name="">
+                                                <option value=""></option>
+                                            </select>
                                         </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label>计划时间：</label><input type="text" name="info[time]" class="form-control inputdate" value="{$list.time}" required />
-                                        </div>
-
-                                        <!--<div class="form-group col-md-4">
-                                        <label>所属流程：</label>
-                                        <select  class="form-control"  name="info[processId]" id="processId"  required>
-                                            <option value="" selected disabled>请先选择流程类型</option>
-                                            <foreach name="processIds" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($list['processId'] == $k) echo "selected"; */?>>{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>-->
-
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-6">
                                             <label>培训负责人：</label><font color="#999">(点击匹配到的人员)</font>
                                             <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="培训负责人" id="blame_name" />
                                             <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
                                         </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label>培训类型：</label><input type="text" name="info[day]" class="form-control" value="{$list.day}" required />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label>培训对象：</label><input type="text" name="info[time_data]" class="form-control" value="{$list.time_data}" required />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label>培训费用：</label><input type="text" name="info[OK_data]" class="form-control" value="{$list.OK_data}" required />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label>培训方案：</label>
-                                            <select  class="form-control"  name="info[before_remind]"  required>
+                                        <div class="form-group col-md-6">
+                                            <label>培训类型：</label>
+                                            <select class="form-control" name="">
                                                 <option value=""></option>
-                                                <!--<option value="1">提醒</option>
-                                                <option value="0">不提醒</option>-->
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-md-12"></div>
+                                        <div class="form-group col-md-6">
+                                            <label>类型详情：</label>
+                                            <select class="form-control" name="">
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+
+                                        <!--<div class="form-group col-md-6">
+                                            <p><label>是否产生培训费用</label></p>
+                                            <input type="radio" name="info[standard]" value="1" > &#8194;是 &#12288;
+                                            <input type="radio" name="info[standard]" value="2" checked> &#8194;否
+                                        </div>-->
+
+                                        <div class="form-group col-md-6 ">
+                                            <label>是否产生培训费用</label> &emsp;
+                                            <input type="radio" name="need_worder_or_not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                            <input type="radio" name="need_worder_or_not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
+                                        </div>
+
+                                        <div class="form-group col-md-6 ">
+                                            <label>是否需要人资综合部的协助</label> &emsp;
+                                            <input type="radio" name="need_worder_or_not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                            <input type="radio" name="need_worder_or_not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>培训目的：</label><input type="text" name="info[OK_data]" class="form-control" value="{$list.OK_data}" required />
+                                        </div>
 
                                         <div class="form-group col-md-12">
                                             <!--<P class="border-bottom-line"> 完成时点详情</P>-->
@@ -226,16 +228,6 @@
         var html = '<div class="userlist" id="pretium_'+i+'">';
         html += '<span class="title"></span>';
         /*html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';*/
-        /*html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][title]" value=""> </div>';*/
-        /*html += '<div class="f_12"><select class="form-control" name="payment['+i+'][timeType]"> <option value="">请选择</option><?php foreach ($timeType as $tk =>$tv) { ?><option value="{$tk}">{$tv}</option><?php } ?></select></div>';
-        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][st_month]"> <option value="">请选择</option><?php for ($mm=1; $mm<=12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
-        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][st_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?> <option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
-        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][et_month]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 12; $mm++){ ?><option value="{$mm}">{$mm}月</option><?php } ?></select></div>';
-        html += '<div class="f_12"><select class="form-control" name="payment['+i+'][et_day]"><option value="">请选择</option><?php for ($mm = 1; $mm <= 31; $mm++){ ?><option value="{$mm}">{$mm}日</option><?php } ?></select></div>';
-        html += '<div class="f_25"><input type="text" class="form-control" name="payment['+i+'][remark]" value=""> </div>';
-        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_'+i+'\')">删除</a>';
-        html += '</div>';*/
-
         html += '<div class="f_12"><input type="text" class="form-control inputdate" name="payment['+i+'][time]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][addr]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][obj]" value=""></div>';
