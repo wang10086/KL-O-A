@@ -96,7 +96,8 @@
                         <li class="treeview {:on('Product')} {:on('Project')} {:on('Project/lession')} {:on('Project/fields')} {:on('Project/types')}">
                             <a href="javascript:;">
                                 <i class="fa fa-globe"></i>
-                                <span onclick="window.location.href = '{:U('Product/public_view')}'">产品管理</span>
+                                <span>产品管理</span>
+                                <!--<span onclick="window.location.href = '{:U('Product/public_view')}'">产品管理</span>-->
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">

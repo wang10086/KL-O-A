@@ -2017,4 +2017,10 @@ class ProductController extends BaseController {
         }
     }
 
+    //门户页面
+    public function public_view(){
+
+
+    }
+
 }
