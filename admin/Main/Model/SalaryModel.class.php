@@ -424,7 +424,12 @@ class SalaryModel extends Model
             $other                          = $salary_subsidy_list['foreign_subsidies']+$salary_subsidy_list['computer_subsidy'] + $other_income['income_money'];
             $data[$k]['Other']              = $other?$other:'0.00'; //其他补款(外地补贴+电脑补贴+其他收入变动(补差额))
             //应发工资 = (基本工资 - 考勤扣款) + (绩效工资 - 绩效增减) + 业绩提成 + 带团补助 + 奖金 + 年终奖 + 住房补贴 + 其他补款;
-            $data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + ($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
+            //4月份发绩效工资40%,5月份发60%, 6月份发80%, 7月份发100% , 7月份删除下面一行 , 恢复下面一行
+            /*******************start**********************/
+            $data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + (($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) * 0.4) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
+            /********************end***********************/
+            //$data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + ($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
+
             $salary_insurance_list          = M('salary_insurance')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //五险一金
             $data[$k]['insurance_id']       = $salary_insurance_list['id']?$salary_insurance_list['id']:'0';
             $data[$k]['medical_care']       = round(($salary_insurance_list['medical_care_base']*$salary_insurance_list['medical_care_ratio'])+ $salary_insurance_list['big_price'],2); //医疗保险个人
@@ -578,7 +583,7 @@ class SalaryModel extends Model
 
         //2020年2、3月份不发绩效工资，4月份删除以下内容
         /*****************start******************/
-        $f      = -100;
+        //$f      = -100;
         /*******************end****************/
 
         $balance1                           = round(($money/$branch*$f),2); //绩效工资余额
