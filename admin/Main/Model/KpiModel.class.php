@@ -340,7 +340,7 @@ class KpiModel extends Model
         $data['quarter_target']     = $quarter_target; //本季度业绩目标
         $data['year_target']        = $year_target; //累计业绩目标
         $data['quarter_profit']     = $quarter_profit; //本季度完成业绩
-        $data['year_profit']        = $year_profit; //年初累计至本季度末完成业绩
+        $data['year_profit']        = $year == 2020 ? $year_profit+29293.46 :$year_profit; //年初累计至本季度末完成业绩
         $data['sum_yj_royalty']     = $data['year_target'] ? (round($data['year_profit']/$data['year_target'],2) - 1) * 0.6 * $salary : 0; //累计业绩贡献奖金 = (年初累计至本季度末完成业绩/累计业绩目标 -1) * 60% * 本人岗位薪酬标准
         $data['paid_yj_royalty']    = $this->get_payoff_quarterRoyalty($userid, $year, 'AA_num');; //已发业绩贡献奖金
         $data['quarter_should_yj_royalty'] = ($data['sum_yj_royalty'] - $data['paid_yj_royalty']) > 0 ? ($data['sum_yj_royalty'] - $data['paid_yj_royalty']) : 0; //本季度应发业绩贡献奖金
