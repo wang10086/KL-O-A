@@ -1,5 +1,7 @@
 <?php
 namespace Main\Controller;
+//use Think\Controller;
+use Think\Upload;
 use Sys\P;
 
 ulib('Page');
@@ -505,5 +507,108 @@ class FilesController extends BaseController {
         $data['num']                = $num;
         $data['msg']                = $msg;
         $this->ajaxReturn($data);
+    }
+
+    //文件审批
+    public function audit_list(){
+        $this->title('文件审批');
+
+        $db                     = M('process_files');
+        $pagecount              = $db->count();
+        $page                   = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages            = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->lists            = $db->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+
+        $this->status           = array(
+            0                   => "<span>未审核</span>",
+            1                   => "<span class='green'>审核通过</span>",
+            2                   => "<span class='red'>审核不通过</span>",
+        );
+        $this->display();
+    }
+
+    //新增待审批文件
+    public function audit_add(){
+        $this->title('新增文件');
+
+        $id                         = I('id',0);
+        if ($id) {
+            $db                     = M('process_files');
+            $list                   = $db->where(array('id'=>$id))->find();
+            $this->row              = $list;
+            $this->typeInfo         = M('approval_file_type')->where(array('pid'=>$list['type']))->select();
+            $file                   = M('attachment')->where(array('id'=>$list['atta_id']))->find();
+            $file['newFileName']    = $list['filename'];
+            $this->file             = $file;
+        }
+        $this->timeType             = C('timeType');
+        $this->userkey              = get_username();
+        //$this->types                = M('approval_file_type')->where(array('pid'=>0))->select();
+        $this->types                = M('approval_file_type')->where(array('pid'=>0,id=>array('gt',1)))->select();
+
+
+        $this->display();
+    }
+
+    //详情
+    public function audit_detail(){
+        
+    }
+
+    public function public_save(){
+        $saveType                   = I('saveType');
+        $num                        = 0;
+        if (isset($_POST['dosubmint'])){
+            if ($saveType == 1){
+                $db                     = M('process_files');
+                $id                     = I('id',0);
+                $info                   = I('info');
+                $newname                = I('newname',array());
+                $fileurl                = I('fileurl');
+                $fileNum                = count($newname);
+                $returnMsg              = array();
+                $returnMsg['num']       = $num;
+                if (!$info['audit_user_id']){ $msg = '文件审核人员信息错误'; $returnMsg['msg'] = $msg; $this->ajaxReturn($returnMsg); }
+                if ($fileNum < 1){ $msg = '请至少上传一个文件'; $returnMsg['msg'] = $msg; $this->ajaxReturn($returnMsg); }
+                if ($fileNum > 1){ $msg = '请上传一个文件'; $returnMsg['msg'] = $msg; $this->ajaxReturn($returnMsg); }
+                if (!$info['type'] || !$info['typeInfo']){ $msg = '文件类型信息错误'; $returnMsg['msg'] = $msg; $this->ajaxReturn($returnMsg); }
+                $data                   = array();
+                $data['type']           = $info['type'];
+                $data['typeInfo']       = $info['typeInfo'];
+                $data['year']           = $info['year'];
+                $data['timeType']       = $info['timeType'];
+                $data['content']        = trim($info['content']);
+                $data['create_time']    = NOW_TIME;
+                $data['create_user_name'] = session('nickname');
+                $data['create_user_id'] = session('userid');
+                $data['audit_user_id']  = $info['audit_user_id'];
+                $data['audit_user_name']= $info['audit_user_name'];
+                foreach ($newname as $k=>$v){
+                    $data['filename']   = trim($v);
+                    $data['filepath']   = $fileurl[$k];
+                    $data['atta_id']    = $k;
+                    if ($id){
+                        $res            = $db->where(array('id'=>$id))->save($data);
+                    }else{
+                        $res            = $db->add($data);
+                        $id             = $res;
+                    }
+                }
+
+                if ($res){ //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.session('rolename').'--'.session('nickname').']的文件待审核!';
+                    $content = '文件名称:$data[\'filename\']';
+                    $url     = U('Files/',array('id'=>$id));
+                    $user    = '['.$data['audit_user_id'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+                }
+                if ($res) $num++;
+                $msg                    = $num > 0 ? '保存成功' : '保存失败';
+                $returnMsg['num']       = $num;
+                $returnMsg['msg']       = $msg;
+                $this->ajaxReturn($returnMsg);
+            }
+        }
     }
 }

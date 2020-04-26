@@ -7,7 +7,7 @@ ulib('Page');
 use Sys\Page;
 
 class ApprovalController extends BaseController {
-    protected $_pagetitle_ = '文件审批';
+    protected $_pagetitle_ = '文件流转';
 
     public function index(){
         $this->title('文件列表');
@@ -50,7 +50,8 @@ class ApprovalController extends BaseController {
         }
         $this->timeType             = C('timeType');
         $this->userkey              = get_username();
-        $this->types                = M('approval_file_type')->where(array('pid'=>0))->select();
+        //$this->types                = M('approval_file_type')->where(array('pid'=>0))->select();
+        $this->types                = M('approval_file_type')->where(array('pid'=>0,'id'=>1))->select();
         $this->display();
     }
 
@@ -70,7 +71,8 @@ class ApprovalController extends BaseController {
                 $att['fileext']     = $row['ext'] ? $row['ext'] : 0;
                 $att['filename']    = $row['name'] ? $row['name'] : 0;
                 $att['filepath']    = $rs['fileurl'] ? $rs['fileurl'] : '00001';
-                $att['fileType']    = I('fileType') ? I('fileType') : 9;
+                //$att['fileType']    = I('fileType') ? I('fileType') : 9;
+                $att['fileType']    = I('fileType') ? I('fileType') : 0;
                 $att['userid']      = session('userid')?session('userid'):0;
                 $att['uploadtime']  = time();
                 $att['uploadip']    = get_client_ip();

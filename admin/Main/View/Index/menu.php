@@ -280,11 +280,18 @@
                                 <if condition="rolemenu(array('Approval/index','Approval/file_upload','Approval/file_detail','Approval/file_audit','Approval/edit_record','Approval/file_re_upload','Approval/file_re_audit'))">
                                     <li class="{:on('Approval/index')} {:on('Approval/file_upload')} {:on('Approval/file_detail')} {:on('Approval/file_audit')} {:on('Approval/edit_record')} {:on('Approval/file_re_upload')} {:on('Approval/file_re_audit')}">
                                         <a href="{:U('Approval/index')}">
-                                            <i class="fa fa-angle-right"></i> 文件审批
+                                            <i class="fa fa-angle-right"></i> 文件流转
                                             <?php if($_no_read_audit_file){ ?>
                                                 <small class="badge pull-right bg-red" style="margin-right:6px;">{$_no_read_audit_file}</small>
                                             <?php }?>
                                         </a>
+                                    </li>
+                                </if>
+
+                                <if condition="rolemenu(array('Files/audit_list'))">
+                                    <li class="{:on('Files/audit_list')} {:on('Files/audit_add')}">
+                                        <a href="{:U('Files/audit_list')}">
+                                            <i class="fa fa-angle-right"></i> 文件审批</a>
                                     </li>
                                 </if>
 

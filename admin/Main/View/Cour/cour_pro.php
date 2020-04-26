@@ -235,7 +235,7 @@
         html += '<div class="f_23"><input type="text" class="form-control" name="payment['+i+'][content]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][long]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][pro]" value=""></div>';
-        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'pretium_\'+i+\')">删除</a>';
+        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick=`delbox("pretium_'+i+'")`>删除</a>';
         $('#payment').append(html);
         $('#payment_val').html(i);
         orderno();
