@@ -207,6 +207,9 @@ function get_file_dir_pid($type){
         case 5:
             $pid                = 595; //销售资料
         break;
+        case 10:
+            $pid                = 11111; //业务季产品审定培训PPT
+        break;
     }
     return $pid;
 }
@@ -214,7 +217,10 @@ function get_file_dir_pid($type){
 function get_cust_file_type($type){
     switch ($type){
         case 5:
-            $fileType           = 1; //销售资料
+            $fileType           = 1; //销售资料 P::FILE_DOWNLOAD
+            break;
+        case 10:
+            $fileType           = 2; //业务季产品审定培训PPT
             break;
     }
     return $fileType;

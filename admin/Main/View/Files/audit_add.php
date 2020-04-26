@@ -123,7 +123,7 @@
                         </form>
                         <div id="formsbtn">
                             <button type="button" class="btn btn-info" onclick="javascript:public_save('myform','<?php echo U('files/public_save'); ?>')">&emsp;保存&emsp;</button>
-                            <button type="button" class="btn btn-warning" style="margin-left: 10px" onclick="javascript:ConfirmSub('auditForm','提交审核后，文件流转期间将不可更改，<br />确定提交审核吗？')">提交审核</button>
+                            <button type="button" class="btn btn-warning" style="margin-left: 10px" onclick="javascript:ConfirmSub('auditForm','确定提交审核吗？')">提交审核</button>
                         </div>
                     </div>
                 </div>

@@ -74,7 +74,7 @@
                                 <?php if (in_array(cookie('userid'), array($list['audit_user_id'], 1)) && $list['audit_status'] == 0){ ?>
                                 <form method="post" action="{:U('Files/public_save')}" id="audit_form">
                                     <input type="hidden" name="dosubmint" value="1">
-                                    <input type="hidden" name="saveType" value="2">
+                                    <input type="hidden" name="saveType" value="3">
                                     <input type="hidden" name="id" value="{$list.id}">
 
                                     <div class="form-group box-float-12">

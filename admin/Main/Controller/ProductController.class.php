@@ -2019,7 +2019,11 @@ class ProductController extends BaseController {
 
     //门户页面
     public function public_view(){
+        $type                       = P::FILE_DOWNLOAD_YWJCP_PPT; //业务季产品培训PPT下载
+        $customer_files             = get_download_files($type);
 
+
+        $this->customer_files       = $customer_files;
 
         $this->display();
     }

@@ -25,14 +25,14 @@
                             <!--<a href="javascript:;"><div class="cus-box-more"><a  href="javascript:;" onClick="moreCustomerFiles('产品培训资料下载')">更多>></a></div></a>-->
                             <a href="javascript:;"><div class="cus-box-more">更多>></div></a>
                         </div>
-                        <!--<foreach name="customer_files" item="v">
+                        <foreach name="customer_files" item="v">
                             <p class="cus-list"><a href="{$v.file_path}" target="_blank"> {$v.file_name} </a> <span class="cus-list-time">{$v.create_time|date='Y-m-d',###}</span></p>
-                        </foreach>-->
-                        <p class="cus-list">产品培训资料下载产品培训资料下载1 <span class="cus-list-time">2020-04-09</span></p>
+                        </foreach>
+                        <!--<p class="cus-list">产品培训资料下载产品培训资料下载1 <span class="cus-list-time">2020-04-09</span></p>
                         <p class="cus-list">产品培训资料下载产品培训资料下载2 <span class="cus-list-time">2020-04-09</span></p>
                         <p class="cus-list">产品培训资料下载产品培训资料下载3 <span class="cus-list-time">2020-04-09</span></p>
                         <p class="cus-list">产品培训资料下载产品培训资料下载4 <span class="cus-list-time">2020-04-09</span></p>
-                        <p class="cus-list">产品培训资料下载产品培训资料下载5 <span class="cus-list-time">2020-04-09</span></p>
+                        <p class="cus-list">产品培训资料下载产品培训资料下载5 <span class="cus-list-time">2020-04-09</span></p>-->
                     </div>
 
                     <div class="cus-box">

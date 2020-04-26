@@ -618,14 +618,6 @@ class FilesController extends BaseController {
                     }
                 }
 
-                if ($res){ //发送系统消息
-                    $uid     = cookie('userid');
-                    $title   = '您有来自['.session('rolename').'--'.session('nickname').']的文件待审核!';
-                    $content = '文件名称:$data[\'filename\']';
-                    $url     = U('Files/audit',array('id'=>$id));
-                    $user    = '['.$data['audit_user_id'].']';
-                    send_msg($uid,$title,$content,$url,$user,'');
-                }
                 if ($res) $num++;
                 $msg                    = $num > 0 ? '保存成功' : '保存失败';
                 $returnMsg['num']       = $num;
@@ -633,7 +625,22 @@ class FilesController extends BaseController {
                 $this->ajaxReturn($returnMsg);
             }
 
-            if ($saveType == 2){ //保存审核文件信息
+            if ($saveType == 2){
+                $id                     = I('id');
+                if (!$id) $this->error('请先保存文件信息');
+                $db                     = M('process_files');
+                $list                   = $db->where(array('id'=>$id))->find();
+                if ($list){ //发送系统消息
+                    $uid     = cookie('userid');
+                    $title   = '您有来自['.session('nickname').']的文件待审核!';
+                    $content = '文件名称:$list[\'filename\']';
+                    $url     = U('Files/audit',array('id'=>$id));
+                    $user    = '['.$data['audit_user_id'].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+                }
+            }
+
+            if ($saveType == 3){ //保存审核文件信息
                 $id                     = I('id');
                 $audit_status           = I('audit_status');
                 $audit_msg              = I('audit_msg');

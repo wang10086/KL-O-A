@@ -137,6 +137,7 @@ final class P {
 
     //下载文件类型
     const FILE_DOWNLOAD_SALE_RES    = 1;    //销售资料下载
+    const FILE_DOWNLOAD_YWJCP_PPT   = 2;    //业务季产品审定培训PPT下载
 
 }
 

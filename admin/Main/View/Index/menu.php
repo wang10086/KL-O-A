@@ -289,7 +289,7 @@
                                 </if>
 
                                 <if condition="rolemenu(array('Files/audit_list'))">
-                                    <li class="{:on('Files/audit_list')} {:on('Files/audit_add')}">
+                                    <li class="{:on('Files/audit_list')} {:on('Files/public_audit_add')} {:on('Files/audit')} ">
                                         <a href="{:U('Files/audit_list')}">
                                             <i class="fa fa-angle-right"></i> 文件审批</a>
                                     </li>
