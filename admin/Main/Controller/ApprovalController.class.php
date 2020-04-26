@@ -500,9 +500,9 @@ class ApprovalController extends BaseController {
                     $user                   = '['.$list['create_user'].']';
                     send_msg($uid,$title,$content,$url,$user,'');
 
-                    if ($list['type'] > 1){ //直接上传文件至文件管理->销售资料文件夹
-                        $this->save_file_data($list['id']);
-                    }
+                    /*if ($list['type'] == 5){ //直接上传文件至文件管理->销售资料文件夹
+                        save_file_data($list['id']);
+                    }*/
 
                     $this->read_res($appid,P::UNREAD_AUDIT_FILE); //更新提示红点
                     $this->success('保存成功');
@@ -523,7 +523,7 @@ class ApprovalController extends BaseController {
         }
     }
 
-    //直接保存文件至"文件管理->销售资料"文件夹
+    /*//直接保存文件至"文件管理->销售资料"文件夹 bak_20200426
     private function save_file_data($approval_id){
         $approval_list              = M()->table('__APPROVAL__ as a')->join('__APPROVAL_FILES__ as f on f.id = a.file_id','left')->field('a.*,f.filepath,f.filesize,f.fileext,f.fileType,f.userid,f.uploadtime,f.uploadip,f.hashcode')->where(array('a.id' =>$approval_id))->find();
         $atta                       = array();
@@ -562,7 +562,7 @@ class ApprovalController extends BaseController {
         $cust['create_user']        = cookie('nickname');
         $cust['create_user_id']     = cookie('userid');
         M('customer_files')->add($cust);
-    }
+    }*/
 
     /**
      * 把源文件的审核结果带入新文件

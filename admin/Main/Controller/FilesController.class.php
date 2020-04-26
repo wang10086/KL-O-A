@@ -519,16 +519,12 @@ class FilesController extends BaseController {
         $this->pages            = $pagecount>P::PAGE_SIZE ? $page->show():'';
         $this->lists            = $db->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 
-        $this->status           = array(
-            0                   => "<span>未审核</span>",
-            1                   => "<span class='green'>审核通过</span>",
-            2                   => "<span class='red'>审核不通过</span>",
-        );
+        $this->status           = $this->get_audit_status();
         $this->display();
     }
 
     //新增待审批文件
-    public function audit_add(){
+    public function public_audit_add(){
         $this->title('新增文件');
 
         $id                         = I('id',0);
@@ -547,18 +543,45 @@ class FilesController extends BaseController {
         $this->types                = M('approval_file_type')->where(array('pid'=>0,id=>array('gt',1)))->select();
 
 
+        $this->display('audit_add');
+    }
+
+    private function get_audit_status(){
+        $status                 = array(
+            0                   => "<span>未审核</span>",
+            1                   => "<span class='green'>审核通过</span>",
+            2                   => "<span class='red'>审核不通过</span>",
+        );
+        return $status;
+    }
+
+    //详情/审核
+    public function audit(){
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $db                         = M('process_files');
+        $this->list                 = $db->where(array('id'=>$id))->find();
+        $this->typelists            = M('approval_file_type')->getField('id,title',true);
+        $this->status               = $this->get_audit_status();
+        $this->timeType             = C('timeType');
+        /*$file                   = M('attachment')->where(array('id'=>$list['atta_id']))->find();
+        $file['newFileName']    = $list['filename'];
+        $this->file             = $file;*/
         $this->display();
     }
 
-    //详情
-    public function audit_detail(){
-        
+    public function audit_del(){
+        $id                         = I('id');
+        if (!$id){ $this->error('数据错误'); }
+        $db                         = M('process_files');
+        $res                        = $db->where(array('id'=>$id))->delete();
+        $res ? $this->success('删除成功') : $this->error('删除失败');
     }
 
     public function public_save(){
         $saveType                   = I('saveType');
         $num                        = 0;
-        if (isset($_POST['dosubmint'])){
+        if (isset($_POST['dosubmint'])){ //保存待审核文件信息
             if ($saveType == 1){
                 $db                     = M('process_files');
                 $id                     = I('id',0);
@@ -599,12 +622,39 @@ class FilesController extends BaseController {
                     $uid     = cookie('userid');
                     $title   = '您有来自['.session('rolename').'--'.session('nickname').']的文件待审核!';
                     $content = '文件名称:$data[\'filename\']';
-                    $url     = U('Files/',array('id'=>$id));
+                    $url     = U('Files/audit',array('id'=>$id));
                     $user    = '['.$data['audit_user_id'].']';
                     send_msg($uid,$title,$content,$url,$user,'');
                 }
                 if ($res) $num++;
                 $msg                    = $num > 0 ? '保存成功' : '保存失败';
+                $returnMsg['num']       = $num;
+                $returnMsg['msg']       = $msg;
+                $this->ajaxReturn($returnMsg);
+            }
+
+            if ($saveType == 2){ //保存审核文件信息
+                $id                     = I('id');
+                $audit_status           = I('audit_status');
+                $audit_msg              = I('audit_msg');
+                $returnMsg              = array();
+                $returnMsg['num']       = $num;
+                if (!$id){ $msg = '数据错误'; $returnMsg['msg'] = $msg; $this->ajaxReturn($returnMsg); }
+                if (!$audit_status){ $msg = '审核信息错误'; $returnMsg['msg'] = $msg; $this->ajaxReturn($returnMsg); }
+                $data                   = array();
+                $data['audit_status']   = $audit_status;
+                $data['audit_msg']      = trim($audit_msg);
+                $data['audit_time']     = NOW_TIME;
+                $db                     = M('process_files');
+                $res                    = $db->where(array('id'=>$id))->save($data);
+                $list                   = $db->where(array('id'=>$id))->find();
+                if ($res){
+                    $num++;
+                    if ($list['type'] >= 5 && $audit_status == 1){ //直接上传文件至文件管理->****文件夹
+                        save_file_data($id);
+                    }
+                }
+                $msg                    = $num > 0 ? '数据保存成功' : '数据保存失败';
                 $returnMsg['num']       = $num;
                 $returnMsg['msg']       = $msg;
                 $this->ajaxReturn($returnMsg);

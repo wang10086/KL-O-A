@@ -95,7 +95,7 @@
                                         <td class="iptval">
                                             <input type="text" name="newname[{$file['id']}]" value="{$file['newFileName']}" class="form-control file_val" />
                                             <input type="hidden" name="fileid[{$file['id']}]" value="{$file['id']}">
-                                            <input type="hidden" name="fileurl[{$file['id']}]" value="'+rs.fileurl+'" />
+                                            <input type="hidden" name="fileurl[{$file['id']}]" value="{$file['filepath']}" />
                                         </td>
                                         <td> <?php echo round($file[file_size]/1024,2); ?>Kb</td>
                                         <td>

@@ -135,6 +135,9 @@ final class P {
     const PROCESS_STU_TIMEOUT       = 4;    //超时提醒
     const PROCESS_STU_QUICKLY       = 5;    //被督办
 
+    //下载文件类型
+    const FILE_DOWNLOAD_SALE_RES    = 1;    //销售资料下载
+
 }
 
 

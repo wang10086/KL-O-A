@@ -964,7 +964,8 @@ class CustomerController extends BaseController {
 
     //市场营销首页
     public function public_index(){
-        $customer_files             = M('customer_files')->order('id desc')->limit(5)->select(); //销售资料下载
+        $type                       = P::FILE_DOWNLOAD_SALE_RES;
+        $customer_files             = get_download_files($type);
 
 
         $this->customer_files       = $customer_files;

@@ -167,3 +167,62 @@ function get_process_log($processId, $nodeId, $typeId, $year, $timeType, $pro_st
     $list               = M('process_log')->where($where)->find();
     return $list ? $list : '';
 }
+
+//直接保存文件至"文件管理->销售资料"文件夹
+ function save_file_data($process_files_id){
+    $field                      = 'p.*,a.filepath,a.filesize,a.fileext';
+    $file_list                  = M()->table('__PROCESS_FILES__ as p')->join('__ATTACHMENT__ as a on a.id = p.atta_id','left')->field($field)->where(array('p.id' =>$process_files_id))->find();
+    $atta_id                    = $file_list['atta_id'];
+    if ($atta_id){ //保存至文件管理中文件夹
+        $file                   = array();
+        $file['file_name']      = $file_list['filename'];
+        $file['file_type']      = 1; //文件
+        $file['file_size']      = $file_list['filesize'];
+        $file['file_ext']       = $file_list['fileext'];
+        $file['file_path']      = $file_list['filepath'];
+        $file['file_id']        = $atta_id;
+        $file['est_time']       = NOW_TIME;
+        $file['est_user']       = cookie('nickname');
+        $file['est_user_id']    = cookie('userid');
+        $file['pid']            = get_file_dir_pid($file_list['type']);
+        $file['level']          = 2;
+        M('files')->add($file);
+    }
+
+    //保存销售资料下载
+    $cust                       = array();
+    $cust['file_name']          = $file_list['filename'];
+    $cust['file_size']          = $file_list['filesize'];
+    $cust['file_path']          = $file_list['filepath'];
+    $cust['file_id']            = $atta_id ;
+    $cust['create_time']        = NOW_TIME;
+    $cust['create_user']        = cookie('nickname');
+    $cust['create_user_id']     = cookie('userid');
+    $cust['type']               = get_cust_file_type($file_list['type']);
+    M('customer_files')->add($cust);
+}
+
+function get_file_dir_pid($type){
+    switch ($type){
+        case 5:
+            $pid                = 595; //销售资料
+        break;
+    }
+    return $pid;
+}
+
+function get_cust_file_type($type){
+    switch ($type){
+        case 5:
+            $fileType           = 1; //销售资料
+            break;
+    }
+    return $fileType;
+}
+
+//获取下载文件列表
+function get_download_files($type){
+    $db                         = M('customer_files');
+    $lists                      = $db->where(array('type'=>$type))->order('id desc')->limit(5)->select(); //销售资料下载
+    return $lists;
+}

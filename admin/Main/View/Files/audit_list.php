@@ -22,7 +22,7 @@
                                     <div class="box-tools pull-right">
                                     	 <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,120);"><i class="fa fa-search"></i> 搜索</a>
                                         <if condition="rolemenu(array('files/audit_add'))">
-                                        <a href="{:U('files/audit_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增审批文件</a>
+                                        <a href="{:U('files/public_audit_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增审批文件</a>
                                         </if>
                                     </div>
                                 </div><!-- /.box-header -->
@@ -34,7 +34,7 @@
                                         <th class="sorting" width="150" data="create_time">上传日期</th>
                                         <th class="sorting" width="80" data="create_user">上传人员</th>
                                         <th class="sorting" width="150" data="status">状态</th>
-                                        <if condition="rolemenu(array('Files/audit_detail'))">
+                                        <if condition="rolemenu(array('Files/audit'))">
                                             <th class="taskOptions" width="70">详情</th>
                                         </if>
 
@@ -54,16 +54,16 @@
                                         <td>{$row.create_time|date="Y-m-d H:i",###}</td>
                                         <td>{$row.create_user_name}</td>
                                         <td>{$status[$row['audit_status']]}</td>
-                                        <if condition="rolemenu(array('Files/audit_detail'))">
+                                        <if condition="rolemenu(array('Files/audit'))">
                                             <td class="taskOptions">
-                                                <a href="{:U('Files/audit_detail',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
+                                                <a href="{:U('Files/audit',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-bars"></i></a>
                                             </td>
                                         </if>
 
                                         <if condition="rolemenu(array('Files/audit_add'))">
                                             <td class="taskOptions">
                                                 <?php if (in_array($row['status'], array(0,2)) && in_array(cookie('userid'),array($row['create_user_id'],1))){ ?>
-                                                    <a href="{:U('Files/audit_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                    <a href="{:U('Files/public_audit_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 <?php }else{ ?>
                                                     <a href="javascript:;" title="编辑" class="btn btn-default btn-smsm"><i class="fa fa-pencil"></i></a>
                                                 <?php } ?>
