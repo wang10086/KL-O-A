@@ -103,6 +103,7 @@ class CustomerController extends BaseController {
         $this->title('政企客户管理');
 
 		$db                 = M('customer_gec');
+		$id                 = I('id');
 		$keywords           = I('keywords');
 		$type               = I('type');
 		$cm                 = I('cm');
@@ -126,6 +127,7 @@ class CustomerController extends BaseController {
 		}
 
         $map['status']	    = 0;
+		if ($id)         $map['id']  = $id;
         if($keywords)    $map['company_name'] = array('like','%'.$keywords.'%');
         if($type)        $map['type'] = $type;
         if($address)     $map['contacts_address'] = array('like','%'.$address.'%');

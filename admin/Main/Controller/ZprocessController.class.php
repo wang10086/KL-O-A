@@ -90,7 +90,6 @@ class ZprocessController extends BaseController{
             }
         }
 
-        //P($lists);
         $this->pro_status_arr   = array(
             1                   => '未读',
             2                   => '<span class="yellow">事前提醒</span>',
