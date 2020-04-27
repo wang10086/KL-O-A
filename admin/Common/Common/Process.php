@@ -134,7 +134,8 @@ function get_approval_process_files($processId, $year, $timeType){
         $where['typeInfo']  = array('in',$typeInfoIds);
         $where['year']      = $year;
         $where['timeType']  = $timeType;
-        $files              = M('approval')->where($where)->select();
+        //$files              = M('approval')->where($where)->select();
+        $files              = M('process_files')->where($where)->select();
         $submit_stu         = array(4,5); //4=>已提交总经理审核,5=>总经理审核通过
         $submit_num         = 0;
         $audit_num          = 0;
