@@ -90,6 +90,14 @@ class ZprocessController extends BaseController{
             }
         }
 
+        //P($lists);
+        $this->pro_status_arr   = array(
+            1                   => '未读',
+            2                   => '<span class="yellow">事前提醒</span>',
+            3                   => '反馈',
+            4                   => '<span class="red">超时提醒</span>',
+            5                   => '<span class="red">被督办</span>'
+        );
         $this->userkey          = get_userkey();
         $this->lists            = $lists;
         $this->stu_num          = $stu_arr;
@@ -327,12 +335,15 @@ class ZprocessController extends BaseController{
     //流程节点管理
     public function node(){
         $this->title('流程节点管理');
+        $title                  = trim(I('title'));
+        $where                  = array();
+        if ($title) $where['title'] = array('like','%'.$title.'%');
         $db                     = M('process_node');
         //分页
-        $pagecount		        = $db->count();
+        $pagecount		        = $db->where($where)->count();
         $page			        = new Page($pagecount, P::PAGE_SIZE);
         $this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $lists                  = $db->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+        $lists                  = $db->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('id'))->select();
 
         $this->lists            = $lists;
         $this->display('node');

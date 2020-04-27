@@ -31,11 +31,6 @@
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
-                    <!--<p class="menu-title-lc"> <i class="fa fa-caret-right"></i> LTC主干流程(5)</p>
-                    <p class="menu-title-lc"> &emsp; 发布/获取业务季销售资料(3)</p>
-                    <p class="menu-title-lc"> &emsp; 组织培训/学习业务季产品   (2)</p>
-                    <p class="menu-title-lc"> <i class="fa fa-caret-right"></i> IPD主干流程(2)</p>
-                    <p class="menu-title-lc"> &emsp; 征集业务季产品需求(2)</p>-->
                 </div>
 
                 <div class="col-md-9 padding0" style="min-height: 500px;">
@@ -68,13 +63,15 @@
                     <table class="table table-striped" id="font-14-p">
                         <thead>
                         <tr style="background-color: #f8f8f8;">
-                            <th width="60"></th>
+                            <th width="20"></th>
+                            <th width="">提醒类型</th>
                             <th width="">标题</th>
+                            <?php if (cookie('userid')==1){ ?>
                             <th width="">节点类型</th>
-                            <!--<th width="">创建人</th>-->
+                            <?php } ?>
                             <th width="">创建时间</th>
-                            <!--<th width="">状态</th>
-                            <th width="">操作者</th>
+                            <th width="">督办</th>
+                            <!--<th width="">操作者</th>
                             <th width="">操作时间</th>-->
                         </tr>
                         </thead>
@@ -82,12 +79,14 @@
                             <foreach name="lists" key="k" item="v">
                                 <tr class="userlist">
                                     <td></td>
-                                    <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}"></a>{$v.title}</td>
+                                    <td>{$pro_status_arr[$v['pro_status']]}</td>
+                                    <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}">{$v.title}</a></td>
+                                    <?php if (cookie('userid')==1){ ?>
                                     <td>{$v.nodeTitle}</td>
-                                    <!--<td> {$v.req_uname}</td>-->
+                                    <?php } ?>
                                     <td>{$v.req_time|date='Y-m-d H:i:s',###}</td>
-                                    <!--<td> {$v.}</td>
-                                    <td></td>
+                                    <td><a href="javascript:;" onclick="art_show_msg('开发中...',1000)" class="btn btn-info btn-smsm">督办</a></td>
+                                    <!--<td></td>
                                     <td>{$v.}</td>-->
                                 </tr>
                             </foreach>
