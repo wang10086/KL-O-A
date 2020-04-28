@@ -256,10 +256,12 @@ class ZprocessController extends BaseController{
         $db                     = M('process');
         $type_db                = M('process_type');
         $pin                    = I('pin',0);
+        $title                  = trim(I('title'));
         $typeLists              = $type_db ->where(array('status'=>array('neq', '-1'))) -> getField('id,title',true);
 
         $where                  = array();
         if ($pin) $where['type']= $pin;
+        if ($title) $where['title'] = array('like','%'.$title.'%');
         $where['status']        = array('neq','-1');
 
         //分页
