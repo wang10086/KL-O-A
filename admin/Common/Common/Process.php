@@ -54,7 +54,7 @@ function process_node_to_log(){
     $nodeLists          = M('process_node')->select();
 
     foreach ($nodeLists as $k=>$v){
-        if (in_array($v['id'],array(6,12))){ //6=>提交业务季产品手册、业务季销售PPT、公司宣传手册; 12=>批准发布业务季产品手册、业务季销售PPT、公司宣传手册
+        if (in_array($v['id'],array(6,12,13,7))){ //6=>提交业务季产品手册、业务季销售PPT、公司宣传手册; 12=>批准发布业务季产品手册、业务季销售PPT、公司宣传手册; 13=>审定培训PPT
             $timeLists  = M('process_node_time')->where(array('nodeId'=>$v['id']))->select();
             if ($timeLists){
                 foreach ($timeLists as $kk=>$vv){

@@ -119,7 +119,7 @@
                         <form method="post" action="{:U('files/public_save')}" id="auditForm">
                             <input type="hidden" name="dosubmint" value="1">
                             <input type="hidden" name="saveType" value="2">
-                            <input type="hidden" name="id" value="{$list.id}">
+                            <input type="hidden" name="id" value="{$row.id}">
                         </form>
                         <div id="formsbtn">
                             <button type="button" class="btn btn-info" onclick="javascript:public_save('myform','<?php echo U('files/public_save'); ?>')">&emsp;保存&emsp;</button>

@@ -96,15 +96,15 @@
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
                 <input type="hidden" name="c" value="Files">
-                <input type="hidden" name="a" value="index">
+                <input type="hidden" name="a" value="audit_list">
 
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="title" placeholder="文件名称">
                 </div>
 
-                <div class="form-group col-md-12">
+                <!--<div class="form-group col-md-12">
                     <input type="text" class="form-control" name="uname" placeholder="上传人员">
-                </div>
+                </div>-->
 
                 </form>
             </div>

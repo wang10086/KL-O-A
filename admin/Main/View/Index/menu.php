@@ -326,6 +326,10 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+                                <if condition="rolemenu(array('Customer/widely'))">
+                                    <li class="{:on('Customer/widely')} {:on('Customer/')}"><a href="{:U('Customer/widely')}"><i class="fa fa-angle-right"></i> 宣传营销</a></li>
+                                </if>
+
                                 <if condition="rolemenu(array('Customer/partner'))">
                                     <li class="{:on('Customer/partner')} {:on('Customer/partner_edit')} {:on('Customer/public_partner_map')} {:on('Customer/partner_detail')}"><a href="{:U('Customer/partner')}"><i class="fa fa-angle-right"></i> 城市合伙人</a></li>
                                 </if>

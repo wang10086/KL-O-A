@@ -548,9 +548,10 @@ class FilesController extends BaseController {
 
     private function get_audit_status(){
         $status                 = array(
-            0                   => "<span>未审核</span>",
+            0                   => "<span>未提交审核</span>",
             1                   => "<span class='green'>审核通过</span>",
             2                   => "<span class='red'>审核不通过</span>",
+            3                   => "<span class='yellow'>已提交,未审核</span>",
         );
         return $status;
     }
@@ -630,7 +631,13 @@ class FilesController extends BaseController {
                 if (!$id) $this->error('请先保存文件信息');
                 $db                     = M('process_files');
                 $list                   = $db->where(array('id'=>$id))->find();
+                $save                   = array();
+                $save['audit_status']   = 3; //已提交,未审核
+                $db->where(array('id'=>$list['id']))->save($save);
                 if ($list){ //发送系统消息
+                    $typeId             = $list['typeInfo'] ? $list['typeInfo'] : $list['type'];
+                    $this->set_submit_file_ok($typeId); //更改系统消息状态
+
                     $uid     = cookie('userid');
                     $title   = '您有来自['.session('nickname').']的文件待审核!';
                     $content = '文件名称:$list[\'filename\']';
@@ -638,6 +645,7 @@ class FilesController extends BaseController {
                     $user    = '['.$data['audit_user_id'].']';
                     send_msg($uid,$title,$content,$url,$user,'');
                 }
+                $this->success('提交成功',U('Files/audit_list'));
             }
 
             if ($saveType == 3){ //保存审核文件信息
@@ -666,6 +674,19 @@ class FilesController extends BaseController {
                 $returnMsg['msg']       = $msg;
                 $this->ajaxReturn($returnMsg);
             }
+        }
+    }
+
+    public function set_submit_file_ok($typeId=0){
+        if ($typeId){
+            $processId                  = M('approval_file_type')->where(array('id'=>$typeId))->getField('process_id');
+            $submit_file_node_ids       = C('process_submit_file_node_id'); ////提交文件即触发完成的node_id
+            $where                      = array();
+            $where['p_id']              = $processId;
+            $where['pnode_id']          = array('in',$submit_file_node_ids);
+            $save                       = array();
+            $save['del_status']         = '-1';
+            M('process_log')->where($where)->save($save);
         }
     }
 }
