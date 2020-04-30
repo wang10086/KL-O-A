@@ -317,7 +317,7 @@
                         </li>
                         </if>
 
-                        <if condition="rolemenu(array('Customer/o2o','Customer/GEC','Customer/IC','Customer/partner'))">
+                        <if condition="rolemenu(array('Customer/o2o','Customer/GEC','Customer/IC','Customer/partner','Customer/widely'))">
                         <li class="treeview {:on('Customer')}">
                             <a href="javascript:;">
                                 <i class="fa fa-group"></i>

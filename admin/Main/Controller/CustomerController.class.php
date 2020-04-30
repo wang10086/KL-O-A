@@ -10,7 +10,7 @@ use Sys\Pinyin;
 // @@@NODE-2###Customer###销售管理###
 class CustomerController extends BaseController {
 
-    protected $_pagetitle_ = '销售管理';
+    protected $_pagetitle_ = '市场营销';
     protected $_pagedesc_  = '';
 
 
@@ -985,5 +985,26 @@ class CustomerController extends BaseController {
         $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
         $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('id desc')->select();
         $this->display();
+    }
+
+    //宣传营销
+    public function widely(){
+        $this->title('宣传营销');
+
+        $this->display();
+    }
+
+    //宣传营销方案
+    public function widelyPro(){
+        $this->title('营销方案');
+
+        //人员名单关键字
+        $this->userkey          = get_username();
+        $this->display('widely_pro');
+    }
+
+    //
+    public function widely_add(){
+        
     }
 }

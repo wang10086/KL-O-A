@@ -4027,7 +4027,19 @@ th{outline: none;}
 #payment td{ line-height:34px;}
 #payment_val{ display:none}
 
-
+#project{ padding:0 0px;}
+#project .f_15{ width:15%; float:left; border-radius:0; padding-right:20px;}
+#project .f_25{ width:25%; float:left; border-radius:0; padding-right:20px;}
+#project .unitbox_15{ width:15%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#project .unitbox_25{ width:25%;float:left; clear:none; border:none; padding:0; padding-right:20px;}
+#project .title{ width:22px; float:left; height:30px; line-height:30px; margin-left:-30px; text-align:right;}
+#project .userlist { width:100%; height:auto !important; float:left; clear:both; padding-bottom:15px; border-bottom:1px solid #cccccc; margin-top:15px; padding-right:80px; position:relative;}
+#project .userlist .btn{ position:absolute; right:0; top:0; width:80px; padding:7px 0;}
+#project .input-group span{ border:1px solid #cccccc; width:40px; background:#ffffff; }
+#project .input-group span input{ margin-left:5px;}
+#project .btn{ padding:7px 12px; font-size:12px;}
+#project td{ line-height:34px;}
+#project_val{ display:none}
 
 #newlistbox{ padding:0 0px;}
 #newlistbox .f_20{ width:20%; float:left; border-radius:0; padding-right:20px;}
