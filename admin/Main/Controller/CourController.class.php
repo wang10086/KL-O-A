@@ -426,5 +426,24 @@ class CourController extends BaseController {
         $this->display('cour_record');
     }
 
+    //新增培训记录
+    public function add_cour_record(){
+	    $this->title('新增培训记录');
+
+        //人员名单关键字
+        $this->userkey          = get_username();
+        $this->users            = M('account')->where(array('status'=>0,'id'=>array('gt',10),'nickname'=>array('notlike','%1')))->order('id asc')->field('id,nickname')->select();
+	    $this->display();
+    }
+
+    //删除培训记录
+    public function del_cour_record(){
+	    $db                     = M('');
+	    $id                     = I('id');
+	    if (!$id) $this->error('获取数据错误');
+	    $res                    = $db->where(array('id'=>$id))->delete();
+	    $res ? $this->success('删除成功') : $this->error('删除失败');
+    }
+
 
 }

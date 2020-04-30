@@ -1005,6 +1005,6 @@ class CustomerController extends BaseController {
 
     //
     public function widely_add(){
-        
+
     }
 }

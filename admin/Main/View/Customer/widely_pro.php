@@ -50,6 +50,16 @@
                                             </select>
                                         </div>
 
+                                        <div class="form-group col-md-6 ">
+                                            <label>活动预算合计(元)</label>
+                                            <input type="text" name="info[project_plan_cost]" value="{$list['project_plan_cost']}" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group col-md-6 ">
+                                            <label>业务季宣传营销计划预算(元)</label>
+                                            <input type="text" name="info[widely_plan_cost]" value="{$list['widely_plan_cost']}" class="form-control" />
+                                        </div>
+
                                         <!--<div class="form-group col-md-6 ">
                                             <label>是否产生活动费用</label> &emsp;
                                             <input type="radio" name="need_worder_or_not" value="0"  <?php /*if($rad==0){ echo 'checked';} */?>> &#8194;不需要 &#12288;&#12288;&#12288;
