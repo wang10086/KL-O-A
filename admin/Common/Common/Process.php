@@ -233,3 +233,13 @@ function get_download_files($type){
     $lists                      = $db->where(array('type'=>$type))->order('id desc')->limit(5)->select(); //销售资料下载
     return $lists;
 }
+
+//业务招标提示
+function save_bid_data($title,$req_id,$uid){
+    $manage_data                = get_manage_uid($uid);
+    $to_uid                     = $manage_data['manager_id'];
+    $to_uname                   = $manage_data['manager_name'];
+    $process_node               = 19; //成立投标小组/编制投标工作方案
+    $pro_status                 = 2; //事前提醒
+    save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+}

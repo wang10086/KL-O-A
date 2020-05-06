@@ -1007,4 +1007,78 @@ class CustomerController extends BaseController {
     public function widely_add(){
 
     }
+
+    //组织业务投标
+    public function public_bid(){
+        $this->title('业务投标计划');
+        $db                         = M('customer_bid');
+        $title                      = trim(I('title'));
+        $where                      = array();
+        if ($title) $where['title'] = array('like', '%'.$title.'%');
+        $pagecount                  = $db->where($where)->count();
+        $page                       = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+
+        $this->display('bid');
+    }
+
+    //添加组织业务投标
+    public function public_bid_add(){
+        $this->title('业务投标计划');
+        $db                         = M('customer_bid');
+        if (isset($_POST['dosubmint'])){
+            $info                   = I('info');
+            $id                     = I('id',0);
+            $info['title']          = trim($info['title']);
+            $info['customer']       = trim($info['customer']);
+            $info['blame_name']     = trim($info['blame_name']);
+            $info['bid_time']       = strtotime($info['bid_time']);
+            if (!$info['title'])    $this->error('投标项目输入有误');
+            if (!$info['customer']) $this->error('招标方输入有误');
+            if (!$info['bid_time']) $this->error('投标时间输入有误');
+            if (!$info['blame_name'] || !$info['blame_uid']) $this->error('提交人信息输入有误');
+            $info['create_time']    = NOW_TIME;
+            $info['create_user_name'] = cookie('nickname');
+            $info['create_user_id'] = cookie('userid');
+            if ($id){
+                $res                = $db->where(array('id'=>$id))->save($info);
+            }else{
+                $res                = $db->add($info);
+                $id                 = $res;
+                save_bid_data($info['title'],$id,$info['blame_uid']); //提醒
+            }
+           $res ? $this->success('保存成功') : $this->error('保存失败');
+        }else{
+            $id                     = I('id',0);
+            if ($id){
+                $list               = $db->where(array('id'=>$id))->find();
+                $this->list         = $list;
+            }
+            //$bid_pros               = M('customer_bid_project')->getField('id, title',true); //投标方案
+            //$this->bid_pros         = $bid_pros;
+            //人员名单关键字
+            $this->userkey          = get_username();
+            $this->display('bid_add');
+        }
+    }
+
+    public function del_bid(){
+        $db                         = M('customer_bid');
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $res                        = $db->where(array('id'=>$id))->delete();
+        $res ? $this->success('删除成功') : $this->error('删除失败');
+    }
+
+    //业务投标方案
+    public function public_bidPro_add(){
+        $this->title('投标工作方案');
+
+        //人员名单关键字
+        $this->userkey          = get_username();
+        $this->display('bid_pro_add');
+    }
+
+
 }
