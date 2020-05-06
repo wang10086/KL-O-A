@@ -22,9 +22,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <if condition="rolemenu(array('Customer/bid_add'))">
+                                        <!--<if condition="rolemenu(array('Customer/bid_add'))">-->
                                         <a href="{:U('Customer/bid_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增活动计划</a>
-                                        </if>
+                                        <!--</if>-->
                                     </div>
                                 </div><!-- /.box-header -->
 
