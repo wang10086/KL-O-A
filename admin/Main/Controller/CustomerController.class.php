@@ -994,6 +994,34 @@ class CustomerController extends BaseController {
         $this->display();
     }
 
+    //
+    public function widely_add(){
+        $this->title('添加市场营销计划');
+        $process_data           = get_process_data(); //流程
+        $this->process_data     = $process_data;
+
+        //人员名单关键字
+        $this->userkey          = get_username();
+        $this->display('widely_add');
+    }
+
+    //市场营销需求
+    public function public_widelyNeed(){
+        $this->title('市场营销需求');
+
+        $this->display('widely_need');
+    }
+
+    //添加需求
+    public function public_addWidelyNeed(){
+        $this->title('添加活动需求');
+
+        $process_data           = get_process_data(); //流程
+        $this->process_data     = $process_data;
+        $this->userkey          = get_username(); //人员名单关键字
+        $this->display('widelyNeedAdd');
+    }
+
     //宣传营销方案
     public function widelyPro(){
         $this->title('营销方案');
@@ -1001,11 +1029,6 @@ class CustomerController extends BaseController {
         //人员名单关键字
         $this->userkey          = get_username();
         $this->display('widely_pro');
-    }
-
-    //
-    public function widely_add(){
-
     }
 
     //组织业务投标

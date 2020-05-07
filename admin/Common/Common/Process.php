@@ -54,7 +54,7 @@ function process_node_to_log(){
     $nodeLists          = M('process_node')->select();
 
     foreach ($nodeLists as $k=>$v){
-        if (in_array($v['id'],array(6,12,13,7))){ //6=>提交业务季产品手册、业务季销售PPT、公司宣传手册; 12=>批准发布业务季产品手册、业务季销售PPT、公司宣传手册; 13=>审定培训PPT
+        if (in_array($v['id'],array(6,7,12,13,15,16))){ //6=>提交业务季产品手册、业务季销售PPT、公司宣传手册; 12=>批准发布业务季产品手册、业务季销售PPT、公司宣传手册; 13=>审定培训PPT,15=>提交业务季宣传营销需求, 16=>制定业务季市场营销计划及预算
             $timeLists  = M('process_node_time')->where(array('nodeId'=>$v['id']))->select();
             if ($timeLists){
                 foreach ($timeLists as $kk=>$vv){
@@ -242,4 +242,11 @@ function save_bid_data($title,$req_id,$uid){
     $process_node               = 19; //成立投标小组/编制投标工作方案
     $pro_status                 = 2; //事前提醒
     save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+}
+
+//获取所有的流程
+function get_process_data(){
+    $db                         = M('process');
+    $data                       = $db->where(array('status'=>array('neq','-1')))->select();
+    return $data;
 }
