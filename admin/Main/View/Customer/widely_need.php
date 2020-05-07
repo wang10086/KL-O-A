@@ -22,9 +22,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <!--<if condition="rolemenu(array('Customer/public_addWidelyNeed'))">-->
                                         <a href="{:U('Customer/public_addWidelyNeed')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增活动需求</a>
-                                        <!--</if>-->
                                     </div>
                                 </div><!-- /.box-header -->
 
