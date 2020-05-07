@@ -71,7 +71,7 @@
 
                                 <div class="form-group col-md-12 mt40">&emsp;</div>
 
-                                <?php if (in_array(cookie('userid'), array($list['audit_user_id'], 1)) && $list['audit_status'] == 0){ ?>
+                                <?php if (in_array(cookie('userid'), array($list['audit_user_id'], 1)) && $list['audit_status'] == 3){ ?>
                                 <form method="post" action="{:U('Files/public_save')}" id="audit_form">
                                     <input type="hidden" name="dosubmint" value="1">
                                     <input type="hidden" name="saveType" value="3">
