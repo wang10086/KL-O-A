@@ -45,7 +45,7 @@
 
                                             <div class="form-group col-md-6">
                                                 <label>活动负责人：</label><font color="#999">(点击匹配到的人员)</font>
-                                                <input type="text" name="info[blame_name]" value="<?php echo $list['blame_name'] ? $list['blame_name'] : cookie('username'); ?>" class="form-control" id="blame_name" />
+                                                <input type="text" name="info[blame_name]" value="<?php echo $list['blame_name'] ? $list['blame_name'] : cookie('nickname'); ?>" class="form-control" id="blame_name" />
                                                 <input type="hidden" name="info[blame_uid]" value="<?php echo $list['blame_uid'] ? $list['blame_uid'] : cookie('userid'); ?>" class="form-control" id="blame_uid" />
                                             </div>
 
