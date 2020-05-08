@@ -33,7 +33,7 @@
                                         <th class="sorting" data="">计划时间</th>
                                         <th class="sorting" data="">活动负责人</th>
                                         <th class="sorting" data="">活动类型</th>
-                                        <th class="sorting" data="">活动费用(元)</th>
+                                        <th class="sorting" data="">活动费用(万元)</th>
                                         <th class="sorting" data="">活动方案</th>
                                         <th class="sorting" data="">状态</th>
                                         <th width="40" class="taskOptions">编辑</th>
@@ -48,7 +48,7 @@
                                         <td>{$row.in_time|date='Y-m-d',###}</td>
                                         <td>{$row.blame_name}</td>
                                         <td>{$process_data[$row['process_id']]}</td>
-                                        <td>{$row.cost}元</td>
+                                        <td>{$row['cost']/10000}万元</td>
                                         <td>{$row.}</td>
                                         <td>{$audit_status[$row['status']]}</td>
                                         <td class="taskOptions">
