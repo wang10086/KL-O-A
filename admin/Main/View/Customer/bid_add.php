@@ -21,7 +21,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <form action="{:U('Customer/bid_add')}" method="post">
+                                        <form action="{:U('Customer/public_bid_add')}" method="post">
                                             <input type="hidden" name="dosubmint" value="1">
                                             <input type="hidden" name="id" value="{$list['id']}">
                                             <div class="form-group col-md-12">

@@ -25,8 +25,11 @@
                                     <div class="content">
                                         <div class="form-group col-md-4">
                                             <label>投标项目</label>
-                                            <select class="form-control" name="">
-                                                <option value=""></option>
+                                            <select class="form-control" name="bid_id" id="bid_id">
+                                                <option value="">==请选择==</option>
+                                                <foreach name="bid_lists" item="v">
+                                                    <option value="{$v.id}">{$v.title}</option>
+                                                </foreach>
                                             </select>
                                         </div>
 

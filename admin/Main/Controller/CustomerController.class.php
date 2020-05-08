@@ -1071,7 +1071,7 @@ class CustomerController extends BaseController {
                 $id                 = $res;
                 save_bid_data($info['title'],$id,$info['blame_uid']); //提醒
             }
-           $res ? $this->success('保存成功') : $this->error('保存失败');
+           $res ? $this->success('保存成功',U('Customer/public_bid')) : $this->error('保存失败');
         }else{
             $id                     = I('id',0);
             if ($id){
@@ -1097,6 +1097,9 @@ class CustomerController extends BaseController {
     //业务投标方案
     public function public_bidPro_add(){
         $this->title('投标工作方案');
+        $bid_db                     = M('customer_bid');
+        $bid_lists                  = $bid_db->order('id desc')->limit(50)->select();
+        $this->bid_lists            = $bid_lists;
 
         //人员名单关键字
         $this->userkey          = get_username();
