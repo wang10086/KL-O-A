@@ -1038,6 +1038,10 @@ class CustomerController extends BaseController {
         }
     }
 
+    public function delWidely(){
+
+    }
+
     //市场营销需求
     public function public_widelyNeed(){
         $this->title('市场营销需求');
@@ -1149,7 +1153,7 @@ class CustomerController extends BaseController {
                 $data               = array();
                 $data['status']     = 3;
                 $res                = $db->where(array('id'=>$id))->save($data);
-                $res ? $this->success('数据保存成功') : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Customer/widely')) : $this->error('数据保存失败');
             }
         }
     }
