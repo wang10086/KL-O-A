@@ -21,7 +21,7 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <form action="{:U('Customer/bid_add')}" method="post">
+                                        <form action="{:U('Customer/public_widely_add')}" method="post" id="myForm">
                                             <input type="hidden" name="dosubmint" value="1">
                                             <input type="hidden" name="id" value="{$list['id']}">
                                             <div class="form-group col-md-12">
@@ -54,10 +54,22 @@
                                                 <input type="text" name="info[cost]" value="{$list['cost']}" class="form-control" required />
                                             </div>
 
-                                            <div id="formsbtn">
+                                            <!--<div id="formsbtn">
                                                 <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                                            </div>
+                                            </div>-->
                                         </form>
+
+                                        <form action="{:U('Customer/public_save_process')}" method="post" id="submitForm">
+                                            <input type="hidden" name="dosubmint" value="1">
+                                            <input type="hidden" name="saveType" value="1">
+                                            <input type="hidden" name="id" value="{$list.id}">
+                                        </form>
+                                        <div id="formsbtn">
+                                            <button type="button" class="btn btn-info btn-lg" onclick="$('#myForm').submit()" id="lrpd">保存</button>
+                                            <?php if ($list['id'] && in_array($list['status'],array(0,2))){ ?>
+                                            <button type="button" class="btn btn-warning btn-lg" onclick="$('#submitForm').submit()" id="lrpd">提交</button>
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                 </div><!-- /.box-body -->
                             </div>

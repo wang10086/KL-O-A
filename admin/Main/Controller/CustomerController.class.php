@@ -990,19 +990,52 @@ class CustomerController extends BaseController {
     //宣传营销
     public function widely(){
         $this->title('宣传营销');
+        $db                         = M('customer_widely');
+        $title                      = trim(I('title'));
+        $where                      = array();
+        if ($title) $where['title'] = array('like', '%'.$title.'%');
 
+        $pagecount                  = $db->where($where)->count();
+        $page                       = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                      = $db->where($where)->limit($page->firstRow .','. $page->listRows)->order($this->orders('id'))->select();
+        $this->lists                = $lists;
+        $process_data               = get_process_data(); //流程
+        $this->process_data         = array_column($process_data,'title','id');
+        $this->audit_status         = get_submit_audit_status();
         $this->display();
     }
 
     //
-    public function widely_add(){
+    public function public_widely_add(){
         $this->title('添加市场营销计划');
-        $process_data           = get_process_data(); //流程
-        $this->process_data     = $process_data;
-
-        //人员名单关键字
-        $this->userkey          = get_username();
-        $this->display('widely_add');
+        $db                         = M('customer_widely');
+        if (isset($_POST['dosubmint'])){
+            $id                     = I('id');
+            $info                   = I('info');
+            $info['title']          = trim($info['title']);
+            $info['in_time']        = strtotime($info['in_time']);
+            if (!$info['title']) $this->error('标题不能为空');
+            if ($id){
+                $res                = $db->where(array('id'=>$id))->save($info);
+            }else{
+                $info['create_time']    = NOW_TIME;
+                $info['create_user_name'] = cookie('nickname');
+                $info['create_user_id'] = cookie('userid');
+                $res                = $db->add($info);
+                $id                 = $res;
+            }
+            $res ? $this->success('数据保存成功',U('Customer/public_widely_add',array('id'=>$id))) : $this->error('数据保存失败');
+        }else{
+            $id                     = I('id');
+            if ($id){
+                $this->list         = $db->where(array('id'=>$id))->find();
+            }
+            $process_data           = get_process_data(); //流程
+            $this->process_data     = $process_data;
+            $this->userkey          = get_username(); //人员名单关键字
+            $this->display('widely_add');
+        }
     }
 
     //市场营销需求
@@ -1102,8 +1135,23 @@ class CustomerController extends BaseController {
         $this->bid_lists            = $bid_lists;
 
         //人员名单关键字
-        $this->userkey          = get_username();
+        $this->userkey              = get_username();
         $this->display('bid_pro_add');
+    }
+
+    //
+    public function public_save_process(){
+        $saveType                   = I('saveType');
+        if (isset($_POST['dosubmint'])){
+            if ($saveType == 1){ //提交审核市场营销计划
+                $db                 = M('customer_widely');
+                $id                 = I('id');
+                $data               = array();
+                $data['status']     = 3;
+                $res                = $db->where(array('id'=>$id))->save($data);
+                $res ? $this->success('数据保存成功') : $this->error('数据保存失败');
+            }
+        }
     }
 
 

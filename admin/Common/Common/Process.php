@@ -250,3 +250,14 @@ function get_process_data(){
     $data                       = $db->where(array('status'=>array('neq','-1')))->select();
     return $data;
 }
+
+//提交审核状态
+function get_submit_audit_status(){
+    $arr                        = array(
+        0                       => '未提交',
+        1                       => '<span class="green">审核通过</span>',
+        2                       => '<span class="red">审核不通过</span>',
+        3                       => '<span class="yellow">已提交,未审核</span>'
+    );
+    return $arr;
+}
