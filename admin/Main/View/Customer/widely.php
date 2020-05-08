@@ -36,9 +36,7 @@
                                         <th class="sorting" data="">活动费用(元)</th>
                                         <th class="sorting" data="">活动方案</th>
                                         <th class="sorting" data="">状态</th>
-                                        <if condition="rolemenu(array('Customer/public_widely_add'))">
                                         <th width="40" class="taskOptions">编辑</th>
-                                        </if>
 
                                         <if condition="rolemenu(array('Customer/delWidely'))">
                                         <th width="40" class="taskOptions">删除</th>
@@ -53,11 +51,9 @@
                                         <td>{$row.cost}元</td>
                                         <td>{$row.}</td>
                                         <td>{$audit_status[$row['status']]}</td>
-                                        <if condition="rolemenu(array('Customer/public_widely_add'))">
                                         <td class="taskOptions">
                                         <a href="{:U('Customer/public_widely_add',array('id'=>$row['id']))}" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
-                                        </if>
                                         <if condition="rolemenu(array('Customer/delWidely'))">
                                         <td class="taskOptions">
                                         <button onClick="javascript:ConfirmDel(`{:U('Customer/delWidely',array('id'=>$row['id']))}`)" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
