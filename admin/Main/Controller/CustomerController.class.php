@@ -1143,6 +1143,87 @@ class CustomerController extends BaseController {
         $this->display('bid_pro_add');
     }
 
+    /*********************start*************************/
+    //组织业务投标
+    public function public_sale(){
+        $process_id                 = I('process_id');
+        $title                      = $process_id ? M('process')->where(array('id'=>$process_id))->getField('title') : '销售支持计划';
+        $this->title($title);
+        $db                         = M('customer_sale');
+        $title                      = trim(I('title'));
+        $where                      = array();
+        if ($title) $where['title'] = array('like', '%'.$title.'%');
+        $pagecount                  = $db->where($where)->count();
+        $page                       = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+        $this->types                = get_sale_type(); //获取销售支持类型
+        $this->display('sale');
+    }
+
+    //添加销售支持计划
+    public function public_sale_add(){
+        $this->title('销售支持计划');
+        $db                         = M('customer_sale');
+        if (isset($_POST['dosubmint'])){
+            $info                   = I('info');
+            $id                     = I('id',0);
+            $info['title']          = trim($info['title']);
+            $info['customer']       = trim($info['customer']);
+            $info['blame_name']     = trim($info['blame_name']);
+            $info['st_time']        = strtotime($info['st_time']);
+            $info['et_time']        = strtotime($info['et_time']);
+            if (!$info['title'])    $this->error('销售支持标题不能为空');
+            if (!$info['blame_name'] || !$info['blame_uid']) $this->error('提交人信息输入有误');
+            $manage_data            = get_manage_uid($info['blame_uid']);
+            $info['audit_uid']      = $manage_data['manager_id'] ? $manage_data['manager_id'] : 0;
+            $info['audit_uname']    = $manage_data['manager_name'] ? $manage_data['manager_name'] : '';
+            if ($id){
+                $res                = $db->where(array('id'=>$id))->save($info);
+            }else{
+                $info['create_time']= NOW_TIME;
+                $info['create_user_name'] = cookie('nickname');
+                $info['create_user_id'] = cookie('userid');
+                $res                = $db->add($info);
+                $id                 = $res;
+                //save_bid_data($info['title'],$id,$info['blame_uid']); //提醒
+            }
+            $res ? $this->success('保存成功',U('Customer/public_sale')) : $this->error('保存失败');
+        }else{
+            $id                     = I('id',0);
+            if ($id){
+                $list               = $db->where(array('id'=>$id))->find();
+                $this->list         = $list;
+            }
+
+            $this->customers        = get_customerlist();
+            $this->types            = get_sale_type(); //获取销售支持类型
+            $this->userkey          = get_username(); //人员名单关键字
+            $this->display('sale_add');
+        }
+    }
+
+    public function del_sale(){
+        $db                         = M('customer_sale');
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $res                        = $db->where(array('id'=>$id))->delete();
+        $res ? $this->success('删除成功') : $this->error('删除失败');
+    }
+
+    //销售支持方案
+    public function public_salePro_add(){
+        $this->title('销售支持方案');
+        $sale_db                    = M('customer_sale');
+        $sale_lists                  = $sale_db->order('id desc')->limit(50)->select();
+        $this->sale_lists           = $sale_lists;
+
+        //人员名单关键字
+        $this->userkey              = get_username();
+        $this->display('sale_pro_add');
+    }
+    /**********************end************************/
+
     //
     public function public_save_process(){
         $saveType                   = I('saveType');

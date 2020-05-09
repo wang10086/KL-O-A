@@ -261,3 +261,13 @@ function get_submit_audit_status(){
     );
     return $arr;
 }
+
+//销售支持类型
+function get_sale_type(){
+    $arr                        = array(
+        1                       => '销售出差',
+        2                       => '协助销售',
+        3                       => '邀请客户'
+    );
+    return $arr;
+}

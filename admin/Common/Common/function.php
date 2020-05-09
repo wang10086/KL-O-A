@@ -6212,3 +6212,34 @@ function diffBetweenTwoDays ($time1 = 0, $time2 = 0){
     }
     return ($time2 - $time1) / 86400;
 }
+
+/**
+ * 获取客户名称关键字(整理客户信息)
+ * @param string $type 1=>'更新相关数据'
+ * @return mixed
+ */
+ function get_customerlist($type='',$PinYin=''){
+    //客户名称关键字
+    $where = array();
+    if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
+        $where['company_name'] = array('neq','');
+    }else{
+        $where['company_name'] = array('neq','');
+        $where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
+    }
+
+    if ($type){
+        $key =  M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
+        foreach($key as $v){
+            if(!$v['pinyin']){
+                $company_name = iconv("utf-8","gb2312",trim($v['company_name']));
+                $pinyin = strtolower($PinYin->getFirstPY($company_name));
+                M('customer_gec')->data(array('pinyin'=>$pinyin))->where(array('id'=>$v['id']))->save();
+            }
+        }
+    }
+
+    //$data                 = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
+    $data                   = M('customer_gec')->where($where)->group("company_name")->order('pinyin ASC')->getField('company_name',true);
+    return $data;
+}

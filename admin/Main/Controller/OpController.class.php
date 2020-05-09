@@ -129,7 +129,7 @@ class OpController extends BaseController {
             }
 
             $exe_user_id                = I('exe_user_id');
-            $customer                   = $this->get_customerlist();
+            $customer                   = get_customerlist();
             if (!in_array($info['customer'],$customer)){ $this->error('客户单位填写错误' . $db->getError()); }
             //if (in_array($info['kind'] , $arr_product) && !$costacc){ $this->error('产品模块不能为空'); }
             //if (!in_array($info['kind'] , $arr_product) && !$info['line_id']) { $this->error('行程方案不能为空'); }
@@ -219,7 +219,7 @@ class OpController extends BaseController {
 
             $this->userkey     = get_userkey();
             $this->provinces   = M('provinces')->getField('id,name',true);
-			$geclist           = $this->get_customerlist(1,$PinYin); //客户名称关键字
+			$geclist           = get_customerlist(1,$PinYin); //客户名称关键字
 			$this->geclist     = $geclist;
 			$this->geclist_str = json_encode($geclist,true);
 			$this->kinds       = get_project_kinds();
@@ -239,7 +239,7 @@ class OpController extends BaseController {
      * @param string $type 1=>'更新相关数据'
      * @return mixed
      */
-    public function get_customerlist($type='',$PinYin=''){
+    /*public function get_customerlist($type='',$PinYin=''){
         //客户名称关键字
         $where = array();
         if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
@@ -263,7 +263,7 @@ class OpController extends BaseController {
         //$data                 = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
         $data                   = M('customer_gec')->where($where)->group("company_name")->order('pinyin ASC')->getField('company_name',true);
         return $data;
-    }
+    }*/
 
 
 	// @@@NODE-3###plans_info###出团计划###
@@ -552,7 +552,7 @@ class OpController extends BaseController {
 			$where['company_name'] = array('neq','');
 			$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
 		}
-		$this->geclist     = $this->get_customerlist();
+		$this->geclist     = get_customerlist();
 
         //人员名单关键字
         $this->userkey      = get_username();
@@ -808,7 +808,7 @@ class OpController extends BaseController {
 			//修改项目基本信息
 			if($opid && $savetype==10 ){
 			    $returnMsg              = array();
-			    $customer               = $this->get_customerlist();
+			    $customer               = get_customerlist();
 			    if (!in_array($info['customer'],$customer) && !strpos($info['project'],'地接团')){
 			        $returnMsg['num']   = $num;
 			        $returnMsg['msg']   = '客户单位输入错误';
