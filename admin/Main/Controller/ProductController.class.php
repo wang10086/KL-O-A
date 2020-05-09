@@ -737,7 +737,7 @@ class ProductController extends BaseController {
 
 	// @@@NODE-3###line###线路行程###
     public function line(){
-        $this->title('线路行程列表');
+        $this->title('项目方案列表');
 
 		$key          = I('key');
 		$status       = I('status','-1');
@@ -1030,6 +1030,7 @@ class ProductController extends BaseController {
 
 
 	public function view_line(){
+        $this->title('项目方案跟进');
 		 $id = I('id',0);
 		 $row =  M('product_line')->find($id);
 		 if($row){
@@ -2026,6 +2027,13 @@ class ProductController extends BaseController {
         $this->customer_files       = $customer_files;
 
         $this->display();
+    }
+
+    //产品方案需求
+    public function public_pro_need(){
+
+
+        $this->display('pro_need');
     }
 
 }

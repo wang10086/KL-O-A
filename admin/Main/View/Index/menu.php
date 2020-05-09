@@ -43,14 +43,17 @@
                             </ul>
                         </li>
 
-                        <if condition="rolemenu(array('Op/index','Op/plans','Project/kind','Op/relpricelist'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME,'Op')} {:on('Project/addkind')}">
+                        <if condition="rolemenu(array('Op/index','Op/plans','Project/kind','Op/relpricelist','Product/line'))">
+                        <li class="treeview {:ison(CONTROLLER_NAME,'Op')} {:on('Project/addkind')} {:on('Product/line')} {:on('Product/add_line')}">
                             <a href="javascript:;">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>项目管理</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+                                <if condition="rolemenu(array('Product/line'))">
+                                    <li class="{:on('Product/line')} {:on('Product/add_line')}"><a href="{:U('Product/line')}"><i class="fa fa-angle-right"></i> 项目方案</a></li>
+                                </if>
                                 <if condition="rolemenu(array('Op/plans'))">
                                     <li><a href="{:U('Op/plans')}"><i class="fa fa-angle-right"></i> 我要立项</a></li>
                                 </if>
@@ -92,7 +95,7 @@
                         </if>
                         -->
 
-                        <if condition="rolemenu(array('Product/index','Product/tpl','Product/line','Product/kind','Product/feedback','Project/lession','Project/fields','Project/types','Product/add_standard_product','Product/product_chart'))">
+                        <if condition="rolemenu(array('Product/index','Product/tpl','Product/kind','Product/feedback','Project/lession','Project/fields','Project/types','Product/add_standard_product','Product/product_chart'))">
                         <li class="treeview {:on('Product')} {:on('Project')} {:on('Project/lession')} {:on('Project/fields')} {:on('Project/types')}">
                             <a href="javascript:;">
                                 <i class="fa fa-globe"></i>
@@ -125,9 +128,9 @@
                                     <li class="{:on('Product/index')} {:on('Product/add')}"><a href="{:U('Product/index')}"><i class="fa fa-angle-right"></i> 产品模块管理</a></li>
                                 </if>
 
-                                <if condition="rolemenu(array('Product/line'))">
+                                <!--<if condition="rolemenu(array('Product/line'))">
                                     <li class="{:on('Product/line')} {:on('Product/add_line')}"><a href="{:U('Product/line')}"><i class="fa fa-angle-right"></i> 行程方案管理</a></li>
-                                </if>
+                                </if>-->
 
                                 <if condition="rolemenu(array('Project/lession'))">
                                     <li class="{:on('Project/lession')} {:on('Project/fields')}"><a href="{:U('Project/lession')}"><i class="fa fa-angle-right"></i> 课程信息管理</a></li>
