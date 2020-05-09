@@ -24,7 +24,7 @@
                                         <form action="{:U('Customer/public_sale_add')}" method="post">
                                             <input type="hidden" name="dosubmint" value="1">
                                             <input type="hidden" name="id" value="{$list['id']}">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-12">
                                                 <label>销售支持标题：</label>
                                                 <input type="text" name="info[title]" value="{$list['title']}" class="form-control" required />
                                             </div>
@@ -37,15 +37,6 @@
                                                     </foreach>
                                                 </select>
                                             </div>
-
-                                            <!--<div class="form-group col-md-6">
-                                                <label>客户：</label>
-                                                <select name="info[customer_id]" class="form-control">
-                                                    <foreach name="customers" key="k" item="v">
-                                                        <option value="{$k}" <?php /*if ($list['customer_id']==$k) echo "selected"; */?>>{$v}</option>
-                                                    </foreach>
-                                                </select>
-                                            </div>-->
 
                                             <div class="form-group col-md-6">
                                                 <label>客户单位：</label>
@@ -71,6 +62,11 @@
                                             <div class="form-group col-md-6">
                                                 <label>结束时间：</label>
                                                 <input type="text" name="info[et_time]" class="form-control inputdate" value="<if condition="$list['et_time']">{$list.et_time|date='Y-m-d',###}</if>" required />
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label>计划费用：</label>
+                                                <input type="text" name="info[cost]" class="form-control" value="{$list.cost}" />
                                             </div>
 
                                             <div id="formsbtn">
