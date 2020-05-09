@@ -17,8 +17,9 @@
                 <div class="row">
                     <!-- right column -->
                     <div class="col-md-12">
+                        <include file="Product:pro_navigate" />
                         <!-- general form elements disabled -->
-                        <div class="box box-warning">
+                        <div class="box box-warning mt20">
                             <div class="box-header">
                                 <h3 class="box-title">行程方案描述</h3>
                             </div><!-- /.box-header -->
@@ -480,20 +481,20 @@
 					var origin = artDialog.open.origin;
 					var model = this.iframe.contentWindow.gosubmint();
 					for (var i = 0; i < model.length; i++) {
-						if (model[i].id) { 
+						if (model[i].id) {
 							modelhtml += '<tr id="tpl_a_'+model[i].id+'"><td><input type="hidden" name="pro_model[]" value="'+model[i].id+'">'+model[i].id+'</td><td><a href="<?php echo U('Product/model_view'); ?>&id='+model[i].id+'" target="_blank">'+model[i].title+'</a></td><td>'+model[i].input_uname+'</td><td class="taskOptions"><button onClick="javascript:del_timu(\'tpl_a_'+model[i].id+'\')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td></tr>';
 						}
 					}
-					$('#tablelist_model').find('tbody').append(modelhtml);	
+					$('#tablelist_model').find('tbody').append(modelhtml);
 				},
 				cancelValue:'取消',
 				cancel: function () {
 				}
-			});	
+			});
 		}
-		
-		
-		
+
+
+
 		//选择模块
 		function selectmodel() {
 			var mokuaihtml = '';
@@ -508,71 +509,71 @@
 					var origin = artDialog.open.origin;
 					var mokuai = this.iframe.contentWindow.gosubmint();
 					for (var i = 0; i < mokuai.length; i++) {
-						if (mokuai[i].id) { 
+						if (mokuai[i].id) {
 							mokuaihtml += '<tr id="tpl_a_'+mokuai[i].id+'"><td><input type="hidden" name="pro[]" value="'+mokuai[i].id+'">'+mokuai[i].id+'</td><td><a href="<?php echo U('Product/view'); ?>&id='+mokuai[i].id+'" target="_blank">'+mokuai[i].title+'</a></td><td>'+mokuai[i].input_uname+'</td><td class="taskOptions"><button onClick="javascript:del_timu(\'tpl_a_'+mokuai[i].id+'\')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td></tr>';
 						}
 					}
-					$('#tablelist').find('tbody').append(mokuaihtml);	
+					$('#tablelist').find('tbody').append(mokuaihtml);
 				},
 				cancelValue:'取消',
 				cancel: function () {
 				}
-			});	
+			});
 		}
-		
+
 		function task_tag(){
-			
+
 			var i = parseInt($('#task_tag_val').text())+1;
-			
+
 			var html = '<div class="col-md-2 pd" id="tag_'+i+'"><div class="input-group"><input type="text" placeholder="标签" name="tag[]" class="form-control"><span class="input-group-addon" style="width:32px;"><a href="javascript:;"  onClick="deltag(\'tag_'+i+'\')">X</a></span></div></div>';
-			
-			$('#task_tag_list').append(html);	
+
+			$('#task_tag_list').append(html);
 			$('#task_tag_val').html(i);
 		}
-		
-		
+
+
 		function deltag(obj){
 			$('#'+obj).remove();
 		}
-		
+
 		function task(obj){
-			
+
 			var i = parseInt($('#task_val').text())+1;
 
 			var days = '<div class="input-group"><input type="text" placeholder="所在城市" name="days['+i+'][citys]" class="form-control"></div><div class="input-group pads"><textarea class="form-control" placeholder="行程安排"  name="days['+i+'][content]"></textarea></div><div class="input-group"><input type="text" placeholder="房餐车安排" name="days['+i+'][remarks]" class="form-control"></div>';
-			
-			
+
+
 			var header = '<div class="tasklist" id="task_ti_'+i+'"><a class="aui_close" href="javascript:;" onClick="del_timu(\'task_ti_'+i+'\')">×</a><div class="col-md-12 pd"><label class="titou"><strong>第<span class="tihao">'+i+'</span>天</strong></label>';
-			
+
 			var footer = '</div></div>';
-			
-			
+
+
 			var html = header+days+footer;
-			
-			$('#task_timu').append(html);	
+
+			$('#task_timu').append(html);
 			$('#task_val').html(i);
 			//重编题号
 			$('.tihao').each(function(index, element) {
 				 var no = index*1+1;
-               $(this).text(no);     
+               $(this).text(no);
             });
 		}
-		
+
 		//移除题目
 		function del_timu(obj){
 			$('#'+obj).remove();
 			$('.tihao').each(function(index, element) {
 				 var no = index*1+1;
-               $(this).text(no);     
+               $(this).text(no);
             });
 		}
-		
+
 		$(document).ready(function(e) {
             $('.tihao').each(function(index, element) {
 				 var no = index*1+1;
-               $(this).text(no);     
+               $(this).text(no);
             });
-        
+
 			var uploader = new plupload.Uploader({
 				runtimes : 'html5,flash,silverlight,html4',
 				browse_button : 'pickupfile', // you can pass in id...
@@ -584,43 +585,43 @@
 				multipart_params: {
 					 catid: 1
 				},
-				
+
 				filters : {
 					max_file_size : '10mb',
 					mime_types: [
 						{title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt"}
 					]
 				},
-	
+
 				init: {
 					PostInit: function() {
 						//$('div.moxie-shim').width(104).height(67);
 					},
-	
+
 					FilesAdded: function(up, files) {
 						plupload.each(files, function(file) {
 							var time = new Date();
 							var month = time.getMonth() +1;
 							if (month < 10) month = "0" + month;
-							
+
 							var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
 							$('#flist').append(
 									'<tr id="' + file.id + '"  valign="middle"><td>'
 									+ '<input type="text" name="nm_' + file.id + '" value="'+ file.name +'" class="form-control" />'
-									+ '</td> <td width="10%">' + plupload.formatSize(file.size) +'' 
-									+ '</td> <td width="30%">' 
-									+ '<div class="progress sm"> ' 
-									+ '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">' 
+									+ '</td> <td width="10%">' + plupload.formatSize(file.size) +''
+									+ '</td> <td width="30%">'
+									+ '<div class="progress sm"> '
+									+ '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">'
 									+ '</div></div></td>'
 									+ '<td width="15%"><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(\''+ file.id +'\');"><i class="fa fa-times"></i>删除</a></td></tr>'
 								);
-	
+
 						});
-	
+
 						uploader.start();
-						
+
 					},
-	
+
 					FileUploaded: function(up, file, res) {
 						var rs = eval('(' + res.response +')');
 						if (rs.rs ==  'ok') {
@@ -630,24 +631,24 @@
 						} else {
 							alert('上传文件失败，请重试');
 						}
-	
+
 					},
-	
+
 					UploadProgress: function(up, file) {
 						$('div[rel=' + file.id + ']').css('width', file.percent + '%');
 					},
-	
+
 					Error: function(up, err) {
 						alert(err.code + ": " + err.message);
 					}
 				}
 			});
-	
+
 			uploader.init();
-			
+
 			closebtns();
 		});
-	
+
 		function removeThisFile(fid) {
 			if (confirm('确定要删除此附件吗？')) {
 				$('#' + fid).empty().remove();
@@ -717,6 +718,6 @@
                 }
             }
 		</script>
-     
+
 
 
