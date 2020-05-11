@@ -271,3 +271,9 @@ function get_sale_type(){
     );
     return $arr;
 }
+
+function get_process_node_data($id){
+    $db                         = M('process_node');
+    $data                       = $db->where(array('id'=>$id))->find();
+    return $data;
+}

@@ -38,7 +38,8 @@
                                         <th class="sorting" data="">培训对象</th>
                                         <th class="sorting" data="">培训费用(元)</th>
                                         <th class="sorting" data="">培训方案</th>
-                                        <if condition="rolemenu(array('Op/plans_info'))">
+                                        <th class="sorting" data="">审核状态</th>
+                                        <if condition="rolemenu(array('Cour/add_plan'))">
                                         <th width="40" class="taskOptions">编辑</th>
                                         </if>
 
@@ -48,16 +49,17 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
+                                        <td>{$row.title}</td>
+                                        <td>{$row.in_time|date='Y-m-d',###}</td>
+                                        <td>{$row.blame_name}</td>
+                                        <td>{$process_data[$row['process_id']]}</td>
+                                        <td>{$row.obj}</td>
+                                        <td>{$row.cost}</td>
                                         <td>{$row.}</td>
-                                        <td>{$row.}</td>
-                                        <td>{$row.}</td>
-                                        <td>{$row.}</td>
-                                        <td>{$row.}</td>
-                                        <td>{$row.}</td>
-                                        <td>{$row.}</td>
-                                        <if condition="rolemenu(array('Op/plans_follow'))">
+                                        <td>{$audit_status[$row['status']]}</td>
+                                        <if condition="rolemenu(array('Cour/add_plan'))">
                                         <td class="taskOptions">
-                                        <a href="" title="详情" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                        <a href="{:U('Cour/add_plan',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         </if>
                                         <if condition="rolemenu(array('Op/delpro'))">
@@ -85,66 +87,12 @@
             <div id="searchtext">
                 <form action="" method="get" id="searchform">
                 <input type="hidden" name="m" value="Main">
-                <input type="hidden" name="c" value="Op">
-                <input type="hidden" name="a" value="index">
-                <input type="hidden" name="pin" value="{$pin}">
+                <input type="hidden" name="c" value="Cour">
+                <input type="hidden" name="a" value="courPlan">
 
                 <div class="form-group col-md-12">
-                    <input type="text" class="form-control" name="title" placeholder="项目名称">
+                    <input type="text" class="form-control" name="title" placeholder="关键字">
                 </div>
-
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="id" placeholder="编号">
-                </div>
-
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="oid" placeholder="团号">
-                </div>
-
-                 <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="dest" placeholder="目的地">
-                </div>
-
-
-
-                <div class="form-group col-md-4">
-                    <select  class="form-control"  name="status">
-                        <option value="-1">成团状态</option>
-                        <option value="0">未成团</option>
-                        <option value="1">已成团</option>
-                    </select>
-                </div>
-
-                <div class="form-group col-md-4">
-                    <select  class="form-control"  name="as">
-                         <option value="-1">状态</option>
-                        <option value="0">未审批</option>
-                        <option value="1">通过审批</option>
-                        <option value="2">未通过审批</option>
-                    </select>
-                </div>
-
-                <div class="form-group col-md-4">
-                    <select class="form-control" name="kind">
-                        <option value="">项目类型</option>
-                        <foreach name="kinds" key="k"  item="v">
-                        <option value="{$k}">{$v}</option>
-                        </foreach>
-                    </select>
-                </div>
-
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="ou" placeholder="立项人">
-                </div>
-
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="jd" placeholder="计调">
-                </div>
-
-                <div class="form-group col-md-4">
-                    <input type="text" class="form-control" name="su" placeholder="销售">
-                </div>
-
                 </form>
             </div>
 

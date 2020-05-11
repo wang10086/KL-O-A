@@ -13,9 +13,6 @@
 
             <!-- Main content -->
             <section class="content">
-            <form method="post" action="{:U('Cour/add_plan')}" name="myform">
-            <input type="hidden" name="dosubmint" value="1">
-            <input type="hidden" name="id" value="{$list.id}">
                 <div class="row">
                      <!-- right column -->
                     <div class="col-md-12">
@@ -25,62 +22,62 @@
                             </div><!-- /.box-header -->
                             <div class="box-body">
                                 <div class="content">
-                                    <div class="form-group col-md-12">
-                                        <label>培训标题：</label><input type="text" name="info[title]" class="form-control" value="{$list.title}" required />
-                                    </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label>计划时间：</label><input type="text" name="info[time]" class="form-control inputdate" value="{$list.time}" required />
-                                    </div>
+                                    <form method="post" action="{:U('Cour/public_save_process')}" name="myForm" id="myForm">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="saveType" value="1">
+                                        <input type="hidden" name="id" value="{$list.id}">
+                                        <div class="form-group col-md-6">
+                                            <label>培训标题：</label><input type="text" name="info[title]" class="form-control" value="{$list.title}" required />
+                                        </div>
 
-                                    <!--<div class="form-group col-md-4">
-                                        <label>所属流程：</label>
-                                        <select  class="form-control"  name="info[processId]" id="processId"  required>
-                                            <option value="" selected disabled>请先选择流程类型</option>
-                                            <foreach name="processIds" key="k" item="v">
-                                                <option value="{$k}" <?php /*if ($list['processId'] == $k) echo "selected"; */?>>{$v}</option>
-                                            </foreach>
-                                        </select>
-                                    </div>-->
+                                        <div class="form-group col-md-6">
+                                            <label>计划时间：</label><input type="text" name="info[in_time]" class="form-control inputdate" value="<?php echo $list['in_time'] ? date('Y-m-d',$list['in_time']) : ''; ?>" required />
+                                        </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label>培训负责人：</label><font color="#999">(点击匹配到的人员)</font>
-                                        <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="培训负责人" id="blame_name" />
-                                        <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
-                                    </div>
+                                        <div class="form-group col-md-6">
+                                            <label>培训负责人：</label><font color="#999">(点击匹配到的人员)</font>
+                                            <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="培训负责人" id="blame_name" />
+                                            <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
+                                        </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label>培训类型：</label><input type="text" name="info[day]" class="form-control" value="{$list.day}" required />
-                                    </div>
+                                        <div class="form-group col-md-6">
+                                            <label>培训类型：</label>
+                                            <select  class="form-control"  name="info[process_id]" >
+                                                <option value="">==请选择==</option>
+                                                <foreach name="process_data" item="v">
+                                                    <option value="{$v.id}" <?php if ($list['process_id']==$v['id']) echo "selected"; ?>>{$v.title}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label>培训对象：</label><input type="text" name="info[time_data]" class="form-control" value="{$list.time_data}" required />
-                                    </div>
+                                        <div class="form-group col-md-6">
+                                            <label>培训对象：</label><input type="text" name="info[obj]" class="form-control" value="{$list.obj}" required />
+                                        </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label>培训费用：</label><input type="text" name="info[OK_data]" class="form-control" value="{$list.OK_data}" required />
-                                    </div>
+                                        <div class="form-group col-md-6">
+                                            <label>培训费用(元)：</label><input type="text" name="info[cost]" class="form-control" value="{$list.cost}" />
+                                        </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label>培训方案：</label>
-                                        <select  class="form-control"  name="info[before_remind]"  required>
-                                            <option value=""></option>
-                                           <!-- <option value="1">提醒</option>
-                                            <option value="0">不提醒</option>-->
-                                        </select>
-                                    </div>
+                                        <div class="form-group col-md-12"></div>
+                                    </form>
 
-                                    <div class="form-group col-md-12"></div>
-
+                                    <form action="{:U('Cour/public_save_process')}" method="post" id="submitForm">
+                                        <input type="hidden" name="dosubmint" value="1">
+                                        <input type="hidden" name="saveType" value="2">
+                                        <input type="hidden" name="id" value="{$list.id}">
+                                    </form>
                                     <div id="formsbtn">
-                                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                        <button type="button" class="btn btn-info btn-lg" onclick="$('#myForm').submit()" id="lrpd">保存</button>
+                                        <?php if ($list['id'] && in_array($list['status'],array(0,2))){ ?>
+                                            <button type="button" class="btn btn-warning btn-lg" onclick="$('#submitForm').submit()" id="lrpd">提交</button>
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
                     </div><!--/.col (right) -->
                 </div>   <!-- /.row -->
-                </form>
             </section><!-- /.content -->
 
         </aside><!-- /.right-side -->

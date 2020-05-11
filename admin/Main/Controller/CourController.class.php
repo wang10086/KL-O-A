@@ -391,15 +391,33 @@ class CourController extends BaseController {
 	//培训计划
     public function courPlan(){
 	    $this->title('培训计划');
+        $db                         = M('cour_plan');
+        $title                      = trim(I('title'));
+        $where                      = array();
+        if ($title) $where['title'] = array('like', '%'.$title.'%');
+
+        $pagecount                  = $db->where($where)->count();
+        $page                       = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                      = $db->where($where)->limit($page->firstRow .','. $page->listRows)->order($this->orders('id'))->select();
+        $this->lists                = $lists;
+        $process_data               = get_process_data(); //流程
+        $this->process_data         = array_column($process_data,'title','id');
+        $this->audit_status         = get_submit_audit_status();
 
 	    $this->display('cour_plan');
     }
 
     public function add_plan(){
 	    $this->title('编辑培训计划');
+	    $id                         = I('id');
+	    if ($id){
+	        $db                     = M('cour_plan');
+	        $this->list             = $db->find($id);
+        }
 
-        //人员名单关键字
-        $this->userkey          = get_username();
+        $this->process_data     = get_process_data(); //流程
+        $this->userkey          = get_username(); //人员名单关键字
 	    $this->display();
     }
 
@@ -443,6 +461,42 @@ class CourController extends BaseController {
 	    if (!$id) $this->error('获取数据错误');
 	    $res                    = $db->where(array('id'=>$id))->delete();
 	    $res ? $this->success('删除成功') : $this->error('删除失败');
+    }
+
+    public function public_save_process(){
+        $saveType                   = I('saveType');
+        if (isset($_POST['dosubmint'])){
+            if ($saveType == 1){ //保存培训计划
+                $db                     = M('cour_plan');
+                $id                     = I('id');
+                $info                   = I('info');
+                $info['title']          = trim($info['title']);
+                $info['in_time']        = strtotime($info['in_time']);
+                if (!$info['title']) $this->error('培训标题不能为空');
+                if (!$info['blame_name'] || !$info['blame_uid']) $this->error('提交人信息输入有误');
+                $process_node_data      = get_process_node_data(7); //7=>制定业务季产品培训方案
+                $info['audit_uid']      = $process_node_data['blame_uid'] ? $process_node_data['blame_uid'] : 0;
+                $info['audit_uname']    = $process_node_data['blame_name'] ? $process_node_data['blame_name'] : '';
+                if ($id){
+                    $res                = $db->where(array('id'=>$id))->save($info);
+                }else{
+                    $info['create_time']= NOW_TIME;
+                    $info['create_user_name'] = cookie('nickname');
+                    $info['create_user_id'] = cookie('userid');
+                    $res                = $db->add($info);
+                    $id                 = $res;
+                }
+                $res ? $this->success('保存成功',U('Cour/add_plan',array('id'=>$id))) : $this->error('保存失败');
+            }
+            if ($saveType == 2){ //提交审核市场营销计划
+                $db                 = M('cour_plan');
+                $id                 = I('id');
+                $data               = array();
+                $data['status']     = 3;
+                $res                = $db->where(array('id'=>$id))->save($data);
+                $res ? $this->success('数据保存成功',U('Cour/courPlan')) : $this->error('数据保存失败');
+            }
+        }
     }
 
 
