@@ -431,9 +431,11 @@ class CourController extends BaseController {
     //培训方案
     public function courPro(){
         $this->title('培训方案');
+        $pro_need_lists         = M('cour_plan')->field('id,title')->order('id desc')->select();
 
-        //人员名单关键字
-        $this->userkey          = get_username();
+        $this->pro_need_lists   = $pro_need_lists;
+        $this->process_data     = get_process_data(); //流程
+        $this->userkey          = get_username(); //人员名单关键字
         $this->display('cour_pro');
     }
 

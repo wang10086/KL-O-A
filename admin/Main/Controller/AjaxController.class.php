@@ -2046,5 +2046,21 @@ class AjaxController extends Controller {
         $lists                      = M('approval_file_type')->where(array('pid'=>$type))->select();
         $this->ajaxReturn($lists);
     }
+
+    //data:{db:db,plan_id:plan_id},
+    public function get_public_plan_data(){
+        $database                   = I('db');
+        $db                         = M($database);
+        $id                         = I('id');
+        if (!$database || !$id){
+            $data                   = array();
+            $data['nn']             = 0;
+            $data['msg']            = '参数错误';
+            $this->ajaxReturn($data);
+        }else{
+            $data                   = $db->find($id);
+            $this->ajaxReturn($data);
+        }
+    }
 }
 

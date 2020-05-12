@@ -23,53 +23,47 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <div class="form-group col-md-6">
-                                            <label>培训标题：</label><!--<input type="text" name="info[title]" class="form-control" value="{$list.title}" required />-->
-                                            <select class="form-control" name="">
-                                                <option value=""></option>
+                                        <div class="form-group col-md-12">
+                                            <label>培训标题：</label>
+                                            <input type="hidden" name="info[title]" id="title" value="{$list.title}">
+                                            <select class="form-control" name="info[plan_id]" onchange="get_plan_data($(this).val())">
+                                                <option value="" selected disabled>==请选择==</option>
+                                                <foreach name="pro_need_lists" item="v">
+                                                    <option value="{$v.id}">{$v.title}</option>
+                                                </foreach>
                                             </select>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label>培训负责人：</label><font color="#999">(点击匹配到的人员)</font>
-                                            <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="培训负责人" id="blame_name" />
+                                            <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="培训负责人" id="blame_name" readonly />
                                             <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label>培训类型：</label>
-                                            <select class="form-control" name="">
-                                                <option value=""></option>
+                                            <select class="form-control" name="info[process_id]" id="process_id" readonly>
+                                                <foreach name="process_data" item="v">
+                                                    <option value="{$v.id}" <?php if ($v['id']==$list['process_id']) echo 'selected'; ?>>{$v.title}</option>
+                                                </foreach>
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-md-6">
-                                            <label>类型详情：</label>
-                                            <select class="form-control" name="">
-                                                <option value=""></option>
-                                            </select>
-                                        </div>
-
-                                        <!--<div class="form-group col-md-6">
-                                            <p><label>是否产生培训费用</label></p>
-                                            <input type="radio" name="info[standard]" value="1" > &#8194;是 &#12288;
-                                            <input type="radio" name="info[standard]" value="2" checked> &#8194;否
-                                        </div>-->
 
                                         <div class="form-group col-md-6 ">
                                             <label>是否产生培训费用</label> &emsp;
-                                            <input type="radio" name="need_worder_or_not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
-                                            <input type="radio" name="need_worder_or_not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
+                                            <input type="radio" name="info[is_cost]" value="0"  <?php if($list['is_cost']==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                            <input type="radio" name="info[is_cost]" value="1"  <?php if($list['is_cost']==1){ echo 'checked';} ?>> &#8194;需要
                                         </div>
 
                                         <div class="form-group col-md-6 ">
                                             <label>是否需要人资综合部的协助</label> &emsp;
-                                            <input type="radio" name="need_worder_or_not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
-                                            <input type="radio" name="need_worder_or_not" value="1"  <?php if($rad==1){ echo 'checked';} ?>> &#8194;需要
+                                            <input type="radio" name="info[need_help]" value="0"  <?php if($list['need_help']==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                            <input type="radio" name="info[need_help]" value="1"  <?php if($list['need_help']==1){ echo 'checked';} ?>> &#8194;需要
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                            <label>培训目的：</label><input type="text" name="info[OK_data]" class="form-control" value="{$list.OK_data}" required />
+                                            <label>培训目的：</label><input type="text" name="info[obj]" class="form-control" value="{$list.obj}" required />
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -240,6 +234,28 @@
         $('#payment_val').html(i);
         orderno();
         relaydate();
+    }
+
+    function get_plan_data(plan_id) {
+        if (!plan_id){ art_show_msg('培训标题错误',2000); return false; }
+        let db      = 'cour_plan';
+        $.ajax({
+            type:"POST",
+            url:"{:U('Ajax/get_public_plan_data')}",
+            data:{db:db,id:plan_id},
+            success:function(data){
+                if(data.nn == 0){
+                    art_show_msg(data.msg,3000);
+                    return false;
+                }else{
+                    $('#title').val(data.title);
+                    $('#blame_uid').val(data.blame_uid);
+                    $('#blame_name').val(data.blame_name);
+                    $('#process_id').val(data.process_id)
+                    $('#process_id').find("option[value="+data.process_id+"]").attr('selected',true);
+                }
+            }
+        })
     }
 </script>
 
