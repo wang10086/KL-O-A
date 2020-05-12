@@ -6243,3 +6243,11 @@ function diffBetweenTwoDays ($time1 = 0, $time2 = 0){
     $data                   = M('customer_gec')->where($where)->group("company_name")->order('pinyin ASC')->getField('company_name',true);
     return $data;
 }
+
+//获取内部地接信息
+function get_dijie_department_data(){
+    //业务部门id 2=>市场部 6=>京区业务中心; 7=>京外业务中心; 12=>南京; 13=>武汉; 14=> 沈阳; 15=>常规旅游; 16=>长春;
+     $department_ids        = array(2,6,7,12,13,14,16);
+     $data                  = M('salary_department')->where(array('id'=>array('in',$department_ids)))->select();
+     return $data;
+}

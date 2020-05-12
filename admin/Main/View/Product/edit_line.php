@@ -646,7 +646,7 @@
 
 			uploader.init();
 
-			closebtns();
+			//closebtns();
 		});
 
 		function removeThisFile(fid) {

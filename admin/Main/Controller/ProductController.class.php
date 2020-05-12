@@ -1698,6 +1698,60 @@ class ProductController extends BaseController {
         $this->display('product_chart_detail');
     }
 
+    //门户页面
+    public function public_view(){
+        $type                       = P::FILE_DOWNLOAD_YWJCP_PPT; //业务季产品培训PPT下载
+        $customer_files             = get_download_files($type);
+
+
+        $this->customer_files       = $customer_files;
+
+        $this->display();
+    }
+
+    //产品方案需求
+    public function public_pro_need(){
+        $this->title('产品方案需求');
+        $db                             = M('product_pro_need');
+        $title                          = trim(I('title'));
+        $where                          = array();
+        if ($title) $where['title']     = $title;
+        $pagecount                      = $db->where($where)->count();
+        $page                           = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+
+        $this->lists                    = $lists;
+        $this->kinds                    = M('project_kind')->getField('id,name',true);
+        $this->status                   = get_submit_audit_status();
+        $this->display('pro_need');
+    }
+
+    public function public_pro_need_add(){
+        $this->title('产品方案需求');
+        $PinYin                         = new Pinyin();
+        $id                             = I('id');
+        if ($id){
+            $db                         = M('product_pro_need');
+            $this->list                 = $db -> find($id);
+        }
+
+        //$this->userkey     = get_userkey();
+        $this->provinces   = M('provinces')->getField('id,name',true);
+        $geclist           = get_customerlist(1,$PinYin); //客户名称关键字
+        $this->geclist     = $geclist;
+        $this->geclist_str = json_encode($geclist,true);
+        $this->kinds       = get_project_kinds();
+        $this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
+        $this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
+        $this->apply_to    = C('APPLY_TO');
+        //$this->dijie_names = C('DIJIE_NAME');
+        $this->dijie_data  = get_dijie_department_data();
+        $this->display('pro_need_add');
+
+
+    }
+
     public function public_save(){
         $savetype                                   = I('savetype');
         $num                                        = 0;
@@ -2015,25 +2069,38 @@ class ProductController extends BaseController {
                 $res                            = $this->request_audit(P::REQ_TYPE_PRODUCTED, $producted_id) ;
                 $res ? $this->success('提交成功') : $this->error('提交申请失败');
             }
+
+            //保存产品方案需求
+            if ($savetype == 5){
+                $db                             = M('product_pro_need');
+                $id                             = I('id');
+                $info                           = I('info');
+                $info['title']                  = trim($info['title']);
+                $info['customer']               = trim($info['customer']);
+                $info['remark']                 = trim($info['remark']);
+                $info['addr']                   = trim($info['addr']);
+                $info['time']                   = strtotime($info['time']);
+                $info['departure']              = strtotime($info['departure']);
+                $manager_data                   = M('salary_department')->where(array('id'=>$info['dijie_department_id']))->find();
+                $info['dijie_manager_id']       = $manager_data['manager_id'];
+                $info['line_blame_uid']         = $manager_data['line_blame_uid'];
+                $info['line_blame_name']        = $manager_data['line_blame_name'];
+                $info['in_dijie']               = '1111';
+                $info['audit_uid']              = '21111';
+                $info['audit_uname']            = '测试审核人';
+
+                if (!$info['title']) $this->error('需求标题不能为空');
+                if ($id){
+                    $res                        = $db->where(array('id'=>$id))->save($info);
+                }else{
+                    $info['create_time']        = NOW_TIME;
+                    $info['create_user']        = cookie('userid');
+                    $info['create_user_name']   = cookie('nickname');
+                    $res                        = $db -> add($info);
+                }
+                $res ? $this->success('提交成功') : $this->error('提交申请失败');
+            }
         }
-    }
-
-    //门户页面
-    public function public_view(){
-        $type                       = P::FILE_DOWNLOAD_YWJCP_PPT; //业务季产品培训PPT下载
-        $customer_files             = get_download_files($type);
-
-
-        $this->customer_files       = $customer_files;
-
-        $this->display();
-    }
-
-    //产品方案需求
-    public function public_pro_need(){
-
-
-        $this->display('pro_need');
     }
 
 }
