@@ -18,7 +18,7 @@
                     <div class="col-md-12">
                         <div class="box box-warning">
                             <div class="box-header">
-                                <h3 class="box-title">{$_action_}</h3>
+                                <h3 class="box-title">基本信息</h3>
                             </div><!-- /.box-header -->
                             <div class="box-body">
                                 <div class="content">
@@ -48,7 +48,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4" style="clear: right;" id="line_or_product">
-                                            <label>客户时间：</label><input type="text" name="info[time]"  value="<?php echo $list['time'] ? date('Y-m-d',$list['time']) : ''; ?>" class="form-control inputdatetime"  required />
+                                            <label>递交客户时间：</label><input type="text" name="info[time]"  value="<?php echo $list['time'] ? date('Y-m-d',$list['time']) : ''; ?>" class="form-control inputdatetime"  required />
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -117,29 +117,49 @@
                                         <div class="form-group col-md-12">
                                             <label>备注：</label><textarea class="form-control"  name="info[remark]">{$list.remark}</textarea>
                                         </div>
+
+                                        <div id="formsbtn">
+                                            <button type="submit" class="btn btn-info btn-sm">保存</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
 
-                        <form action="{:U('Cour/public_save_process')}" method="post" id="submitForm">
-                            <input type="hidden" name="dosubmint" value="1">
-                            <input type="hidden" name="saveType" value="2">
-                            <input type="hidden" name="id" value="{$list.id}">
-                        </form>
 
-                        <div style="width:100%; text-align:center;">
+                        <div class="box box-warning">
+                            <div class="box-header">
+                                <h3 class="box-title">详细信息</h3>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="content">
+
+                                    <form method="post" action="{:U('Product/public_save')}" name="myform" id="myForm">
+                                        <input type="hidden" name="dosubmit" value="1">
+                                        <input type="hidden" name="savetype" value="5">
+                                        <input type="hidden" name="id" value="{$list.id}">
+
+
+                                        <div id="formsbtn">
+                                            <!--<button type="button" class="btn btn-info btn-sm" onclick="$('#myForm').submit()">保存</button>
+                                            <?php /*if ($list['id'] && in_array($list['status'],array(0,2))){ */?>
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="$('#submitForm').submit()" >提交</button>
+                                            --><?php /*} */?>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div><!-- /.box-body -->
+                        </div>
+
+
+
+                        <!--<div style="width:100%; text-align:center;">
                             <div class="callout callout-danger" id="noSubmitDiv" style="display: none">
                                 <h4>提示：如果无法提交需求,请按要求及时完善客户信息！</h4>
                             </div>
 
-                            <div id="formsbtn">
-                                <button type="button" class="btn btn-info btn-sm" onclick="$('#myForm').submit()">保存</button>
-                                <?php /*if ($list['id'] && in_array($list['status'],array(0,2))){ */?>
-                                    <button type="button" class="btn btn-warning btn-sm" onclick="$('#submitForm').submit()" <!--id="lrpd"--> >提交</button>
-                                <?php /*} */?>
-                            </div>
-                        </div>
+
+                        </div>-->
 
                     </div><!--/.col (right) -->
                 </div>   <!-- /.row -->
