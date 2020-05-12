@@ -22,7 +22,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',800,220);"><i class="fa fa-search"></i> 搜索</a>
+                                        <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,160);"><i class="fa fa-search"></i> 搜索</a>
                                         <if condition="rolemenu(array('Op/plans'))">
                                             <a href="{:U('Product/public_pro_need_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增方案需求</a>
                                         </if>

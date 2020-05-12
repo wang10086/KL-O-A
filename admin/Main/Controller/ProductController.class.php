@@ -1715,7 +1715,7 @@ class ProductController extends BaseController {
         $db                             = M('product_pro_need');
         $title                          = trim(I('title'));
         $where                          = array();
-        if ($title) $where['title']     = $title;
+        if ($title) $where['title']     = array('like','%'.$title.'%');
         $pagecount                      = $db->where($where)->count();
         $page                           = new Page($pagecount,P::PAGE_SIZE);
         $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
