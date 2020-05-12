@@ -358,7 +358,7 @@
                     </div>
 
                     <div class="form-group col-md-4">
-                        <label>接收人员：</label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$work_plan['exe_user_name']}" id="do_user_name" required />
+                        <label>接收人员：<font color="#999">(点击匹配到的人员信息)</font></label><input type="text" class="form-control" name="info[exe_user_name]"  value="{$work_plan['exe_user_name']}" id="do_user_name" required />
                         <input type="hidden" name="info[exe_user_id]" id="do_user_id"  value="{$work_plan['exe_user_id']}" />
                     </div>
 
