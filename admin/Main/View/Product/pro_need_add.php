@@ -142,9 +142,9 @@
                             <div class="box-body">
                                 <div class="content">
 
-                                    <form method="post" action="{:U('Product/public_save')}" name="myform" id="myForm">
+                                    <form method="post" action="{:U('Product/public_save')}" name="myform" id="">
                                         <input type="hidden" name="dosubmit" value="1">
-                                        <input type="hidden" name="savetype" value="5">
+                                        <input type="hidden" name="savetype" value="6">
                                         <input type="hidden" name="id" value="{$list.id}">
 
 
@@ -222,7 +222,7 @@
                 data:{kind:kind,province:province,department_id:dijie_department_id},
                 success:function (data) {
                     if (data.code == 'n'){
-                        art_show_msg(data.msg,4);
+                        art_show_msg(data.msg,3);
                         return false;
                     }else{
                         save_form('myForm')
@@ -244,7 +244,6 @@
                 url: "{:U('Ajax/get_line_blame_user_data')}",
                 data:{kind:kind,department_id:department_id},
                 success:function (data) {
-                    console.log(data);
                     $('input[name="info[line_blame_uid]"]').val(data.line_blame_uid);
                     $('input[name="info[line_blame_name]"]').val(data.line_blame_name);
                 },
@@ -322,7 +321,7 @@
                     $('input[name="info[producted_id]"]').val(producted_id);
 
                 },
-                cancelValue:'取消',
+                cancelVal:'取消',
                 cancel: function () {
                 }
             });
