@@ -149,17 +149,11 @@
                                                             <input type="text" class="form-control" name="payment[1][obj]" value="">
                                                         </div>
                                                         <div class="f_12">
-                                                            <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" id="blame_name" />
-                                                            <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
+                                                            <input type="text" name="payment[blame_name]" value="" class="form-control" id="blame_name_1" />
+                                                            <input type="hidden" name="payment[blame_uid]" value="" class="form-control" id="blame_uid_1" />
                                                         </div>
                                                         <div class="f_23">
                                                             <input type="text" class="form-control" name="payment[1][content]" value="">
-                                                            <!--<select class="form-control" name="payment[1][et_day]">
-                                                            <option value="">请选择</option>
-                                                            <?php /*for ($i=1; $i<=31; $i++){ */?>
-                                                                <option value="{$i}">{$i}日</option>
-                                                            <?php /*} */?>
-                                                        </select>-->
                                                         </div>
                                                         <div class="f_12">
                                                             <input type="text" class="form-control" name="payment[1][long]" value="">
@@ -225,13 +219,15 @@
         html += '<div class="f_12"><input type="text" class="form-control inputdate" name="payment['+i+'][time]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][addr]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][obj]" value=""></div>';
-        html += '<div class="f_12"><input type="text" name="info[blame_name]" value="{$list[\'blame_name\']}" class="form-control" id="blame_name" /><input type="hidden" name="info[blame_uid]" value="{$list[\'blame_uid\']}" class="form-control" id="blame_uid" /></div>';
+        html += '<div class="f_12"><input type="text" name="info[blame_name]" value="" class="form-control" id="blame_name_'+i+'" />' +
+            '<input type="hidden" name="info[blame_uid]" value="" class="form-control" id="blame_uid_'+i+'" /></div>';
         html += '<div class="f_23"><input type="text" class="form-control" name="payment['+i+'][content]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][long]" value=""></div>';
         html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][pro]" value=""></div>';
         html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick=`delbox("pretium_'+i+'")`>删除</a>';
         $('#payment').append(html);
         $('#payment_val').html(i);
+        autocomplete_id('blame_name_'+i,'blame_uid_'+i,keywords);
         orderno();
         relaydate();
     }

@@ -2062,5 +2062,139 @@ class AjaxController extends Controller {
             $this->ajaxReturn($data);
         }
     }
+
+    //检查产品方案需求数据信息 {kind:kind,province:province,department_id:dijie_department_id}
+
+    /**
+     * //业务部门id 2=>市场部 5=>计调部 6=>京区业务中心,7=>京外; 12=>南京; 13=>武汉; 14=> 沈阳;15=>常规业务 16=>长春;
+    $department_ids        = array(2,5,6,12,13,14,16);
+     * [1]=>北京市,[2]=>天津市,[3]=>河北省,[4]=>山西省,[5]=>内蒙古,[6]=>辽宁省,[7]=>吉林省,[8]=>黑龙江省,[9]=>上海市,[10]=>江苏省,[11]=>浙江省,[12]=>安徽省,[13]=>福建省,[14]=>江西省,[15]=>山东省,[16]=>河南省,[17]=>湖北省,[18]=>湖南省,[19]=>广东省,[20]=>广西省,[21]=>海南省,[22]=>重庆市,[23]=>四川省,[24]=>贵州省,[25]=>云南省,[26]=>西藏,[27]=>陕西省,[28]=>甘肃省,[29]=>青海省,[30]=>宁夏,[31]=>新疆,[32]=>台湾省,[33]=>香港,[34]=>澳门
+     * 2.对应各接待实施部门分别为：京区-目的地为京津冀（科学快车除外）的所有项目以及组团到公司各业务部门区域之外的项目，
+     * 计调部-市场部、京外业务中心、武汉项目部、沈阳项目部、长春项目部组团到各业务部门区域之外的项目，市场部-科学快车项目，
+     * 南京项目部-目的地为苏浙皖沪（科学快车除外）的所有项目以及组团到公司各业务部门区域之外的项目，
+     * 武汉沈阳长春项目部-目的地分别为鄂湘赣、辽鲁、吉黑（科学快车除外）的所有项目。
+     * 3.所选接待实施部门不符合2条逻辑时，提醒“接待实施部门选择有误，请检查项目类型和目的地是否准确”。
+     * 4.各接待实施部门对应线控负责人：京区-魏春竹，计调-研学旅行孟华、实验室建设梅轶宁、背景提升及小课题于洵、其他秦鸣，市场-杜莹，南京-李艳，武汉-李铮，沈阳-赵鹏，长春-赵艳。线控负责人自动匹配。
+     */
+    public function check_product_pro_need_data(){
+        $kind                       = I('kind');
+        $province                   = I('province');
+        $department_id              = I('department_id');
+        $data                       = array();
+        if (!$kind || !$province || !$department_id){
+            $data['code']           = 'n';
+            $data['msg']            = '数据错误';
+            $this->ajaxReturn($data);
+        }else{
+            //获取线控负责人信息
+           // $line_user_data                 = $this->get_line_blame_user_data($kind,$department_id);
+
+            //检查项目类型 , 接待实施部门和目的地信息是否匹配
+            if ($kind == 69){ //69=>科学快车 市场部负责所有的科学快车项目距
+                if ($department_id != 2){
+                    $data['code']           = 'n';
+                    $data['msg']            = '接待实施部门选择有误，请检查项目类型和目的地是否准确';
+                }else{
+                    $data['code']           = 'y';
+                    $data['msg']            = 'ok';
+                }
+                $this->ajaxReturn($data);
+            }else{
+                $province_data              = $this->get_department_to_province($department_id);
+                if (in_array($province, $province_data)){
+                    $data['code']           = 'y';
+                    $data['msg']            = 'ok';
+                }else{
+                    $data['code']           = 'n';
+                    $data['msg']            = '接待实施部门选择有误，请检查项目类型和目的地是否准确';
+                }
+                //$data['province']           = $province_data;
+            }
+            //$data['line_blame_uid']         = $line_user_data['line_blame_uid'];
+            //$data['line_blame_name']        = $line_user_data['line_blame_name'];
+            $this->ajaxReturn($data);
+        }
+
+    }
+
+    //获取线控负责人信息   各接待实施部门对应线控负责人：京区-魏春竹，计调-研学旅行孟华、实验室建设梅轶宁、背景提升及小课题于洵、其他秦鸣，市场-杜莹，南京-李艳，武汉-李铮，沈阳-赵鹏，长春-赵艳
+    public function get_line_blame_user_data(){
+        $kind                               = I('kind');
+        $department_id                      = I('department_id');
+        $lists                              = get_dijie_department_data();
+        $data                               = array();
+        switch ($department_id){
+            case in_array($department_id,array(2,6,12,13,14,16)): //业务部门id 2=>市场部 6=>京区业务中心, 12=>南京; 13=>武汉; 14=> 沈阳; 16=>长春;
+                foreach ($lists as $v){
+                    if ($v['id'] == $department_id){
+                        $data['line_blame_uid'] = $v['line_blame_uid'];
+                        $data['line_blame_name']= $v['line_blame_name'];
+                    }
+                }
+                break;
+            case 5: //5=>计调部
+                switch ($kind){
+                    case 54: //54=>研学旅行
+                        $data['line_blame_uid'] = 39;
+                        $data['line_blame_name']= '孟华';
+                        break;
+                    case 67: //67=>实验室建设
+                        $data['line_blame_uid'] = 232;
+                        $data['line_blame_name']= '梅轶宁';
+                        break;
+                    case in_array($kind,array(61,90)): //90=>背景提升及科研实习, 61=>小课题
+                        $data['line_blame_uid'] = 202;
+                        $data['line_blame_name']= '于洵';
+                        break;
+                    default:
+                        $data['line_blame_uid'] = 12;
+                        $data['line_blame_name']= '秦鸣';
+                }
+                break;
+            default:
+                $data['line_blame_uid'] = 0;
+                $data['line_blame_name']= '';
+        }
+        //return $data;
+        $this->ajaxReturn($data);
+    }
+
+    //检查项目类型 , 接待实施部门和目的地信息是否匹配
+    private function get_department_to_province($department_id){
+        $myDepartmentId                     = session('department'); //提需求人所在的部门ID
+        switch ($department_id){
+            case 13: //武汉项目部
+                $province = array(14,17,18); //[14]=>江西省,[17]=>湖北省,[18]=>湖南省
+            break;
+            case 14: //沈阳项目部
+                $province = array(6,15); //[6]=>辽宁省,[15]=>山东省
+                break;
+            case 16: //长春项目部
+                $province = array(7,8); //[7]=>吉林省,[8]=>黑龙江省
+                break;
+            case 6: //京区业务中心
+                if ($myDepartmentId == 6){
+                    $province = array(1,2,3,4,5,13,16,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34);
+                }else{
+                    $province = array(1,2,3); //[1]=>北京市,[2]=>天津市,[3]=>河北省,
+                }
+            break;
+            case 12: //南京
+                if ($myDepartmentId == 12){
+                    $province = array(9,10,11,12,4,5,13,16,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34); //[9]=>上海市,[10]=>江苏省,[11]=>浙江省,[12]=>安徽省
+                }else{
+                    $province = array(9,10,11,12); //[9]=>上海市,[10]=>江苏省,[11]=>浙江省,[12]=>安徽省
+                }
+            break;
+            case 5: //计调部
+                if (in_array($myDepartmentId, array(6,12))){ //6京区 12南京
+                    $province = array();
+                }else{
+                    $province = array(4,5,13,16,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34);
+                }
+                break;
+        }
+        return $province;
+    }
 }
 

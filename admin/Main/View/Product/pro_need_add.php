@@ -27,7 +27,7 @@
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="savetype" value="5">
                                         <input type="hidden" name="id" value="{$list.id}">
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-8">
                                             <label>项目名称：</label><input type="text" name="info[title]" value="{$list.title}" class="form-control" required />
                                         </div>
 
@@ -78,7 +78,7 @@
                                             <select  class="form-control"  name="info[province]" id="province" required >
                                                 <option value="" disabled selected>--请选择--</option>
                                                 <foreach name="provinces" key="k" item="v">
-                                                    <option value="{$v}" <?php if ($list['province'] == $v) echo ' selected'; ?> >{$v}</option>
+                                                    <option value="{$k}" <?php if ($list['province'] == $k) echo ' selected'; ?> >{$v}</option>
                                                 </foreach>
                                             </select>
                                         </div>
@@ -100,7 +100,7 @@
 
                                         <div class="form-group col-md-4">
                                             <label>接待实施部门</label>
-                                            <select  name="info[dijie_department_id]" class="form-control" required>
+                                            <select  name="info[dijie_department_id]" class="form-control" onchange="get_line_blame_data($(this).val())" required>
                                                 <option value="" selected disabled>--请选择--</option>
                                                 <foreach name="dijie_data" item="v">
                                                     <option value="{$v.id}" <?php if ($list['dijie_department_id'] == $v['id']) echo ' selected'; ?>>{$v.department}</option>
@@ -108,10 +108,15 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-md-4" id="sale">
+                                        <div class="form-group col-md-4">
                                             <label>线控负责人：</label>
-                                            <input type="hidden" class="form-control" name="info[line_blame_uid]" value="{$list.line_blame_uid}">
-                                            <input type="text" class="form-control" name="info[line_blame_name]" value="{$list.line_blame_name}">
+                                            <input type="hidden" class="form-control" name="info[line_blame_uid]" value="{$list.line_blame_uid}" />
+                                            <input type="text" class="form-control" name="info[line_blame_name]" value="{$list.line_blame_name}" readonly />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>客户预算：</label>
+                                            <input type="text" class="form-control" name="info[cost]" value="{$list.cost}" required />
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -119,7 +124,10 @@
                                         </div>
 
                                         <div id="formsbtn">
-                                            <button type="submit" class="btn btn-info btn-sm">保存</button>
+                                                <div class="callout callout-danger content" id="noSubmitDiv" style="display: none">
+                                                    <h4>提示：如果无法提交需求,请按要求及时完善客户信息！</h4>
+                                                </div>
+                                            <button type="button" onclick="check_dijie_province_data()" class="btn btn-info btn-sm" id="base_btn">保存</button>
                                         </div>
                                     </form>
                                 </div>
@@ -157,8 +165,6 @@
                             <div class="callout callout-danger" id="noSubmitDiv" style="display: none">
                                 <h4>提示：如果无法提交需求,请按要求及时完善客户信息！</h4>
                             </div>
-
-
                         </div>-->
 
                     </div><!--/.col (right) -->
@@ -200,27 +206,53 @@
 
         })
 
-        // 判断是否是内部地接
-       /*function is_or_not_dijie(){
-           var dj = $('#dijie').val();
-           if (dj == 1){
-               var HTML = '';
-               HTML += '<label>地接单位名称</label>'+
-                    '<select  name="info[dijie_name]" class="form-control" required>'+
-                    '<option value="" selected disabled>--请选择--</option>'+
-                    '<foreach name="dijie_names" key="k" item="v">'+
-                    '<option value="{$k}">{$v}</option>'+
-                    '</foreach>'+
-                    '</select>';
-               $('#dijie_name').html(HTML);
-               $('#sale').hide();
-               $('#dijie_name').show();
-           }else{
-               $('#dijie_name').hide();
-               $('#dijie_name').html('');
-               $('#sale').show();
-           }
-       }*/
+        // 判断填写数据是否正确
+        function check_dijie_province_data() {
+            let kind                = $('#kind').val();
+            let province            = $('#province').val();
+            let dijie_department_id = $('select[name="info[dijie_department_id]"]').val(); //地接部门ID
+
+            if (!kind){ art_show_msg('项目类型填写有误',2000); return false; }
+            if (!province){ art_show_msg('省份信息填写有误',2000); return false; }
+            if (!dijie_department_id){ art_show_msg('接待部门信息填写有误',2000); return false; }
+
+            $.ajax({
+                type: 'POST',
+                url: "{:U('Ajax/check_product_pro_need_data')}",
+                data:{kind:kind,province:province,department_id:dijie_department_id},
+                success:function (data) {
+                    if (data.code == 'n'){
+                        art_show_msg(data.msg,4);
+                        return false;
+                    }else{
+                        save_form('myForm')
+                    }
+                },
+                error:function (data) {
+                    console.log('error');
+                }
+            })
+        }
+
+        //获取线控负责人
+        function get_line_blame_data(department_id) {
+            let kind    = $('#kind').val();
+            if (!kind){ art_show_msg('项目类型信息错误',3); return false; }
+            if (!department_id){ art_show_msg('接待实施部门信息有误', 3); return false; }
+            $.ajax({
+                type: 'POST',
+                url: "{:U('Ajax/get_line_blame_user_data')}",
+                data:{kind:kind,department_id:department_id},
+                success:function (data) {
+                    console.log(data);
+                    $('input[name="info[line_blame_uid]"]').val(data.line_blame_uid);
+                    $('input[name="info[line_blame_name]"]').val(data.line_blame_name);
+                },
+                error:function (data) {
+                    console.log('error');
+                }
+            })
+        }
 
        //设置研学旅行项目类型(是否地接)
        function set_yxlx_op_type(kind){
@@ -297,19 +329,18 @@
         }
 
         function save_form(id) {
-            let project     = $('input[name="info[project]"]').val().trim();
-            let line_id     = $('input[name="info[line_id]"]').val();
-            let apply_to    = $('select[name="info[apply_to]"]').val();
+            let title       = $('input[name="info[title]"]').val().trim();
             let kind        = $('select[name="info[kind]"]').val();
             let number      = $('input[name="info[number]"]').val();
             let departure   = $('input[name="info[departure]"]').val();
             let days        = $('input[name="info[days]"]').val();
-            let province    = $('select[name="province"]').val();
-            let addr        = $('input[name="addr"]').val();
+            let province    = $('select[name="info[province]"]').val();
+            let addr        = $('input[name="info[addr]"]').val();
             let customer    = $('input[name="info[customer]"]').val();
-            let in_dijie    = $('select[name="info[in_dijie]"]').val();
-            let dijie_name  = $('select[name="info[dijie_name]"]').val();
-            let producted_id= $('input[name="info[producted_id]"]').val();
+            let dijie_dep_id= $('select[name="info[dijie_department_id]"]').val();
+            let line_uid    = $('input[name="info[line_blame_uid]"]').val();
+            let line_name   = $('input[name="info[line_blame_name]"]').val();
+            let cost        = $('input[name="info[cost]"]').val();
 
             let geclist     = <?php echo $geclist_str; ?>;
             let customer_num = 0;
@@ -317,8 +348,7 @@
                 customer_num++;
             }
 
-            if (!project)   { art_show_msg('项目名称不能为空',3); return false; }
-            if (!apply_to)  { art_show_msg('适合人群不能为空',3); return false; }
+            if (!title)   { art_show_msg('项目名称不能为空',3); return false; }
             if (!kind)      { art_show_msg('项目类型不能为空',3); return false; }
             if (!number)    { art_show_msg('预计人数不能为空',3); return false; }
             if (!departure) { art_show_msg('计划出团日期不能为空',3); return false; }
@@ -326,9 +356,9 @@
             if (!province)  { art_show_msg('目的地省份不能为空',3); return false; }
             if (!addr)      { art_show_msg('详细地址不能为空',3); return false; }
             if (!customer_num){ art_show_msg('客户单位填写错误',3); return false; }
-            if (!in_dijie)  { art_show_msg('是否内部地接不能为空',3); return false; }
-            if (in_dijie == 1 && !dijie_name){ art_show_msg('内部地接名称不能为空',3); return false; }
-            if (!line_id && !producted_id){ art_show_msg('线路或标准化产品不能为空',3); return false; }
+            if (!dijie_dep_id){ art_show_msg('接待实施部门错误',3); return false; }
+            if (!cost)      { art_show_msg('客户预算信息错误',3); return false; }
+            if (!line_uid || !line_name){ art_show_msg('线控负责人信息错误',3); return false; }
             $('#'+id).submit();
         }
 
@@ -344,11 +374,11 @@
                     success:function (data) {
                         if (data.stu == 0){
                             art_show_msg(data.msg,4);
-                            $('#lrpd').hide();
+                            $('#base_btn').hide();
                             $('#noSubmitDiv').show();
                             return false;
                         }else{
-                            $('#lrpd').show();
+                            $('#base_btn').show();
                             $('#noSubmitDiv').hide();
                         }
                     },
