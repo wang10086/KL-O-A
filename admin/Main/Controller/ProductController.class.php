@@ -1746,14 +1746,30 @@ class ProductController extends BaseController {
         $this->geclist     = $geclist;
         $this->geclist_str = json_encode($geclist,true);
         $this->kinds       = get_project_kinds();
-        $this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
-        $this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
+        //$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
+        //$this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
         $this->apply_to    = C('APPLY_TO');
         //$this->dijie_names = C('DIJIE_NAME');
         $this->dijie_data  = get_dijie_department_data();
         $this->teacher_level = C('TEACHER_LEVEL'); //教师级别
         $this->display('pro_need_add');
+    }
 
+    //详情页 / 审核页
+    public function public_pro_need_detail(){
+        $id                             = I('id');
+        if (!$id) $this->error('获取数据失败');
+        $need_db                        = M('product_pro_need');
+        $list                           = $need_db -> find($id);
+        $detail_db                      = $this->get_product_pro_need_tetail_db($list['kind']);
+        $detail                         = $detail_db->where(array('product_pro_need_id'=>$id))->find();
+
+        $this->list                     = $list;
+        $this->detail                   = $detail;
+        $this->provinces                = M('provinces')->getField('id,name',true);
+        $this->kinds                    = M('project_kind')->getField('id,name',true);
+        $this->apply_to                 = C('APPLY_TO');
+        $this->dijie_data               = get_dijie_department_data();
 
     }
 
