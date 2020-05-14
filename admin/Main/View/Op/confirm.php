@@ -87,7 +87,8 @@
                                     </h3>
                                 </div>
                                 <div class="box-body" id="resource">
-                                    <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
+                                    <?php /*if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ */?>
+                                    <?php if(!$jiesuan){ ?>  <!--各部门线控人员填写业务实施计划单-->
                                         <div class="form-group col-md-12 ml-12" id="res-need-or-not">
                                             <h2 class="tcs_need_h2">资源需求：</h2>
                                             <input type="radio" name="need-tcs-or-not" value="0"  <?php if($rad==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
