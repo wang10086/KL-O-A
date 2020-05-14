@@ -2114,7 +2114,7 @@ class ProductController extends BaseController {
                     $res                        = $db -> add($info);
                     $id                         = $res;
                 }
-                $res ? $this->success('提交成功',U('Product/public_pro_need_add',array('id'=>$id))) : $this->error('提交申请失败');
+                $res ? $this->success('保存成功',U('Product/public_pro_need_add',array('id'=>$id))) : $this->error('数据保存失败');
             }
 
             //保存科学课程详情
@@ -2145,7 +2145,15 @@ class ProductController extends BaseController {
             }
 
             //提交科学课程
-            if ($savetype == 7){}
+            if ($savetype == 7){
+                $id                             = I('id');
+                $db                             = M('product_pro_need'); //需求表
+                if (!$id) $this->error('获取数据失败');
+                $data                           = array();
+                $data['status']                 = 3;
+                $res                            = $db->where(array('id'=>$id))->save($data);
+                $res ? $this->success('提交成功',U('Product/public_pro_need')) : $this->error('提交申请失败');
+            }
         }
     }
 
