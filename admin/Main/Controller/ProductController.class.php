@@ -1723,6 +1723,7 @@ class ProductController extends BaseController {
 
         $this->lists                    = $lists;
         $this->kinds                    = M('project_kind')->getField('id,name',true);
+        $this->provinces                = M('provinces')->getField('id,name',true);
         $this->status                   = get_submit_audit_status();
         $this->display('pro_need');
     }
@@ -1733,7 +1734,10 @@ class ProductController extends BaseController {
         $id                             = I('id');
         if ($id){
             $db                         = M('product_pro_need');
-            $this->list                 = $db -> find($id);
+            $list                       = $db -> find($id);
+            $this->list                 = $list;
+            $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
+            $this->detail               = $detail_db->where(array('product_pro_need_id'=>$id))->find();
         }
 
         //$this->userkey     = get_userkey();
@@ -1747,9 +1751,20 @@ class ProductController extends BaseController {
         $this->apply_to    = C('APPLY_TO');
         //$this->dijie_names = C('DIJIE_NAME');
         $this->dijie_data  = get_dijie_department_data();
+        $this->teacher_level = C('TEACHER_LEVEL'); //教师级别
         $this->display('pro_need_add');
 
 
+    }
+
+    //获取详细信息数据表
+    private function get_product_pro_need_tetail_db($kind){
+        switch ($kind){
+            case 60: //60=>科学课程
+                $db         = M('product_pro_need_kxkc');
+                break;
+        }
+        return $db;
     }
 
     public function public_save(){
@@ -2097,9 +2112,40 @@ class ProductController extends BaseController {
                     $info['create_user']        = cookie('userid');
                     $info['create_user_name']   = cookie('nickname');
                     $res                        = $db -> add($info);
+                    $id                         = $res;
                 }
-                $res ? $this->success('提交成功') : $this->error('提交申请失败');
+                $res ? $this->success('提交成功',U('Product/public_pro_need_add',array('id'=>$id))) : $this->error('提交申请失败');
             }
+
+            //保存科学课程详情
+            if ($savetype == 6){
+                $need_db                        = M('product_pro_need'); //需求表
+                $kxkc_db                        = M('product_pro_need_kxkc'); //科学课程详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                //$producted_title                = I('producted_title'); //模块名称
+                $in_time                        = I('in_time');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['title']                  = trim($data['title']);
+                $data['addr']                   = trim($data['addr']);
+                $data['teacher_condition']      = trim($data['teacher_condition']);
+                $data['other_res_condition']    = trim($data['other_res_condition']);
+                $data['remark']                 = trim($data['remark']);
+                $data['product_pro_need_id']    = $need_id;
+                $data['lession_time']           = strtotime($data['lession_time']);
+                $data['st_time']                = strtotime(substr($in_time,0,8));
+                $data['et_time']                = strtotime(substr($in_time,-8));
+                $res                            = $id ? $kxkc_db->where(array('id'=>$id))->save($data) : $kxkc_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //提交科学课程
+            if ($savetype == 7){}
         }
     }
 

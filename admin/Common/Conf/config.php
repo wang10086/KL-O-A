@@ -290,6 +290,9 @@ $config = array(
         '1'     => '<span class="red">非常不满意</span>'
     ),
 
+    //教师级别
+    'TEACHER_LEVEL'        => array('硕士','博士','专家','公司内部人员','其他'),
+
     //评分,根据不同的项目类型显示不同内容
     'SCORE_KIND1'          => array(
         '1'  =>  '线路' ,

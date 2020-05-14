@@ -27,7 +27,7 @@
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="savetype" value="5">
                                         <input type="hidden" name="id" value="{$list.id}">
-                                        <div class="form-group col-md-8">
+                                        <div class="form-group col-md-12">
                                             <label>项目名称：</label><input type="text" name="info[title]" value="{$list.title}" class="form-control" required />
                                         </div>
 
@@ -41,13 +41,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group col-md-4" id="standard_box">
-                                            <p><label>是否标准化产品</label></p>
-                                            <input type="radio" name="info[standard]" value="1" > &#8194;标准化 &#12288;
-                                            <input type="radio" name="info[standard]" value="2" checked> &#8194;非标准化
-                                        </div>
-
-                                        <div class="form-group col-md-4" style="clear: right;" id="line_or_product">
+                                        <div class="form-group col-md-4">
                                             <label>递交客户时间：</label><input type="text" name="info[time]"  value="<?php echo $list['time'] ? date('Y-m-d',$list['time']) : ''; ?>" class="form-control inputdatetime"  required />
                                         </div>
 
@@ -100,7 +94,7 @@
 
                                         <div class="form-group col-md-4">
                                             <label>接待实施部门</label>
-                                            <select  name="info[dijie_department_id]" class="form-control" onchange="get_line_blame_data($(this).val())" required>
+                                            <select  name="info[dijie_department_id]" class="form-control" onchange="get_line_blame_data()" required>
                                                 <option value="" selected disabled>--请选择--</option>
                                                 <foreach name="dijie_data" item="v">
                                                     <option value="{$v.id}" <?php if ($list['dijie_department_id'] == $v['id']) echo ' selected'; ?>>{$v.department}</option>
@@ -134,38 +128,9 @@
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
 
-
-                        <div class="box box-warning">
-                            <div class="box-header">
-                                <h3 class="box-title">详细信息</h3>
-                            </div><!-- /.box-header -->
-                            <div class="box-body">
-                                <div class="content">
-
-                                    <form method="post" action="{:U('Product/public_save')}" name="myform" id="">
-                                        <input type="hidden" name="dosubmit" value="1">
-                                        <input type="hidden" name="savetype" value="6">
-                                        <input type="hidden" name="id" value="{$list.id}">
-
-
-                                        <div id="formsbtn">
-                                            <!--<button type="button" class="btn btn-info btn-sm" onclick="$('#myForm').submit()">保存</button>
-                                            <?php /*if ($list['id'] && in_array($list['status'],array(0,2))){ */?>
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="$('#submitForm').submit()" >提交</button>
-                                            --><?php /*} */?>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div><!-- /.box-body -->
-                        </div>
-
-
-
-                        <!--<div style="width:100%; text-align:center;">
-                            <div class="callout callout-danger" id="noSubmitDiv" style="display: none">
-                                <h4>提示：如果无法提交需求,请按要求及时完善客户信息！</h4>
-                            </div>
-                        </div>-->
+                        <?php if ($list['kind'] == 60){ ?> <!--60=>科学课程-->
+                            <include file="pro_60" />
+                        <?php } ?>
 
                     </div><!--/.col (right) -->
                 </div>   <!-- /.row -->
@@ -180,9 +145,6 @@
     <script type="text/javascript">
 
         $(function () {
-            //$('#dijie_name').hide();
-            //$('#wonder_department').hide();
-
             //是否标准化
             $('#standard_box').find('ins').each(function () {
                 $(this).click(function () {
@@ -196,11 +158,15 @@
                             '<a  href="javascript:;" class="btn btn-success btn-sm" onClick="select_standard_product()">获取产品</a>' +
                             '</span>'
                     }else{ //非标准化
-                        html  = '<label>**客户时间：</label>' +
-                            '<input type="text" name="info[departure]"  value="" class="form-control inputdatetime"  required />';
+                        html = '<label style="display: block">标准化产品</label>' +
+                            '<input type="text" name="producted_title" class="form-control" style="width: 75%; display: inline-block;" readonly>' +
+                            '<input type="hidden" name="info[producted_id]">' +
+                            '<span style="display: inline-block; width: 20%; margin-left: 3px">' +
+                            '<a  href="javascript:;" class="btn btn-default btn-sm">获取产品</a>' +
+                            '</span>'
                     }
                     $('#line_or_product').html(html)
-                    relaydate();
+                    //relaydate();
                 })
             })
 
@@ -235,22 +201,25 @@
         }
 
         //获取线控负责人
-        function get_line_blame_data(department_id) {
+        function get_line_blame_data() {
+            let department_id = $('select[name="info[dijie_department_id]"]').val();
             let kind    = $('#kind').val();
-            if (!kind){ art_show_msg('项目类型信息错误',3); return false; }
-            if (!department_id){ art_show_msg('接待实施部门信息有误', 3); return false; }
-            $.ajax({
-                type: 'POST',
-                url: "{:U('Ajax/get_line_blame_user_data')}",
-                data:{kind:kind,department_id:department_id},
-                success:function (data) {
-                    $('input[name="info[line_blame_uid]"]').val(data.line_blame_uid);
-                    $('input[name="info[line_blame_name]"]').val(data.line_blame_name);
-                },
-                error:function (data) {
-                    console.log('error');
-                }
-            })
+            if (department_id){
+                if (!kind){ art_show_msg('项目类型信息错误',3); return false; }
+                // if (!department_id){ art_show_msg('接待实施部门信息有误', 3); return false; }
+                $.ajax({
+                    type: 'POST',
+                    url: "{:U('Ajax/get_line_blame_user_data')}",
+                    data:{kind:kind,department_id:department_id},
+                    success:function (data) {
+                        $('input[name="info[line_blame_uid]"]').val(data.line_blame_uid);
+                        $('input[name="info[line_blame_name]"]').val(data.line_blame_name);
+                    },
+                    error:function (data) {
+                        console.log('error');
+                    }
+                })
+            }
         }
 
        //设置研学旅行项目类型(是否地接)
@@ -275,6 +244,7 @@
             set_yxlx_op_type(kind) // 设置研学旅行项目类型(是否地接)
             $('input[name="producted_title"]').val('');
             $('input[name="info[producted_id]"]').val('');
+            get_line_blame_data();
         })
 
         //选择行程线路

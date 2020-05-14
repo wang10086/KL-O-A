@@ -54,7 +54,7 @@
                                                 <td>{$row.number}人</td>
                                                 <td>{$row['departure']|date='Y-m-d',###}</td>
                                                 <td>{$row.days}天</td>
-                                                <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$row.province} - {$row.addr}</div></td>
+                                                <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$provinces[$row[province]]} - {$row.addr}</div></td>
                                                 <td><div class="tdbox_long" style="width:80px" title="<?php echo $kinds[$row['kind']]; ?>"><?php echo $kinds[$row['kind']]; ?></div></td>
                                                 <td>{$row.create_user_name}</td>
                                                 <td>{$status[$row[status]]}</td>

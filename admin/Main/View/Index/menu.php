@@ -44,7 +44,7 @@
                         </li>
 
                         <if condition="rolemenu(array('Op/index','Op/plans','Project/kind','Op/relpricelist','Product/line'))">
-                        <li class="treeview {:ison(CONTROLLER_NAME,'Op')} {:on('Project/addkind')} {:on('Product/line')} {:on('Product/add_line')}">
+                        <li class="treeview {:ison(CONTROLLER_NAME,'Op')} {:on('Project/addkind')} {:on('Product/line')} {:on('Product/add_line')} {:on('Product/public_pro_need')} {:on('Product/public_pro_need_add')}">
                             <a href="javascript:;">
                                 <i class="fa fa-shopping-cart"></i>
                                 <span>项目管理</span>
@@ -52,7 +52,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <if condition="rolemenu(array('Product/line'))">
-                                    <li class="{:on('Product/line')} {:on('Product/add_line')}"><a href="{:U('Product/line')}"><i class="fa fa-angle-right"></i> 项目方案</a></li>
+                                    <li class="{:on('Product/line')} {:on('Product/add_line')} {:on('Product/public_pro_need')} {:on('Product/public_pro_need_add')}"><a href="{:U('Product/line')}"><i class="fa fa-angle-right"></i> 项目方案</a></li>
                                 </if>
                                 <if condition="rolemenu(array('Op/plans'))">
                                     <li><a href="{:U('Op/plans')}"><i class="fa fa-angle-right"></i> 我要立项</a></li>
