@@ -1737,7 +1737,7 @@ class ProductController extends BaseController {
             $list                       = $db -> find($id);
             $this->list                 = $list;
             $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
-            //$this->detail               = $detail_db->where(array('product_pro_need_id'=>$id))->find();
+            $this->detail               = $detail_db->where(array('product_pro_need_id'=>$id))->find();
         }
 
         $this->provinces                = M('provinces')->getField('id,name',true);
