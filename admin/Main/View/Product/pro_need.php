@@ -32,12 +32,12 @@
                                 <div class="box-body">
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" data="" width="160">需求名称</th>
-                                            <th class="sorting" data="">人数</th>
+                                            <th class="sorting" data="" >需求名称</th>
+                                            <th class="sorting" data=""80 width="">人数</th>
                                             <th class="sorting" data="">出行时间</th>
-                                            <th class="sorting" data="">天数</th>
-                                            <th class="sorting" width="80" data="">目的地</th>
-                                            <th class="sorting" width="80" data="">类型</th>
+                                            <th class="sorting" data="" width="80">天数</th>
+                                            <th class="sorting" data="">目的地</th>
+                                            <th class="sorting" data="">类型</th>
                                             <th class="sorting" data="">创建者</th>
                                             <th class="sorting" data="">状态</th>
                                             <if condition="rolemenu(array('Op/plans'))">
@@ -50,12 +50,12 @@
                                         </tr>
                                         <foreach name="lists" item="row">
                                             <tr>
-                                                <td><div class="tdbox_long"><a href="{:U('',array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
+                                                <td><div class="tdbox_long"><a href="{:U('Product/public_pro_need_detail',array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
                                                 <td>{$row.number}人</td>
                                                 <td>{$row['departure']|date='Y-m-d',###}</td>
                                                 <td>{$row.days}天</td>
-                                                <td><div class="tdbox_long" style="width:80px" title="{$row.destination}">{$provinces[$row[province]]} - {$row.addr}</div></td>
-                                                <td><div class="tdbox_long" style="width:80px" title="<?php echo $kinds[$row['kind']]; ?>"><?php echo $kinds[$row['kind']]; ?></div></td>
+                                                <td>{$provinces[$row[province]]} - {$row.addr}</td>
+                                                <td><?php echo $kinds[$row['kind']]; ?></td>
                                                 <td>{$row.create_user_name}</td>
                                                 <td>{$status[$row[status]]}</td>
                                                 <if condition="rolemenu(array('Op/plans'))">

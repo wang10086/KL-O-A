@@ -1740,23 +1740,25 @@ class ProductController extends BaseController {
             $this->detail               = $detail_db->where(array('product_pro_need_id'=>$id))->find();
         }
 
-        //$this->userkey     = get_userkey();
-        $this->provinces   = M('provinces')->getField('id,name',true);
-        $geclist           = get_customerlist(1,$PinYin); //客户名称关键字
-        $this->geclist     = $geclist;
-        $this->geclist_str = json_encode($geclist,true);
-        $this->kinds       = get_project_kinds();
-        //$this->userlist    =  M('account')->where('`id`>3')->getField('id,nickname', true);
-        //$this->rolelist    =  M('role')->where('`id`>10')->getField('id,role_name', true);
-        $this->apply_to    = C('APPLY_TO');
-        //$this->dijie_names = C('DIJIE_NAME');
-        $this->dijie_data  = get_dijie_department_data();
-        $this->teacher_level = C('TEACHER_LEVEL'); //教师级别
+        $this->provinces                = M('provinces')->getField('id,name',true);
+        $geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
+        $this->geclist                  = $geclist;
+        $this->geclist_str              = json_encode($geclist,true);
+        $this->kinds                    = get_project_kinds();
+        //$this->userlist               =  M('account')->where('`id`>3')->getField('id,nickname', true);
+        //$this->rolelist               =  M('role')->where('`id`>10')->getField('id,role_name', true);
+        //$this->dijie_names            = C('DIJIE_NAME');
+        //$this->userkey                = get_userkey();
+        $this->apply_to                 = C('APPLY_TO');
+        $this->dijie_data               = get_dijie_department_data();
+        $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
+        $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
         $this->display('pro_need_add');
     }
 
     //详情页 / 审核页
     public function public_pro_need_detail(){
+        $this->title('产品方案需求');
         $id                             = I('id');
         if (!$id) $this->error('获取数据失败');
         $need_db                        = M('product_pro_need');
@@ -1768,9 +1770,11 @@ class ProductController extends BaseController {
         $this->detail                   = $detail;
         $this->provinces                = M('provinces')->getField('id,name',true);
         $this->kinds                    = M('project_kind')->getField('id,name',true);
+        $this->departments              =  M('salary_department')->getField('id,department',true);
         $this->apply_to                 = C('APPLY_TO');
-        $this->dijie_data               = get_dijie_department_data();
-
+        $this->status                   = get_submit_audit_status();
+        $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
+        $this->display('pro_need_detail');
     }
 
     //获取详细信息数据表
@@ -2116,9 +2120,9 @@ class ProductController extends BaseController {
                 $info['dijie_manager_id']       = $manager_data['manager_id'];
                 $info['line_blame_uid']         = $manager_data['line_blame_uid'];
                 $info['line_blame_name']        = $manager_data['line_blame_name'];
-                $info['in_dijie']               = '1111';
-                $info['audit_uid']              = '21111';
-                $info['audit_uname']            = '测试审核人';
+                $info['in_dijie']               = 0; //是否为内部地接团
+                $info['audit_uid']              = $info['line_blame_uid'];
+                $info['audit_uname']            = $info['line_blame_name'];
 
                 if (!$info['title']) $this->error('需求标题不能为空');
                 if ($id){
@@ -2169,6 +2173,23 @@ class ProductController extends BaseController {
                 $data['status']                 = 3;
                 $res                            = $db->where(array('id'=>$id))->save($data);
                 $res ? $this->success('提交成功',U('Product/public_pro_need')) : $this->error('提交申请失败');
+            }
+
+            //审核
+            if ($savetype == 8){
+                $id                             = I('id');
+                $status                         = I('status');
+                $audit_remark                   = I('audit_remark');
+                $db                             = M('product_pro_need');
+                if (!$id){ $this->error('获取数据错误'); }
+                $data                           = array();
+                $data['status']                 = $status;
+                $data['audit_time']             = NOW_TIME;
+                $data['audit_remark']           = trim($audit_remark);
+                $data['audit_uid']              = cookie('userid');
+                $data['audit_uname']            = cookie('nickname');
+                $res                            = $db->where(array('id'=>$id))->save($data);
+                $res ? $this->success('审核成功',U('Product/public_pro_need')) : $this->error('审核失败');
             }
         }
     }

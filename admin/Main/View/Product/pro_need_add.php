@@ -129,7 +129,7 @@
                         </div><!-- /.box -->
 
                         <?php if ($list['kind'] == 60){ ?> <!--60=>科学课程-->
-                            <include file="pro_60" />
+                            <include file="pro_60_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->
