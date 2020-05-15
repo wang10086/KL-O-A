@@ -123,7 +123,7 @@
 
             <div id="formsbtn">
                 <button type="button" class="btn btn-info btn-sm" onclick="$('#detailForm').submit()">保存</button>
-                <?php if ($list['id'] && in_array($list['status'],array(0,2))){ ?>
+                <?php if ($detail['id'] && in_array($list['status'],array(0,2))){ ?>
                     <button type="button" class="btn btn-warning btn-sm" onclick="$('#submitForm').submit()" >提交</button>
                 <?php } ?>
             </div>

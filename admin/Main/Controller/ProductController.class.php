@@ -1737,7 +1737,9 @@ class ProductController extends BaseController {
             $list                       = $db -> find($id);
             $this->list                 = $list;
             $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
-            $this->detail               = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
+            $detail                     = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
+            $this->detail               = $detail;
+            $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
         }
 
         $this->provinces                = M('provinces')->getField('id,name',true);
@@ -1782,6 +1784,9 @@ class ProductController extends BaseController {
         switch ($kind){
             case 60: //60=>科学课程
                 $db         = M('product_pro_need_kxkc');
+                break;
+            case 82: //82=> 科学博物园
+                $db         = M('product_pro_need_kxbwy');
                 break;
             default:
                 $db         = '';
@@ -2206,6 +2211,36 @@ class ProductController extends BaseController {
                 $data['audit_uname']            = cookie('nickname');
                 $res                            = $db->where(array('id'=>$id))->save($data);
                 $res ? $this->success('审核成功',U('Product/public_pro_need')) : $this->error('审核失败');
+            }
+
+            //保存科学博物院需求详情
+            if ($savetype == 9){
+                $need_db                        = M('product_pro_need'); //需求表
+                $kxbwy_db                       = M('product_pro_need_kxbwy'); //科学博物园详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                $in_time                        = I('in_time');
+                $yard                           = I('yard');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['other_yf_condition']     = trim($data['other_yf_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['product_pro_need_id']    = $need_id;
+                $data['time']                   = strtotime($data['time']);
+                $data['time1']                  = strtotime($data['time1']);
+                $data['time2']                  = strtotime($data['time2']);
+                $data['time3']                  = strtotime($data['time3']);
+                $data['st_time']                = strtotime(substr($in_time,0,8));
+                $data['et_time']                = strtotime(substr($in_time,-8));
+                $data['yard']                   = implode(',',$yard);
+                $res                            = $id ? $kxbwy_db->where(array('id'=>$id))->save($data) : $kxbwy_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
         }
     }
