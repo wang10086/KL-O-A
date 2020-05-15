@@ -131,7 +131,7 @@
                         <input type="radio" name="data[is_need_lecture]" value="0" <?php if ($detail['is_need_lecture'] == 0) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="width: 50%; float: left;">
-                        时间：<input type="text" name="data[lecture_time]" value="{$detail.lecture_time|date='Y-m-d H:i:s',###}" class="inputdatetime" style="border: none; border-bottom: solid 1px; width: 150px;" > &#12288;&#12288;
+                        时间：<input type="text" name="data[lecture_time]" value="<?php echo $detail['lecture_time'] ? date('Y-m-d H:i:s',$detail['lecture_time']) : ''; ?>" class="inputdatetime" style="border: none; border-bottom: solid 1px; width: 150px;" > &#12288;&#12288;
                         时长：<input type="text" name="data[lecture_long]" value="{$detail['lecture_long']}" style="border: none; border-bottom: solid 1px; width: 100px;" > &#12288;&#12288;
                         地点：<input type="text" name="data[lecture_addr]" value="{$detail['lecture_addr']}" style="border: none; border-bottom: solid 1px; width: 150px;" > &#12288;&#12288;
                     </div>
