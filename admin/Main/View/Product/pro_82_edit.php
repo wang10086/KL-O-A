@@ -78,7 +78,7 @@
                     <div style="width: 70%; float: left;">
                         地点：<input type="text" name="data[addr1]" value="{$detail['addr1']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                         时间：<input type="text" name="data[time1]" value="{$detail['time1']}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        时长：<input type="text" name="data[long1]" value="{$detail['long1']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        时长(小时)：<input type="text" name="data[long1]" value="{$detail['long1']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -91,7 +91,7 @@
                     <div style="width: 70%; float: left;">
                         地点：<input type="text" name="data[addr2]" value="{$detail['addr2']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                         时间：<input type="text" name="data[time2]" value="{$detail['time2']}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        时长：<input type="text" name="data[long2]" value="{$detail['long2']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        时长(小时)：<input type="text" name="data[long2]" value="{$detail['long2']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -104,7 +104,7 @@
                     <div style="width: 70%; float: left;">
                         地点：<input type="text" name="data[addr3]" value="{$detail['addr3']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                         时间：<input type="text" name="data[time3]" value="{$detail['time3']}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        时长：<input type="text" name="data[long3]" value="{$detail['long3']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        时长(小时)：<input type="text" name="data[long3]" value="{$detail['long3']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -200,6 +200,18 @@
                     <div style="width: 75%; float: left;">
                         数量：<input type="text" name="data[poster_num]" value="{$detail['poster_num']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
                         要求：<input type="text" name="data[poster_other]" value="{$detail['poster_other']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12" style="overflow: hidden;">
+                    <label style="float: left; width: 80px;">手册要求：</label>
+                    <div style="width: 15%; float: left;">
+                        <input type="radio" name="data[is_need_manual]" value="1" <?php if ($detail['is_need_manual'] == 1) echo "checked"; ?>> &#8194;是 &#12288;
+                        <input type="radio" name="data[is_need_manual]" value="0" <?php if ($detail['is_need_manual'] == 0) echo "checked"; ?>> &#8194;否
+                    </div>
+                    <div style="width: 75%; float: left;">
+                        数量：<input type="text" name="data[manual_num]" value="{$detail['manual_num']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        页数：<input type="text" name="data[page_num]" value="{$detail['page_num']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
                     </div>
                 </div>
 

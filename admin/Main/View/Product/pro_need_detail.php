@@ -92,6 +92,10 @@
 
                             <?php if ($list['kind'] == 60){ ?> <!--60=>科学课程-->
                                 <include file="pro_60_read" />
+                            <?php }elseif ($list['kind'] == 82){ ?> <!--82=>科学博物园-->
+                                <include file="pro_82_read" />
+                            <?php }elseif ($list['kind'] == 54){ ?> <!--54=>研学旅行-->
+                                <include file="pro_54_read" />
                             <?php } ?>
 
                             <!--审核-->
