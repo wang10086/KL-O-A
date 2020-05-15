@@ -1789,6 +1789,20 @@ class ProductController extends BaseController {
         return $db;
     }
 
+    public function del_pro_need(){
+        $id                             = I('id');
+        if (!$id){ $this->error('获取数据错误'); }
+        $num                            = 0;
+        $db                             = M('product_pro_need');
+        $kind                           = $db->where(array('id'=>$id))->getField('kind');
+        $detail_db                      = $this->get_product_pro_need_tetail_db($kind);
+        $res1                           = $db->where(array('id'=>$id))->delete();
+        $res2                           = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->delete() : '';
+        if ($res1) $num++;
+        if ($res2) $num++;
+        $num > 0 ? $this->success('删除成功') : $this->error('删除失败');
+    }
+
     public function public_save(){
         $savetype                                   = I('savetype');
         $num                                        = 0;

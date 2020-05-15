@@ -44,7 +44,7 @@
                                                 <th width="40" class="taskOptions">跟进</th>
                                             </if>
 
-                                            <if condition="rolemenu(array(''))">
+                                            <if condition="rolemenu(array('Product/del_pro_need'))">
                                                 <th width="40" class="taskOptions">删除</th>
                                             </if>
                                         </tr>
@@ -63,9 +63,9 @@
                                                         <a href="{:U('Product/public_pro_need_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
                                                     </td>
                                                 </if>
-                                                <if condition="rolemenu(array(''))">
+                                                <if condition="rolemenu(array('Product/del_pro_need'))">
                                                     <td class="taskOptions">
-                                                        <button onClick="javascript:ConfirmDel('{:U('',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
+                                                        <button onClick="javascript:ConfirmDel('{:U('Product/del_pro_need',array('id'=>$row['id']))}')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button>
                                                     </td>
                                                 </if>
                                             </tr>
