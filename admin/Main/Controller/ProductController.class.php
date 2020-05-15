@@ -1788,6 +1788,9 @@ class ProductController extends BaseController {
             case 82: //82=> 科学博物园
                 $db         = M('product_pro_need_kxbwy');
                 break;
+            case 54: //54=> 研学旅行
+                $db         = M('product_pro_need_yxlx');
+                break;
             default:
                 $db         = '';
         }
@@ -2094,22 +2097,6 @@ class ProductController extends BaseController {
                 }
             }
 
-            //标准化模块申请审批
-            if ($savetype == 4){
-                $product_id                     = trim(I('product_id'));
-                if (!$product_id){              $this->error('获取数据失败'); }
-                $data                           = array();
-                $data['audit_status']           = 0; //已提交,待审核
-                $res                            = M('product')->where(array('id'=>$product_id))->save($data);
-                $where                          = array();
-                $where['req_type']              = P::REQ_TYPE_PRODUCT_NEW;
-                $where['req_id']                = $product_id;
-                $list                           = M('audit_log')->where($where)->find();
-                if ($list){                     $this->error('您已经提交审核过了,请勿重复提交'); }
-                $res                            = $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $product_id) ;
-                $res ? $this->success('提交成功') : $this->error('提交申请失败');
-            }
-
             //审核标准化产品
             if ($savetype == 3){
                 $producted_id                   = I('producted_id');
@@ -2123,6 +2110,22 @@ class ProductController extends BaseController {
                 $list                           = M('audit_log')->where($where)->find();
                 if ($list){                     $this->error('您已经提交审核过了,请勿重复提交'); }
                 $res                            = $this->request_audit(P::REQ_TYPE_PRODUCTED, $producted_id) ;
+                $res ? $this->success('提交成功') : $this->error('提交申请失败');
+            }
+
+            //标准化模块申请审批
+            if ($savetype == 4){
+                $product_id                     = trim(I('product_id'));
+                if (!$product_id){              $this->error('获取数据失败'); }
+                $data                           = array();
+                $data['audit_status']           = 0; //已提交,待审核
+                $res                            = M('product')->where(array('id'=>$product_id))->save($data);
+                $where                          = array();
+                $where['req_type']              = P::REQ_TYPE_PRODUCT_NEW;
+                $where['req_id']                = $product_id;
+                $list                           = M('audit_log')->where($where)->find();
+                if ($list){                     $this->error('您已经提交审核过了,请勿重复提交'); }
+                $res                            = $this->request_audit(P::REQ_TYPE_PRODUCT_NEW, $product_id) ;
                 $res ? $this->success('提交成功') : $this->error('提交申请失败');
             }
 
@@ -2237,6 +2240,32 @@ class ProductController extends BaseController {
                 $data['et_time']                = strtotime(substr($in_time,-8));
                 $data['yard']                   = implode(',',$yard);
                 $res                            = $id ? $kxbwy_db->where(array('id'=>$id))->save($data) : $kxbwy_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //保存研学旅行需求详情
+            if ($savetype == 10){
+                $need_db                        = M('product_pro_need'); //需求表
+                $yxlx_db                        = M('product_pro_need_yxlx'); //研学旅行详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                $in_time                        = I('in_time');
+                //$yard                           = I('yard');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['other_line_condition']   = trim($data['other_line_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['product_pro_need_id']    = $need_id;
+                $data['lecture_time']           = strtotime($data['lecture_time']);
+                $data['st_time']                = strtotime(substr($in_time,0,10));
+                $data['et_time']                = strtotime(substr($in_time,-10));
+                $res                            = $id ? $yxlx_db->where(array('id'=>$id))->save($data) : $yxlx_db->add($data);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;

@@ -11,21 +11,24 @@
                 <input type="hidden" name="need_id" value="{$list.id}">
                 <input type="hidden" name="id" value="{$detail.id}">
 
+                <!--是否标准化-->
+                <include file="is_standard" />
+
                 <P class="border-bottom-line"> 研发方案需求</P>
-                <div class="form-group col-md-8">
+                <div class="form-group col-md-12">
                     <label>课程名称：</label>
                     <input type="text" class="form-control" name="data[title]" value="{$detail.title}" required />
                 </div>
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-8">
                     <label>上课地址：</label>
                     <input type="text" class="form-control" name="data[addr]" value="{$detail.addr}" required />
                 </div>
 
-                <div class="form-group col-md-4" id="standard_box">
+                <!--<div class="form-group col-md-4" id="standard_box">
                     <p><label>是否标准化产品</label></p>
-                    <input type="radio" name="info[standard]" value="1" <?php if ($list['standard'] == 1) echo "checked"; ?>> &#8194;标准化 &#12288;
-                    <input type="radio" name="info[standard]" value="2" <?php if ($list['standard'] == 2) echo "checked"; ?>> &#8194;非标准化
+                    <input type="radio" name="info[standard]" value="1" <?php /*if ($list['standard'] == 1) echo "checked"; */?>> &#8194;标准化 &#12288;
+                    <input type="radio" name="info[standard]" value="2" <?php /*if ($list['standard'] == 2) echo "checked"; */?>> &#8194;非标准化
                 </div>
 
                 <div class="form-group col-md-4" style="clear: right;" id="line_or_product">
@@ -35,7 +38,7 @@
                     <span style="display: inline-block; width: 20%; margin-left: 3px">
                         <a  href="javascript:;" class="btn btn-default btn-sm" >获取产品</a>
                     </span>
-                </div>
+                </div>-->
 
                 <div class="form-group col-md-4">
                     <label>开课时间：(第一次上课时间)</label><input type="text" name="data[lession_time]"  value="<?php echo $detail['lession_time'] ? date('Y-m-d',$detail['lession_time']) : ''; ?>" class="form-control inputdatetime"  required />
