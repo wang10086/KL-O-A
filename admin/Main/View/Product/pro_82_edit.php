@@ -77,7 +77,7 @@
                     </div>
                     <div style="width: 70%; float: left;">
                         地点：<input type="text" name="data[addr1]" value="{$detail['addr1']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        时间：<input type="text" name="data[time1]" value="{$detail['time1']}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        时间：<input type="text" name="data[time1]" value="{$detail.time1|date='Y-m-d',###}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                         时长(小时)：<input type="text" name="data[long1]" value="{$detail['long1']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                     </div>
                     <div style="width: 70%; float: left;">
                         地点：<input type="text" name="data[addr2]" value="{$detail['addr2']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        时间：<input type="text" name="data[time2]" value="{$detail['time2']}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        时间：<input type="text" name="data[time2]" value="{$detail.time2|date='Y-m-d',###}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                         时长(小时)：<input type="text" name="data[long2]" value="{$detail['long2']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                     </div>
                     <div style="width: 70%; float: left;">
                         地点：<input type="text" name="data[addr3]" value="{$detail['addr3']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        时间：<input type="text" name="data[time3]" value="{$detail['time3']}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        时间：<input type="text" name="data[time3]" value="{$detail.time3|date='Y-m-d',###}" class="inputdatetime" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                         时长(小时)：<input type="text" name="data[long3]" value="{$detail['long3']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>

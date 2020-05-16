@@ -196,12 +196,12 @@
                     <label style="float: left; width: 80px;">住宿</label>
                     <div style="width: 70%; float: left;">
                         星级: <select name="data[star]"  style="border: none; border-bottom: solid 1px; width: 125px;">
-                            <option value="0">==请选择==</option>
-                            <option value="5">五星级</option>
-                            <option value="4">四星级</option>
-                            <option value="3">三星级</option>
-                            <option value="2">二星级</option>
-                            <option value="1">一星级</option>
+                            <option value="0" <?php if ($detail['star']==0) echo 'selected'; ?>>==请选择==</option>
+                            <option value="5" <?php if ($detail['star']==5) echo 'selected'; ?>>五星级</option>
+                            <option value="4" <?php if ($detail['star']==4) echo 'selected'; ?>>四星级</option>
+                            <option value="3" <?php if ($detail['star']==3) echo 'selected'; ?>>三星级</option>
+                            <option value="2" <?php if ($detail['star']==2) echo 'selected'; ?>>二星级</option>
+                            <option value="1" <?php if ($detail['star']==1) echo 'selected'; ?>>一星级</option>
                         </select> &emsp;&emsp;
                         预算价格：<input type="text" name="data[stay_price]" value="{$detail['stay_price']}" style="border: none; border-bottom: solid 1px; width: 125px;" > &#12288;&#12288;
                         房间数：<input type="text" name="data[house_num]" value="{$detail['house_num']}" style="border: none; border-bottom: solid 1px; width: 125px;" > &#12288;&#12288;
@@ -214,7 +214,7 @@
                     <div style="width: 70%; float: left;">
                         早餐数：<input type="text" name="data[breakfast_num]" value="{$detail['breakfast_num']}" style="border: none; border-bottom: solid 1px; width: 60px;" > &#12288;&#12288;
                         正餐数：<input type="text" name="data[dinner_num]" value="{$detail['dinner_num']}" style="border: none; border-bottom: solid 1px; width: 60px;" > &#12288;&#12288;
-                        餐标：<input type="text" name="data[stay_price]" value="{$detail['stay_price']}" style="border: none; border-bottom: solid 1px; width: 125px;" > &#12288;&#12288;
+                        餐标：<input type="text" name="data[dinner_price]" value="{$detail['dinner_price']}" style="border: none; border-bottom: solid 1px; width: 125px;" > &#12288;&#12288;
                         要求：<input type="text" name="data[dinner_condition]" value="{$detail['dinner_condition']}" style="border: none; border-bottom: solid 1px; width: 140px;" > &#12288;&#12288;
                     </div>
                 </div>
