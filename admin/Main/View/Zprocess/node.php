@@ -106,6 +106,16 @@
                 <div class="form-group col-md-12">
                     <input type="text" class="form-control" name="title" placeholder="节点名称关键字">
                 </div>
+
+                <div class="form-group col-md-12">
+                    <select class="form-control" name="process_id">
+                        <option value="">==请选择流程==</option>
+                        <foreach name="process_lists" item="v">
+                            <option value="{$v.id}">{$v.title}</option>
+                        </foreach>
+                    </select>
+                </div>
+
                 </form>
             </div>
 

@@ -337,8 +337,10 @@ class ZprocessController extends BaseController{
     public function node(){
         $this->title('流程节点管理');
         $title                  = trim(I('title'));
+        $process_id             = I('process_id',0);
         $where                  = array();
-        if ($title) $where['title'] = array('like','%'.$title.'%');
+        if ($title) $where['title']          = array('like','%'.$title.'%');
+        if ($process_id) $where['processId'] = $process_id;
         $db                     = M('process_node');
         //分页
         $pagecount		        = $db->where($where)->count();
@@ -347,6 +349,7 @@ class ZprocessController extends BaseController{
         $lists                  = $db->limit($page->firstRow . ',' . $page->listRows)->where($where)->order($this->orders('id'))->select();
 
         $this->lists            = $lists;
+        $this->process_lists    = get_process_data();
         $this->display('node');
     }
 
