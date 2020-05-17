@@ -80,7 +80,7 @@
                                 <tr class="userlist">
                                     <td></td>
                                     <td>{$pro_status_arr[$v['pro_status']]}</td>
-                                    <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}">{$v.title}</a></td>
+                                    <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}" onclick="read_log({$v.id},{$v.to_uid},{$v.pro_status})">{$v.title}</a></td>
                                     <?php if (cookie('userid')==1){ ?>
                                     <td>{$v.nodeTitle}</td>
                                     <?php } ?>
@@ -121,6 +121,21 @@
     function autocomp(username,userid){
         let userkey = <?php echo $userkey; ?>;
         autocomplete_id(username,userid,userkey);
+    }
+
+
+    function read_log(log_id,to_uid,pro_status) {
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/read_process_log')}",
+            dataType: 'JSON',
+            data: {log_id:log_id, to_uid:to_uid, pro_status:pro_status},
+            success: function () { },
+            error: function () {
+                console.log('error');
+                return false;
+            }
+        })
     }
 </script>
 

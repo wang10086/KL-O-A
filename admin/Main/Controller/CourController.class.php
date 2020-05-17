@@ -498,7 +498,7 @@ class CourController extends BaseController {
                 $res                = $db->where(array('id'=>$id))->save($data);
                 if ($res){
                     $process_node_id = 7; //制定业务季产品培训方案
-                    save_process_ok(0,$process_node_id);
+                    save_process_ok($process_node_id);
                     $this->success('数据保存成功',U('Cour/courPlan'));
                 }else{
                     $this->error('数据保存失败');

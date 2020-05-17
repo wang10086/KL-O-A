@@ -2196,5 +2196,24 @@ class AjaxController extends Controller {
         }
         return $province;
     }
+
+
+    //已读
+    public function read_process_log(){
+        $log_id                         = I('log_id');
+        $to_uid                         = I('to_uid');
+        $pro_status                     = I('pro_status');
+        if (in_array($pro_status, array(1,2)) && $to_uid == cookie('userid')){ //1=>未读, 2=>事前提醒
+            $db                         = M('process_log');
+            $where                      = array();
+            $where['id']                = $log_id;
+            $data                       = array();
+            $data['audit_uid']          = cookie('userid');
+            $data['audit_uname']        = cookie('nickname');
+            $data['audit_time']         = NOW_TIME;
+            $data['del_status']         = '-1'; //已处理
+            $db->where($where)->save($data);
+        }
+    }
 }
 

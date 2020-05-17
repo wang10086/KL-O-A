@@ -284,7 +284,7 @@ function get_process_node_data($id){
  * @param int $process_node_id
  * @param string $remark
  */
-function save_process_ok($process_log_id=0,$process_node_id=0,$remark=''){
+function save_process_ok($process_node_id=0,$remark=''){
    $db                          = M('process_log');
    $data                        = array();
    $data['audit_uid']           = cookie('userid');
@@ -294,7 +294,7 @@ function save_process_ok($process_log_id=0,$process_node_id=0,$remark=''){
    $data['del_status']          = '-1'; //已处理
    $where                       = array();
    $where['to_uid']             = cookie('userid');
-   if ($process_log_id)  $where['id']       = $process_log_id;
+   //if ($process_log_id)  $where['id']       = $process_log_id;
    if ($process_node_id) $where['pnode_id'] = $process_node_id;
    $db->where($where)->save($data);
 }
