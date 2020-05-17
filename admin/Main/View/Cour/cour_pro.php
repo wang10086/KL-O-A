@@ -23,6 +23,9 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
+                                        <form action="{:U('Cour/public_save_process')}" method="post">
+                                            <input type="hidden" name="dosubmint" value="1">
+                                            <input type="hidden" name="saveType" value="3">
                                         <div class="form-group col-md-12">
                                             <label>培训标题：</label>
                                             <input type="hidden" name="info[title]" id="title" value="{$list.title}">
@@ -136,31 +139,31 @@
                                                 <?php }else{ ?>
                                                     <div class="userlist" id="pretium_id">
                                                         <span class="title">1</span>
-                                                        <!--<input type="hidden" name="payment[1][no]" class="payno" value="1">-->
+                                                        <!--<input type="hidden" name="data[1][no]" class="payno" value="1">-->
                                                         <div class="f_12">
-                                                            <input type="text" class="form-control inputdate" name="payment[1][time]" value="">
+                                                            <input type="text" class="form-control inputdate" name="data[1][time]" value="">
                                                         </div>
 
                                                         <div class="f_12">
-                                                            <input type="text" class="form-control" name="payment[1][addr]" value="">
+                                                            <input type="text" class="form-control" name="data[1][addr]" value="">
                                                         </div>
 
                                                         <div class="f_12">
-                                                            <input type="text" class="form-control" name="payment[1][obj]" value="">
+                                                            <input type="text" class="form-control" name="data[1][obj]" value="">
                                                         </div>
                                                         <div class="f_12">
-                                                            <input type="text" name="payment[blame_name]" value="" class="form-control" id="blame_name_1" />
-                                                            <input type="hidden" name="payment[blame_uid]" value="" class="form-control" id="blame_uid_1" />
+                                                            <input type="text" name="data[1][blame_name]" value="" class="form-control" id="blame_name_1" />
+                                                            <input type="hidden" name="data[1][blame_uid]" value="" class="form-control" id="blame_uid_1" />
                                                         </div>
                                                         <div class="f_23">
-                                                            <input type="text" class="form-control" name="payment[1][content]" value="">
+                                                            <input type="text" class="form-control" name="data[1][content]" value="">
                                                         </div>
                                                         <div class="f_12">
-                                                            <input type="text" class="form-control" name="payment[1][long]" value="">
+                                                            <input type="text" class="form-control" name="data[1][long]" value="">
                                                         </div>
 
                                                         <div class="f_12">
-                                                            <input type="text" class="form-control" name="payment[1][pro]" value="">
+                                                            <input type="text" class="form-control" name="data[1][pro]" value="">
                                                         </div>
 
                                                         <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
@@ -176,6 +179,7 @@
                                         <div id="formsbtn">
                                             <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
                                         </div>
+                                        </form>
                                     </div>
                                 </div><!-- /.box-body -->
                             </div>
@@ -190,7 +194,7 @@
 <script type="text/javascript">
     const keywords = <?php echo $userkey; ?>;
     $(document).ready(function(e){
-        autocomplete_id('blame_name','blame_uid',keywords);
+        autocomplete_id('blame_name_1','blame_uid_1',keywords);
     })
 
     //编号
@@ -216,14 +220,14 @@
         var html = '<div class="userlist" id="pretium_'+i+'">';
         html += '<span class="title"></span>';
         /*html += '<input type="hidden" name="payment['+i+'][no]" class="payno" value="">';*/
-        html += '<div class="f_12"><input type="text" class="form-control inputdate" name="payment['+i+'][time]" value=""></div>';
-        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][addr]" value=""></div>';
-        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][obj]" value=""></div>';
-        html += '<div class="f_12"><input type="text" name="info[blame_name]" value="" class="form-control" id="blame_name_'+i+'" />' +
-            '<input type="hidden" name="info[blame_uid]" value="" class="form-control" id="blame_uid_'+i+'" /></div>';
-        html += '<div class="f_23"><input type="text" class="form-control" name="payment['+i+'][content]" value=""></div>';
-        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][long]" value=""></div>';
-        html += '<div class="f_12"><input type="text" class="form-control" name="payment['+i+'][pro]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control inputdate" name="data['+i+'][time]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="data['+i+'][addr]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="data['+i+'][obj]" value=""></div>';
+        html += '<div class="f_12"><input type="text" name="data['+i+'][blame_name]" value="" class="form-control" id="blame_name_'+i+'" />' +
+            '<input type="hidden" name="data['+i+'][blame_uid]" value="" class="form-control" id="blame_uid_'+i+'" /></div>';
+        html += '<div class="f_23"><input type="text" class="form-control" name="data['+i+'][content]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="data['+i+'][long]" value=""></div>';
+        html += '<div class="f_12"><input type="text" class="form-control" name="data['+i+'][pro]" value=""></div>';
         html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick=`delbox("pretium_'+i+'")`>删除</a>';
         $('#payment').append(html);
         $('#payment_val').html(i);

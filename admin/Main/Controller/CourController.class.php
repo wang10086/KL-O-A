@@ -467,42 +467,54 @@ class CourController extends BaseController {
 
     public function public_save_process(){
         $saveType                   = I('saveType');
-        if (isset($_POST['dosubmint'])){
-            if ($saveType == 1){ //保存培训计划
-                $db                     = M('cour_plan');
-                $id                     = I('id');
-                $info                   = I('info');
-                $info['title']          = trim($info['title']);
-                $info['in_time']        = strtotime($info['in_time']);
+        if (isset($_POST['dosubmint'])) {
+            if ($saveType == 1) { //保存培训计划
+                $db = M('cour_plan');
+                $id = I('id');
+                $info = I('info');
+                $info['title'] = trim($info['title']);
+                $info['in_time'] = strtotime($info['in_time']);
                 if (!$info['title']) $this->error('培训标题不能为空');
                 if (!$info['blame_name'] || !$info['blame_uid']) $this->error('提交人信息输入有误');
-                $process_node_data      = get_process_node_data(7); //7=>制定业务季产品培训方案
-                $info['audit_uid']      = $process_node_data['blame_uid'] ? $process_node_data['blame_uid'] : 0;
-                $info['audit_uname']    = $process_node_data['blame_name'] ? $process_node_data['blame_name'] : '';
-                if ($id){
-                    $res                = $db->where(array('id'=>$id))->save($info);
-                }else{
-                    $info['create_time']= NOW_TIME;
+                $process_node_data = get_process_node_data(7); //7=>制定业务季产品培训方案
+                $info['audit_uid'] = $process_node_data['blame_uid'] ? $process_node_data['blame_uid'] : 0;
+                $info['audit_uname'] = $process_node_data['blame_name'] ? $process_node_data['blame_name'] : '';
+                if ($id) {
+                    $res = $db->where(array('id' => $id))->save($info);
+                } else {
+                    $info['create_time'] = NOW_TIME;
                     $info['create_user_name'] = cookie('nickname');
                     $info['create_user_id'] = cookie('userid');
-                    $res                = $db->add($info);
-                    $id                 = $res;
+                    $res = $db->add($info);
+                    $id = $res;
                 }
-                $res ? $this->success('保存成功',U('Cour/add_plan',array('id'=>$id))) : $this->error('保存失败');
+                $res ? $this->success('保存成功', U('Cour/add_plan', array('id' => $id))) : $this->error('保存失败');
             }
-            if ($saveType == 2){ //提交审核市场营销计划
-                $db                 = M('cour_plan');
-                $id                 = I('id');
-                $data               = array();
-                $data['status']     = 3;
-                $res                = $db->where(array('id'=>$id))->save($data);
-                if ($res){
+            if ($saveType == 2) { //提交审核市场营销计划
+                $db = M('cour_plan');
+                $id = I('id');
+                $data = array();
+                $data['status'] = 3;
+                $res = $db->where(array('id' => $id))->save($data);
+                if ($res) {
                     $process_node_id = 7; //制定业务季产品培训方案
                     save_process_ok($process_node_id);
-                    $this->success('数据保存成功',U('Cour/courPlan'));
-                }else{
+                    $this->success('数据保存成功', U('Cour/courPlan'));
+                } else {
                     $this->error('数据保存失败');
                 }
+            }
+
+            if ($saveType == 3) { //保存培训方案
+                $info                           = I('info');
+                $data                           = I('data');
+                $info_db                        = M('cour_pro');
+                if (!$info['title']) $this->error('请选择培训标题');
+                $info['create_time']            = NOW_TIME;
+                $info['create_user_name']       = cookie('nickname');
+                $info['create_user_id']         = cookie('userid');
+                $res                            = $info_db->add($info);
+
             }
         }
     }
