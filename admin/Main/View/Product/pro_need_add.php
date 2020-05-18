@@ -134,6 +134,8 @@
                             <include file="pro_82_edit" />
                         <?php }elseif ($list['kind'] == 54){ ?> <!--54=>研学旅行-->
                             <include file="pro_54_edit" />
+                        <?php }elseif ($list['kind'] == 90){ ?> <!--90=>背景提升-->
+                            <include file="pro_90_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->

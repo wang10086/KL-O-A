@@ -1740,6 +1740,7 @@ class ProductController extends BaseController {
             $detail                     = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
             $this->detail               = $detail;
             $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
+            $this->detail_expert_level  = $detail['expert_level'] ? explode(',',$detail['expert_level']) : '';
         }
 
         $this->provinces                = M('provinces')->getField('id,name',true);
@@ -1754,6 +1755,7 @@ class ProductController extends BaseController {
         $this->apply_to                 = C('APPLY_TO');
         $this->dijie_data               = get_dijie_department_data();
         $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
+        $this->expert_level             = C('EXPERT_LEVEL'); //专家级别
         $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
         $this->display('pro_need_add');
     }
@@ -1790,6 +1792,9 @@ class ProductController extends BaseController {
                 break;
             case 54: //54=> 研学旅行
                 $db         = M('product_pro_need_yxlx');
+                break;
+            case 90: //90=> 背景提升
+                $db         = M('product_pro_need_bjts');
                 break;
             default:
                 $db         = '';
@@ -2266,6 +2271,28 @@ class ProductController extends BaseController {
                 $data['st_time']                = strtotime(substr($in_time,0,10));
                 $data['et_time']                = strtotime(substr($in_time,-10));
                 $res                            = $id ? $yxlx_db->where(array('id'=>$id))->save($data) : $yxlx_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //保存背景提升需求详情
+            if ($savetype == 11){
+                $need_db                        = M('product_pro_need'); //需求表
+                $bjts_db                        = M('product_pro_need_bjts'); //背景提升详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                $expert_level                   = I('expert_level');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['other_yf_condition']     = trim($data['other_yf_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['product_pro_need_id']    = $need_id;
+                $data['expert_level']           = implode(',',$expert_level);
+                $res                            = $id ? $bjts_db->where(array('id'=>$id))->save($data) : $bjts_db->add($data);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;

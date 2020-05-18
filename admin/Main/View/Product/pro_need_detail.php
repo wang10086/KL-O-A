@@ -96,6 +96,8 @@
                                 <include file="pro_82_read" />
                             <?php }elseif ($list['kind'] == 54){ ?> <!--54=>研学旅行-->
                                 <include file="pro_54_read" />
+                            <?php }elseif ($list['kind'] == 90){ ?> <!--90=>背景提升-->
+                                <include file="pro_90_read" />
                             <?php } ?>
 
                             <!--审核-->

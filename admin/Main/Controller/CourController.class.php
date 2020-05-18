@@ -506,6 +506,7 @@ class CourController extends BaseController {
             }
 
             if ($saveType == 3) { //保存培训方案
+                //P($_POST);
                 $info                           = I('info');
                 $data                           = I('data');
                 $info_db                        = M('cour_pro');
