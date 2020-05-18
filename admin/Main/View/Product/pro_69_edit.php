@@ -1,0 +1,203 @@
+<div class="box box-warning">
+    <div class="box-header">
+        <h3 class="box-title">详细信息</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body">
+        <div class="content">
+
+            <form method="post" action="{:U('Product/public_save')}" name="myform" id="detailForm">
+                <input type="hidden" name="dosubmit" value="1">
+                <input type="hidden" name="savetype" value="13">
+                <input type="hidden" name="need_id" value="{$list.id}">
+                <input type="hidden" name="id" value="{$detail.id}">
+
+                <!--是否标准化-->
+                <include file="is_standard" />
+
+                <P class="border-bottom-line"> 业务基本信息</P>
+                <div class="form-group col-md-12">
+                    <label>活动主题：</label>
+                    <input type="text" name="data[title]"  value="{$detail.title}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>主办单位名称：</label>
+                    <input type="text" name="data[company]"  value="{$detail.company}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>承办单位名称：</label>
+                    <input type="text" name="data[company1]"  value="{$detail.company1}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>申请活动时间：<font color="#999">(可多项)</font></label>
+                    <input type="text" name="data[time]"  value="{$detail.time}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>申请活动地点：<font color="#999">(可多项)</font></label>
+                    <input type="text" name="data[addr]"  value="{$detail.addr}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <p><label>布展条件</label></p>
+                    <input type="radio" name="data[condition]" value="室内" <?php if ($detail['condition'] == '室内') echo "checked"; ?>> &#8194;室内 &#12288;
+                    <input type="radio" name="data[condition]" value="室外" <?php if ($detail['condition'] == '室外') echo "checked"; ?>> &#8194;室外
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>可布展面积：</label>
+                    <input type="text" name="data[area]"  value="{$detail.area}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>巡展自带项目需求：</label>
+                    <input type="checkbox" name="selfOpNeed[]" value="模型展品" <?php if (in_array('模型展品',$selfOpNeeds)) echo "checked"; ?>> &#8194;模型展品 &#12288;
+                    <input type="checkbox" name="selfOpNeed[]" value="互动展品" <?php if (in_array('互动展品',$selfOpNeeds)) echo "checked"; ?>> &#8194;互动展品 &#12288;
+                    <input type="checkbox" name="selfOpNeed[]" value="球幕影院" <?php if (in_array('球幕影院',$selfOpNeeds)) echo "checked"; ?>> &#8194;球幕影院 &#12288;
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>附加项目需求：</label>
+                    <input type="checkbox" name="addOpNeed[]" value="科学家讲座" <?php if (in_array('科学家讲座',$addOpNeeds)) echo "checked"; ?>> &#8194;科学家讲座 &#12288;
+                    <input type="checkbox" name="addOpNeed[]" value="校园科技节" <?php if (in_array('校园科技节',$addOpNeeds)) echo "checked"; ?>> &#8194;校园科技节 &#12288;
+                    <input type="checkbox" name="addOpNeed[]" value="科学实验秀" <?php if (in_array('科学实验秀',$addOpNeeds)) echo "checked"; ?>> &#8194;科学实验秀 &#12288;
+                </div>
+
+                <P class="border-bottom-line"> 申请单位联系方式</P>
+                <div class="form-group col-md-6">
+                    <label>姓名：</label>
+                    <input type="text" name="data[name]"  value="{$detail.name}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>办公电话：</label>
+                    <input type="text" name="data[tel]"  value="{$detail.tel}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>职称/职务：</label>
+                    <input type="text" name="data[post]"  value="{$detail.post}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>手机：</label>
+                    <input type="text" name="data[mobile]"  value="{$detail.mobile}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>传真：</label>
+                    <input type="text" name="data[fax]"  value="{$detail.fax}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>电子邮箱：</label>
+                    <input type="text" name="data[email]"  value="{$detail.email}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>附件 ：<font color="#999">（关于活动简介）</font></label>
+                    <textarea class="form-control"  name="data[content]">{$detail.content}</textarea>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+                <!--<div class="form-group col-md-4">
+                    <label>类型：</label>
+                    <select name="data[type]" class="form-control">
+                        <option value="">==请选择==</option>
+                        <option value="实验室" <?php /*if ($detail['type']=='实验室') echo "selected"; */?>>实验室</option>
+                        <option value="科普基地" <?php /*if ($detail['type']=='科普基地') echo "selected"; */?>>科普基地</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>受众群体：</label>
+                    <input type="text" name="data[group]"  value="{$detail.group}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>预估周期：</label>
+                    <input type="text" name="data[cycle]"  value="{$detail.cycle}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>面积与高度：</label>
+                    <input type="text" name="data[area]"  value="{$detail.area}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>建设方案初稿提交时间：</label>
+                    <input type="text" class="form-control inputdate" name="data[pro_time]" value="{$detail.pro_time|date='Y-m-d',###}" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>项目成本初稿提交时间：</label>
+                    <input type="text" class="form-control inputdate" name="data[costacc_time]" value="{$detail.costacc_time|date='Y-m-d',###}" />
+                </div>
+
+                <div class="form-group col-md-8">
+                    <label>其他：</label>
+                    <input type="text" name="data[other]"  value="{$detail.other}" class="form-control"  />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>项目建设诉求 ：<font color="#999">（客户沟通内容）</font></label>
+                    <textarea class="form-control"  name="data[content]">{$detail.content}</textarea>
+                </div>
+
+                <P class="border-bottom-line"> 资源管理需求</P>
+                <div class="form-group col-md-6">
+                    <label>院所支持需求</label><input type="text" name="data[ins_need]"  value="{$detail['ins_need']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>专家级别需求</label><input type="text" name="data[expert_need]"  value="{$detail['expert_need']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>现场踏勘需求</label><input type="text" name="data[site_need]"  value="{$detail['site_need']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>效果设计需求</label><input type="text" name="data[design_need]"  value="{$detail['design_need']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>招投标需求</label><input type="text" name="data[bidding_need]"  value="{$detail['bidding_need']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>后期服务需求</label><input type="text" name="data[service_need]"  value="{$detail['service_need']}" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>其他需求</label>
+                    <textarea class="form-control"  name="data[other_condition]" rows="5">{$detail.other_condition}</textarea>
+                </div>-->
+            </form>
+
+            <form method="post" action="{:U('Product/public_save')}" name="myform" id="submitForm">
+                <input type="hidden" name="dosubmit" value="1">
+                <input type="hidden" name="savetype" value="7">
+                <input type="hidden" name="id" value="{$list.id}">
+            </form>
+
+            <div id="formsbtn">
+                <button type="button" class="btn btn-info btn-sm" onclick="$('#detailForm').submit()">保存</button>
+                <?php if ($detail['id'] && in_array($list['status'],array(0,2))){ ?>
+                    <button type="button" class="btn btn-warning btn-sm" onclick="$('#submitForm').submit()" >提交</button>
+                <?php } ?>
+            </div>
+        </div>
+    </div><!-- /.box-body -->
+</div>

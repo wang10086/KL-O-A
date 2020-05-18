@@ -1741,6 +1741,8 @@ class ProductController extends BaseController {
             $this->detail               = $detail;
             $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
             $this->detail_expert_level  = $detail['expert_level'] ? explode(',',$detail['expert_level']) : '';
+            $this->selfOpNeeds          = $detail['selfOpNeed'] ? explode(',',$detail['selfOpNeed']) : '';
+            $this->addOpNeeds           = $detail['addOpNeed'] ? explode(',',$detail['addOpNeed']) : '';
         }
 
         $this->provinces                = M('provinces')->getField('id,name',true);
@@ -1798,6 +1800,9 @@ class ProductController extends BaseController {
                 break;
             case 67: //67=> 实验室建设
                 $db         = M('product_pro_need_sysjs');
+                break;
+            case 69: //69=> 科学快车
+                $db         = M('product_pro_need_bus');
                 break;
             default:
                 $db         = '';
@@ -2323,6 +2328,37 @@ class ProductController extends BaseController {
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
+
+            //保存科学快车详情
+            if ($savetype == 13){
+                $need_db                        = M('product_pro_need'); //需求表
+                $detail_db                      = M('product_pro_need_bus'); //科学快车详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                $selfOpNeed                     = I('selfOpNeed');
+                $addOpNeed                      = I('addOpNeed');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['title']                  = trim($data['title']);
+                $data['company']                = trim($data['company']);
+                $data['company1']               = trim($data['company1']);
+                $data['time']                   = trim($data['time']);
+                $data['addr']                   = trim($data['addr']);
+                $data['area']                   = trim($data['area']);
+                $data['post']                   = trim($data['post']);
+                $data['content']                = trim($data['content']);
+                $data['selfOpNeed']             = implode(',',$selfOpNeed);
+                $data['addOpNeed']              = implode(',',$addOpNeed);
+                $data['product_pro_need_id']    = $need_id;
+                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+
         }
     }
 

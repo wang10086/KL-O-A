@@ -100,6 +100,8 @@
                                 <include file="pro_90_read" />
                             <?php }elseif ($list['kind'] == 67){ ?> <!--67=>实验室建设-->
                                 <include file="pro_67_read" />
+                            <?php }elseif ($list['kind'] == 69){ ?> <!--69=>科学快车-->
+                                <include file="pro_69_read" />
                             <?php } ?>
 
                             <!--审核-->
