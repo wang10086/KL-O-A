@@ -136,6 +136,8 @@
                             <include file="pro_54_edit" />
                         <?php }elseif ($list['kind'] == 90){ ?> <!--90=>背景提升-->
                             <include file="pro_90_edit" />
+                        <?php }elseif ($list['kind'] == 67){ ?> <!--67=>实验室建设-->
+                            <include file="pro_67_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->

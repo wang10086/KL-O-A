@@ -1796,6 +1796,9 @@ class ProductController extends BaseController {
             case 90: //90=> 背景提升
                 $db         = M('product_pro_need_bjts');
                 break;
+            case 67: //67=> 实验室建设
+                $db         = M('product_pro_need_sysjs');
+                break;
             default:
                 $db         = '';
         }
@@ -2293,6 +2296,28 @@ class ProductController extends BaseController {
                 $data['product_pro_need_id']    = $need_id;
                 $data['expert_level']           = implode(',',$expert_level);
                 $res                            = $id ? $bjts_db->where(array('id'=>$id))->save($data) : $bjts_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //保存实验室建设需求详情
+            if ($savetype == 12){
+                $need_db                        = M('product_pro_need'); //需求表
+                $detail_db                      = M('product_pro_need_sysjs'); //实验室建设详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['pro_time']               = strtotime($data['pro_time']);
+                $data['costacc_time']           = strtotime($data['costacc_time']);
+                $data['other']                  = trim($data['other']);
+                $data['content']                = trim($data['content']);
+                $data['other_condition']        = trim($data['other_condition']);
+                $data['product_pro_need_id']    = $need_id;
+                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;

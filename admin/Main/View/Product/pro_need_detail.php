@@ -98,6 +98,8 @@
                                 <include file="pro_54_read" />
                             <?php }elseif ($list['kind'] == 90){ ?> <!--90=>背景提升-->
                                 <include file="pro_90_read" />
+                            <?php }elseif ($list['kind'] == 67){ ?> <!--67=>实验室建设-->
+                                <include file="pro_67_read" />
                             <?php } ?>
 
                             <!--审核-->
