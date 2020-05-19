@@ -1811,6 +1811,9 @@ class ProductController extends BaseController {
             case 56: //56=> 科学快车
                 $db         = M('product_pro_need_xykjj');
                 break;
+            case 61: //61=> 科学快车
+                $db         = M('product_pro_need_xkt');
+                break;
             default:
                 $db         = '';
         }
@@ -2389,6 +2392,36 @@ class ProductController extends BaseController {
                 $data['time']                   = strtotime($data['time']);
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
+                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //保存小课题详情
+            if ($savetype == 15){
+                $need_db                        = M('product_pro_need'); //需求表
+                $detail_db                      = M('product_pro_need_xkt'); //校园科技节详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                $pro_type                       = I('pro_type');
+                $pro_addr                       = I('pro_addr');
+                $expert_level                   = I('expert_level');
+                $resulted                       = I('resulted');
+                $match                          = I('match');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['customer']               = trim($data['customer']);
+                $data['other_condition']        = trim($data['other_condition']);
+                $data['in_time']                = trim($data['in_time']);
+                $data['pro_type']               = implode(',',$pro_type);
+                $data['pro_addr']               = implode(',',$pro_addr);
+                $data['expert_level']           = implode(',',$expert_level);
+                $data['resulted']               = implode(',',$resulted);
+                $data['match']                  = implode(',',$match);
+                $data['product_pro_need_id']    = $need_id;
                 $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;

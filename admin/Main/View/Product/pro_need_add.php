@@ -142,6 +142,8 @@
                             <include file="pro_69_edit" />
                         <?php }elseif ($list['kind'] == 56){ ?> <!--56=>校园科技节-->
                             <include file="pro_56_edit" />
+                        <?php }elseif ($list['kind'] == 61){ ?> <!--61=>小课题-->
+                            <include file="pro_61_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->

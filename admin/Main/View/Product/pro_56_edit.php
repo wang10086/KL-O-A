@@ -147,9 +147,6 @@
                     <label>其他资源管理需求</label><input type="text" name="data[other_zy_condition]"  value="{$detail['other_zy_condition']}" class="form-control" />
                 </div>
 
-
-
-
                 <P class="border-bottom-line"> 计调物资需求</P>
                 <div class="form-group col-md-12" style="overflow: hidden;">
                     <label style="float: left; width: 100px;">用车需求：</label>
@@ -179,11 +176,6 @@
                 <div class="form-group col-md-12">
                     <label>其他计调物资需求</label><input type="text" name="data[other_jd_condition]"  value="{$detail['other_jd_condition']}" class="form-control" />
                 </div>
-
-
-
-
-
 
                 <P class="border-bottom-line"> 市场设计需求</P>
                 <div class="form-group col-md-12" style="overflow: hidden;">
