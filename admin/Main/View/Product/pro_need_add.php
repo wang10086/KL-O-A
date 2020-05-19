@@ -140,6 +140,8 @@
                             <include file="pro_67_edit" />
                         <?php }elseif ($list['kind'] == 69){ ?> <!--69=>科学快车-->
                             <include file="pro_69_edit" />
+                        <?php }elseif ($list['kind'] == 56){ ?> <!--56=>校园科技节-->
+                            <include file="pro_56_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->

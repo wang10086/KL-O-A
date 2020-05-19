@@ -102,6 +102,8 @@
                                 <include file="pro_67_read" />
                             <?php }elseif ($list['kind'] == 69){ ?> <!--69=>科学快车-->
                                 <include file="pro_69_read" />
+                            <?php }elseif ($list['kind'] == 56){ ?> <!--56=>校园科技节-->
+                                <include file="pro_56_read" />
                             <?php } ?>
 
                             <!--审核-->
