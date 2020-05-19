@@ -1780,6 +1780,8 @@ class ProductController extends BaseController {
         $this->apply_to                 = C('APPLY_TO');
         $this->status                   = get_submit_audit_status();
         $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
+        $this->selfOpNeeds              = $detail['selfOpNeed'] ? explode(',',$detail['selfOpNeed']) : '';
+        $this->addOpNeeds               = $detail['addOpNeed'] ? explode(',',$detail['addOpNeed']) : '';
         $this->display('pro_need_detail');
     }
 

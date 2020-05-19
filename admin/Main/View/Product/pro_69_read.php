@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="form-group col-md-6">
-                    <label>手机：{$detail.tel}</label>
+                    <label>手机：{$detail.mobile}</label>
                 </div>
 
                 <div class="form-group col-md-6">
@@ -71,6 +71,21 @@
                     <label>附件(关于活动简介)：{$detail.content}</label>
                 </div>
             </div>
+
+            <!--打印页面-->
+            <include file="pro_69_print_table" />
+
+            <div class="no-print">
+                <button style="float: right" class="btn btn-default" onclick="print_part('print_table');"><i class="fa fa-print"></i> 打印</button>
+            </div>
         </div>
     </div><!-- /.box-body -->
 </div>
+
+<script type="text/javascript">
+    function print_part(id){
+        $('#'+id).css({"width":"90%"});
+        document.body.innerHTML=document.getElementById(id).innerHTML;
+        window.print();
+    }
+</script>
