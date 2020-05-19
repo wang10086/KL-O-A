@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label>其他市场设计需求：{$detail.other_condition}</label>
+                    <label>其他相关需求：{$detail.other_condition}</label>
                 </div>
             </div>
         </div>
