@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label>活动世间：{$detail.in_time} </label>
+                    <label>活动时间：{$detail.in_time} </label>
                 </div>
 
                 <div class="form-group col-md-4">

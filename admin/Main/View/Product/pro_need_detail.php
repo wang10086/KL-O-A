@@ -106,6 +106,8 @@
                                 <include file="pro_56_read" />
                             <?php }elseif ($list['kind'] == 61){ ?> <!--61=>小课题-->
                                 <include file="pro_61_read" />
+                            <?php }elseif ($list['kind'] == 87){ ?> <!--87=>单进院所-->
+                                <include file="pro_87_read" />
                             <?php } ?>
 
                             <!--审核-->

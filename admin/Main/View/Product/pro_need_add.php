@@ -144,6 +144,8 @@
                             <include file="pro_56_edit" />
                         <?php }elseif ($list['kind'] == 61){ ?> <!--61=>小课题-->
                             <include file="pro_61_edit" />
+                        <?php }elseif ($list['kind'] == 87){ ?> <!--87=>单进院所-->
+                            <include file="pro_87_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->
