@@ -1823,6 +1823,9 @@ class ProductController extends BaseController {
             case 57: //57=>综合实践
                 $db         = M('product_pro_need_zhsj');
                 break;
+            case 65: //65=>教师培训
+                $db         = M('product_pro_need_jspx');
+                break;
             default:
                 $db         = '';
         }
@@ -2489,7 +2492,7 @@ class ProductController extends BaseController {
             //保存综合实践需求详情
             if ($savetype == 18){
                 $need_db                        = M('product_pro_need'); //需求表
-                $yxlx_db                        = M('product_pro_need_zhsj'); //综合实践详情表
+                $detail_db                      = M('product_pro_need_zhsj'); //综合实践详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
                 $data                           = I('data'); //详情
@@ -2501,7 +2504,33 @@ class ProductController extends BaseController {
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
                 $data['product_pro_need_id']    = $need_id;
                 $data['time']                   = strtotime($data['time']);
-                $res                            = $id ? $yxlx_db->where(array('id'=>$id))->save($data) : $yxlx_db->add($data);
+                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //保存教师培训需求详情
+            if ($savetype == 19){
+                $need_db                        = M('product_pro_need'); //需求表
+                $detail_db                      = M('product_pro_need_jspx'); //研学旅行详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                $in_time                        = I('in_time');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['other_line_condition']   = trim($data['other_line_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['product_pro_need_id']    = $need_id;
+                $data['lecture_time']           = strtotime($data['lecture_time']);
+                $data['leader_time']            = strtotime($data['leader_time']);
+                $data['st_time']                = strtotime(substr($in_time,0,10));
+                $data['et_time']                = strtotime(substr($in_time,-10));
+                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;

@@ -112,6 +112,8 @@
                                 <include file="pro_64_read" />
                             <?php }elseif ($list['kind'] == 57){ ?> <!--57=>综合实践-->
                                 <include file="pro_57_read" />
+                            <?php }elseif ($list['kind'] == 65){ ?> <!--65=>教师培训-->
+                                <include file="pro_65_read" />
                             <?php } ?>
 
                             <!--审核-->

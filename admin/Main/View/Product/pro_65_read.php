@@ -7,11 +7,11 @@
             <div class="form-group col-md-12">
                 <P class="border-bottom-line"> 研发方案需求</P>
                 <div class="form-group col-md-4">
-                    <label>研学时间： <?php echo $detail['st_time'] ? date('Y-m-d', $detail['st_time']) : ''; ?> - <?php echo $detail['et_time'] ? date('Y-m-d', $detail['et_time']) : ''; ?></label>
+                    <label>培训时间： <?php echo $detail['st_time'] ? date('Y-m-d', $detail['st_time']) : ''; ?> - <?php echo $detail['et_time'] ? date('Y-m-d', $detail['et_time']) : ''; ?></label>
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label>研学预算：{$detail.price}元/人</label>
+                    <label>培训预算：{$detail.price}元/人</label>
                 </div>
 
                 <div class="form-group col-md-4">
@@ -55,6 +55,13 @@
                         <?php echo $detail['member'] ? '人数：'.$detail['member'].'人；' : ''; ?>
                         <?php echo $detail['num'] ? '次数：'.$detail['num'] : ''; ?>
                         <?php echo $detail['material_cost'] ? '费用预算：'.$detail['material_cost'].'元' : ''; ?>
+                    </label>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>是否需要领导出席及讲话：<?php echo $detail['is_need_leader']==1 ? '需要；' : '不需要；'; ?>
+                        <?php echo $detail['leader_time'] ? '出席时间：'.date('Y-m-d H:i:s',$detail['leader_time']).'；' : ''; ?>
+                        <?php echo $detail['leader_condition'] ? '要求：'.$detail['leader_condition'] : ''; ?>
                     </label>
                 </div>
 
@@ -151,19 +158,11 @@
                 </div>
 
                 <P class="border-bottom-line"> 市场设计需求</P>
-                <div class="form-group col-md-6">
-                    <label>科学手册：页数：{$detail.page_num}； 设计要求：{$detail.manual_condition}；</label>
+                <div class="form-group col-md-12">
+                    <label>手册：页数：{$detail.page_num}； 设计要求：{$detail.manual_condition}；</label>
                 </div>
 
-                <div class="form-group col-md-6">
-                    <label>线路宣传单：<?php echo $detail['is_need_leaflet']==1 ? '需要，数量：'.$detail['leaflet_num'].'，要求：'.$detail['leaflet_condition'] : '不需要'; ?></label>
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label>H5宣传页：<?php echo $detail['is_need_H5']==1 ? '需要，数量：'.$detail['H5_num'].'，要求：'.$detail['H5_condition'] : '不需要'; ?></label>
-                </div>
-
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label>其他设计需求：{$detail.other_sj_condition}</label>
                 </div>
             </div>
