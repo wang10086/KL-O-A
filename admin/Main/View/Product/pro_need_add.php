@@ -148,6 +148,8 @@
                             <include file="pro_87_edit" />
                         <?php }elseif ($list['kind'] == 64){ ?> <!--64=>专场讲座-->
                             <include file="pro_64_edit" />
+                        <?php }elseif ($list['kind'] == 57){ ?> <!--57=>综合实践-->
+                            <include file="pro_57_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->
