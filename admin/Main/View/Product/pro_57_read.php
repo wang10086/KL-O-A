@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label>其他线路需求：{$detail.other_line_condition}</label>
+                    <label>其他研发需求：{$detail.other_line_condition}</label>
                 </div>
 
                 <P class="border-bottom-line"> 资源管理需求</P>
