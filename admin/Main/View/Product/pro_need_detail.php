@@ -108,6 +108,8 @@
                                 <include file="pro_61_read" />
                             <?php }elseif ($list['kind'] == 87){ ?> <!--87=>单进院所-->
                                 <include file="pro_87_read" />
+                            <?php }elseif ($list['kind'] == 64){ ?> <!--64=>专场讲座-->
+                                <include file="pro_64_read" />
                             <?php } ?>
 
                             <!--审核-->

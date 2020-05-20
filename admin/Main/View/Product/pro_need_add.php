@@ -146,6 +146,8 @@
                             <include file="pro_61_edit" />
                         <?php }elseif ($list['kind'] == 87){ ?> <!--87=>单进院所-->
                             <include file="pro_87_edit" />
+                        <?php }elseif ($list['kind'] == 64){ ?> <!--64=>专场讲座-->
+                            <include file="pro_64_edit" />
                         <?php } ?>
 
                     </div><!--/.col (right) -->

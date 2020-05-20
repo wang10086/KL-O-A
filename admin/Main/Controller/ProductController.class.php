@@ -1817,6 +1817,9 @@ class ProductController extends BaseController {
             case 87: //87=> 单进院所
                 $db         = M('product_pro_need_djys');
                 break;
+            case 64: //64=>专场讲座
+                $db         = M('product_pro_need_zcjz');
+                break;
             default:
                 $db         = '';
         }
@@ -2445,6 +2448,32 @@ class ProductController extends BaseController {
                 $data['content']                = trim($data['content']);
                 $data['long']                   = trim($data['long']);
                 $data['other_condition']        = trim($data['other_condition']);
+                $data['time']                   = strtotime($data['time']);
+                $data['product_pro_need_id']    = $need_id;
+                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                if ($res) $num++;
+                if ($need_res) $num++;
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //保存专场讲座详情
+            if ($savetype == 17){
+                $need_db                        = M('product_pro_need'); //需求表
+                $detail_db                      = M('product_pro_need_zcjz'); //专场讲座详情表
+                $need_id                        = I('need_id');
+                $id                             = I('id');
+                $data                           = I('data'); //详情
+                $info                           = I('info'); //需求
+                $expert_level                   = I('expert_level');
+                if (!$need_id){ $this->error('数据错误'); }
+                $data['addr']                   = trim($data['addr']);
+                $data['equipment']              = trim($data['equipment']);
+                $data['field']                  = trim($data['field']);
+                $data['expert_type']            = trim($data['expert_type']);
+                $data['type']                   = trim($data['type']);
+                $data['other_condition']        = trim($data['other_condition']);
+                $data['expert_level']           = implode(',',$expert_level);
                 $data['time']                   = strtotime($data['time']);
                 $data['product_pro_need_id']    = $need_id;
                 $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
