@@ -201,6 +201,7 @@ class FinanceController extends BaseController {
 		$this->ages				= C('AGE_LIST');
 		$this->kinds			= M('project_kind')->getField('id,name', true);
         $this->productList      = M('op_costacc')->where(array('op_id'=>$opid,'type'=>5,'status'=>0))->select();
+        $this->costacc_res      = M('op_costacc_res')->where(array('op_id'=>$opid))->find();
         $this->is_dijie         = $op['in_dijie'];
 
 		$this->display('costacc');
@@ -247,7 +248,7 @@ class FinanceController extends BaseController {
             $del = $db->where(array('op_id'=>$opid,'status'=>0,'id'=>array('not in',$delid)))->delete();
             if($del) $num++;
 
-			M('op')->data($info)->where(array('op_id'=>$opid))->save();
+			//M('op')->data($info)->where(array('op_id'=>$opid))->save();
             $auth               = array();
             $auth['hesuan']     = session('userid');
             if (!in_array(session('userid'),array(1,11))){

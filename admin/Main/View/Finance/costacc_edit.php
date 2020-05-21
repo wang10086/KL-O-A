@@ -108,7 +108,7 @@
             <label>成本价格：</label>
             
             <div style=" width:100%;">
-                <span style="width:65%; float:left;"><input type="text" name="info[costacc]" value="" class="form-control" id="costaccsumval" readonly value="{$op.costacc}" /></span>
+                <span style="width:65%; float:left;"><input type="text" name="info[costacc]" value="" class="form-control" id="costaccsumval" readonly value="{$costacc_res.costacc}" /></span>
                 <span style="width:35%; float:left; margin-left:-1px;"><input type="text" name="" class="form-control" value="{$op.costacc_unit}" placeholder="元" /></span>
             </div>
 
@@ -118,7 +118,7 @@
         <div class="form-group col-md-4">
             <label>建议最低报价：</label>
             <div style=" width:100%;">
-                <span style="width:65%; float:left;"><input type="text" name="info[costacc_min_price]" value="{$op.costacc_min_price}" class="form-control" required /></span>
+                <span style="width:65%; float:left;"><input type="text" name="info[costacc_min_price]" value="{$costacc_res.costacc_min_price}" class="form-control" required /></span>
                 <span style="width:35%; float:left; margin-left:-1px;"><input type="text" name="" class="form-control" value="{$op.costacc_min_price_unit}" placeholder="元" /></span>
             </div>
         </div>
@@ -126,7 +126,7 @@
         <div class="form-group col-md-4">
             <label>建议最高报价：</label>
             <div style=" width:100%;">
-                <span style="width:65%; float:left;"><input type="text" name="info[costacc_max_price]" value="{$op.costacc_max_price}"  class="form-control" required /></span>
+                <span style="width:65%; float:left;"><input type="text" name="info[costacc_max_price]" value="{$costacc_res.costacc_max_price}"  class="form-control" required /></span>
                 <span style="width:35%; float:left; margin-left:-1px;"><input type="text" name="" value="{$op.costacc_max_price_unit}"  class="form-control" placeholder="元"/></span>
             </div>
         </div>

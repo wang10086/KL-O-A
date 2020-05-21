@@ -46,9 +46,9 @@
             <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
                 
                 <tr>
-                    <td width="33.33%">成本价格：{$op.costacc}{$op.costacc_unit}</td>
-                    <td width="33.33%">建议最低报价：{$op.costacc_min_price}{$op.costacc_min_price_unit}</td>
-                    <td width="33.33%">建议最高报价：{$op.costacc_max_price}{$op.costacc_max_price_unit}</td>
+                    <td width="33.33%">成本价格：{$costacc_res.costacc} 元</td>
+                    <td width="33.33%">建议最低报价：{$costacc_res.costacc_min_price} 元</td>
+                    <td width="33.33%">建议最高报价：{$costacc_res.costacc_max_price} 元</td>
                 </tr>
             </table>
             
