@@ -47,9 +47,12 @@
                                 <if condition="rolemenu(array('Product/line'))">
                                     <li class="{:on('Product/line')} {:on('Product/add_line')} {:on('Product/public_pro_need')} {:on('Product/public_pro_need_add')}"><a href="{:U('Product/line')}"><i class="fa fa-angle-right"></i> 项目方案</a></li>
                                 </if>
-                                <if condition="rolemenu(array('Op/plans'))">
-                                    <li><a href="{:U('Op/plans')}"><i class="fa fa-angle-right"></i> 我要立项</a></li>
+                                <if condition="rolemenu(array('Product/line'))">
+                                    <li class="{:on('Product/line')} {:on('Product/add_line')} {:on('Product/public_pro_need')} {:on('Product/public_pro_need_add')}"><a href="{:U('Product/public_pro_need')}"><i class="fa fa-angle-right"></i> 项目方案开发中...</a></li>
                                 </if>
+                                <!--<if condition="rolemenu(array('Op/plans'))">
+                                    <li><a href="{:U('Op/plans')}"><i class="fa fa-angle-right"></i> 我要立项</a></li>
+                                </if>-->
                                 <if condition="rolemenu(array('Op/index'))">
                                     <li><a href="{:U('Op/index')}"><i class="fa fa-angle-right"></i> 项目管理</a></li>
                                 </if>

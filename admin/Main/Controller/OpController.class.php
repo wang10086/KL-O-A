@@ -134,7 +134,7 @@ class OpController extends BaseController {
 				$info['create_time']    = time();
                 $info['op_id']          = $opid;
                 //$info['speed']          = 1;
-                $info['op_create_date'] = date('Y-m-d',time());
+                //$info['op_create_date'] = date('Y-m-d',time());
                 $info['destination']    = $province.'--'.$addr;
 				$info['create_user']    = cookie('userid');
 				$info['create_user_name'] = cookie('name');
@@ -205,7 +205,7 @@ class OpController extends BaseController {
 			$this->display('plans');
 		}
     }
-    
+
 
 
 	// @@@NODE-3###plans_info###出团计划###

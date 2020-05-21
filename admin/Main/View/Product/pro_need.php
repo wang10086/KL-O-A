@@ -24,7 +24,7 @@
                                     <div class="box-tools pull-right">
                                         <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,160);"><i class="fa fa-search"></i> 搜索</a>
                                         <if condition="rolemenu(array('Op/plans'))">
-                                            <a href="{:U('Product/public_pro_need_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增方案需求</a>
+                                            <a href="{:U('Product/public_pro_need_add')}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 新增产品方案需求</a>
                                         </if>
                                     </div>
                                 </div><!-- /.box-header -->
@@ -32,16 +32,22 @@
                                 <div class="box-body">
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" data="" >需求名称</th>
-                                            <th class="sorting" data=""80 width="">人数</th>
-                                            <th class="sorting" data="">出行时间</th>
-                                            <th class="sorting" data="" width="80">天数</th>
+                                            <th class="sorting" data="" >项目名称</th>
+                                            <!--<th class="sorting" data=""80 width="">人数</th>
+                                            <th class="sorting" data="">出行时间</th>-->
+                                            <th class="sorting" data="">业务人员</th>
+                                            <th class="sorting" data="">业务部门</th>
                                             <th class="sorting" data="">目的地</th>
+                                            <th class="sorting" data="">接待实施部门</th>
+                                            <th class="sorting" data="">线控负责人</th>
+                                            <th class="sorting" data="" width="80">天数</th>
+                                            <th class="sorting" data="">参考价格</th>
                                             <th class="sorting" data="">类型</th>
-                                            <th class="sorting" data="">创建者</th>
-                                            <th class="sorting" data="">状态</th>
+                                            <th class="sorting" data="">发布者</th>
+                                            <th class="sorting" data="">审批状态</th>
+                                            <th class="sorting" data="">方案进程</th>
                                             <if condition="rolemenu(array('Op/plans'))">
-                                                <th width="40" class="taskOptions">跟进</th>
+                                                <th width="40" class="taskOptions">编辑</th>
                                             </if>
 
                                             <if condition="rolemenu(array('Product/del_pro_need'))">
@@ -51,13 +57,19 @@
                                         <foreach name="lists" item="row">
                                             <tr>
                                                 <td><div class="tdbox_long"><a href="{:U('Product/public_pro_need_detail',array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
-                                                <td>{$row.number}人</td>
-                                                <td>{$row['departure']|date='Y-m-d',###}</td>
-                                                <td>{$row.days}天</td>
+                                                <!--<td>{$row.number}人</td>
+                                                <td>{$row['departure']|date='Y-m-d',###}</td>-->
+                                                <td>{$row.}</td>
+                                                <td>{$row.}</td>
                                                 <td>{$provinces[$row[province]]} - {$row.addr}</td>
+                                                <td>{$row.}</td>
+                                                <td>{$row.line_blame_name}</td>
+                                                <td>{$row.days}天</td>
+                                                <td>{$row.}</td>
                                                 <td><?php echo $kinds[$row['kind']]; ?></td>
                                                 <td>{$row.create_user_name}</td>
                                                 <td>{$status[$row[status]]}</td>
+                                                <td>{$row.}</td>
                                                 <if condition="rolemenu(array('Op/plans'))">
                                                     <td class="taskOptions">
                                                         <a href="{:U('Product/public_pro_need_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>

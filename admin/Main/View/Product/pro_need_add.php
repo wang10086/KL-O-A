@@ -28,7 +28,7 @@
                                         <input type="hidden" name="savetype" value="5">
                                         <input type="hidden" name="id" value="{$list.id}">
                                         <div class="form-group col-md-12">
-                                            <label>项目名称：</label><input type="text" name="info[title]" value="{$list.title}" class="form-control" required />
+                                            <label>项目名称：</label><input type="text" name="info[project]" value="{$list.project}" class="form-control" required />
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -60,7 +60,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label id="ctrq">计划出团日期：</label><input type="text" name="info[departure]"  value="<?php echo $list['departure'] ? date('Y-m-d',$list['departure']) : ''; ?>" class="form-control inputdate"  required />
+                                            <label id="ctrq">计划出团日期：</label><input type="text" name="info[departure]"  value="{$list.departure}" class="form-control inputdate"  required />
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -78,7 +78,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label>详细地址：</label><input type="text" name="info[addr]" class="form-control" value="{$list.addr}" required />
+                                            <label>详细地址：</label><input type="text" name="info[destination]" class="form-control" value="{$list.destination}" required />
                                         </div>
 
 
@@ -320,13 +320,13 @@
         }
 
         function save_form(id) {
-            let title       = $('input[name="info[title]"]').val().trim();
+            let project     = $('input[name="info[project]"]').val().trim();
             let kind        = $('select[name="info[kind]"]').val();
             let number      = $('input[name="info[number]"]').val();
             let departure   = $('input[name="info[departure]"]').val();
             let days        = $('input[name="info[days]"]').val();
             let province    = $('select[name="info[province]"]').val();
-            let addr        = $('input[name="info[addr]"]').val();
+            let destination = $('input[name="info[destination]"]').val();
             let customer    = $('input[name="info[customer]"]').val();
             let dijie_dep_id= $('select[name="info[dijie_department_id]"]').val();
             let line_uid    = $('input[name="info[line_blame_uid]"]').val();
@@ -339,13 +339,13 @@
                 customer_num++;
             }
 
-            if (!title)   { art_show_msg('项目名称不能为空',3); return false; }
+            if (!project)   { art_show_msg('项目名称不能为空',3); return false; }
             if (!kind)      { art_show_msg('项目类型不能为空',3); return false; }
             if (!number)    { art_show_msg('预计人数不能为空',3); return false; }
             if (!departure) { art_show_msg('计划出团日期不能为空',3); return false; }
             if (!days)      { art_show_msg('行程天数不能为空',3); return false; }
             if (!province)  { art_show_msg('目的地省份不能为空',3); return false; }
-            if (!addr)      { art_show_msg('详细地址不能为空',3); return false; }
+            if (!destination) { art_show_msg('详细地址不能为空',3); return false; }
             if (!customer_num){ art_show_msg('客户单位填写错误',3); return false; }
             if (!dijie_dep_id){ art_show_msg('接待实施部门错误',3); return false; }
             if (!cost)      { art_show_msg('客户预算信息错误',3); return false; }

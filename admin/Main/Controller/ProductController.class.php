@@ -1733,7 +1733,8 @@ class ProductController extends BaseController {
         $PinYin                         = new Pinyin();
         $id                             = I('id');
         if ($id){
-            $db                         = M('product_pro_need');
+            //$db                         = M('product_pro_need');
+            $db                         = M('op');
             $list                       = $db -> find($id);
             $this->list                 = $list;
             $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
@@ -2164,7 +2165,7 @@ class ProductController extends BaseController {
                 $res ? $this->success('提交成功') : $this->error('提交申请失败');
             }
 
-            //保存产品方案需求
+            /*//保存产品方案需求
             if ($savetype == 5){
                 $db                             = M('product_pro_need');
                 $id                             = I('id');
@@ -2176,9 +2177,9 @@ class ProductController extends BaseController {
                 $info['time']                   = strtotime($info['time']);
                 $info['departure']              = strtotime($info['departure']);
                 $manager_data                   = M('salary_department')->where(array('id'=>$info['dijie_department_id']))->find();
-                $info['dijie_manager_id']       = $manager_data['manager_id'];
-                $info['line_blame_uid']         = $manager_data['line_blame_uid'];
-                $info['line_blame_name']        = $manager_data['line_blame_name'];
+                //$info['dijie_manager_id']       = $manager_data['manager_id'];
+                //$info['line_blame_uid']         = $manager_data['line_blame_uid'];
+                //$info['line_blame_name']        = $manager_data['line_blame_name'];
                 $info['in_dijie']               = 0; //是否为内部地接团
                 $info['audit_uid']              = $info['line_blame_uid'];
                 $info['audit_uname']            = $info['line_blame_name'];
@@ -2193,6 +2194,42 @@ class ProductController extends BaseController {
                     $res                        = $db -> add($info);
                     $id                         = $res;
                 }
+                $res ? $this->success('保存成功',U('Product/public_pro_need_add',array('id'=>$id))) : $this->error('数据保存失败');
+            }*/
+
+            //保存产品方案需求
+            if ($savetype == 5){
+                $db                             = M('op');
+                $id                             = I('id');
+                $info                           = I('info');
+                $info['project']                = trim($info['project']);
+                $info['customer']               = trim($info['customer']);
+                $info['remark']                 = trim($info['remark']);
+                $info['destination']            = trim($info['destination']);
+                $info['time']                   = strtotime($info['time']);
+
+                if (!$info['project']) $this->error('需求标题不能为空');
+                if (!$info['line_blame_uid'] || !$info['line_blame_name']) $this->error('线控负责人信息错误');
+                if ($id){
+                    $res                        = $db->where(array('id'=>$id))->save($info);
+                    $record_msg                 = '编辑产品方案需求';
+
+                }else{
+                    $info['create_time']        = time();
+                    $info['create_user']        = cookie('userid');
+                    $info['create_user_name']   = cookie('name');
+                    $info['op_create_user']     = cookie('rolename');
+                    $info['audit_status']       = 1; //项目不用审核,默认通过
+                    $info['op_id']              = opid();
+                    $res                        = $db -> add($info);
+                    $id                         = $res;
+                    $record_msg                 = '填写产品方案需求';
+                }
+                $record                         = array();
+                $record['op_id']                = $info['op_id'];
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $res ? $this->success('保存成功',U('Product/public_pro_need_add',array('id'=>$id))) : $this->error('数据保存失败');
             }
 
