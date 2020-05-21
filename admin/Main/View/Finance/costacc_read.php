@@ -32,7 +32,7 @@
                     	<td></td>
                         <td></td>
                         <td></td>
-                        <td style="font-size:16px; color:#ff3300;">&yen; {$op.costacc}</td>
+                        <td style="font-size:16px; color:#ff3300;">&yen; {$costacc_res.costacc}</td>
                         <td></td>
                         <td></td>
                     </tr>        
