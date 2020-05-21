@@ -24,13 +24,6 @@
                             </li>
                         </if>
 
-
-                        <!--<li class="{:on('Chart')}">
-                            <a href="{:U('Chart/pplist')}">
-                                <i class="fa fa-signal"></i> <span>业绩排行</span>
-                            </a>
-                        </li>-->
-
                         <li class="treeview {:ison(CONTROLLER_NAME,'Chart')} {:on('Kpi/kpiChart')}">
                             <a href="javascript:;">
                                 <i class="fa fa-signal"></i>
@@ -63,37 +56,10 @@
                                 <if condition="rolemenu(array('Op/relpricelist'))">
                                         <li class="{:on('Op/relpricelist')} {:on('Op/relprice')}"><a href="{:U('Op/relpricelist')}"><i class="fa fa-angle-right"></i> 项目比价</a></li>
                                 </if>
-                                <!--<if condition="rolemenu(array('Op/satisfaction'))">
-                                    <li class="{:on('Op/satisfaction')} {:on('Op/')}"><a href="{:U('Op/satisfaction')}"><i class="fa fa-angle-right"></i> 研发满意度</a></li>
-                                </if>-->
 
                             </ul>
                         </li>
                         </if>
-
-                        <!--
-                        <if condition="rolemenu(array('Project/index','Project/kind'))">
-                        <li class="treeview {:on('Project')}">
-                            <a href="javascript:;">
-                                <i class="fa fa-pencil-square"></i>
-                                <span>项目管理</span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                            	<if condition="rolemenu(array('Project/add'))">
-                                		<li class="{:on('Project/add')}"><a href="{:U('Project/add')}"><i class="fa fa-angle-right"></i> 新建项目</a></li>
-                                </if>
-                                <if condition="rolemenu(array('Project/index'))">
-                                		<li class="{:on('Project/index')}"><a href="{:U('Project/index')}"><i class="fa fa-angle-right"></i> 项目列表</a></li>
-                                </if>
-                                <if condition="rolemenu(array('Project/kind'))">
-                                		<li class="{:on('Project/kind')} {:on('Project/addkind')}"><a href="{:U('Project/kind')}"><i class="fa fa-angle-right"></i> 项目类型</a></li>
-                                </if>
-
-                            </ul>
-                        </li>
-                        </if>
-                        -->
 
                         <if condition="rolemenu(array('Product/index','Product/tpl','Product/kind','Product/feedback','Project/lession','Project/fields','Project/types','Product/add_standard_product','Product/product_chart'))">
                         <li class="treeview {:on('Product')} {:on('Project')} {:on('Project/lession')} {:on('Project/fields')} {:on('Project/types')}">
@@ -230,10 +196,6 @@
                                 </li>
                                 </if>
 
-                                <!--<if condition="rolemenu(array('SupplierRes/chart'))">
-                                    <li class="{:on('SupplierRes/chart')}"><a href="{:U('SupplierRes/chart')}"><i class="fa fa-bar-chart"></i> 资源统计</a></li>
-                                </if>-->
-
                                 <if condition="rolemenu(array('SupplierRes/chart','SupplierRes/focus_buy','SupplierRes/focus_buy_list','SupplierRes/focus_list_edit','SupplierRes/focus_list_del','SupplierRes/cost_save','SupplierRes/cost_save_detail','SupplierRes/cost_save_add','SupplierRes/cost_save_price','SupplierRes/cost_save_del','ScienceRes/province'))">
                                     <li class="treeview {:on('SupplierRes')}">
                                         <a href=""><i class="fa  fa-cubes"></i> 集中采购</a>
@@ -307,13 +269,7 @@
                                     </ul>
                                 </li>
 
-                                <!--<li>
-                                    <a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 公司管理手册</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 部门工作手册</a>
-                                </li>
-                                <li class="{:on('File/instruction')}">
+                                <!--<li class="{:on('File/instruction')}">
                                     <a href="{:U('File/instruction',array('pid'=>45))}"><i class="fa fa-angle-right"></i> 岗位作业指导书</a>
                                 </li>-->
                             </ul>
@@ -688,31 +644,6 @@
                         </if>
 
 
-<!--                        <if condition="rolemenu(array('Kpi/pdca','Kpi/qa'))">-->
-<!--                        <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">-->
-<!--                            <a href="javascript:;">-->
-<!--                                <i class="fa fa-trophy"></i>-->
-<!--                                <span>绩效管理</span>-->
-<!--                                <i class="fa fa-angle-left pull-right"></i>-->
-<!--                            </a>-->
-<!--                            <ul class="treeview-menu">-->
-<!--                            	<if condition="rolemenu(array('Kpi/pdcaresult'))">-->
-<!--                            	<li><a href="{:U('Kpi/pdcaresult')}"><i class="fa fa-angle-right"></i> 绩效考评结果</a></li>-->
-<!--                                </if>-->
-<!--                            	<if condition="rolemenu(array('Kpi/pdca'))">-->
-<!--                                	<li><a href="{:U('Kpi/pdca')}"><i class="fa fa-angle-right"></i> PDCA</a></li>-->
-<!--                                </if>-->
-<!--                                <if condition="rolemenu(array('Kpi/qa'))">-->
-<!--                                	<li><a href="{:U('Kpi/qa')}"><i class="fa fa-angle-right"></i> 品质检查</a></li>-->
-<!--                                </if>-->
-<!--                                <li><a href="{:U('Kpi/postkpi')}"><i class="fa fa-angle-right"></i> KPI</a></li>-->
-<!--                                <!---->
-<!--                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>-->
-<!--                                -->
-<!--                            </ul>-->
-<!--                        </li>-->
-<!--                        </if>-->
-
                         <if condition="rolemenu(array('Cour/courPlan','Cour/courNeed','Cour/courPro','Cour/courRecord','Cour/courlist','Cour/courtype','Cour/pptlist'))">
                             <li class="treeview {:ison(CONTROLLER_NAME, 'Cour')}">
                                 <a href="javascript:;">
@@ -889,24 +820,6 @@
                             </li>
                         </if>
 
-                        <!--
-                        <li class="treeview {:ison(CONTROLLER_NAME, 'Kpi')}">
-                            <a href="javascript:;">
-                                <i class="fa fa-trophy"></i>
-                                <span>绩效管理</span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                            	<li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 考评结果</a></li>
-                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> PDCA</a></li>
-                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> 品质检查</a></li>
-                                <li><a href="javascript:;" onClick="art_show_msg('加班开发中，稍后呈现...',5)"><i class="fa fa-angle-right"></i> KPI</a></li>
-                            </ul>
-                        </li>
-                        -->
-
-
-
                         <if condition="rolemenu(array('Chart/index','Chart/department','Chart/summary_types','Chart/quarter_department','Chart/quarter_summary_types'))">
                         <li class="treeview {:ison(CONTROLLER_NAME, 'Chart')}">
                             <a href="javascript:;">
@@ -985,33 +898,6 @@
                             </ul>
                         </li>
                         </if>
-
-
-
-<!--                        <if condition="rolemenu(array('Rbac/role','Rbac/index'))">-->
-<!--                            <li class="treeview {:on('Rbac/role')} {:on('Rbac/addrole')} {:on('Rbac/priv')} {:on('Rbac/index')} {:on('Rbac/adduser')} {:on('Rbac/password')}">-->
-<!---->
-<!--                                <a href="{:U('Rbac/index')}">-->
-<!--                                    <i class="fa fa-user"></i>-->
-<!--                                    <span>用户管理</span>-->
-<!--                                    <i class="fa fa-angle-left pull-right"></i>-->
-<!--                                </a>-->
-<!--                                <ul class="treeview-menu">-->
-<!---->
-<!--                                    <if condition="rolemenu(array('Rbac/role'))">-->
-<!--                                    	<li class="{:on('Rbac/role')} {:on('Rbac/addrole')} {:on('Rbac/priv')}"><a href="{:U('Rbac/role')}"><i class="fa fa-angle-right"></i> 组织结构</a></li>-->
-<!--                                    </if>-->
-<!--                                    <if condition="rolemenu(array('Rbac/index'))">-->
-<!--                                    	<li  class="{:on('Rbac/index')} {:on('Rbac/adduser')} {:on('Rbac/password')}"><a href="{:U('Rbac/index')}"><i class="fa fa-angle-right"></i> 人员管理</a></li>-->
-<!--                                    </if>-->
-<!---->
-<!--                                    <if condition="rolemenu(array('Rbac/post'))">-->
-<!--                                    	<li class="{:on('Rbac/post')} {:on('Rbac/addpost')}"><a href="{:U('Rbac/post')}"><i class="fa fa-angle-right"></i> 岗位管理</a></li>-->
-<!--                                    </if>-->
-<!---->
-<!--                                </ul>-->
-<!--                            </li>-->
-<!--                        </if>-->
 
 
 

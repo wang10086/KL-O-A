@@ -2223,7 +2223,7 @@ class ProductController extends BaseController {
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
-            //提交科学课程
+            //提交审核
             if ($savetype == 7){
                 $id                             = I('id');
                 $db                             = M('product_pro_need'); //需求表
