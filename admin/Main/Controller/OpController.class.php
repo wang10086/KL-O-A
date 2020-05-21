@@ -107,22 +107,11 @@ class OpController extends BaseController {
 		if(isset($_POST['dosubmint']) && $_POST['dosubmint']){
             $db                         = M('op');
             $mod                        = D('Op');
-            //$op_cost_db                 = M('op_cost');
-            //$op_guide_db                = M('op_guide');
-            //$op_member_db               = M('op_member');
-            //$op_supplier_db             = M('op_supplier');
 
             $info                       = I('info');
             $expert                     = I('expert');
-            //$guide                      = I('guide');
-            //$member                     = I('member');
-            //$cost                       = I('cost');
-            //$supplier                   = I('supplier');
-            //$wuzi                       = I('wuzi');
             $province                   = I('province');
             $addr                       = I('addr');
-            //$costacc                    = I('costacc'); //标准模块
-            //$arr_product                = C('ARR_PRODUCT');
             $info['op_create_user']     = cookie('rolename');
             if ($info['in_dijie'] == 1) {
                 $info['project']        = '【发起团】'.$info['project'];
@@ -131,8 +120,6 @@ class OpController extends BaseController {
             $exe_user_id                = I('exe_user_id');
             $customer                   = get_customerlist();
             if (!in_array($info['customer'],$customer)){ $this->error('客户单位填写错误' . $db->getError()); }
-            //if (in_array($info['kind'] , $arr_product) && !$costacc){ $this->error('产品模块不能为空'); }
-            //if (!in_array($info['kind'] , $arr_product) && !$info['line_id']) { $this->error('行程方案不能为空'); }
 
 			if($info){
                 $opid                   = opid();
@@ -141,7 +128,8 @@ class OpController extends BaseController {
                 $info['departure']      = trim($info['departure']);
                 $info['days']           = trim($info['days']);
                 $info['customer']       = trim($info['customer']);
-                $info['context']        = trim($info['context']);
+                //$info['context']        = trim($info['context']);
+                $info['remark']         = trim($info['remark']);
                 $info['expert']         = $expert?implode(',',$expert):0;
 				$info['create_time']    = time();
                 $info['op_id']          = $opid;
@@ -180,22 +168,6 @@ class OpController extends BaseController {
 					$record['explain']  = '项目立项';
 					op_record($record);
 
-					/*
-					//收录客户信息
-					$company_name = iconv("utf-8","gb2312",trim($info['customer']));
-					$data = array();
-					$data['company_name'] = $info['customer'];
-					$data['cm_id'] = $info['create_user'];
-					$data['cm_name'] = $info['create_user_name'];
-					$data['cm_time'] = $info['create_time'];
-					$data['create_time'] = $info['create_time'];
-					$data['pinyin'] = strtolower($PinYin->getFirstPY($company_name));
-
-					if(!M('customer_gec')->where(array('company_name'=>$info['customer'],'cm_id'=>$info['create_user']))->find()){
-						M('customer_gec')->add($data);
-					}
-					*/
-
 					$this->success('保存成功！',U('Op/plans_follow',array('opid'=>$opid)));
 				}else{
 					$this->error('保存失败' . $db->getError());
@@ -233,37 +205,7 @@ class OpController extends BaseController {
 			$this->display('plans');
 		}
     }
-
-    /**
-     * 获取客户名称关键字(整理客户信息)
-     * @param string $type 1=>'更新相关数据'
-     * @return mixed
-     */
-    /*public function get_customerlist($type='',$PinYin=''){
-        //客户名称关键字
-        $where = array();
-        if(C('RBAC_SUPER_ADMIN')==cookie('username') || in_array(cookie('roleid'),array(10,11,28,30))){
-            $where['company_name'] = array('neq','');
-        }else{
-            $where['company_name'] = array('neq','');
-            $where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
-        }
-
-        if ($type){
-            $key =  M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
-            foreach($key as $v){
-                if(!$v['pinyin']){
-                    $company_name = iconv("utf-8","gb2312",trim($v['company_name']));
-                    $pinyin = strtolower($PinYin->getFirstPY($company_name));
-                    M('customer_gec')->data(array('pinyin'=>$pinyin))->where(array('id'=>$v['id']))->save();
-                }
-            }
-        }
-
-        //$data                 = M('customer_gec')->field('id,pinyin,company_name')->where($where)->group("company_name")->order('pinyin ASC')->select();
-        $data                   = M('customer_gec')->where($where)->group("company_name")->order('pinyin ASC')->getField('company_name',true);
-        return $data;
-    }*/
+    
 
 
 	// @@@NODE-3###plans_info###出团计划###
@@ -836,7 +778,8 @@ class OpController extends BaseController {
                     $info['days']           = trim($info['days']);
                     $info['destination']    = trim($info['destination']);
                     $info['customer']       = trim($info['customer']);
-                    $info['context']        = trim($info['context']);
+                    //$info['context']        = trim($info['context']);
+                    $info['remark']         = trim($info['remark']);
                     $info['line_id']        = $info['standard'] == 1 ? 0 : $info['line_id'];
                     $info['producted_id']   = $info['standard'] == 2 ? 0 : $info['producted_id'];
 

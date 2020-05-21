@@ -111,7 +111,7 @@
     <div class="form-group col-md-12">
         <div class="form-group col-md-8">
             <div class="form-group col-md-12" style="margin-left:-15px;">
-                <label>备注：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
+                <label>备注：</label><textarea class="form-control"  name="info[remark]">{$op.remark}</textarea>
             </div>
 
             <div class="form-group col-md-12" id="addti_btn">
@@ -126,7 +126,7 @@
     </div>
     <?php }else{ ?>
         <div class="form-group col-md-12">
-            <label>备注：</label><textarea class="form-control"  name="info[context]">{$op.context}</textarea>
+            <label>备注：</label><textarea class="form-control"  name="info[remark]">{$op.remark}</textarea>
         </div>
 
         <div class="form-group col-md-12" id="addti_btn">

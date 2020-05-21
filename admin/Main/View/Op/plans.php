@@ -130,7 +130,7 @@
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <label>备注：</label><textarea class="form-control"  name="info[context]" id="context"></textarea>
+                                        <label>备注：</label><textarea class="form-control"  name="info[remark]" id="context"></textarea>
                                         <span id="contextTip"></span>
                                     </div>
 
