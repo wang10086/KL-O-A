@@ -10,6 +10,7 @@
                 <input type="hidden" name="savetype" value="14">
                 <input type="hidden" name="need_id" value="{$list.id}">
                 <input type="hidden" name="id" value="{$detail.id}">
+                <input type="hidden" name="opid" value="{$list.op_id}">
 
                 <!--是否标准化-->
                 <include file="is_standard" />

@@ -2218,7 +2218,7 @@ class ProductController extends BaseController {
                 if (!$info['line_blame_uid'] || !$info['line_blame_name']) $this->error('线控负责人信息错误');
                 if ($id){
                     $res                        = $db->where(array('id'=>$id))->save($info);
-                    $record_msg                 = '编辑产品方案需求';
+                    $record_msg                 = '编辑产品方案需求基本信息';
                 }else{
                     $info['create_time']        = time();
                     $info['create_user']        = cookie('userid');
@@ -2229,7 +2229,7 @@ class ProductController extends BaseController {
                     $info['op_id']              = opid();
                     $res                        = $db -> add($info);
                     $id                         = $res;
-                    $record_msg                 = '填写产品方案需求';
+                    $record_msg                 = '填写产品方案需求基本信息';
                 }
                 $record                         = array();
                 $record['op_id']                = $info['op_id'];
@@ -2242,9 +2242,10 @@ class ProductController extends BaseController {
             //保存科学课程详情
             if ($savetype == 6){
                 $need_db                        = M('product_pro_need'); //需求表
-                $kxkc_db                        = M('product_pro_need_kxkc'); //科学课程详情表
+                $detail_db                      = M('product_pro_need_kxkc'); //科学课程详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 //$producted_title                = I('producted_title'); //模块名称
@@ -2259,7 +2260,19 @@ class ProductController extends BaseController {
                 $data['lession_time']           = strtotime($data['lession_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
-                $res                            = $id ? $kxkc_db->where(array('id'=>$id))->save($data) : $kxkc_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2297,9 +2310,10 @@ class ProductController extends BaseController {
             //保存科学博物院需求详情
             if ($savetype == 9){
                 $need_db                        = M('product_pro_need'); //需求表
-                $kxbwy_db                       = M('product_pro_need_kxbwy'); //科学博物园详情表
+                $detail_db                      = M('product_pro_need_kxbwy'); //科学博物园详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
@@ -2317,7 +2331,19 @@ class ProductController extends BaseController {
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
                 $data['yard']                   = implode(',',$yard);
-                $res                            = $id ? $kxbwy_db->where(array('id'=>$id))->save($data) : $kxbwy_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2327,9 +2353,10 @@ class ProductController extends BaseController {
             //保存研学旅行需求详情
             if ($savetype == 10){
                 $need_db                        = M('product_pro_need'); //需求表
-                $yxlx_db                        = M('product_pro_need_yxlx'); //研学旅行详情表
+                $detail_db                      = M('product_pro_need_yxlx'); //研学旅行详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
@@ -2343,7 +2370,19 @@ class ProductController extends BaseController {
                 $data['lecture_time']           = strtotime($data['lecture_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,10));
                 $data['et_time']                = strtotime(substr($in_time,-10));
-                $res                            = $id ? $yxlx_db->where(array('id'=>$id))->save($data) : $yxlx_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2353,9 +2392,10 @@ class ProductController extends BaseController {
             //保存背景提升需求详情
             if ($savetype == 11){
                 $need_db                        = M('product_pro_need'); //需求表
-                $bjts_db                        = M('product_pro_need_bjts'); //背景提升详情表
+                $detail_db                      = M('product_pro_need_bjts'); //背景提升详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $expert_level                   = I('expert_level');
@@ -2365,7 +2405,19 @@ class ProductController extends BaseController {
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
                 $data['product_pro_need_id']    = $need_id;
                 $data['expert_level']           = implode(',',$expert_level);
-                $res                            = $id ? $bjts_db->where(array('id'=>$id))->save($data) : $bjts_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2378,6 +2430,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_sysjs'); //实验室建设详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 if (!$need_id){ $this->error('数据错误'); }
@@ -2387,7 +2440,19 @@ class ProductController extends BaseController {
                 $data['content']                = trim($data['content']);
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['product_pro_need_id']    = $need_id;
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2400,6 +2465,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_bus'); //科学快车详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $selfOpNeed                     = I('selfOpNeed');
@@ -2416,7 +2482,19 @@ class ProductController extends BaseController {
                 $data['selfOpNeed']             = implode(',',$selfOpNeed);
                 $data['addOpNeed']              = implode(',',$addOpNeed);
                 $data['product_pro_need_id']    = $need_id;
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2429,6 +2507,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_xykjj'); //校园科技节详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
@@ -2447,7 +2526,19 @@ class ProductController extends BaseController {
                 $data['time']                   = strtotime($data['time']);
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2460,6 +2551,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_xkt'); //校园科技节详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $pro_type                       = I('pro_type');
@@ -2477,7 +2569,19 @@ class ProductController extends BaseController {
                 $data['resulted']               = implode(',',$resulted);
                 $data['match']                  = implode(',',$match);
                 $data['product_pro_need_id']    = $need_id;
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2490,6 +2594,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_djys'); //单进院所详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 if (!$need_id){ $this->error('数据错误'); }
@@ -2499,7 +2604,19 @@ class ProductController extends BaseController {
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['time']                   = strtotime($data['time']);
                 $data['product_pro_need_id']    = $need_id;
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2512,6 +2629,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_zcjz'); //专场讲座详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $expert_level                   = I('expert_level');
@@ -2525,7 +2643,19 @@ class ProductController extends BaseController {
                 $data['expert_level']           = implode(',',$expert_level);
                 $data['time']                   = strtotime($data['time']);
                 $data['product_pro_need_id']    = $need_id;
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2538,6 +2668,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_zhsj'); //综合实践详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 if (!$need_id){ $this->error('数据错误'); }
@@ -2547,7 +2678,19 @@ class ProductController extends BaseController {
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
                 $data['product_pro_need_id']    = $need_id;
                 $data['time']                   = strtotime($data['time']);
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2560,6 +2703,7 @@ class ProductController extends BaseController {
                 $detail_db                      = M('product_pro_need_jspx'); //研学旅行详情表
                 $need_id                        = I('need_id');
                 $id                             = I('id');
+                $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
@@ -2573,7 +2717,19 @@ class ProductController extends BaseController {
                 $data['leader_time']            = strtotime($data['leader_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,10));
                 $data['et_time']                = strtotime(substr($in_time,-10));
-                $res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑产品方案需求详细信息';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加产品方案需求详细信息';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
