@@ -56,8 +56,8 @@
 
                 <div class="form-group col-md-4" id="standard_box">
                     <p><label>是否设置动手实践</label></p>
-                    <input type="radio" name="data[hands_on]" value="1" > &#8194;是 &#12288;
-                    <input type="radio" name="data[hands_on]" value="2" checked> &#8194;否
+                    <input type="radio" name="data[hands_on]" value="1" <?php if ($detail['hands_on']==1) echo 'checked'; ?>> &#8194;是 &#12288;
+                    <input type="radio" name="data[hands_on]" value="0" <?php if ($detail['hands_on']==0) echo 'checked'; ?>> &#8194;否
                 </div>
 
                 <div class="form-group col-md-4">

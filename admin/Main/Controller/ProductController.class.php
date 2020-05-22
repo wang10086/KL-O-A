@@ -2213,7 +2213,6 @@ class ProductController extends BaseController {
                 $info['remark']                 = trim($info['remark']);
                 $info['destination']            = trim($info['destination']);
                 $info['time']                   = strtotime($info['time']);
-
                 if (!$info['project']) $this->error('需求标题不能为空');
                 if (!$info['line_blame_uid'] || !$info['line_blame_name']) $this->error('线控负责人信息错误');
                 if ($id){
@@ -2223,6 +2222,7 @@ class ProductController extends BaseController {
                     $info['create_time']        = time();
                     $info['create_user']        = cookie('userid');
                     $info['create_user_name']   = cookie('name');
+                    $info['sale_user']          = $info['create_user_name'];
                     $info['op_create_user']     = cookie('rolename');
                     $info['audit_status']       = 1; //项目不用审核,默认通过
                     $info['create_user_department_id'] = cookie('department');
@@ -2260,7 +2260,6 @@ class ProductController extends BaseController {
                 $data['lession_time']           = strtotime($data['lession_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2282,12 +2281,23 @@ class ProductController extends BaseController {
             //提交审核
             if ($savetype == 7){
                 $id                             = I('id');
-                $db                             = M('product_pro_need'); //需求表
+                $db                             = M('op'); //需求表
+                $list                           = $db->find($id);
                 if (!$id) $this->error('获取数据失败');
                 $data                           = array();
-                $data['status']                 = 3;
+                $data['process']                = 1; //已提交产品方案需求
                 $res                            = $db->where(array('id'=>$id))->save($data);
-                $res ? $this->success('提交成功',U('Product/public_pro_need')) : $this->error('提交申请失败');
+                if ($res){
+                    $process_node1              = 36; //接受客户对产品实施方案需求信息
+                    $pro_status1                = 1; // 未读
+                    $process_node2              = 38; //组织编制产品实施方案
+                    $pro_status2                = 2; // 事前提醒
+                    save_process_log($process_node1,$pro_status1,$list['project'],$list['id'],'',$list['line_blame_uid'],$list['line_blame_name']); //保存待办事宜
+                    save_process_log($process_node2,$pro_status2,$list['project'],$list['id'],'',$list['line_blame_uid'],$list['line_blame_name']); //保存待办事宜
+                    $this->success('提交成功',U('Product/public_pro_need'));
+                }else{
+                    $this->error('提交申请失败');
+                }
             }
 
             //审核
@@ -2331,7 +2341,6 @@ class ProductController extends BaseController {
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
                 $data['yard']                   = implode(',',$yard);
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2370,7 +2379,6 @@ class ProductController extends BaseController {
                 $data['lecture_time']           = strtotime($data['lecture_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,10));
                 $data['et_time']                = strtotime(substr($in_time,-10));
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2405,7 +2413,6 @@ class ProductController extends BaseController {
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
                 $data['product_pro_need_id']    = $need_id;
                 $data['expert_level']           = implode(',',$expert_level);
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2440,7 +2447,6 @@ class ProductController extends BaseController {
                 $data['content']                = trim($data['content']);
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['product_pro_need_id']    = $need_id;
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2482,7 +2488,6 @@ class ProductController extends BaseController {
                 $data['selfOpNeed']             = implode(',',$selfOpNeed);
                 $data['addOpNeed']              = implode(',',$addOpNeed);
                 $data['product_pro_need_id']    = $need_id;
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2526,7 +2531,6 @@ class ProductController extends BaseController {
                 $data['time']                   = strtotime($data['time']);
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2569,7 +2573,6 @@ class ProductController extends BaseController {
                 $data['resulted']               = implode(',',$resulted);
                 $data['match']                  = implode(',',$match);
                 $data['product_pro_need_id']    = $need_id;
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2604,7 +2607,6 @@ class ProductController extends BaseController {
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['time']                   = strtotime($data['time']);
                 $data['product_pro_need_id']    = $need_id;
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2643,7 +2645,6 @@ class ProductController extends BaseController {
                 $data['expert_level']           = implode(',',$expert_level);
                 $data['time']                   = strtotime($data['time']);
                 $data['product_pro_need_id']    = $need_id;
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2678,7 +2679,6 @@ class ProductController extends BaseController {
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
                 $data['product_pro_need_id']    = $need_id;
                 $data['time']                   = strtotime($data['time']);
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2717,7 +2717,6 @@ class ProductController extends BaseController {
                 $data['leader_time']            = strtotime($data['leader_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,10));
                 $data['et_time']                = strtotime(substr($in_time,-10));
-                //$res                            = $id ? $detail_db->where(array('id'=>$id))->save($data) : $detail_db->add($data);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
