@@ -1727,6 +1727,7 @@ class ProductController extends BaseController {
         $this->kinds                    = M('project_kind')->getField('id,name',true);
         $this->provinces                = M('provinces')->getField('id,name',true);
         //$this->status                   = get_submit_audit_status();
+        $this->op_process               = C('OP_PROCESS'); //方案进程
         $this->departments              = M('salary_department')->getField('id,department',true);
         $this->display('pro_need');
     }
@@ -1789,6 +1790,7 @@ class ProductController extends BaseController {
         $this->selfOpNeeds              = $detail['selfOpNeed'] ? explode(',',$detail['selfOpNeed']) : '';
         $this->addOpNeeds               = $detail['addOpNeed'] ? explode(',',$detail['addOpNeed']) : '';
         $this->yards                    = $detail['yard'] ? explode(',',$detail['yard']) : '';
+        $this->op_process               = C('OP_PROCESS'); //方案进程
         $this->display('pro_need_detail');
     }
 

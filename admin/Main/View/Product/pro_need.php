@@ -69,7 +69,7 @@
                                                 <td><?php echo $kinds[$row['kind']]; ?></td>
                                                 <td>{$row.create_user_name}</td>
                                                 <!--<td>{$status[$row[status]]}</td>-->
-                                                <td>{$row.}</td>
+                                                <td>{$op_process[$row['process']]}</td>
                                                 <if condition="rolemenu(array('Op/plans'))">
                                                     <td class="taskOptions">
                                                         <a href="{:U('Product/public_pro_need_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>

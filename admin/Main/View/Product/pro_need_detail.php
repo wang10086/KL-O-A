@@ -22,7 +22,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">基本信息</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        方案进程：{$status[$list['']]}
+                                        方案进程：{$op_process[$list['process']]}
                                     </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
