@@ -22,7 +22,7 @@
                                 <div class="box-header">
                                     <h3 class="box-title">基本信息</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        审核状态：{$status[$list['status']]}
+                                        方案进程：{$status[$list['']]}
                                     </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
@@ -30,7 +30,7 @@
 
                                         <div class="form-group col-md-12">
                                             <div class="form-group col-md-12">
-                                                <label>客户名称：{$list.title}</label>
+                                                <label>客户名称：{$list.project}</label>
                                             </div>
 
                                             <div class="form-group col-md-4">
@@ -50,7 +50,7 @@
                                             </div>
 
                                             <div class="form-group col-md-4">
-                                                <label>计划出团日期：{$list.departure|date='Y-m-d',###}</label>
+                                                <label>计划出团日期：{$list.departure}</label>
                                             </div>
 
                                             <div class="form-group col-md-4">
@@ -62,7 +62,7 @@
                                             </div>
 
                                             <div class="form-group col-md-4">
-                                                <label>详细地址：{$list.addr}</label>
+                                                <label>详细地址：{$list.destination}</label>
                                             </div>
 
                                             <div class="form-group col-md-4">

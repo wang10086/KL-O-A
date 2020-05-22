@@ -1712,10 +1712,12 @@ class ProductController extends BaseController {
     //产品方案需求
     public function public_pro_need(){
         $this->title('产品方案需求');
-        $db                             = M('product_pro_need');
+        //$db                             = M('product_pro_need');
+        $db                             = M('op');
         $title                          = trim(I('title'));
         $where                          = array();
-        if ($title) $where['title']     = array('like','%'.$title.'%');
+        $where['id']                    = array('gt',3604);
+        if ($title) $where['project']   = array('like','%'.$title.'%');
         $pagecount                      = $db->where($where)->count();
         $page                           = new Page($pagecount,P::PAGE_SIZE);
         $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
@@ -1724,7 +1726,8 @@ class ProductController extends BaseController {
         $this->lists                    = $lists;
         $this->kinds                    = M('project_kind')->getField('id,name',true);
         $this->provinces                = M('provinces')->getField('id,name',true);
-        $this->status                   = get_submit_audit_status();
+        //$this->status                   = get_submit_audit_status();
+        $this->departments              = M('salary_department')->getField('id,department',true);
         $this->display('pro_need');
     }
 
@@ -1769,7 +1772,8 @@ class ProductController extends BaseController {
         $this->title('产品方案需求');
         $id                             = I('id');
         if (!$id) $this->error('获取数据失败');
-        $need_db                        = M('product_pro_need');
+        //$need_db                        = M('product_pro_need');
+        $need_db                        = M('op');
         $list                           = $need_db -> find($id);
         $detail_db                      = $this->get_product_pro_need_tetail_db($list['kind']);
         $detail                         = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
@@ -2213,13 +2217,13 @@ class ProductController extends BaseController {
                 if ($id){
                     $res                        = $db->where(array('id'=>$id))->save($info);
                     $record_msg                 = '编辑产品方案需求';
-
                 }else{
                     $info['create_time']        = time();
                     $info['create_user']        = cookie('userid');
                     $info['create_user_name']   = cookie('name');
                     $info['op_create_user']     = cookie('rolename');
                     $info['audit_status']       = 1; //项目不用审核,默认通过
+                    $info['create_user_department_id'] = cookie('department');
                     $info['op_id']              = opid();
                     $res                        = $db -> add($info);
                     $id                         = $res;

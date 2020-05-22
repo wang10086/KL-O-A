@@ -44,7 +44,7 @@
                                             <th class="sorting" data="">参考价格</th>
                                             <th class="sorting" data="">类型</th>
                                             <th class="sorting" data="">发布者</th>
-                                            <th class="sorting" data="">审批状态</th>
+                                            <!--<th class="sorting" data="">审批状态</th>-->
                                             <th class="sorting" data="">方案进程</th>
                                             <if condition="rolemenu(array('Op/plans'))">
                                                 <th width="40" class="taskOptions">编辑</th>
@@ -56,19 +56,19 @@
                                         </tr>
                                         <foreach name="lists" item="row">
                                             <tr>
-                                                <td><div class="tdbox_long"><a href="{:U('Product/public_pro_need_detail',array('id'=>$row['id']))}" title="{$row.title}">{$row.title}</a></div></td>
+                                                <td><div class="tdbox_long"><a href="{:U('Product/public_pro_need_detail',array('id'=>$row['id']))}" title="{$row.title}">{$row.project}</a></div></td>
                                                 <!--<td>{$row.number}人</td>
                                                 <td>{$row['departure']|date='Y-m-d',###}</td>-->
-                                                <td>{$row.}</td>
-                                                <td>{$row.}</td>
+                                                <td>{$row.create_user_name}</td>
+                                                <td>{$departments[$row['create_user_department_id']]}</td>
                                                 <td>{$provinces[$row[province]]} - {$row.addr}</td>
-                                                <td>{$row.}</td>
+                                                <td>{$departments[$row['dijie_department_id']]}</td>
                                                 <td>{$row.line_blame_name}</td>
                                                 <td>{$row.days}天</td>
-                                                <td>{$row.}</td>
+                                                <td>{$row.cost}</td>
                                                 <td><?php echo $kinds[$row['kind']]; ?></td>
                                                 <td>{$row.create_user_name}</td>
-                                                <td>{$status[$row[status]]}</td>
+                                                <!--<td>{$status[$row[status]]}</td>-->
                                                 <td>{$row.}</td>
                                                 <if condition="rolemenu(array('Op/plans'))">
                                                     <td class="taskOptions">
