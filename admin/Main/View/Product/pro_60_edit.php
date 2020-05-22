@@ -25,21 +25,6 @@
                     <input type="text" class="form-control" name="data[addr]" value="{$detail.addr}" required />
                 </div>
 
-                <!--<div class="form-group col-md-4" id="standard_box">
-                    <p><label>是否标准化产品</label></p>
-                    <input type="radio" name="info[standard]" value="1" <?php /*if ($list['standard'] == 1) echo "checked"; */?>> &#8194;标准化 &#12288;
-                    <input type="radio" name="info[standard]" value="2" <?php /*if ($list['standard'] == 2) echo "checked"; */?>> &#8194;非标准化
-                </div>
-
-                <div class="form-group col-md-4" style="clear: right;" id="line_or_product">
-                    <label style="display: block">标准化产品</label>
-                    <input type="text" name="producted_title" class="form-control" value="{$producted_list.title}" style="width: 75%; display: inline-block;" readonly>
-                    <input type="hidden" name="info[producted_id]" value="{$list.producted_id}">
-                    <span style="display: inline-block; width: 20%; margin-left: 3px">
-                        <a  href="javascript:;" class="btn btn-default btn-sm" >获取产品</a>
-                    </span>
-                </div>-->
-
                 <div class="form-group col-md-4">
                     <label>开课时间：(第一次上课时间)</label><input type="text" name="data[lession_time]"  value="<?php echo $detail['lession_time'] ? date('Y-m-d',$detail['lession_time']) : ''; ?>" class="form-control inputdatetime"  required />
                 </div>
@@ -124,12 +109,15 @@
                 <input type="hidden" name="id" value="{$list.id}">
             </form>
 
-            <div id="formsbtn">
+            <!--保存 提交按钮-->
+            <include file="pro_submit_btns" />
+
+            <!--<div id="formsbtn">
                 <button type="button" class="btn btn-info btn-sm" onclick="$('#detailForm').submit()">保存</button>
-                <?php if ($detail['id'] && in_array($list['status'],array(0,2))){ ?>
+                <?php /*if ($detail['id'] && $list['process'] == 0){ */?>
                     <button type="button" class="btn btn-warning btn-sm" onclick="$('#submitForm').submit()" >提交</button>
-                <?php } ?>
-            </div>
+                <?php /*} */?>
+            </div>-->
         </div>
     </div><!-- /.box-body -->
 </div>

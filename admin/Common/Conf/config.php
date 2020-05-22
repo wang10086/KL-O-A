@@ -356,6 +356,17 @@ $config = array(
 
     'OA_CONTROLLER_NAMES'=>array('Index','Approval','Attachment','Chart','Contract','Cour','Customer','Export','File','Files','Finance','GuideRes','Inspect','Kpi','Minange','Material','Message','Op','Product','Project','Rbac','Rights','Salary','Sale','ScienceRes','Staff','SupplierRes','User','Wages','Worder','Work','Manage'),
 
+    //项目方案进程
+    'OP_PROCESS'    => array(
+        0           => '未提交产品方案需求',
+        1           => '已提交产品方案需求',
+        2           => '已完成产品实施方案',
+        3           => '已确定客户需求',
+        4           => '已成团确认',
+        5           => '已完成业务实施方案'
+    ),
+
+
     /*//工作记录类型  bak_20200318
     'REC_TYPE' => array('1'=>'工作不及时','2'=>'工作不合格','3'=>'工作不满意','4'=>'工作未完成'),
 
