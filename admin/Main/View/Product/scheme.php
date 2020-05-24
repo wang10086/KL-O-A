@@ -53,7 +53,7 @@
                                     <foreach name="lists" item="row">
                                         <tr>
                                             <td>{$row.id}</td>
-                                            <td><a href="{:U('Product/view_scheme', array('id'=>$row['id']))}">{$row.project}</a></td>
+                                            <td><a href="{:U('Product/public_view_scheme', array('id'=>$row['id']))}">{$row.project}</a></td>
                                             <td>{$row.create_user_name}</td>
                                             <td>{$row.audit_user_name}</td>
                                             <td>{$audit_status[$row['audit_status']]}</td>

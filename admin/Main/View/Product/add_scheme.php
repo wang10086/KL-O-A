@@ -236,12 +236,24 @@
                     </div>
                     </div>
 
-                    <div id="formsbtn">
-                        <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                    </div>
+
 
                 </div>
                 </form>
+
+                <form method="post" action="{:U('Product/public_save')}" name="myform" id="submitForm">
+                    <input type="hidden" name="dosubmit" value="1">
+                    <input type="hidden" name="savetype" value="20">
+                    <input type="hidden" name="id" value="{$oplist.scheme_id}">
+                </form>
+
+                <div id="formsbtn">
+                    <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
+                    <button type="button" class="btn btn-info btn-lg" id="lrpd" onclick="$('#myform').submit()">保存</button>
+                    <?php if ($oplist['scheme_id'] && in_array($oplist['scheme_audit_status'], array(0,2))){ ?>
+                        <button type="button" class="btn btn-warning btn-lg" id="lrpd" onclick="$('#submitForm').submit()" >提交</button>
+                    <?php } ?>
+                </div>
             </section><!-- /.content -->
 
         </aside><!-- /.right-side -->

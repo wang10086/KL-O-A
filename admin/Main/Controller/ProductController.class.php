@@ -1763,7 +1763,6 @@ class ProductController extends BaseController {
         $PinYin                         = new Pinyin();
         $id                             = I('id');
         if ($id){
-            //$db                         = M('product_pro_need');
             $db                         = M('op');
             $list                       = $db -> find($id);
             $this->list                 = $list;
@@ -1782,10 +1781,6 @@ class ProductController extends BaseController {
         $this->geclist                  = $geclist;
         $this->geclist_str              = json_encode($geclist,true);
         $this->kinds                    = get_project_kinds();
-        //$this->userlist               =  M('account')->where('`id`>3')->getField('id,nickname', true);
-        //$this->rolelist               =  M('role')->where('`id`>10')->getField('id,role_name', true);
-        //$this->dijie_names            = C('DIJIE_NAME');
-        //$this->userkey                = get_userkey();
         $this->apply_to                 = C('APPLY_TO');
         $this->dijie_data               = get_dijie_department_data();
         $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
@@ -1885,7 +1880,6 @@ class ProductController extends BaseController {
         $title                          = I('tit');
         $db                             = M('op_scheme');
         $where                          = array();
-        //$where['id']                    = array('gt',3604);
         if ($title) $where['project']   = array('like','%'.$title.'%');
         $pagecount                      = $db->where($where)->count();
         $page                           = new Page($pagecount,P::PAGE_SIZE);
@@ -1944,11 +1938,13 @@ class ProductController extends BaseController {
         }else{
             $id                             = I('id');
             if ($id){
-                $oplist                     = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.atta_ids, o.*')->find();
+                $oplist                     = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids, o.*')->find();
                 $apply_to                   = C('APPLY_TO');
                 $oplist['apply_to']         = $apply_to[$oplist['apply_to']];
                 $departments                = M('salary_department')->getField('id,department',true);
                 $oplist['dijie_department'] = $departments[$oplist['dijie_department_id']];
+                $kinds                      = M('project_kind')->getField('id,name',true);
+                $oplist['kind']             = $kinds[$oplist['kind']];
                 $this->oplist               = $oplist;
                 $pro_ids                    = $oplist['pro_ids'] ? explode(',',$oplist['pro_ids']) : '';
                 $pro_model_ids              = $oplist['pro_model_ids'] ? explode(',',$oplist['pro_model_ids']) : '';
@@ -1962,10 +1958,32 @@ class ProductController extends BaseController {
             $where                          = array();
             $where['id']                    = array('gt',3604);
             $projects                       = M('op')->where($where)->order($this->orders('id'))->limit(100)->getField('op_id,project',true);
-
             $this->projects                 = $projects;
             $this->display();
         }
+    }
+
+    public function public_view_scheme(){
+        $id                                 = I('id');
+        if (!$id){ $this->error('获取数据错误'); }
+        $list                               = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids, o.*')->find();
+        $apply_to                           = C('APPLY_TO');
+        $list['apply_to']                   = $apply_to[$list['apply_to']];
+        $departments                        = M('salary_department')->getField('id,department',true);
+        $list['dijie_department']           = $departments[$list['dijie_department_id']];
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $list['kind']                       = $kinds[$list['kind']];
+        $this->list                         = $list;
+        $pro_ids                            = $list['pro_ids'] ? explode(',',$list['pro_ids']) : '';
+        $pro_model_ids                      = $list['pro_model_ids'] ? explode(',',$list['pro_model_ids']) : '';
+        $line_ids                           = $list['line_ids'] ? explode(',',$list['line_ids']) : '';
+        $atta_ids                           = $list['atta_ids'] ? explode(',',$list['atta_ids']) : '';
+        if ($pro_ids) $this->pro_lists              = M('product')->where(array('id'=>array('in',$pro_ids)))->select();
+        if ($pro_model_ids) $this->pro_model_lists  = M('product_model')->where(array('id'=>array('in',$pro_model_ids)))->select();
+        if ($line_ids) $this->line_lists            = M('product_line')->where(array('id'=>array('in',$line_ids)))->select();
+        if ($atta_ids) $this->atta_lists            = M('attachment')->where(array('id'=>array('in',$atta_ids)))->select();
+
+        $this->display('view_scheme');
     }
 
     public function public_save(){
@@ -2848,6 +2866,31 @@ class ProductController extends BaseController {
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+            }
+
+            //提交审核 产品实施方案
+            if ($savetype == 20){
+                $id                             = I('id');
+                $db                             = M('op_scheme'); //产品实施方案
+                $list                           = $db->find($id);
+                if (!$id) $this->error('获取数据失败');
+                $data                           = array();
+                $data['audit_status']           = 3; //已提交,未审核
+                $res                            = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $record                     = array();
+                    $record['op_id']            = $opid;
+                    $record['optype']           = 1;
+                    $record['explain']          = '提交产品实施方案';
+                    op_record($record);
+
+                    $process_node               = 39; //确认产品实施方案
+                    $pro_status                 = 2; // 事前提醒
+                    save_process_log($process_node,$pro_status,$list['project'],$list['id'],'',$list['audit_user_id'],$list['audit_user_name']); //保存待办事宜
+                    $this->success('提交成功',U('Product/public_scheme'));
+                }else{
+                    $this->error('提交申请失败');
+                }
             }
         }
     }
