@@ -2215,5 +2215,22 @@ class AjaxController extends Controller {
             $db->where($where)->save($data);
         }
     }
+
+    //获取项目信息
+    public function get_op_data(){
+        $opid                           = I('opid');
+        $db                             = M('op');
+        if ($opid){
+            $list                       = $db->where(array('op_id'=>$opid))->find();
+            $kinds                      = M('project_kind')->getField('id,name',true);
+            $departments                = M('salary_department')->getField('id,department',true);
+            $apply_to                   = C('APPLY_to');
+            $list['kind']               = $kinds[$list['kind']];
+            $list['dijie_department']   = $departments[$list['dijie_department_id']];
+            $list['apply_to']           = $apply_to[$list['apply_to']];
+        }
+        $data                           = $list ? $list : '';
+        $this->ajaxReturn($data);
+    }
 }
 

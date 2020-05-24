@@ -1076,6 +1076,32 @@ class ProductController extends BaseController {
 
 	}
 
+    // @@@NODE-3###select_line###选择产品模块###
+    public function select_line(){
+
+        $key          = I('key');
+        $status       = I('status','-1');
+        $kind         = I('kind','-1');
+        $mdd          = I('mdd');
+
+        $db           = M('product_line');
+        $this->status = $status;
+        $this->kind   = $kind;
+        $where        = array();
+        if($this->status != '-1') $where['audit_status'] = $this->status;
+        if($this->kind != '-1')   $where['kind'] = $this->kind;
+        if($key)    $where['title'] = array('like','%'.$key.'%');
+        if($mdd)    $where['dest']  = array('like','%'.$mdd.'%');
+
+        $pagecount   = $db->where($where)->count();
+        $page        = new Page($pagecount,25);
+        $this->pages = $pagecount>25 ? $page->show():'';
+        $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('input_time'))->select();
+        $this->kindlist = M('project_kind')->select();
+
+        $this->display('select_line');
+    }
+
 
 
 	// @@@NODE-3###select_tpl###线路选择模板###
@@ -1851,6 +1877,95 @@ class ProductController extends BaseController {
         if ($res1) $num++;
         if ($res2) $num++;
         $num > 0 ? $this->success('删除成功') : $this->error('删除失败');
+    }
+
+    //产品实施方案  scheme
+    public function public_scheme(){
+        $this->title('产品实施方案');
+        $title                          = I('tit');
+        $db                             = M('op_scheme');
+        $where                          = array();
+        //$where['id']                    = array('gt',3604);
+        if ($title) $where['project']   = array('like','%'.$title.'%');
+        $pagecount                      = $db->where($where)->count();
+        $page                           = new Page($pagecount,P::PAGE_SIZE);
+        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        $lists                          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+
+        $this->lists                    = $lists;
+        $this->audit_status             = get_submit_audit_status();
+        $this->display('scheme');
+    }
+
+    //添加实施方案
+    public function add_scheme(){
+        $this->title('产品实施方案');
+        $db                                 = M('op_scheme');
+        if (isset($_POST['dosubmit'])){
+            $id                             = I('id');
+            $op_id                          = I('op_id');
+            $pro                            = I('pro'); //产品模块
+            $pro_model                      = I('pro_model'); //产品模板
+            $line                           = I('line'); //参考产品实施方案  线路
+            //$newname                        = I('newname'); //上传文件信息
+            $resfiles                       = I('resfiles'); //文件ID
+            if (!$op_id){ $this->error('项目名称不能为空'); }
+            $oplist                         = M('op')->where(array('op_id'=>$op_id))->find();
+            $data                           = array();
+            $data['project']                = $oplist['project'];
+            $data['group_id']               = $oplist['group_id'];
+            $data['op_id']                  = $op_id;
+            $data['audit_user_id']          = $oplist['create_user'];
+            $data['audit_user_name']        = $oplist['create_user_name'];
+            $data['pro_ids']                = $pro ? implode(',',$pro) : '';
+            $data['pro_model_ids']          = $pro_model ? implode(',',$pro_model) : '';
+            $data['line_ids']               = $line ? implode(',',$line) : '';
+            $data['atta_ids']               = $resfiles ? implode(',',$resfiles) : '';
+            if($id){
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                $record_msg                 = '编辑产品实施方案';
+            }else{
+                $data['create_user_id']     = cookie('userid');
+                $data['create_user_name']   = cookie('nickname');
+                $data['create_time']        = NOW_TIME;
+                $res                        = $db->add($data);
+                $record_msg                 = '新增产品实施方案';
+            }
+            if ($res){
+                $record                     = array();
+                $record['op_id']            = $op_id;
+                $record['optype']           = 1;
+                $record['explain']          = $record_msg;
+                op_record($record);
+                $this->success('数据保存成功');
+            }else{
+                $this->error('数据保存失败');
+            }
+        }else{
+            $id                             = I('id');
+            if ($id){
+                $oplist                     = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.atta_ids, o.*')->find();
+                $apply_to                   = C('APPLY_TO');
+                $oplist['apply_to']         = $apply_to[$oplist['apply_to']];
+                $departments                = M('salary_department')->getField('id,department',true);
+                $oplist['dijie_department'] = $departments[$oplist['dijie_department_id']];
+                $this->oplist               = $oplist;
+                $pro_ids                    = $oplist['pro_ids'] ? explode(',',$oplist['pro_ids']) : '';
+                $pro_model_ids              = $oplist['pro_model_ids'] ? explode(',',$oplist['pro_model_ids']) : '';
+                $line_ids                   = $oplist['line_ids'] ? explode(',',$oplist['line_ids']) : '';
+                $atta_ids                   = $oplist['atta_ids'] ? explode(',',$oplist['atta_ids']) : '';
+                if ($pro_ids) $this->pro_lists              = M('product')->where(array('id'=>array('in',$pro_ids)))->select();
+                if ($pro_model_ids) $this->pro_model_lists  = M('product_model')->where(array('id'=>array('in',$pro_model_ids)))->select();
+                if ($line_ids) $this->line_lists            = M('product_line')->where(array('id'=>array('in',$line_ids)))->select();
+                if ($atta_ids) $this->atta_lists            = M('attachment')->where(array('id'=>array('in',$atta_ids)))->select();
+            }
+            $where                          = array();
+            $where['id']                    = array('gt',3604);
+            $projects                       = M('op')->where($where)->order($this->orders('id'))->limit(100)->getField('op_id,project',true);
+
+            $this->projects                 = $projects;
+            $this->display();
+        }
     }
 
     public function public_save(){
