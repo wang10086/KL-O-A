@@ -1,4 +1,4 @@
-<div class="form-group col-md-4">
+<div class="form-group col-md-12" style="margin-top:20px;">
     <label>项目名称：</label>{$op.project}
 </div>
 
@@ -7,57 +7,45 @@
 </div>
 
 <div class="form-group col-md-4">
-    <label>递交客户时间：{$op.time|date='Y-m-d',###}</label>
+    <label>预计人数：</label>{$op.number}人
 </div>
 
 <div class="form-group col-md-4">
-    <label>适合人群：{$apply_to[$op['apply_to']]}</label>
+    <label>出团日期：</label>{$op.departure}
 </div>
 
 <div class="form-group col-md-4">
-    <label>预计人数：{$op.number}人</label>
+    <label>行程天数：</label>{$op.days}天
 </div>
 
 <div class="form-group col-md-4">
-    <label>计划出团日期：{$op.departure}</label>
+    <label>目的地：</label>{$op.destination}
 </div>
 
 <div class="form-group col-md-4">
-    <label>行程天数：{$op.days}天</label>
+    <label>立项时间：</label>{$op.op_create_date}
 </div>
 
 <div class="form-group col-md-4">
-    <label>目的地省份：{$provinces[$op['province']]}</label>
+    <label>业务部门：</label>{$op.op_create_user}
 </div>
 
 <div class="form-group col-md-4">
-    <label>详细地址：{$op.destination}</label>
+    <label>销售人员：</label>{$op.sale_user}
 </div>
 
 <div class="form-group col-md-4">
-    <label>客户单位：{$op.customer}</label>
+    <label>客户单位：</label>{$op.customer}
 </div>
 
-<div class="form-group col-md-4">
-    <label>接待实施部门：{$departments[$op['dijie_department_id']]}</label>
-</div>
-
-<div class="form-group col-md-4">
-    <label>线控负责人：{$op.line_blame_name}</label>
-</div>
-
-<div class="form-group col-md-4">
-    <label>客户预算：{$op.cost}</label>
-</div>
-
-<div class="form-group col-md-4">
-    <label>业务人员：{$op.sale_user}</label>
-</div>
-
-<div class="form-group col-md-4">
-    <label>业务部门：<?php echo $departments[$op['create_user_department_id']] ?></label>
-</div>
-
+<?php if($op_expert){ ?>
+    <div class="form-group col-md-12">
+        <label>协助销售实施专家：</label>
+        <foreach name="op_expert" item="v">
+            {:username($v)} &emsp;
+        </foreach>
+    </div>
+<?php } ?>
 
 <?php if ($is_dijie){ ?> <!--内部地接-->
     <div class="form-group col-md-8">

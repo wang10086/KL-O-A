@@ -419,7 +419,8 @@ class OpController extends BaseController {
         $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
         $this->price_kind     = $priceKind;
         $this->opid           = $opid;
-		$this->kinds          = M('project_kind')->getField('id,name', true);
+		//$this->kinds          = M('project_kind')->getField('id,name', true);
+        $this->kinds          = get_project_kinds();
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
 		$this->rolelist       = M('role')->where('`id`>10')->getField('id,role_name', true);
 		$this->op             = $op;
@@ -447,8 +448,15 @@ class OpController extends BaseController {
         $this->guide          = $guide?$guide:$guide_old;
         $this->dijie_names    = C('DIJIE_NAME');
         $this->change         = M('op')->where(array('dijie_opid'=>$opid))->find();
-        $this->expert         = C('expert');
-        $this->op_expert      = explode(',',$op['expert']);
+        //$this->expert         = C('expert');
+        //$this->op_expert      = explode(',',$op['expert']);
+        $this->provinces                = M('provinces')->getField('id,name',true);
+        $this->departments              =  M('salary_department')->getField('id,department',true);
+        $this->dijie_data               = get_dijie_department_data();
+        $PinYin                         = new Pinyin();
+        $geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
+        $this->geclist                  = $geclist;
+        $this->geclist_str              = json_encode($geclist,true);
 
         $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
          foreach ($product_need as $k=>$v){
@@ -494,7 +502,7 @@ class OpController extends BaseController {
 			$where['company_name'] = array('neq','');
 			$where['cm_id'] = array('in',Rolerelation(cookie('roleid')));
 		}
-		$this->geclist     = get_customerlist();
+		//$this->geclist     = get_customerlist();
 
         //人员名单关键字
         $this->userkey      = get_username();
@@ -747,8 +755,8 @@ class OpController extends BaseController {
 				}
 			}
 
-			//修改项目基本信息
-			if($opid && $savetype==10 ){
+			//修改项目基本信息  bak_20200521
+			/*if($opid && $savetype==10 ){
 			    $returnMsg              = array();
 			    $customer               = get_customerlist();
 			    if (!in_array($info['customer'],$customer) && !strpos($info['project'],'地接团')){
@@ -800,7 +808,29 @@ class OpController extends BaseController {
                 $returnMsg['num']   = $num;
                 $returnMsg['msg']   = $msg;
                 $this->ajaxReturn($returnMsg);
-			}
+			}*/
+
+            //保存产品方案需求
+            if ($savetype == 10){
+                $db                             = M('op');
+                $info                           = I('info');
+                $info['project']                = trim($info['project']);
+                $info['customer']               = trim($info['customer']);
+                $info['remark']                 = trim($info['remark']);
+                $info['destination']            = trim($info['destination']);
+                $info['time']                   = strtotime($info['time']);
+                if (!$info['project']) $this->error('需求标题不能为空');
+                if (!$opid){ $this->error('数据错误'); }
+                if (!$info['line_blame_uid'] || !$info['line_blame_name']) $this->error('线控负责人信息错误');
+                $res                            = $db->where(array('op_id'=>$opid))->save($info);
+
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = '编辑产品方案需求基本信息';
+                op_record($record);
+                $res ? $this->success('保存成功',U('Op/plans_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
 
 			//保存价格
 			if($cost){

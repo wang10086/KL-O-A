@@ -1,18 +1,24 @@
-<form method="post" action="<?php echo U('Op/public_save'); ?>" name="myform" id="save_op_info">
+
+<form method="post" action="{:U('Op/public_save')}" name="myform" id="myForm">
     <input type="hidden" name="dosubmint" value="1">
-    <input type="hidden" name="opid" value="{$op.op_id}">
     <input type="hidden" name="savetype" value="10">
-    <div class="form-group col-md-4" >
-        <label>项目名称：</label><input type="text" name="info[project]"  value="{$op.project}" class="form-control" />
+    <input type="hidden" name="opid" value="{$op.op_id}">
+    <div class="form-group col-md-4">
+        <label>项目名称：</label><input type="text" name="info[project]" value="{$op.project}" class="form-control" required />
     </div>
 
     <div class="form-group col-md-4">
         <label>项目类型：</label>
-        <select  class="form-control"  name="info[kind]" id="kind" required>
-            <foreach name="kinds" key="k" item="v">
-                <option value="{$k}" <?php if ($op && ($k == $op['kind'])) echo ' selected'; ?> >{$v}</option>
+        <select  class="form-control"  name="info[kind]" id="kind"  required>
+            <option value="">请选择项目类型</option>
+            <foreach name="kinds" item="v">
+                <option value="{$v.id}" <?php if ($op['kind'] == $v['id']) echo "selected" ?> >{:tree_pad($v['level'], true)} {$v.name}</option>
             </foreach>
         </select>
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>递交客户时间：</label><input type="text" name="info[time]"  value="<?php echo $op['time'] ? date('Y-m-d',$op['time']) : ''; ?>" class="form-control inputdatetime"  required />
     </div>
 
     <div class="form-group col-md-4">
@@ -20,63 +26,41 @@
         <select  class="form-control"  name="info[apply_to]" required>
             <option value="" selected disabled>请选择适合人群</option>
             <foreach name="apply_to" key="k" item="v">
-                <option value="{$k}" <?php if ($op && ($k == $op['apply_to'])) echo ' selected'; ?> >{$v}</option>
+                <option value="{$k}" <?php if ($row && ($k == $row['grade'])) echo ' selected'; ?> >{$v}</option>
             </foreach>
         </select>
     </div>
 
-    <div class="form-group col-md-4" id="standard_box">
-        <p><label>是否标准化产品</label></p>
-        <input type="radio" name="info[standard]" value="1" <?php echo $op['standard']==1 ? "checked" : ''; ?>> &#8194;标准化 &#12288;
-        <input type="radio" name="info[standard]" value="2" <?php echo $op['standard']==2 ? "checked" : ''; ?>> &#8194;非标准化
-    </div>
-
-    <div class="form-group col-md-4" style="clear: right;" id="line_or_product">
-        <?php if ($op['standard']==1){ ?>
-            <label style="display: block">标准化产品</label>
-            <input type="text" name="producted_title" class="form-control" value="{$producted_list.title}" style="width: 75%; display: inline-block;" readonly>
-            <input type="hidden" name="info[producted_id]" value="{$op.producted_id}">
-            <span style="display: inline-block; width: 20%">
-                <a href="javascript:;" class="btn btn-success btn-sm" onClick="select_standard_product()">获取产品</a>
-            </span>
-        <?php }else{ ?>
-            <label style="display: block">行程方案</label>
-            <input type="text" name="line_title" class="form-control" value="{$line_list.title}" style="width: 75%; display: inline-block;" readonly>
-            <input type="hidden" name="info[line_id]" value="{$op.line_id}">
-            <span style="display: inline-block; width: 20%">
-                <a href="javascript:;" class="btn btn-success btn-sm" onClick="selectmodel()">获取线路</a>
-            </span>
-        <?php } ?>
+    <div class="form-group col-md-4">
+        <label>预计人数：</label><input type="text" name="info[number]" value="{$op.number}" class="form-control" required />
     </div>
 
     <div class="form-group col-md-4">
-        <label>预计人数：</label><input type="text" name="info[number]" value="{$op.number}" class="form-control" />
+        <label id="ctrq">计划出团日期：</label><input type="text" name="info[departure]"  value="{$op.departure}" class="form-control inputdate"  required />
     </div>
 
     <div class="form-group col-md-4">
-        <label>计划出团日期：</label><input type="text" name="info[departure]" value="{$op.departure}"  class="form-control inputdate"/>
+        <label id="xcts">行程天数：</label><input type="text" name="info[days]" value="{$op.days}" class="form-control"  required />
     </div>
 
     <div class="form-group col-md-4">
-        <label>行程天数：</label><input type="text" name="info[days]" value="{$op.days}" class="form-control" />
-    </div>
-
-    <div class="form-group col-md-4">
-        <label>目的地：</label><input type="text" name="info[destination]" value="{$op.destination}" class="form-control" />
-    </div>
-
-    <!--<div class="form-group col-md-4">
-        <label>业务部门：</label>
-        <select  class="form-control" name="info[op_create_user]">
-        <foreach name="rolelist" key="k" item="v">
-            <option value="{$v}" <?php /*if($v==$op['op_create_user']){ echo 'selected';} */?> >{$v}</option>
-        </foreach>
+        <label>目的地省份</label>
+        <select  class="form-control"  name="info[province]" id="province" required >
+            <option value="" disabled selected>--请选择--</option>
+            <foreach name="provinces" key="k" item="v">
+                <option value="{$k}" <?php if ($op['province'] == $k) echo ' selected'; ?> >{$v}</option>
+            </foreach>
         </select>
-    </div>-->
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>详细地址：</label><input type="text" name="info[destination]" class="form-control" value="{$op.destination}" required />
+    </div>
+
 
     <div class="form-group col-md-4">
         <label>客户单位：</label>
-        <input type="text" class="form-control" name="info[customer]" value="{$op.customer}" list="customer" />
+        <input type="text" class="form-control" name="info[customer]" value="{$op.customer}" list="customer" onblur="check_customer($(this).val())" />
         <datalist id="customer">
             <foreach name="geclist" item="v">
                 <option value="{$v}" label="" />
@@ -84,95 +68,186 @@
         </datalist>
     </div>
 
-    <!--<div class="form-group col-md-4" style="padding: 0">
-        <div class="col-md-12"  style="padding-right: 0">
-            <span class="lm_c">协助销售实施专家：</span>
-            <foreach name="expert" key="k" item="v">
-                <span class="lm_c"><input type="checkbox" name="expert[]" value="{$k}" <?php /*if (in_array($k,$op_expert)) echo "checked"; */?>> {$v}</span>
-            </foreach>
-        </div>
-        <div class="col-md-12"  style="padding-right: 0">
-            <span class="lm_c">背景提升产品负责人：</span>
-            <span class="lm_c"><input type="checkbox" name="expert[]" value="202" <?php /*if (in_array(202,$op_expert)) echo "checked"; */?>> 于洵</span>
-        </div>
-    </div>-->
-
     <div class="form-group col-md-4">
-        <label>是否本公司其他项目部地接</label>
-        <select  name="info[in_dijie]" class="form-control" required id="dijie" onchange="is_or_not_dijie()">
-            <option value="" disabled>--请选择--</option>
-            <option value="1" <?php if ($op['in_dijie'] ==1){echo 'selected';} ?> >是</option>：
-            <option value="2" <?php if ($op['in_dijie'] ==2 || !$op['in_dijie']){echo 'selected';} ?> >否</option>
+        <label>接待实施部门</label>
+        <select  name="info[dijie_department_id]" class="form-control" onchange="get_line_blame_data()" required>
+            <option value="" selected disabled>--请选择--</option>
+            <foreach name="dijie_data" item="v">
+                <option value="{$v.id}" <?php if ($op['dijie_department_id'] == $v['id']) echo ' selected'; ?>>{$v.department}</option>
+            </foreach>
         </select>
     </div>
 
-    <div class="form-group col-md-4" id="dijie_or_sale"></div>
-    <?php if ($is_dijie){ ?> <!--内部地接-->
-    <div class="form-group col-md-12">
-        <div class="form-group col-md-8">
-            <div class="form-group col-md-12" style="margin-left:-15px;">
-                <label>备注：</label><textarea class="form-control"  name="info[remark]">{$op.remark}</textarea>
-            </div>
-
-            <div class="form-group col-md-12" id="addti_btn">
-                <a  href="javascript:;" class="btn btn-info btn-sm" onClick="check_op_form:public_save('save_op_info','<?php echo U('Op/public_save'); ?>');">保存</a>
-            </div>
-        </div>
-
-        <div class="form-group col-md-4">
-            <label style="width:100%; border-bottom:1px solid #dedede; padding-bottom:10px; font-weight:bold;">内部满意度评分二维码&emsp;<span class="red">(请发送给组团方：{$is_dijie.create_user_name})</span></label>
-            <div id="code"></div>
-        </div>
+    <div class="form-group col-md-4">
+        <label>线控负责人：</label>
+        <input type="hidden" class="form-control" name="info[line_blame_uid]" value="{$op.line_blame_uid}" />
+        <input type="text" class="form-control" name="info[line_blame_name]" value="{$op.line_blame_name}" readonly />
     </div>
-    <?php }else{ ?>
-        <div class="form-group col-md-12">
-            <label>备注：</label><textarea class="form-control"  name="info[remark]">{$op.remark}</textarea>
-        </div>
 
-        <div class="form-group col-md-12" id="addti_btn">
-            <a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:check_op_form('save_op_info','<?php echo U('Op/public_save'); ?>');">保存</a>
+    <div class="form-group col-md-4">
+        <label>客户预算：</label>
+        <input type="text" class="form-control" name="info[cost]" value="{$op.cost}" required />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>业务人员：</label>
+        <input type="text" class="form-control" name="info[sale_user]" value="<?php echo $op['sale_user'] ? $op['sale_user'] : cookie('name'); ?>" readonly />
+    </div>
+
+    <div class="form-group col-md-4">
+        <label>业务部门：</label>
+        <input type="text" class="form-control" name="" value="<?php echo $op['create_user_department_id'] ? $departments[$op['create_user_department_id']] : $departments[cookie('department')]; ?>" readonly />
+    </div>
+
+    <div class="form-group col-md-12">
+        <label>备注：</label><textarea class="form-control"  name="info[remark]">{$op.remark}</textarea>
+    </div>
+    
+
+    <div class="form-group col-md-12" id="addti_btn">
+        <div class="callout callout-danger content" id="noSubmitDiv" style="display: none">
+            <h4>提示：如果无法提交需求,请按要求及时完善客户信息！</h4>
         </div>
-    <?php } ?>
+        <button type="button" onclick="check_dijie_province_data()" class="btn btn-info btn-sm" id="base_btn">保存</button>
+    </div>
 </form>
 
-<script>
-    var in_dijie = "<?php echo $op['in_dijie']; ?>";
-    var dijie_name = '<label>地接单位名称：</label>'+
-            '<select  name="info[dijie_name]" class="form-control" required>'+
-            '<option value="" selected disabled>--请选择--</option>'+
-            '<foreach name="dijie_names" key="k" item="v">'+
-            '<option value="{$k}" <?php if ($op['dijie_name']==$k){echo 'selected';} ?>>{$v}</option>'+
-            '</foreach>'+
-            '</select>';
-    var sale = '<label>销售人员：</label> ' +
-        '<input type="text" class="form-control" name="info[sale_user]" value="{$op.sale_user}" readonly>';
-    $(function () {
-        if (in_dijie ==1){
-            $('#dijie_or_sale').html(dijie_name);
-        }else{
-            $('#dijie_or_sale').html(sale);
-        }
-    })
+<script type="text/javascript">
 
-    function is_or_not_dijie(){
-        var dj = $('#dijie').val();
-        if (dj == 1){
-            $('#dijie_or_sale').html(dijie_name);
-        }else{
-            $('#dijie_or_sale').html(sale);
+    // 判断填写数据是否正确
+    function check_dijie_province_data() {
+        let kind                = $('#kind').val();
+        let province            = $('#province').val();
+        let dijie_department_id = $('select[name="info[dijie_department_id]"]').val(); //地接部门ID
+
+        if (!kind){ art_show_msg('项目类型填写有误',2000); return false; }
+        if (!province){ art_show_msg('省份信息填写有误',2000); return false; }
+        if (!dijie_department_id){ art_show_msg('接待部门信息填写有误',2000); return false; }
+
+        $.ajax({
+            type: 'POST',
+            url: "{:U('Ajax/check_product_pro_need_data')}",
+            data:{kind:kind,province:province,department_id:dijie_department_id},
+            success:function (data) {
+                if (data.code == 'n'){
+                    art_show_msg(data.msg,3);
+                    return false;
+                }else{
+                    save_form('myForm')
+                }
+            },
+            error:function (data) {
+                console.log('error');
+            }
+        })
+    }
+
+    //获取线控负责人
+    function get_line_blame_data() {
+        let department_id = $('select[name="info[dijie_department_id]"]').val();
+        let kind    = $('#kind').val();
+        if (department_id){
+            if (!kind){ art_show_msg('项目类型信息错误',3); return false; }
+            // if (!department_id){ art_show_msg('接待实施部门信息有误', 3); return false; }
+            $.ajax({
+                type: 'POST',
+                url: "{:U('Ajax/get_line_blame_user_data')}",
+                data:{kind:kind,department_id:department_id},
+                success:function (data) {
+                    $('input[name="info[line_blame_uid]"]').val(data.line_blame_uid);
+                    $('input[name="info[line_blame_name]"]').val(data.line_blame_name);
+                },
+                error:function (data) {
+                    console.log('error');
+                }
+            })
         }
     }
 
-    $('#kind').change(function () {
+    //设置研学旅行项目类型(是否地接)
+    /*function set_yxlx_op_type(kind){
+        if (kind == 54 || kind == 84){
+            $('#dijie').children('option[value="2"]').attr('selected',true);
+            $('#dijie').attr('disabled',true);
+        }else if(kind == 83){
+            $('#dijie').children('option[value="1"]').attr('selected',true);
+            $('#dijie').attr('disabled',true);
+            $('#dijie_name').show();
+        }else {
+            $('#dijie').find('option[value="1"]').attr('selected',false);
+            $('#dijie').find('option[value="2"]').attr('selected',false);
+            $('#dijie').children('option:first-child').attr('selected',true).attr('disabled',true);
+            $('#dijie').removeAttr('disabled');
+        }
+    }*/
+
+    $('#kind').on('change',function () {
+        var kind    = $(this).val();
+        //set_yxlx_op_type(kind) // 设置研学旅行项目类型(是否地接)
         $('input[name="producted_title"]').val('');
         $('input[name="info[producted_id]"]').val('');
+        get_line_blame_data();
     })
 
-    function check_op_form(id, url){
-        let producted_id    = $('input[name="info[producted_id]"]').val();
-        let line_id         = $('input[name="info[line_id]"]').val();
-        if (!producted_id && !line_id){ art_show_msg("线路或标准化产品不能为空",3); return false; }
-        public_save(id,url);
+    function save_form(id) {
+        let project     = $('input[name="info[project]"]').val().trim();
+        let kind        = $('select[name="info[kind]"]').val();
+        let number      = $('input[name="info[number]"]').val();
+        let departure   = $('input[name="info[departure]"]').val();
+        let days        = $('input[name="info[days]"]').val();
+        let province    = $('select[name="info[province]"]').val();
+        let destination = $('input[name="info[destination]"]').val();
+        let customer    = $('input[name="info[customer]"]').val();
+        let dijie_dep_id= $('select[name="info[dijie_department_id]"]').val();
+        let line_uid    = $('input[name="info[line_blame_uid]"]').val();
+        let line_name   = $('input[name="info[line_blame_name]"]').val();
+        let cost        = $('input[name="info[cost]"]').val();
+
+        let geclist     = <?php echo $geclist_str; ?>;
+        let customer_num = 0;
+        if (in_array(customer,geclist)){
+            customer_num++;
+        }
+
+        if (!project)   { art_show_msg('项目名称不能为空',3); return false; }
+        if (!kind)      { art_show_msg('项目类型不能为空',3); return false; }
+        if (!number)    { art_show_msg('预计人数不能为空',3); return false; }
+        if (!departure) { art_show_msg('计划出团日期不能为空',3); return false; }
+        if (!days)      { art_show_msg('行程天数不能为空',3); return false; }
+        if (!province)  { art_show_msg('目的地省份不能为空',3); return false; }
+        if (!destination) { art_show_msg('详细地址不能为空',3); return false; }
+        if (!customer_num){ art_show_msg('客户单位填写错误',3); return false; }
+        if (!dijie_dep_id){ art_show_msg('接待实施部门错误',3); return false; }
+        if (!cost)      { art_show_msg('客户预算信息错误',3); return false; }
+        if (!line_uid || !line_name){ art_show_msg('线控负责人信息错误',3); return false; }
+        $('#'+id).submit();
+    }
+
+    //检查客户信息是否完善
+    function check_customer(customer){
+        if (!customer){
+            art_show_msg('客户单位不能为空',3); return false;
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: "{:U('Ajax/check_customer')}",
+                data:{customer:customer},
+                success:function (data) {
+                    if (data.stu == 0){
+                        art_show_msg(data.msg,4);
+                        $('#base_btn').hide();
+                        $('#noSubmitDiv').show();
+                        return false;
+                    }else{
+                        $('#base_btn').show();
+                        $('#noSubmitDiv').hide();
+                    }
+                },
+                error:function (data) {
+                    console.log(data.statusText);
+                }
+            })
+        }
     }
 
 </script>

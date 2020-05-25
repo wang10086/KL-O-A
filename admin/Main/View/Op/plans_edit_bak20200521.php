@@ -62,9 +62,7 @@
                                         <?php  }else{ ?>
                                         <include file="op_pro" />
                                         <?php  } ?>
-                                        
                                     </div>
-                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
@@ -72,34 +70,10 @@
                            <?php  if($op['audit_status']==1){ ?>
                                <div class="box box-warning">
                                    <div class="box-header">
-                                       <h3 class="box-title">行程方案及资源需求</h3>
+                                       <h3 class="box-title">专家/辅导员需求</h3>
                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                            负责人：{$op.sale_user}
                                        </h3>
-                                   </div>
-                                   <div class="box-body">
-                                       <?php if (in_array($op['kind'],$arr_product)){ //产品模块化 ?>
-                                           <?php if(rolemenu(array('Op/select_module')) && $settlement['audit']!=1 && ($op['create_user']==cookie('userid') ||C('RBAC_SUPER_ADMIN')==cookie('username') ||cookie('roleid')==10)){ ?>
-                                                <include file="op_product_edit" />
-                                           <?php }else{ ?>
-                                               <?php if ($product_need){ ?>
-                                                   <include file="op_product_read" />
-                                               <?php } ?>
-                                               <?php if($op['line_id']){ ?>
-                                                   <include file="op_line" />
-                                               <?php } ?>
-                                           <?php } ?>
-                                       <?php }else{ //线路 ?>
-                                           <?php if(rolemenu(array('Op/public_save_line')) && $settlement['audit']!=1  && ($opauth['line']==cookie('userid')|| C('RBAC_SUPER_ADMIN')==cookie('username') ||rolemenu(array('Op/assign_line')))){ ?>
-                                               <?php if($isFixedLine){ ?>
-                                                   <include file="op_line" />
-                                               <?php }else{ ?>
-                                                   <include file="op_line_edit" />
-                                               <?php } ?>
-                                           <?php }else{ ?>
-                                               <include file="op_line" />
-                                           <?php  } ?>
-                                       <?php } ?>
                                    </div>
 
                                    <div class="box-body">
@@ -656,8 +630,8 @@
 	}
 
     //选择产品模块
-    function selectproduct() {
-        art.dialog.open("<?php echo U('Op/select_module',array('opid'=>$opid)); ?>",{
+    /*function selectproduct() {
+        art.dialog.open("<?php /*echo U('Op/select_module',array('opid'=>$opid));*/ ?>",{
             lock:true,
             title: '选择产品模块',
             width:1000,
@@ -697,7 +671,7 @@
             cancel: function () {
             }
         });
-    }
+    }*/
 
 
     //选择合格供方
