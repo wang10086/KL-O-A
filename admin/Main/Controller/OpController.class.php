@@ -99,6 +99,73 @@ class OpController extends BaseController {
 		$this->display('index');
     }
 
+    //项目方案跟进
+    public function public_pro_index(){
+        $this->title('出团计划列表');
+
+        $db		= M('op');
+
+        $title	= I('title');		//项目名称
+        $opid	= I('id');			//项目编号
+        $oid	= I('oid');			//项目团号
+        $dest	= I('dest');			//目的地
+        $su		= I('su');			//销售
+
+        $where                                          = array();
+        if($title)			$where['o.project']			= array('like','%'.$title.'%');
+        if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
+        if($opid)			$where['o.op_id']			= $opid;
+        if($dest)			$where['o.destination']		= $dest;
+        if($su)				$where['o.sale_user']		= array('like','%'.$su.'%');
+        $where['o.type']                    = 1;
+        $where['o.id']                      = array('gt',3604);
+
+        //分页
+        $pagecount		= $db->table('__OP__ as o')->field('o.op_id')->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->count();
+        $page			= new Page($pagecount, P::PAGE_SIZE);
+        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
+
+
+        $field	        = 'o.*,a.nickname as jidiao,c.dep_time';
+        $lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
+        //$dijie_opids    = get_dijie_opids();
+
+        foreach($lists as $k=>$v){
+            //判断是否成团
+            if ($v['group_id']) { $lists[$k]['group_id'] = '<span class="green">'.$v['group_id'].'</span>'; }else{ $lists[$k]['group_id'] = '未成团'; }
+
+            //判断项目是否审核通过
+            if($v['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="blue">未审核</span>';
+            if($v['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="blue">立项通过</span>';
+            if($v['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="blue">立项未通过</span>';
+
+            //判断预算是否通过
+            $yusuan = M('op_budget')->where(array('op_id'=>$v['op_id']))->find();
+            if($yusuan && $yusuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="green">已提交预算</span>';
+            if($yusuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="green">预算通过</span>';
+            if($yusuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="green">预算未通过</span>';
+
+            //判断结算是否通过
+            $jiesuan = M('op_settlement')->where(array('op_id'=>$v['op_id']))->find();
+            if($jiesuan && $jiesuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="yellow">已提交结算</span>';
+            if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
+            if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
+
+            /*if ($v['group_id']){
+                if (in_array($v['op_id'],$dijie_opids)){
+                    $lists[$k]['has_qrcode']    = ''; //不显示二维码
+                }else{
+                    $lists[$k]['has_qrcode']    = 1;  //显示二维码
+                }
+            }*/
+        }
+
+        $this->lists   =  $lists;
+        $this->kinds   =  M('project_kind')->getField('id,name', true);
+
+        $this->display('pro_index');
+    }
+
 
     // @@@NODE-3###plans###制定出团计划###
     public function plans(){
@@ -457,6 +524,7 @@ class OpController extends BaseController {
         $geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
         $this->geclist                  = $geclist;
         $this->geclist_str              = json_encode($geclist,true);
+        $this->scheme_list              = M('op_scheme')->where(array('op_id'=>$opid))->find();
 
         $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
          foreach ($product_need as $k=>$v){
@@ -1757,6 +1825,53 @@ class OpController extends BaseController {
 			$this->display('assign_guide');
 		}
 	}
+
+    //@@@NODE-3###assign_scheme###指派实施方案负责人###
+    public function assign_scheme(){
+        $opid       = I('opid');
+        $info       = I('info');
+        $user       =  M('account')->getField('id,nickname', true);
+        if(isset($_POST['dosubmit']) && $info){
+
+            $data = array();
+            $data['scheme'] = $info;
+            $auth = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            //$thing  = "编制实施方案";
+            //project_worder($info,$opid,$thing);
+
+            if($auth){
+                M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+            }else{
+                $data['op_id'] = $opid;
+                M('op_auth')->add($data);
+            }
+            $record = array();
+            $record['op_id']   = $opid;
+            $record['optype']  = 2;
+            $record['explain'] = '指派【'.$user[$info].'】负责编制实施方案';
+            op_record($record);
+
+            echo '<script>window.top.location.reload();</script>';
+
+        }else{
+
+            //用户列表
+            $key = I('key');
+            $db = M('account');
+            $where = array();
+            $where['id'] = array('gt',3);
+            if($key) $where['nickname'] = array('like','%'.$key.'%');
+            $pagecount = $db->where($where)->count();
+            $page = new Page($pagecount,6);
+            $this->pages = $pagecount>6 ? $page->show():'';
+            $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+            $this->role  =  M('role')->getField('id,role_name', true);
+            $this->opid = $opid;
+            $this->display('assign_scheme');
+        }
+    }
 
 	//@@@NODE-3###assign_res###指派人员跟进导游辅导员调度###
     public function assign_material(){

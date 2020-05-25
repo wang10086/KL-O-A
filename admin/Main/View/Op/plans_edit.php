@@ -85,7 +85,37 @@
                                        <div class="form-group">&nbsp;</div>
                                    </div>
                                </div>
-                                
+
+                               <div class="box box-warning">
+                                   <div class="box-header">
+                                       <h3 class="box-title">编制产品实施方案</h3>
+                                       <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                           <?php  if($opauth && $opauth['scheme']){ ?>
+                                               负责人：{$user.$opauth[scheme]}
+                                           <?php  }else{ ?>
+                                               <?php  if(rolemenu(array('Op/assign_scheme'))){ ?>
+                                                   <a href="javascript:;" onclick="javascript:assign('{:U('Op/assign_scheme',array('opid'=>$op['op_id']))}','指派产品实施方案负责人');" style="color:#09F;">指派负责人</a>
+                                               <?php  }else{ ?>
+                                                   暂未指派负责人
+                                               <?php  } ?>
+                                           <?php  } ?>
+                                       </h3>
+                                   </div>
+                                   <div class="box-body">
+
+                                       <div class="content" style="padding-top:40px;">
+                                           <?php if(!$scheme_list){
+                                               echo '<div class="form-group col-md-12">尚未编制产品实施方案，<a href="'.U('Product/add_scheme',array('opid'=>$op['op_id'])).'">立即编制</a>！</div>';
+                                           }else{ ?>
+                                               <div class="form-group col-md-12">
+                                                   <label>实施方案：<a href="{:U('Product/public_view_scheme',array('id'=>$scheme_list['id']))}" target="_blank">{$scheme_list.project}</a></label>
+                                               </div>
+                                           <?php } ?>
+                                       </div>
+
+                                   </div>
+                               </div>
+
                                  <div class="box box-warning">
                                     <div class="box-header">
                                         <h3 class="box-title">成本核算</h3>

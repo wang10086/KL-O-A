@@ -1986,6 +1986,7 @@ class ProductController extends BaseController {
         if ($line_ids) $this->line_lists            = M('product_line')->where(array('id'=>array('in',$line_ids)))->select();
         if ($atta_ids) $this->atta_lists            = M('attachment')->where(array('id'=>array('in',$atta_ids)))->select();
 
+        $this->audit_status                 = get_submit_audit_status();
         $this->display('view_scheme');
     }
 

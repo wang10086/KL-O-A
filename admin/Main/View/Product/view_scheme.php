@@ -21,6 +21,7 @@
                             <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">产品方案需求基本信息</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">审核状态：{$audit_status[$list['scheme_audit_status']]} &emsp;</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body" style=" padding-top:30px; padding-bottom:0px;">
 
