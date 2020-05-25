@@ -20,9 +20,9 @@
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
-                                        <a href="{:U('Product/public_pro_need')}" class="btn btn-sm btn-primary"><i class="fa fa-folder"></i> 产品方案需求</a>
+                                        <!--<a href="{:U('Product/public_pro_need')}" class="btn btn-sm btn-primary"><i class="fa fa-folder"></i> 产品方案需求</a>-->
                                     	<a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',600,160);"><i class="fa fa-search"></i> 搜索</a>
-                                        <a href="{:U('Product/add_line')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增线路</a>
+                                        <!--<a href="{:U('Product/add_line')}" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i> 新增线路</a>-->
                                     </div>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
