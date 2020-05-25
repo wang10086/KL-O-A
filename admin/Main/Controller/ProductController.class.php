@@ -1966,7 +1966,7 @@ class ProductController extends BaseController {
     public function public_view_scheme(){
         $id                                 = I('id');
         if (!$id){ $this->error('获取数据错误'); }
-        $list                               = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids, o.*')->find();
+        $list                               = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids , s.audit_user_id as scheme_audit_user_id, o.*')->find();
         $apply_to                           = C('APPLY_TO');
         $list['apply_to']                   = $apply_to[$list['apply_to']];
         $departments                        = M('salary_department')->getField('id,department',true);
@@ -2887,9 +2887,51 @@ class ProductController extends BaseController {
                     $process_node               = 39; //确认产品实施方案
                     $pro_status                 = 2; // 事前提醒
                     save_process_log($process_node,$pro_status,$list['project'],$list['id'],'',$list['audit_user_id'],$list['audit_user_name']); //保存待办事宜
+
+                    //消除待办事宜
+                    $ok_node                    = 38; //组织编制产品实施方案
+                    save_process_ok($ok_node);
                     $this->success('提交成功',U('Product/public_scheme'));
                 }else{
                     $this->error('提交申请失败');
+                }
+            }
+
+            //审核  产品实施方案
+            if ($savetype == 21){
+                $id                             = I('id');
+                $status                         = I('status');
+                $audit_remark                   = trim(I('status'));
+                if (!$id) $this->error('获取数据失败');
+                if (!$status) $this->error('请选择审核结果');
+                $db                             = M('op_scheme');
+                $list                           = $db->where(array('id'=>$id))->find();
+                $data                           = array();
+                $data['audit_status']           = $status;
+                $data['audit_remark']           = $audit_remark;
+                $data['audit_time']             = NOW_TIME;
+                $res                            = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $record                     = array();
+                    $record['op_id']            = $list['op_id'];
+                    $record['optype']           = 1;
+                    $record['explain']          = '审核产品实施方案：审核状态：'.$status==1 ? '审核通过' : '审核不通过';
+                    op_record($record);
+
+                    //生成待办事宜
+                    if ($status==2){ //审核未通过
+                        $process_node           = 40; //修改产品实施方案
+                        $pro_status             = 3; // 反馈
+                        save_process_log($process_node,$pro_status,$list['project'],$list['id'],'',$list['create_user_id'],$list['create_user_name']); //保存待办事宜
+                    }
+
+                    //消除待办事宜
+                    $ok_node                    = 39; //确认产品实施方案
+                    save_process_ok($ok_node,$audit_remark);
+
+                    $this->success('数据保存成功');
+                }else{
+                    $this->error('保存数据失败');
                 }
             }
         }
