@@ -24,48 +24,52 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body" style=" padding-top:30px; padding-bottom:0px;">
 
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label>项目名称：{$list.project}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>项目类型：{$list.kind}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>适合人群：{$list.apply_to}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>预计人数：{$list.number}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>计划出团日期：{$list.deperture}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>行程天数：{$list.days} 天</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>目的地：{$list.destination}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>客户单位：{$list.customer}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>接待实施部门：{$list.dijie_department}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>线控负责人：{$list.line_blame_name}</label>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-4">
                                         <label>客户预算：&yen; {$list.cost}</label>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>是否请研发部研发新模块: <?php echo $list['new_model']==1 ? '是' : '否'; ?></label>
                                     </div>
 
                                     <div class="form-group col-md-12">

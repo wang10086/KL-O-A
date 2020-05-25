@@ -110,11 +110,17 @@
                             <div class="box-header">
                                 <h3 class="box-title">选择产品模块</h3>
                                 <div class="box-tools pull-right">
-
                                      <a href="javascript:;" class="btn btn-danger btn-sm" onclick="selectmodel()">选择模块</a>
                                 </div>
                             </div><!-- /.box-header -->
                             <div class="box-body">
+
+                                <div class="form-group col-md-4">
+                                    <label>是否请研发部研发新模块：</label>
+                                    <input type="radio" name="new_model" value="1" <?php if ($oplist['new_model']==1) echo "checked"; ?>> &#8194;是 &#12288;
+                                    <input type="radio" name="new_model" value="0" <?php if ($oplist['new_model']==0) echo "checked"; ?>> &#8194;否 &#12288;
+                                </div>
+
                             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                 <tr role="row" class="orders" >
                                     <th width="80">ID</th>

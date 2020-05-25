@@ -81,6 +81,14 @@
                                                 <label>客户预算：{$list.cost}</label>
                                             </div>
 
+                                            <div class="form-group col-md-4">
+                                                <label>业务人员：{$list.sale_user}</label>
+                                            </div>
+
+                                            <div class="form-group col-md-8">
+                                                <label>业务部门：<?php echo $departments[$list['create_user_department_id']] ?></label>
+                                            </div>
+
                                             <div class="form-group col-md-12">
                                                 <label>备注：{$list.remark}</label>
                                             </div>

@@ -1773,7 +1773,7 @@ class ProductController extends BaseController {
             $this->detail_expert_level  = $detail['expert_level'] ? explode(',',$detail['expert_level']) : '';
             $this->selfOpNeeds          = $detail['selfOpNeed'] ? explode(',',$detail['selfOpNeed']) : '';
             $this->addOpNeeds           = $detail['addOpNeed'] ? explode(',',$detail['addOpNeed']) : '';
-            $this->yards                    = $detail['yard'] ? explode(',',$detail['yard']) : '';
+            $this->yards                = $detail['yard'] ? explode(',',$detail['yard']) : '';
         }
 
         $this->provinces                = M('provinces')->getField('id,name',true);
@@ -1786,6 +1786,7 @@ class ProductController extends BaseController {
         $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
         $this->expert_level             = C('EXPERT_LEVEL'); //专家级别
         $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
+        $this->departments              =  M('salary_department')->getField('id,department',true);
         $this->display('pro_need_add');
     }
 
@@ -1898,6 +1899,7 @@ class ProductController extends BaseController {
         if (isset($_POST['dosubmit'])){
             $id                             = I('id');
             $op_id                          = I('op_id');
+            $new_model                      = I('new_model');
             $pro                            = I('pro'); //产品模块
             $pro_model                      = I('pro_model'); //产品模板
             $line                           = I('line'); //参考产品实施方案  线路
@@ -1909,6 +1911,7 @@ class ProductController extends BaseController {
             $data['project']                = $oplist['project'];
             $data['group_id']               = $oplist['group_id'];
             $data['op_id']                  = $op_id;
+            $data['new_model']              = $new_model;
             $data['audit_user_id']          = $oplist['create_user'];
             $data['audit_user_name']        = $oplist['create_user_name'];
             $data['pro_ids']                = $pro ? implode(',',$pro) : '';
@@ -1938,7 +1941,7 @@ class ProductController extends BaseController {
         }else{
             $id                             = I('id');
             if ($id){
-                $oplist                     = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids, o.*')->find();
+                $oplist                     = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids, s.new_model, o.*')->find();
                 $apply_to                   = C('APPLY_TO');
                 $oplist['apply_to']         = $apply_to[$oplist['apply_to']];
                 $departments                = M('salary_department')->getField('id,department',true);
@@ -1966,7 +1969,7 @@ class ProductController extends BaseController {
     public function public_view_scheme(){
         $id                                 = I('id');
         if (!$id){ $this->error('获取数据错误'); }
-        $list                               = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids , s.audit_user_id as scheme_audit_user_id, o.*')->find();
+        $list                               = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids , s.audit_user_id as scheme_audit_user_id, s.new_model, o.*')->find();
         $apply_to                           = C('APPLY_TO');
         $list['apply_to']                   = $apply_to[$list['apply_to']];
         $departments                        = M('salary_department')->getField('id,department',true);
@@ -2355,7 +2358,7 @@ class ProductController extends BaseController {
                     $info['create_time']        = time();
                     $info['create_user']        = cookie('userid');
                     $info['create_user_name']   = cookie('name');
-                    $info['sale_user']          = $info['create_user_name'];
+                    //$info['sale_user']          = $info['create_user_name'];
                     $info['op_create_user']     = cookie('rolename');
                     $info['audit_status']       = 1; //项目不用审核,默认通过
                     $info['create_user_department_id'] = cookie('department');

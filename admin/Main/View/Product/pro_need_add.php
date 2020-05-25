@@ -27,7 +27,7 @@
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="savetype" value="5">
                                         <input type="hidden" name="id" value="{$list.id}">
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-4">
                                             <label>项目名称：</label><input type="text" name="info[project]" value="{$list.project}" class="form-control" required />
                                         </div>
 
@@ -111,6 +111,16 @@
                                         <div class="form-group col-md-4">
                                             <label>客户预算：</label>
                                             <input type="text" class="form-control" name="info[cost]" value="{$list.cost}" required />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>业务人员：</label>
+                                            <input type="text" class="form-control" name="info[sale_user]" value="<?php echo $list['sale_user'] ? $list['sale_user'] : cookie('name'); ?>" readonly />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>业务部门：</label>
+                                            <input type="text" class="form-control" name="" value="<?php echo $list['create_user_department_id'] ? $departments[$list['create_user_department_id']] : $departments[cookie('department')]; ?>" readonly />
                                         </div>
 
                                         <div class="form-group col-md-12">
