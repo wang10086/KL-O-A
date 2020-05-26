@@ -4367,7 +4367,7 @@ function get_huikuan_list($begin_time,$end_time){
                 $kind           = array(67); //实验室建设
             break;
             case 234: //马娜
-                $kind           = array(54,83,84); //54研学旅行,83组团研学旅行,84地接研学旅行
+                $kind           = array(54); //54研学旅行,83组团研学旅行,84地接研学旅行
                 break;
             case 82 || 204: //吕严 || 李徵红
                 $kind           = array(87); //单进院所
