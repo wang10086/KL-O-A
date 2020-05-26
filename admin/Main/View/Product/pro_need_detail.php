@@ -18,7 +18,9 @@
                          <!-- right column -->
                         <div class="col-md-12">
 
-                            <div class="box box-warning">
+                            <include file="Product:pro_navigate" />
+
+                            <div class="box box-warning mt20">
                                 <div class="box-header">
                                     <h3 class="box-title">基本信息</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
@@ -125,9 +127,9 @@
                             <?php } ?>
 
                             <!--审核-->
-                            <?php if ($list['status'] == 3 && in_array(cookie('userid'),array(1,11,$list['audit_uid']))){ ?>
+                            <?php /*if ($list['status'] == 3 && in_array(cookie('userid'),array(1,11,$list['audit_uid']))){ */?><!--
                                 <include file="pro_audit_box" />
-                            <?php } ?>
+                            --><?php /*} */?>
 
 
                         </div><!--/.col (right) -->

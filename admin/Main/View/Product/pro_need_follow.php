@@ -17,7 +17,7 @@
                      <!-- right column -->
                     <div class="col-md-12">
 
-                        <!--<include file="Product:pro_navigate" />-->
+                        <include file="Product:pro_navigate" />
 
                         <div class="box box-warning mt20">
                             <div class="box-header">

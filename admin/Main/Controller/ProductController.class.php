@@ -1738,7 +1738,6 @@ class ProductController extends BaseController {
     //产品方案需求
     public function public_pro_need(){
         $this->title('产品方案需求');
-        //$db                             = M('product_pro_need');
         $db                             = M('op');
         $title                          = trim(I('title'));
         $where                          = array();
@@ -1761,13 +1760,45 @@ class ProductController extends BaseController {
     public function public_pro_need_add(){
         $this->title('产品方案需求');
         $PinYin                         = new Pinyin();
-        $id                             = I('id');
-        if ($id){
+        //$id                             = I('id');
+        /*if ($id){
             $db                         = M('op');
             $list                       = $db -> find($id);
             $this->list                 = $list;
             $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
             $detail                     = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
+            $this->detail               = $detail;
+            $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
+            $this->detail_expert_level  = $detail['expert_level'] ? explode(',',$detail['expert_level']) : '';
+            $this->selfOpNeeds          = $detail['selfOpNeed'] ? explode(',',$detail['selfOpNeed']) : '';
+            $this->addOpNeeds           = $detail['addOpNeed'] ? explode(',',$detail['addOpNeed']) : '';
+            $this->yards                = $detail['yard'] ? explode(',',$detail['yard']) : '';
+        }*/
+
+        $this->provinces                = M('provinces')->getField('id,name',true);
+        $geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
+        $this->geclist                  = $geclist;
+        $this->geclist_str              = json_encode($geclist,true);
+        $this->kinds                    = get_project_kinds();
+        $this->apply_to                 = C('APPLY_TO');
+        $this->dijie_data               = get_dijie_department_data();
+        $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
+        $this->expert_level             = C('EXPERT_LEVEL'); //专家级别
+        $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
+        $this->departments              =  M('salary_department')->getField('id,department',true);
+        $this->display('pro_need_add');
+    }
+
+    public function public_pro_need_follow(){
+        $this->title('产品方案需求');
+        $PinYin                         = new Pinyin();
+        $opid                           = I('opid');
+        if ($opid){
+            $db                         = M('op');
+            $list                       = $db ->where(array('op_id'=>$opid)) -> find();
+            $this->list                 = $list;
+            $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
+            $detail                     = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$list['id']))->find() : '';
             $this->detail               = $detail;
             $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
             $this->detail_expert_level  = $detail['expert_level'] ? explode(',',$detail['expert_level']) : '';
@@ -1787,19 +1818,18 @@ class ProductController extends BaseController {
         $this->expert_level             = C('EXPERT_LEVEL'); //专家级别
         $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
         $this->departments              =  M('salary_department')->getField('id,department',true);
-        $this->display('pro_need_add');
+        $this->display('pro_need_follow');
     }
 
     //详情页 / 审核页
     public function public_pro_need_detail(){
         $this->title('产品方案需求');
-        $id                             = I('id');
-        if (!$id) $this->error('获取数据失败');
-        //$need_db                        = M('product_pro_need');
+        $opid                           = I('opid');
+        if (!$opid) $this->error('获取数据失败');
         $need_db                        = M('op');
-        $list                           = $need_db -> find($id);
+        $list                           = $need_db -> where(array('op_id'=>$opid)) -> find();
         $detail_db                      = $this->get_product_pro_need_tetail_db($list['kind']);
-        $detail                         = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
+        $detail                         = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$list['id']))->find() : '';
 
         $this->list                     = $list;
         $this->detail                   = $detail;
@@ -2337,7 +2367,7 @@ class ProductController extends BaseController {
                     $res                        = $db -> add($info);
                     $id                         = $res;
                 }
-                $res ? $this->success('保存成功',U('Product/public_pro_need_add',array('id'=>$id))) : $this->error('数据保存失败');
+                $res ? $this->success('保存成功',U('Product/public_pro_need_follow',array('id'=>$id))) : $this->error('数据保存失败');
             }*/
 
             //保存产品方案需求
@@ -2373,7 +2403,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('保存成功',U('Product/public_pro_need_add',array('id'=>$id))) : $this->error('数据保存失败');
+                $res ? $this->success('保存成功',U('Product/public_pro_need_follow',array('id'=>$id))) : $this->error('数据保存失败');
             }
 
             //保存科学课程详情
@@ -2412,7 +2442,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //提交审核
@@ -2437,8 +2467,8 @@ class ProductController extends BaseController {
                 }
             }
 
-            //审核
-            if ($savetype == 8){
+            //审核  bak_20200526
+            /*if ($savetype == 8){
                 $id                             = I('id');
                 $status                         = I('status');
                 $audit_remark                   = I('audit_remark');
@@ -2452,7 +2482,7 @@ class ProductController extends BaseController {
                 $data['audit_uname']            = cookie('nickname');
                 $res                            = $db->where(array('id'=>$id))->save($data);
                 $res ? $this->success('审核成功',U('Product/public_pro_need')) : $this->error('审核失败');
-            }
+            }*/
 
             //保存科学博物院需求详情
             if ($savetype == 9){
@@ -2496,7 +2526,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存研学旅行需求详情
@@ -2534,7 +2564,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存背景提升需求详情
@@ -2568,7 +2598,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存实验室建设需求详情
@@ -2602,7 +2632,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存科学快车详情
@@ -2643,7 +2673,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存校园科技节详情
@@ -2686,7 +2716,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存小课题详情
@@ -2728,7 +2758,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存单进院所详情
@@ -2762,7 +2792,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存专场讲座详情
@@ -2800,7 +2830,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存综合实践需求详情
@@ -2834,7 +2864,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存教师培训需求详情
@@ -2872,7 +2902,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_add',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //提交审核 产品实施方案

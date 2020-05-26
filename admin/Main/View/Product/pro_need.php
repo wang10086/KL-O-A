@@ -3,7 +3,7 @@
             <aside class="right-side">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>{$_pagetitle_}</h1>
+                    <h1>{$_action_} <small></small> </h1>
                     <ol class="breadcrumb">
                         <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
                         <li><a href="javascript:;"><i class="fa fa-gift"></i> {$_pagetitle_}</a></li>
@@ -16,9 +16,9 @@
                     <div class="row">
                         <div class="col-xs-12">
 
-                            <include file="Product:pro_navigate" />
+                            <!--<include file="Product:pro_navigate" />-->
 
-                            <div class="box box-warning mt20">
+                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
@@ -33,8 +33,6 @@
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
                                             <th class="sorting" data="" >项目名称</th>
-                                            <!--<th class="sorting" data=""80 width="">人数</th>
-                                            <th class="sorting" data="">出行时间</th>-->
                                             <th class="sorting" data="">业务人员</th>
                                             <th class="sorting" data="">业务部门</th>
                                             <th class="sorting" data="">目的地</th>
@@ -47,7 +45,7 @@
                                             <!--<th class="sorting" data="">审批状态</th>-->
                                             <th class="sorting" data="">方案进程</th>
                                             <if condition="rolemenu(array('Op/plans'))">
-                                                <th width="40" class="taskOptions">编辑</th>
+                                                <th width="40" class="taskOptions">跟进</th>
                                             </if>
 
                                             <if condition="rolemenu(array('Product/del_pro_need'))">
@@ -56,9 +54,15 @@
                                         </tr>
                                         <foreach name="lists" item="row">
                                             <tr>
-                                                <td><div class="tdbox_long"><a href="{:U('Product/public_pro_need_detail',array('id'=>$row['id']))}" title="{$row.title}">{$row.project}</a></div></td>
-                                                <!--<td>{$row.number}人</td>
-                                                <td>{$row['departure']|date='Y-m-d',###}</td>-->
+                                                <td>
+                                                    <div class="tdbox_long">
+                                                        <?php if (($row['process'] == 0 && cookie('userid')==$row['create_user']) || in_array(cookie('userid'), array(1,11))){ ?>
+                                                            <a href="{:U('Product/public_pro_need_follow',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a>
+                                                        <?php }else{ ?>
+                                                            <a href="{:U('Product/public_pro_need_detail',array('opid'=>$row['op_id']))}" title="{$row.project}">{$row.project}</a>
+                                                        <?php } ?>
+                                                    </div>
+                                                </td>
                                                 <td>{$row.create_user_name}</td>
                                                 <td>{$departments[$row['create_user_department_id']]}</td>
                                                 <td>{$provinces[$row[province]]} - {$row.addr}</td>
@@ -72,7 +76,11 @@
                                                 <td>{$op_process[$row['process']]}</td>
                                                 <if condition="rolemenu(array('Op/plans'))">
                                                     <td class="taskOptions">
-                                                        <a href="{:U('Product/public_pro_need_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                        <?php if (($row['process'] == 0 && cookie('userid')==$row['create_user']) || in_array(cookie('userid'), array(1,11))){ ?>
+                                                            <a href="{:U('Product/public_pro_need_follow',array('opid'=>$row['op_id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                        <?php }else{ ?>
+                                                            <a href="{:U('Product/public_pro_need_detail',array('opid'=>$row['op_id']))}" title="跟进" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                        <?php } ?>
                                                     </td>
                                                 </if>
                                                 <if condition="rolemenu(array('Product/del_pro_need'))">
