@@ -4471,7 +4471,7 @@ function get_cp_satisfied_kpi_data($user_id=0,$start_time,$end_time){
     $op_average_sum                 = array_sum(array_filter(explode(',',str_replace('%','',implode(',',array_column($shishi_lists,'op_average'))))));
     $score_average                  = $score_num ? round($op_average_sum/$score_num,2).'%' : '100%'; //已调查顾客满意度
     $shishi_num                     = count($shishi_lists); //所有实施团的数量(包括未调查的数量)
-    $complete                       = $shishi_num ? (round($op_average_sum/$shishi_num,2)/100).'%' : '100%'; //全部平均值
+    $complete                       = $shishi_num ? (round($op_average_sum/$shishi_num,2)).'%' : '100%'; //全部平均值
 
     //客服满意度
     $data                           = array();

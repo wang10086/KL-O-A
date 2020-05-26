@@ -2471,6 +2471,9 @@ class ProductController extends BaseController {
                 $data['other_jd_condition']     = trim($data['other_jd_condition']);
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
                 $data['product_pro_need_id']    = $need_id;
+                $data['yf_cost']                = trim($data['yf_cost']) ? trim($data['yf_cost']) : '0';
+                $data['guide_cost']             = trim($data['guide_cost']) ? trim($data['guide_cost']) : '0';
+                $data['food_price']             = trim($data['food_price']) ? trim($data['food_price']) : '0';
                 $data['time']                   = strtotime($data['time']);
                 $data['time1']                  = strtotime($data['time1']);
                 $data['time2']                  = strtotime($data['time2']);
