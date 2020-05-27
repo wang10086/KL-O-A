@@ -32,7 +32,7 @@
                                 <div class="box-body">
                                     <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
                                         <tr role="row" class="orders" >
-                                            <th class="sorting" data="" >项目名称（测试）</th>
+                                            <th class="sorting" data="" >项目名称（测）</th>
                                             <th class="sorting" data="">业务人员</th>
                                             <th class="sorting" data="">业务部门</th>
                                             <th class="sorting" data="">目的地</th>
