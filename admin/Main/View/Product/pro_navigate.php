@@ -1,3 +1,4 @@
+
 <div class="btn-group" id="catfont">
 <?php if (($list['process'] == 0 && cookie('userid')==$list['create_user']) || in_array(cookie('userid'), array(1,11))){ ?>
     <a href="{:U('Product/public_pro_need_follow')}" class="btn <?php if(in_array(ACTION_NAME, array('public_pro_need_follow','public_pro_need_detail'))){ echo 'btn-info';}else{ echo 'btn-default';} ?>">产品方案需求</a>
