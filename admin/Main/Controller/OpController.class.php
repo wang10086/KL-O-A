@@ -99,73 +99,6 @@ class OpController extends BaseController {
 		$this->display('index');
     }
 
-    //项目方案跟进
-    public function public_pro_index(){
-        $this->title('出团计划列表');
-
-        $db		= M('op');
-
-        $title	= I('title');		//项目名称
-        $opid	= I('id');			//项目编号
-        $oid	= I('oid');			//项目团号
-        $dest	= I('dest');			//目的地
-        $su		= I('su');			//销售
-
-        $where                                          = array();
-        if($title)			$where['o.project']			= array('like','%'.$title.'%');
-        if($oid)			$where['o.group_id']		= array('like','%'.$oid.'%');
-        if($opid)			$where['o.op_id']			= $opid;
-        if($dest)			$where['o.destination']		= $dest;
-        if($su)				$where['o.sale_user']		= array('like','%'.$su.'%');
-        $where['o.type']                    = 1;
-        $where['o.id']                      = array('gt',3604);
-
-        //分页
-        $pagecount		= $db->table('__OP__ as o')->field('o.op_id')->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->where($where)->count();
-        $page			= new Page($pagecount, P::PAGE_SIZE);
-        $this->pages	= $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-
-        $field	        = 'o.*,a.nickname as jidiao,c.dep_time';
-        $lists          = $db->table('__OP__ as o')->field($field)->join('__OP_AUTH__ as u on u.op_id = o.op_id','LEFT')->join('__ACCOUNT__ as a on a.id = u.line','LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id','LEFT')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('o.create_time'))->select();
-        //$dijie_opids    = get_dijie_opids();
-
-        foreach($lists as $k=>$v){
-            //判断是否成团
-            if ($v['group_id']) { $lists[$k]['group_id'] = '<span class="green">'.$v['group_id'].'</span>'; }else{ $lists[$k]['group_id'] = '未成团'; }
-
-            //判断项目是否审核通过
-            if($v['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="blue">未审核</span>';
-            if($v['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="blue">立项通过</span>';
-            if($v['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="blue">立项未通过</span>';
-
-            //判断预算是否通过
-            $yusuan = M('op_budget')->where(array('op_id'=>$v['op_id']))->find();
-            if($yusuan && $yusuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="green">已提交预算</span>';
-            if($yusuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="green">预算通过</span>';
-            if($yusuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="green">预算未通过</span>';
-
-            //判断结算是否通过
-            $jiesuan = M('op_settlement')->where(array('op_id'=>$v['op_id']))->find();
-            if($jiesuan && $jiesuan['audit_status']==0) $lists[$k]['zhuangtai'] = '<span class="yellow">已提交结算</span>';
-            if($jiesuan['audit_status']==1) $lists[$k]['zhuangtai'] = '<span class="yellow">完成结算</span>';
-            if($jiesuan['audit_status']==2) $lists[$k]['zhuangtai'] = '<span class="yellow">结算未通过</span>';
-
-            /*if ($v['group_id']){
-                if (in_array($v['op_id'],$dijie_opids)){
-                    $lists[$k]['has_qrcode']    = ''; //不显示二维码
-                }else{
-                    $lists[$k]['has_qrcode']    = 1;  //显示二维码
-                }
-            }*/
-        }
-
-        $this->lists   =  $lists;
-        $this->kinds   =  M('project_kind')->getField('id,name', true);
-
-        $this->display('pro_index');
-    }
-
 
     // @@@NODE-3###plans###制定出团计划###
     public function plans(){
@@ -486,7 +419,8 @@ class OpController extends BaseController {
         $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id"=>$opid))->select();
         $this->price_kind     = $priceKind;
         $this->opid           = $opid;
-		//$this->kinds          = M('project_kind')->getField('id,name', true);
+        $this->fa             = I('fa',0);
+        //$this->kinds          = M('project_kind')->getField('id,name', true);
         $this->kinds          = get_project_kinds();
 		$this->user           = M('account')->where('`id`>3')->getField('id,nickname', true);
 		$this->rolelist       = M('role')->where('`id`>10')->getField('id,role_name', true);
@@ -587,6 +521,7 @@ class OpController extends BaseController {
         $this->yanfa        = $yanfa;
         $this->ziyuan       = $ziyuan;
         $this->is_dijie     = is_dijie($opid); //是否是地接团
+        $this->fa           = I('fa',0); //加载不同导航栏
         $this->display('plans_edit');
 
 	}
@@ -823,64 +758,10 @@ class OpController extends BaseController {
 				}
 			}
 
-			//修改项目基本信息  bak_20200521
-			/*if($opid && $savetype==10 ){
-			    $returnMsg              = array();
-			    $customer               = get_customerlist();
-			    if (!in_array($info['customer'],$customer) && !strpos($info['project'],'地接团')){
-			        $returnMsg['num']   = $num;
-			        $returnMsg['msg']   = '客户单位输入错误';
-			        $this->ajaxReturn($returnMsg);
-                }
-			    if ($info['in_dijie'] == 1 && !trim($info['dijie_name'])){
-                    $returnMsg['num']   = $num;
-                    $returnMsg['msg']   = '地接单位名称错误';
-                    $this->ajaxReturn($returnMsg);
-                }
-				$op = M('op')->where(array('op_id'=>$opid))->find();
-				if($op['status']=='0' || cookie('userid')==$op['create_user'] || cookie('roleid')==10 || C('RBAC_SUPER_ADMIN')==cookie('username')) {
-                    if (in_array($op['in_dijie'],array(0,2)) && $info['in_dijie']==1){
-                        $info['project'] = '【发起团】'.$info['project'];
-                    }elseif ($op['in_dijie']==1 && $info['in_dijie'] !=1){
-                        $info['project']    = str_replace('【发起团】','',$info['project']);
-                        $info['dijie_name'] = '';
-                        $info['dijie_opid'] = '';
-                    }
-                    $expert                 = I('expert');
-                    $info['expert']         = $expert?implode(',',$expert):0;
-                    $info['project']        = trim($info['project']);
-                    $info['number']         = trim($info['number']);
-                    $info['departure']      = trim($info['departure']);
-                    $info['days']           = trim($info['days']);
-                    $info['destination']    = trim($info['destination']);
-                    $info['customer']       = trim($info['customer']);
-                    //$info['context']        = trim($info['context']);
-                    $info['remark']         = trim($info['remark']);
-                    $info['line_id']        = $info['standard'] == 1 ? 0 : $info['line_id'];
-                    $info['producted_id']   = $info['standard'] == 2 ? 0 : $info['producted_id'];
-
-                    //保存成团
-                    $issave = M('op')->data($info)->where(array('op_id' => $opid))->save();
-                    if ($issave) $num++;
-                }
-				if($num){
-				    $msg                = '数据保存成功';
-					$record             = array();
-					$record['op_id']    = $opid;
-					$record['optype']   = 1;
-					$record['explain']  = '修改项目基本信息';
-					op_record($record);
-				}else{
-				    $msg                = '数据保存失败';
-                }
-                $returnMsg['num']   = $num;
-                $returnMsg['msg']   = $msg;
-                $this->ajaxReturn($returnMsg);
-			}*/
-
             //保存产品方案需求
             if ($savetype == 10){
                 $db                             = M('op');
+                $fa                             = I('fa');
                 $info                           = I('info');
                 $info['project']                = trim($info['project']);
                 $info['customer']               = trim($info['customer']);
@@ -897,7 +778,7 @@ class OpController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = '编辑产品方案需求基本信息';
                 op_record($record);
-                $res ? $this->success('保存成功',U('Op/plans_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('保存成功',U('Op/plans_follow',array('opid'=>$opid,'fa'=>$fa))) : $this->error('数据保存失败');
             }
 
 			//保存价格

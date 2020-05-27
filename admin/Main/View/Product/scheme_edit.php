@@ -1,108 +1,10 @@
-<include file="Index:header2" />
 
 
-        <aside class="right-side">
-            <section class="content-header">
-                <h1>{$_action_}</h1>
-                <ol class="breadcrumb">
-                    <li><a href="{:U('Index/index')}"><i class="fa fa-home"></i> 首页</a></li>
-                    <li><a href="{:U('Product/public_scheme')}"><i class="fa fa-gift"></i>{$_action_} </a></li>
-                </ol>
-            </section>
-
-            <!-- Main content -->
-            <section class="content">
                 <form method="post" action="{:U('Product/add_scheme')}" name="myform" id="myform">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-warning mt20">
-                            <div class="box-header">
-                                <h3 class="box-title">产品方案需求基本信息</h3>
-                            </div><!-- /.box-header -->
-                            <div class="box-body">
-                                <input type="hidden" name="dosubmit" value="1" />
-                                <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
-                                <input type="hidden" name="savetype" value="1">
-                                <input type="hidden" name="id" value="{$oplist.scheme_id}">
-                                <div class="form-group col-md-4">
-                                    <label>项目名称：</label>
-                                    <select  class="form-control"  name="op_id" onchange="get_op_data($(this).val())" <?php if ($oplist['scheme_id']) echo 'readonly';  ?>>
-                                        <option value="">请选项目</option>
-                                        <foreach name="projects" key="k" item="v">
-                                            <option value="{$k}" <?php if ($oplist['op_id'] == $k) echo "selected" ?> > {$v}</option>
-                                        </foreach>
-                                    </select>
-                                    <foreach>
-
-                                    </foreach>
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>项目类型：</label>
-                                    <input type="text" name="" value="{$oplist.kind}" id="kind" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>适合人群：</label>
-                                    <input type="text" name="" value="{$oplist.apply_to}" id="apply_to" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>预计人数：</label>
-                                    <input type="text" name="" value="{$oplist.number}" id="number" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label id="ctrq">计划出团日期：</label>
-                                    <input type="text" name="" value="{$oplist.departure}" id="departure" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label id="xcts">行程天数：</label>
-                                    <input type="text" name="" value="{$oplist.days}" id="days" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>目的地：</label>
-                                    <input type="text" name="" value="{$oplist.destination}" id="destination" class="form-control" readonly />
-                                </div>
-
-
-                                <div class="form-group col-md-4">
-                                    <label>客户单位：</label>
-                                    <input type="text" name="" value="{$oplist.customer}" id="customer" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>接待实施部门</label>
-                                    <input type="text" name="" value="{$oplist.dijie_department}" id="dijie_department" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>线控负责人：</label>
-                                    <input type="text" name="" value="{$oplist.line_blame_name}" id="line_blame_name" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>客户预算：</label>
-                                    <input type="text" name="" value="{$oplist.cost}" id="cost" class="form-control"  readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>业务：</label>
-                                    <input type="text" name="" value="{$oplist.sale_user}" id="sale_user" class="form-control" readonly />
-                                </div>
-
-                                <div class="form-group col-md-12">
-                                    <label>备注：</label><textarea  name="" class="form-control" id="remark" readonly >{$oplist.remark}</textarea>
-                                </div>
-
-                                <div class="form-group">&nbsp;</div>
-                            </div><!-- /.box-body -->
-                        </div><!-- /.box -->
-
-                    </div><!--/.col (right) -->
-                </div>   <!-- /.row -->
+                <input type="hidden" name="dosubmit" value="1" />
+                    <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+                    <input type="hidden" name="savetype" value="1">
+                    <input type="hidden" name="opid" value="{$oplist.op_id}">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -110,15 +12,15 @@
                             <div class="box-header">
                                 <h3 class="box-title">选择产品模块</h3>
                                 <div class="box-tools pull-right">
-                                     <a href="javascript:;" class="btn btn-danger btn-sm" onclick="selectmodel()">选择模块</a>
+                                     <a href="javascript:;" class="btn btn-success btn-sm" onclick="selectmodel()">选择模块</a>
                                 </div>
                             </div><!-- /.box-header -->
                             <div class="box-body">
 
                                 <div class="form-group col-md-4">
                                     <label>是否请研发部研发新模块：</label>
-                                    <input type="radio" name="new_model" value="1" <?php if ($oplist['new_model']==1) echo "checked"; ?>> &#8194;是 &#12288;
-                                    <input type="radio" name="new_model" value="0" <?php if ($oplist['new_model']==0) echo "checked"; ?>> &#8194;否 &#12288;
+                                    <input type="radio" name="new_model" value="1" <?php if ($scheme_list['new_model']==1) echo "checked"; ?>> &#8194;是 &#12288;
+                                    <input type="radio" name="new_model" value="0" <?php if ($scheme_list['new_model']==0) echo "checked"; ?>> &#8194;否 &#12288;
                                 </div>
 
                             <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
@@ -241,32 +143,21 @@
                         </div>
                     </div>
                     </div>
-
-
-
                 </div>
                 </form>
 
                 <form method="post" action="{:U('Product/public_save')}" name="myform" id="submitForm">
                     <input type="hidden" name="dosubmit" value="1">
                     <input type="hidden" name="savetype" value="20">
-                    <input type="hidden" name="id" value="{$oplist.scheme_id}">
+                    <input type="hidden" name="id" value="{$scheme_list.id}">
                 </form>
 
                 <div id="formsbtn">
-                    <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
                     <button type="button" class="btn btn-info btn-lg" id="lrpd" onclick="$('#myform').submit()">保存</button>
-                    <?php if ($oplist['scheme_id'] && in_array($oplist['scheme_audit_status'], array(0,2))){ ?>
+                    <?php if ($scheme_list['id'] && in_array($scheme_list['audit_status'], array(0,2))){ ?>
                         <button type="button" class="btn btn-warning btn-lg" id="lrpd" onclick="$('#submitForm').submit()" >提交</button>
                     <?php } ?>
                 </div>
-            </section><!-- /.content -->
-
-        </aside><!-- /.right-side -->
-  </div>
-</div>
-
-<include file="Index:footer2" />
 
 		<script type="text/javascript">
 
@@ -354,7 +245,7 @@
             }
             
             //获取项目基本信息
-            function get_op_data(opid) {
+            /*function get_op_data(opid) {
                 if (!opid){ art_show_msg('项目名称错误',2); return false; }
                 $.ajax({
                     type: 'POST',
@@ -380,7 +271,7 @@
                     }
 
                 })
-            }
+            }*/
 
             //选择参考产品实施方案(原 线路)
             function select_line() {

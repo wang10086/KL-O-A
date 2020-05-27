@@ -16,8 +16,12 @@
                     <div class="row">
                          <!-- right column -->
                         <div class="col-md-12" style="padding-bottom:200px;">
-                        	
-                            <include file="Op:op_navigate" />
+
+                            <?php if ($fa == 1){ ?>
+                                <include file="Product:pro_navigate" />
+                            <?php }else{ ?>
+                                <include file="Op:op_navigate" />
+                            <?php } ?>
 
                             <div class="box box-warning" style="margin-top:15px;">
                                 <div class="box-header">

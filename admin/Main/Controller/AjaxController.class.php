@@ -2216,8 +2216,8 @@ class AjaxController extends Controller {
         }
     }
 
-    //获取项目信息
-    public function get_op_data(){
+    //获取项目信息  bak_20200527
+    /*public function get_op_data(){
         $opid                           = I('opid');
         $db                             = M('op');
         if ($opid){
@@ -2231,6 +2231,6 @@ class AjaxController extends Controller {
         }
         $data                           = $list ? $list : '';
         $this->ajaxReturn($data);
-    }
+    }*/
 }
 

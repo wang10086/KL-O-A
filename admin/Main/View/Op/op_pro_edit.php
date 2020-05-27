@@ -2,6 +2,7 @@
 <form method="post" action="{:U('Op/public_save')}" name="myform" id="myForm">
     <input type="hidden" name="dosubmint" value="1">
     <input type="hidden" name="savetype" value="10">
+    <input type="hidden" name="fa" value="{$fa}">
     <input type="hidden" name="opid" value="{$op.op_id}">
     <div class="form-group col-md-4">
         <label>项目名称：</label><input type="text" name="info[project]" value="{$op.project}" class="form-control" required />

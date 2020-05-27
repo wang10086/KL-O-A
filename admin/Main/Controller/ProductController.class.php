@@ -1786,6 +1786,7 @@ class ProductController extends BaseController {
         $this->expert_level             = C('EXPERT_LEVEL'); //专家级别
         $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
         $this->departments              =  M('salary_department')->getField('id,department',true);
+        $this->fa                       = I('fa',1);
         $this->display('pro_need_add');
     }
 
@@ -1797,6 +1798,7 @@ class ProductController extends BaseController {
             $db                         = M('op');
             $list                       = $db ->where(array('op_id'=>$opid)) -> find();
             $this->list                 = $list;
+            $this->opid                 = $opid;
             $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
             $detail                     = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$list['id']))->find() : '';
             $this->detail               = $detail;
@@ -1818,6 +1820,7 @@ class ProductController extends BaseController {
         $this->expert_level             = C('EXPERT_LEVEL'); //专家级别
         $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
         $this->departments              =  M('salary_department')->getField('id,department',true);
+        $this->fa                       = I('fa',1); //导航栏,项目方案跟进
         $this->display('pro_need_follow');
     }
 
@@ -1831,6 +1834,7 @@ class ProductController extends BaseController {
         $detail_db                      = $this->get_product_pro_need_tetail_db($list['kind']);
         $detail                         = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$list['id']))->find() : '';
 
+        $this->opid                     = $opid;
         $this->list                     = $list;
         $this->detail                   = $detail;
         $this->provinces                = M('provinces')->getField('id,name',true);
@@ -1843,6 +1847,7 @@ class ProductController extends BaseController {
         $this->addOpNeeds               = $detail['addOpNeed'] ? explode(',',$detail['addOpNeed']) : '';
         $this->yards                    = $detail['yard'] ? explode(',',$detail['yard']) : '';
         $this->op_process               = C('OP_PROCESS'); //方案进程
+        $this->fa                       = I('fa',1); //导航栏,项目方案跟进
         $this->display('pro_need_detail');
     }
 
@@ -1905,42 +1910,58 @@ class ProductController extends BaseController {
         $num > 0 ? $this->success('删除成功') : $this->error('删除失败');
     }
 
-    //产品实施方案  scheme
-    public function public_scheme(){
-        $this->title('产品实施方案');
-        $title                          = I('tit');
-        $db                             = M('op_scheme');
-        $where                          = array();
-        if ($title) $where['project']   = array('like','%'.$title.'%');
-        $pagecount                      = $db->where($where)->count();
-        $page                           = new Page($pagecount,P::PAGE_SIZE);
-        $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
-        $lists                          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 
-        $this->lists                    = $lists;
-        $this->audit_status             = get_submit_audit_status();
-        $this->display('scheme');
-    }
+   public function scheme(){
+       $this->title('产品实施方案');
+       $this->fa                            = I('fa',1);
+       $opid                                = I('opid');
+       if (!$opid) $this->error('数据错误');
+
+       $oplist                              = M('op')->where(array('op_id'=>$opid))->find();
+       $scheme_list                         = M('op_scheme')->where(array('op_id'=>$opid))->find();
+
+       $apply_to                            = C('APPLY_TO');
+       $oplist['apply_to']                  = $apply_to[$oplist['apply_to']];
+       $departments                         = M('salary_department')->getField('id,department',true);
+       $oplist['dijie_department']          = $departments[$oplist['dijie_department_id']];
+       $kinds                               = M('project_kind')->getField('id,name',true);
+       $oplist['kind']                      = $kinds[$oplist['kind']];
+       $this->oplist                        = $oplist;
+       $pro_ids                             = $scheme_list['pro_ids'] ? explode(',',$scheme_list['pro_ids']) : '';
+       $pro_model_ids                       = $scheme_list['pro_model_ids'] ? explode(',',$scheme_list['pro_model_ids']) : '';
+       $line_ids                            = $scheme_list['line_ids'] ? explode(',',$scheme_list['line_ids']) : '';
+       $atta_ids                            = $scheme_list['atta_ids'] ? explode(',',$scheme_list['atta_ids']) : '';
+       if ($pro_ids) $this->pro_lists              = M('product')->where(array('id'=>array('in',$pro_ids)))->select();
+       if ($pro_model_ids) $this->pro_model_lists  = M('product_model')->where(array('id'=>array('in',$pro_model_ids)))->select();
+       if ($line_ids) $this->line_lists            = M('product_line')->where(array('id'=>array('in',$line_ids)))->select();
+       if ($atta_ids) $this->atta_lists            = M('attachment')->where(array('id'=>array('in',$atta_ids)))->select();
+       $this->scheme_list                          = $scheme_list;
+       $this->audit_status                  = get_submit_audit_status();
+       $this->opid                          = $opid;
+       $this->fa                            = I('fa',1); //导航栏,项目方案跟进
+
+       $this->display('scheme');
+   }
 
     //添加实施方案
     public function add_scheme(){
         $this->title('产品实施方案');
         $db                                 = M('op_scheme');
         if (isset($_POST['dosubmit'])){
-            $id                             = I('id');
-            $op_id                          = I('op_id');
+
+            $opid                           = I('opid');
             $new_model                      = I('new_model');
             $pro                            = I('pro'); //产品模块
             $pro_model                      = I('pro_model'); //产品模板
             $line                           = I('line'); //参考产品实施方案  线路
             //$newname                        = I('newname'); //上传文件信息
             $resfiles                       = I('resfiles'); //文件ID
-            if (!$op_id){ $this->error('项目名称不能为空'); }
-            $oplist                         = M('op')->where(array('op_id'=>$op_id))->find();
+            if (!$opid){ $this->error('项目数据错误'); }
+            $oplist                         = M('op')->where(array('op_id'=>$opid))->find();
             $data                           = array();
             $data['project']                = $oplist['project'];
             $data['group_id']               = $oplist['group_id'];
-            $data['op_id']                  = $op_id;
+            $data['op_id']                  = $opid;
             $data['new_model']              = $new_model;
             $data['audit_user_id']          = $oplist['create_user'];
             $data['audit_user_name']        = $oplist['create_user_name'];
@@ -1948,8 +1969,9 @@ class ProductController extends BaseController {
             $data['pro_model_ids']          = $pro_model ? implode(',',$pro_model) : '';
             $data['line_ids']               = $line ? implode(',',$line) : '';
             $data['atta_ids']               = $resfiles ? implode(',',$resfiles) : '';
-            if($id){
-                $res                        = $db->where(array('id'=>$id))->save($data);
+            $list                           = $db->where(array('op_id'=>$opid))->find();
+            if($list){
+                $res                        = $db->where(array('op_id'=>$opid))->save($data);
                 $record_msg                 = '编辑产品实施方案';
             }else{
                 $data['create_user_id']     = cookie('userid');
@@ -1960,7 +1982,7 @@ class ProductController extends BaseController {
             }
             if ($res){
                 $record                     = array();
-                $record['op_id']            = $op_id;
+                $record['op_id']            = $opid;
                 $record['optype']           = 1;
                 $record['explain']          = $record_msg;
                 op_record($record);
@@ -1969,56 +1991,10 @@ class ProductController extends BaseController {
                 $this->error('数据保存失败');
             }
         }else{
-            $id                             = I('id');
-            if ($id){
-                $oplist                     = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids, s.new_model, o.*')->find();
-                $apply_to                   = C('APPLY_TO');
-                $oplist['apply_to']         = $apply_to[$oplist['apply_to']];
-                $departments                = M('salary_department')->getField('id,department',true);
-                $oplist['dijie_department'] = $departments[$oplist['dijie_department_id']];
-                $kinds                      = M('project_kind')->getField('id,name',true);
-                $oplist['kind']             = $kinds[$oplist['kind']];
-                $this->oplist               = $oplist;
-                $pro_ids                    = $oplist['pro_ids'] ? explode(',',$oplist['pro_ids']) : '';
-                $pro_model_ids              = $oplist['pro_model_ids'] ? explode(',',$oplist['pro_model_ids']) : '';
-                $line_ids                   = $oplist['line_ids'] ? explode(',',$oplist['line_ids']) : '';
-                $atta_ids                   = $oplist['atta_ids'] ? explode(',',$oplist['atta_ids']) : '';
-                if ($pro_ids) $this->pro_lists              = M('product')->where(array('id'=>array('in',$pro_ids)))->select();
-                if ($pro_model_ids) $this->pro_model_lists  = M('product_model')->where(array('id'=>array('in',$pro_model_ids)))->select();
-                if ($line_ids) $this->line_lists            = M('product_line')->where(array('id'=>array('in',$line_ids)))->select();
-                if ($atta_ids) $this->atta_lists            = M('attachment')->where(array('id'=>array('in',$atta_ids)))->select();
-            }
-            $where                          = array();
-            $where['id']                    = array('gt',3604);
-            $projects                       = M('op')->where($where)->order($this->orders('id'))->limit(100)->getField('op_id,project',true);
-            $this->projects                 = $projects;
-            $this->display();
+            $this->error('非法数据');
         }
     }
 
-    public function public_view_scheme(){
-        $id                                 = I('id');
-        if (!$id){ $this->error('获取数据错误'); }
-        $list                               = M()->table('__OP__ as o')->join('__OP_SCHEME__ as s on s.op_id = o.op_id','left')->where(array('s.id'=>$id))->field('s.id as scheme_id, s.pro_ids, s.pro_model_ids, s.line_ids, s.audit_status as scheme_audit_status, s.atta_ids , s.audit_user_id as scheme_audit_user_id, s.new_model, o.*')->find();
-        $apply_to                           = C('APPLY_TO');
-        $list['apply_to']                   = $apply_to[$list['apply_to']];
-        $departments                        = M('salary_department')->getField('id,department',true);
-        $list['dijie_department']           = $departments[$list['dijie_department_id']];
-        $kinds                              = M('project_kind')->getField('id,name',true);
-        $list['kind']                       = $kinds[$list['kind']];
-        $this->list                         = $list;
-        $pro_ids                            = $list['pro_ids'] ? explode(',',$list['pro_ids']) : '';
-        $pro_model_ids                      = $list['pro_model_ids'] ? explode(',',$list['pro_model_ids']) : '';
-        $line_ids                           = $list['line_ids'] ? explode(',',$list['line_ids']) : '';
-        $atta_ids                           = $list['atta_ids'] ? explode(',',$list['atta_ids']) : '';
-        if ($pro_ids) $this->pro_lists              = M('product')->where(array('id'=>array('in',$pro_ids)))->select();
-        if ($pro_model_ids) $this->pro_model_lists  = M('product_model')->where(array('id'=>array('in',$pro_model_ids)))->select();
-        if ($line_ids) $this->line_lists            = M('product_line')->where(array('id'=>array('in',$line_ids)))->select();
-        if ($atta_ids) $this->atta_lists            = M('attachment')->where(array('id'=>array('in',$atta_ids)))->select();
-
-        $this->audit_status                 = get_submit_audit_status();
-        $this->display('view_scheme');
-    }
 
     public function public_save(){
         $savetype                                   = I('savetype');
@@ -2383,6 +2359,7 @@ class ProductController extends BaseController {
                 if (!$info['project']) $this->error('需求标题不能为空');
                 if (!$info['line_blame_uid'] || !$info['line_blame_name']) $this->error('线控负责人信息错误');
                 if ($id){
+                    $opid                       = I('opid');
                     $res                        = $db->where(array('id'=>$id))->save($info);
                     $record_msg                 = '编辑产品方案需求基本信息';
                 }else{
@@ -2393,7 +2370,8 @@ class ProductController extends BaseController {
                     $info['op_create_user']     = cookie('rolename');
                     $info['audit_status']       = 1; //项目不用审核,默认通过
                     $info['create_user_department_id'] = cookie('department');
-                    $info['op_id']              = opid();
+                    $opid                       = opid();
+                    $info['op_id']              = $opid;
                     $res                        = $db -> add($info);
                     $id                         = $res;
                     $record_msg                 = '填写产品方案需求基本信息';
@@ -2403,7 +2381,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('保存成功',U('Product/public_pro_need_follow',array('id'=>$id))) : $this->error('数据保存失败');
+                $res ? $this->success('保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'fa'=>1))) : $this->error('数据保存失败');
             }
 
             //保存科学课程详情
@@ -2442,7 +2420,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //提交审核
@@ -2526,7 +2504,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存研学旅行需求详情
@@ -2564,7 +2542,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存背景提升需求详情
@@ -2598,7 +2576,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存实验室建设需求详情
@@ -2632,7 +2610,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存科学快车详情
@@ -2673,7 +2651,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存校园科技节详情
@@ -2716,7 +2694,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存小课题详情
@@ -2758,7 +2736,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存单进院所详情
@@ -2792,7 +2770,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存专场讲座详情
@@ -2830,7 +2808,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存综合实践需求详情
@@ -2864,7 +2842,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //保存教师培训需求详情
@@ -2902,7 +2880,7 @@ class ProductController extends BaseController {
                 $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
-                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('id'=>$need_id))) : $this->error('数据保存失败');
+                $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid,'id'=>$need_id))) : $this->error('数据保存失败');
             }
 
             //提交审核 产品实施方案
@@ -2916,7 +2894,7 @@ class ProductController extends BaseController {
                 $res                            = $db->where(array('id'=>$id))->save($data);
                 if ($res){
                     $record                     = array();
-                    $record['op_id']            = $opid;
+                    $record['op_id']            = $list['op_id'];
                     $record['optype']           = 1;
                     $record['explain']          = '提交产品实施方案';
                     op_record($record);
@@ -2928,7 +2906,8 @@ class ProductController extends BaseController {
                     //消除待办事宜
                     $ok_node                    = 38; //组织编制产品实施方案
                     save_process_ok($ok_node);
-                    $this->success('提交成功',U('Product/public_scheme'));
+                    //$this->success('提交成功',U('Product/public_scheme'));
+                    $this->success('提交成功');
                 }else{
                     $this->error('提交申请失败');
                 }
@@ -2952,7 +2931,7 @@ class ProductController extends BaseController {
                     $record                     = array();
                     $record['op_id']            = $list['op_id'];
                     $record['optype']           = 1;
-                    $record['explain']          = '审核产品实施方案：审核状态：'.$status==1 ? '审核通过' : '审核不通过';
+                    $record['explain']          = '审核产品实施方案：审核状态：'.($status==1 ? '审核通过' : '审核不通过');
                     op_record($record);
 
                     //生成待办事宜

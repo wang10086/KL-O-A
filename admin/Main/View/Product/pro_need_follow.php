@@ -30,6 +30,7 @@
                                         <input type="hidden" name="dosubmit" value="1">
                                         <input type="hidden" name="savetype" value="5">
                                         <input type="hidden" name="id" value="{$list.id}">
+                                        <input type="hidden" name="opid" value="{$list.op_id}">
                                         <div class="form-group col-md-4">
                                             <label>项目名称：</label><input type="text" name="info[project]" value="{$list.project}" class="form-control" required />
                                         </div>
