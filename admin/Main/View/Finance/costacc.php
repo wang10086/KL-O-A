@@ -29,34 +29,20 @@
                                 <div class="box-body">
                                     <div class="content">
 
-                                        <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
-                                        	<tr>
-                                            	<td colspan="3">项目名称：{$op.project}</td>
-                                            </tr>
-                                            <tr>
-                                            	<td width="33.33%">项目类型：<?php echo $kinds[$op['kind']]; ?></td>
-                                                <td width="33.33%">预计人数：{$op.number}人</td>
-                                                <td width="33.33%">预计出团日期：{$op.departure}</td>
-                                            </tr>
-                                            <tr>
-                                            	<td width="33.33%">预计行程天数：{$op.days}天</td>
-                                                <td width="33.33%">目的地：{$op.destination}</td>
-                                                <td width="33.33%">立项时间：{$op.op_create_date}</td>
-                                            </tr>
-                                        </table>
+                                        <include file="Finance:op_pro" />
 
                                     </div>
 
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <?php /*if($budget['audit']==0 && ($op['line_id'] || $productList)){ */?>
-                            <?php if(!$budget && $op['standard'] != 1){ ?>
+                            <?php if(!$budget && $op['standard'] != 1 && $costacc_res['status'] != 1){ ?>
                             	<include file="costacc_edit" />
                             <?php }else{ ?>
                             	<include file="costacc_read" />
                             <?php } ?>
 
+                            <include file="baojia_edit" />
 
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
@@ -142,7 +128,18 @@
             costaccsum += parseFloat($(this).val());
         });
 		$('#costaccsum').html('&yen; '+costaccsum.toFixed(2));
-		$('#costaccsumval').val(costaccsum.toFixed(2));
+		let final_cost      = costaccsum.toFixed(2)
+        let gross           = "{$gross}";
+		let min_a           = accAdd(1,gross); //加 "建议最低报价”由系统生成，即=成本价格×（1+同类产品平均毛利率）；“建议最高报价”由系统生成，即=成本价格×（1+1.5×同类产品平均毛利率）
+		let min_cost        = accMul(final_cost,min_a); //乘
+        let max_a           = accMul(1.5,gross); //乘
+        let max_b           = accAdd(1,max_a); //加
+        let max_cost        = accMul(final_cost,max_b); //
+		$('#costaccsumval').val(final_cost);
+        $('input[name="info[costacc_min_price]"]').val(min_cost);
+        $('input[name="info[costacc_max_price]"]').val(max_cost)
+		console.log(min_a);
+		console.log(min_cost);
 	}
 
 
@@ -184,6 +181,8 @@
             $('#myform').submit();
         }
 	}
+	
+
 </script>
 
 

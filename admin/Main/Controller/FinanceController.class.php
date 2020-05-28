@@ -203,6 +203,11 @@ class FinanceController extends BaseController {
         $this->productList      = M('op_costacc')->where(array('op_id'=>$opid,'type'=>5,'status'=>0))->select();
         $this->costacc_res      = M('op_costacc_res')->where(array('op_id'=>$opid))->find();
         $this->is_dijie         = $op['in_dijie'];
+        $this->apply_to         = C('APPLY_TO');
+        $this->provinces        = M('provinces')->getField('id,name',true);
+        $this->departments      =  M('salary_department')->getField('id,department',true);
+        $gross                  = M('gross')->where(array('kind_id'=>$op['kind']))->getField('gross');
+        $this->gross            = str_replace('%','',$gross)/100;
 
 		$this->display('costacc');
 	}
@@ -2230,6 +2235,39 @@ class FinanceController extends BaseController {
                 echo '<script>window.top.location.reload();</script>';
 
             }
+
+            //提交成本核算
+            if ($savetype==22){
+                $opid                   = I('opid');
+                $db                     = M('op_costacc_res');
+                $data                   = array();
+                $data['status']         = 1;
+                $res                    = $db->where(array('op_id'=>$opid))->save($data);
+                if ($res){
+                    $record = array();
+                    $record['op_id']   = $opid;
+                    $record['optype']  = 8;
+                    $record['explain'] = '提交成本核算';
+                    op_record($record);
+
+                    $this->success('提交成功');
+                }else{
+                    $this->error('提交失败');
+                }
+            }
+        }
+    }
+
+    //保存报价
+    public function save_baojia(){
+        $opid               = I('opid');
+        $info               = I('info');
+        $db                 = M('op_costacc_res');
+        $res                = $db->where(array('op_id'=>$opid))->save($info);
+        if ($res){
+            $this->success('保存数据成功');
+        }else{
+            $this->error('保存数据失败');
         }
     }
 

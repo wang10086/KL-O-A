@@ -1,13 +1,14 @@
-<form method="post" action="{:U('Finance/save_costacc')}" name="myform" id="myform">
-<!--<form method="post" action="{:U('Finance/save_costacc')}" name="myform" id="myform" onsubmit="return submintform()">-->
-<input type="hidden" name="dosubmint" value="1">
-<input type="hidden" name="opid" value="{$op.op_id}">
-<input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+
 <div class="box box-warning">
     <div class="box-header">
         <h3 class="box-title">成本核算</h3>
     </div><!-- /.box-header -->
     <div class="box-body">
+        <form method="post" action="{:U('Finance/save_costacc')}" name="myform" id="myform">
+            <!--<form method="post" action="{:U('Finance/save_costacc')}" name="myform" id="myform" onsubmit="return submintform()">-->
+            <input type="hidden" name="dosubmint" value="1">
+            <input type="hidden" name="opid" value="{$op.op_id}">
+            <input type="hidden" name="referer" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
         <div class="content" style="padding-top:0px;">
             <div id="costacc">
                 <div class="userlist">
@@ -92,27 +93,19 @@
             </div>
             <div id="costacc_val">1</div>
             <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
-                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_costacc()"><i class="fa fa-fw fa-plus"></i> 新增成本项</a> 
-                
+                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_costacc()"><i class="fa fa-fw fa-plus"></i> 新增成本项</a>
             </div>
             <div class="form-group">&nbsp;</div>
         </div>
         
-       
-        
 
         <div class="content">
-        
-        
         <div class="form-group col-md-4">
             <label>成本价格：</label>
-            
             <div style=" width:100%;">
                 <span style="width:65%; float:left;"><input type="text" name="info[costacc]" value="" class="form-control" id="costaccsumval" readonly value="{$costacc_res.costacc}" /></span>
                 <span style="width:35%; float:left; margin-left:-1px;"><input type="text" name="" class="form-control" value="{$op.costacc_unit}" placeholder="元" /></span>
             </div>
-
-            
         </div>
         
         <div class="form-group col-md-4">
@@ -130,17 +123,25 @@
                 <span style="width:35%; float:left; margin-left:-1px;"><input type="text" name="" value="{$op.costacc_max_price_unit}"  class="form-control" placeholder="元"/></span>
             </div>
         </div>
-        
-        
-        
+        </div>
+        </form>
+
+        <form method="post" action="{:U('Finance/public_save')}" name="myform" id="submitForm">
+            <input type="hidden" name="dosubmint" value="1" />
+            <input type="hidden" name="savetype" value="22" />
+            <input type="hidden" name="opid" value="{$op.op_id}" />
+        </form>
+
+        <div id="formsbtn">
+            <button type="button" class="btn btn-info <!--btn-sm-->" onclick="submintform()">保存</button>
+            <?php /*if ($costacc_res['status'] == 0){ */?>
+                <button type="button" class="btn btn-warning <!--btn-sm-->" onclick="$('#submitForm').submit()" >提交</button>
+            <?php /*} */?>
         </div>
     </div>
 </div>
 
-
-<div id="formsbtn" style="padding-bottom:10px;">
-    <!--<button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>-->
+<!--<div id="formsbtn" style="padding-bottom:10px;">
     <a type="button" onclick="submintform()" class="btn btn-info btn-lg" id="lrpd">保存</a>
-</div>
-
-</form>
+    <a type="button" onclick="" class="btn btn-warning btn-lg" id="lrpd">提交</a>
+</div>-->
