@@ -8,7 +8,7 @@ use Sys\Page;
 ulib('Pinyin');
 use Sys\Pinyin;
 // @@@NODE-2###Material###物资管理###
-class AjaxController extends Controller {
+class AjaxController extends BasepubController {
 
 	public function material(){
 
@@ -2213,6 +2213,15 @@ class AjaxController extends Controller {
             $data['audit_time']         = NOW_TIME;
             $data['del_status']         = '-1'; //已处理
             $db->where($where)->save($data);
+        }
+    }
+
+    //读取
+    public function read_file(){
+        $id                             = I('id');
+        $unread_type                    = I('unread_type');
+        if ($id && $unread_type){
+            $this->read_res($id,$unread_type); //查看资源
         }
     }
 

@@ -971,6 +971,8 @@ class CustomerController extends BaseController {
 
 
         $this->customer_files       = $customer_files;
+        $this->msg_file_ids         = get_unread_req_ids(P::UNREAD_SALE_FILE);
+        $this->unread_type          = P::UNREAD_SALE_FILE;
         $this->display('index');
     }
 
@@ -984,6 +986,8 @@ class CustomerController extends BaseController {
         $page                       = new Page($pagecount,P::PAGE_SIZE);
         $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
         $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('id desc')->select();
+        $this->msg_file_ids         = get_unread_req_ids(P::UNREAD_SALE_FILE);
+        $this->unread_type          = P::UNREAD_SALE_FILE;
         $this->display();
     }
 

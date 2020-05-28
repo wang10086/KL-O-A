@@ -25,7 +25,7 @@
                             <a href="javascript:;"><div class="cus-box-more"><a  href="javascript:;" onClick="moreCustomerFiles()">更多>></a></div></a>
                         </div>
                         <foreach name="customer_files" item="v">
-                            <p class="cus-list"><a href="{$v.file_path}" target="_blank"> {$v.file_name} </a> <span class="cus-list-time">{$v.create_time|date='Y-m-d',###}</span></p>
+                            <p class="cus-list"><?php if (in_array($v['id'],$msg_file_ids)){ echo "<span class='red'>*</span>"; } ?><a href="{$v.file_path}" target="_blank" onclick="read_file({$v.id},{$unread_type})"> {$v.file_name} </a> <span class="cus-list-time">{$v.create_time|date='Y-m-d',###}</span></p>
                         </foreach>
                         <!--<p class="cus-list">销售资料下载销售资料下载1 <span class="cus-list-time">2020-04-09</span></p>
                         <p class="cus-list">销售资料下载销售资料下载2 <span class="cus-list-time">2020-04-09</span></p>-->
@@ -104,5 +104,16 @@
             cancel: function () {
             }
         });
+    }
+
+    function read_file(id,unread_type) {
+        $.ajax({
+            type: "POST",
+            url : "{:U('Ajax/read_file')}",
+            dataType : 'JSON',
+            data: {id:id,unread_type:unread_type},
+            success(){},
+            error(){}
+        })
     }
 </script>

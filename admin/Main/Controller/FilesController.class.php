@@ -640,9 +640,9 @@ class FilesController extends BaseController {
 
                     $uid     = cookie('userid');
                     $title   = '您有来自['.session('nickname').']的文件待审核!';
-                    $content = '文件名称:$list[\'filename\']';
+                    $content = '文件名称:'.$list['filename'];
                     $url     = U('Files/audit',array('id'=>$id));
-                    $user    = '['.$data['audit_user_id'].']';
+                    $user    = '['.$list['audit_user_id'].']';
                     send_msg($uid,$title,$content,$url,$user,'');
                 }
                 $this->success('提交成功',U('Files/audit_list'));
@@ -663,6 +663,7 @@ class FilesController extends BaseController {
                 $db                     = M('process_files');
                 $res                    = $db->where(array('id'=>$id))->save($data);
                 $list                   = $db->where(array('id'=>$id))->find();
+
                 if ($res){
                     $num++;
                     if ($list['type'] >= 5 && $audit_status == 1){ //直接上传文件至文件管理->****文件夹

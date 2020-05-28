@@ -284,7 +284,7 @@
                             <a href="javascript:;">
                                 <i class="fa fa-group"></i>
                                 <span onclick="window.location.href = '{:U('Customer/public_index')}'">市场营销</span>
-                                <if condition="$_no_read_GEC_transfer_"><small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_GEC_transfer_}</small></if>
+                                <if condition="$_no_read_GEC_transfer"><small class="badge pull-right bg-red" style="margin-right:10px;"><?php echo $_no_read_GEC_transfer + $_no_read_sale_files; ?></small></if>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
@@ -304,7 +304,7 @@
                                 	<li class="{:on('Customer/GEC')} {:on('Customer/GEC_edit')}">
                                         <a href="{:U('Customer/GEC')}"><i class="fa fa-angle-right"></i>
                                             客户管理
-                                            <?php if($_no_read_GEC_transfer_){ ?> <small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_GEC_transfer_}</small> <?php } ?>
+                                            <?php if($_no_read_GEC_transfer){ ?> <small class="badge pull-right bg-red" style="margin-right:10px;">{$_no_read_GEC_transfer}</small> <?php } ?>
                                         </a>
                                     </li>
                                 </if>

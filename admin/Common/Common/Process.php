@@ -200,7 +200,30 @@ function get_process_log($processId, $nodeId, $typeId, $year, $timeType, $pro_st
     $cust['create_user']        = cookie('nickname');
     $cust['create_user_id']     = cookie('userid');
     $cust['type']               = get_cust_file_type($file_list['type']);
-    M('customer_files')->add($cust);
+    $file_id                    = M('customer_files')->add($cust);
+
+     $unread_type               = 4; //P::UNREAD_SALE_FILE; //未读的销售资料下载信息
+     $unread_req_id             = $file_id;
+     $to_uids                   = M('account')->where(array('status'=>0))->getField('id',true);
+     $uids                      = implode(',',$to_uids);
+     save_unread_msg($unread_type,$unread_req_id, $uids);
+}
+
+
+/**
+ * 创建未读消息
+ * @param $type   P::UNREAD_SALE_FILE
+ * @param $req_id
+ * @param $to_uids
+ */
+function save_unread_msg($type,$req_id,$to_uids){
+    $read                       = array();
+    $read['type']               = $type;
+    $read['req_id']             = $req_id;
+    $read['userids']            = $to_uids;
+    $read['create_time']        = NOW_TIME;
+    $read['read_type']          = 0;
+    M('unread')->add($read);
 }
 
 function get_file_dir_pid($type){

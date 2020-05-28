@@ -384,6 +384,60 @@ class BasepubController extends Controller {
             }
         }
     }
+
+    /**
+     * 未查看的资源
+     * @param $type 类型
+     * @return int
+     */
+    protected final function get_no_read_res($type){
+        $db                                 = M('unread');
+        $where                              = ' type = '.$type.' and ';
+        $where                              .= ' read_type = 0 ';
+        $lists                              = $db ->where($where)->select();
+        $num                                = 0;
+        foreach ($lists as $k=>$v){
+            $user_ids                       = explode(',',$v['userids']);
+            if (in_array(session('userid'),$user_ids)){
+                $num++;
+            }
+        }
+        return $num;
+    }
+
+    /**查看资源
+     * @param $req_id
+     * @param $type
+     */
+    protected final function read_res($req_id,$type){
+        $db                                 = M('unread');
+        $where                              = ' type = '.$type.' and ';
+        $where                              .= ' req_id = '.$req_id;
+        $list                               = $db ->where($where)->find();
+        $user_ids                           = explode(',',$list['userids']);
+        foreach ($user_ids as $k =>$v){
+            if ($v == session('userid')) unset($user_ids[$k]);
+        }
+        $userids                            = implode(',',$user_ids);
+        if (!$userids){ $read_type          = 1; } //所有人已读完,无需查阅该数据
+        //$db -> where('id = '.$list['id'])->setField('userids',$userids);
+        $data                               = array();
+        $data['userids']                    = $userids;
+        $data['read_type']                  = $read_type ? $read_type : 0;
+        $db->where(array('id'=>$list['id']))->save($data);
+    }
+
+    /**
+     * 删除资源
+     * @param $id
+     * @param $type
+     */
+    protected final function del_read($id,$type){
+        $db                                 = M('unread');
+        $where                              = ' req_id = '.$id.' and ';
+        $where                              .= ' type = '.$type;
+        $db->where($where)->delete();
+    }
 }
 
 
