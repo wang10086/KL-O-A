@@ -381,12 +381,12 @@ class SaleModel extends Model{
     public function get_timely_data($startTime,$endTime,$uid=''){
         $timely                         = get_timely(1); //1=>计调操作及时性
         //$timely                          = array_column($timely,'content','title');
-        $costacc_data                   = get_costacc_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content'],$uid); //报价及时性
-        $budget_data                    = get_budget_data($startTime,$endTime,$timely[1]['title'],$timely['1']['content'],$uid); //预算及时性
-        $settlement_data                = get_settlement_data($startTime,$endTime,$timely[2]['title'],$timely['2']['content'],$uid); //结算及时性
-        $reimbursement_data             = get_reimbursement_data($startTime,$endTime,$timely[3]['title'],$timely['3']['content'],$uid);
+        //$costacc_data                   = get_costacc_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content'],$uid); //报价及时性
+        $budget_data                    = get_budget_data($startTime,$endTime,$timely[0]['title'],$timely['1']['content'],$uid); //预算及时性
+        $settlement_data                = get_settlement_data($startTime,$endTime,$timely[1]['title'],$timely['2']['content'],$uid); //结算及时性
+        $reimbursement_data             = get_reimbursement_data($startTime,$endTime,$timely[2]['title'],$timely['3']['content'],$uid);
 
-        $data[]                         = $costacc_data;
+        //$data[]                         = $costacc_data;
         $data[]                         = $budget_data;
         $data[]                         = $settlement_data;
         $data[]                         = $reimbursement_data;
@@ -422,19 +422,19 @@ class SaleModel extends Model{
         $timely                         = get_timely(1); //1=>计调操作及时性
         $timely_column                  = array_column($timely,'content','title');
         switch ($title){
-            case $timely[0]['title']: //报价及时性
+            /*case $timely[0]['title']: //报价及时性  bak_20200528
                 $info                   = get_costacc_data($startTime,$endTime,$title,$timely_column[$title],$uid);
                 $data                   = $info['sum_list'];
-                break;
-            case $timely[1]['title']: //预算及时性
+                break;*/
+            case $timely[0]['title']: //预算及时性
                 $info                   = get_budget_data($startTime,$endTime,$title,$timely_column[$title],$uid);
                 $data                   = $info['sum_list'];
                 break;
-            case $timely[2]['title']: //结算及时性
+            case $timely[1]['title']: //结算及时性
                 $info                   = get_settlement_data($startTime,$endTime,$title,$timely_column[$title],$uid);
                 $data                   = $info['sum_list'];
                 break;
-            case $timely[3]['title']: //报账及时性
+            case $timely[2]['title']: //报账及时性
                 $info                   = get_reimbursement_data($startTime,$endTime,$title,$timely_column[$title],$uid,$group_id);
                 $data                   = $info['sum_list'];
                 break;

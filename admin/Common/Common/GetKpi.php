@@ -2929,14 +2929,14 @@ function get_res_op_satisfaction($lists,$type,$dimension){
 }
 
     /**
-     *  获取本周期报价及时性
+     *  获取本周期报价及时性  bak_20200528
      * @param $startTime
      * @param $endTime
      * @param string $title
      * @param string $uid
      * @return array
      */
-    function get_costacc_data($startTime,$endTime,$title='',$content='',$uid=''){
+    /*function get_costacc_data($startTime,$endTime,$title='',$content='',$uid=''){
         $where                              = array();
         if ($uid){ $where['c.input_user_id']= $uid; }
         $where['c.create_time']             = array('between',"$startTime,$endTime");
@@ -2968,7 +2968,7 @@ function get_res_op_satisfaction($lists,$type,$dimension){
         $data['sum_list']                   = $costacc_list;
         $data['ok_list']                    = $ok_list;
         return $data;
-    }
+    }*/
 
     /**
      *  获取本周期预算及时性
