@@ -382,9 +382,9 @@ class SaleModel extends Model{
         $timely                         = get_timely(1); //1=>计调操作及时性
         //$timely                          = array_column($timely,'content','title');
         //$costacc_data                   = get_costacc_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content'],$uid); //报价及时性
-        $budget_data                    = get_budget_data($startTime,$endTime,$timely[0]['title'],$timely['1']['content'],$uid); //预算及时性
-        $settlement_data                = get_settlement_data($startTime,$endTime,$timely[1]['title'],$timely['2']['content'],$uid); //结算及时性
-        $reimbursement_data             = get_reimbursement_data($startTime,$endTime,$timely[2]['title'],$timely['3']['content'],$uid);
+        $budget_data                    = get_budget_data($startTime,$endTime,$timely[0]['title'],$timely['0']['content'],$uid); //预算及时性
+        $settlement_data                = get_settlement_data($startTime,$endTime,$timely[1]['title'],$timely['1']['content'],$uid); //结算及时性
+        $reimbursement_data             = get_reimbursement_data($startTime,$endTime,$timely[2]['title'],$timely['2']['content'],$uid);
 
         //$data[]                         = $costacc_data;
         $data[]                         = $budget_data;
