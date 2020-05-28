@@ -53,11 +53,18 @@
                                             <input type="text" name="info[code]" value="{$row.code}" class="form-control" required />
                                         </div>
 
-                                        <div class="form-group col-md-6">
-                                            <p>内部地接结算毛利比（组团：地接）</p>
-                                            <input class="input_ratio" type="text" name="info[group_gross_profit_ratio]" value="{$row.group_gross_profit_ratio}" placeholder="组团方占比：6">
+                                        <div class="form-group col-md-12">
+                                            <label>标准化结算毛利比（组团：地接）</label>
+                                            <input class="form-control" style="width: 180px; display: inline-block;" type="text" name="info[group_gross_profit_ratio]" value="{$row.group_gross_profit_ratio}" placeholder="组团方占比：6">
                                             <span style="width: 2%">：</span>
-                                            <input class="input_ratio" type="text" name="info[land_gross_profit_ratio]" value="{$row.land_gross_profit_ratio}" placeholder="地接方占比：4">
+                                            <input class="form-control" style="width: 180px; display: inline-block;" type="text" name="info[land_gross_profit_ratio]" value="{$row.land_gross_profit_ratio}" placeholder="地接方占比：4">
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>定制化结算毛利比（组团：地接）</label>
+                                            <input class="form-control" style="width: 180px; display: inline-block;" type="text" name="info[group_ratio_unique]" value="{$row.group_ratio_unique}" placeholder="组团方占比：6">
+                                            <span style="width: 2%">：</span>
+                                            <input class="form-control" style="width: 180px; display: inline-block;" type="text" name="info[land_ratio_unique]" value="{$row.land_ratio_unique}" placeholder="地接方占比：4">
                                         </div>
 
                                         <div class="form-group col-md-6">&emsp;</div>
