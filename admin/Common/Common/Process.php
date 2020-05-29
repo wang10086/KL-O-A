@@ -49,6 +49,27 @@ function save_process_log($process_node,$pro_status,$title='',$req_id=0,$to_post
     $res                = $list ? $db->where(array('id'=>$list['id']))->save($data) : $db->add($data);
 }
 
+/**
+ * 完成
+ * @param int $process_log_id
+ * @param int $process_node_id
+ * @param string $remark
+ */
+function save_process_ok($process_node_id=0,$remark=''){
+    $db                          = M('process_log');
+    $data                        = array();
+    $data['audit_uid']           = cookie('userid');
+    $data['audit_uname']         = cookie('nickname');
+    $data['audit_time']          = NOW_TIME;
+    $data['audit_remark']        = $remark;
+    $data['del_status']          = '-1'; //已处理
+    $where                       = array();
+    $where['to_uid']             = cookie('userid');
+    //if ($process_log_id)  $where['id']       = $process_log_id;
+    if ($process_node_id) $where['pnode_id'] = $process_node_id;
+    $db->where($where)->save($data);
+}
+
 //根据流程节点自动生成提示信息
 function process_node_to_log(){
     $nodeLists          = M('process_node')->select();
@@ -301,23 +322,3 @@ function get_process_node_data($id){
     return $data;
 }
 
-/**
- * 完成
- * @param int $process_log_id
- * @param int $process_node_id
- * @param string $remark
- */
-function save_process_ok($process_node_id=0,$remark=''){
-   $db                          = M('process_log');
-   $data                        = array();
-   $data['audit_uid']           = cookie('userid');
-   $data['audit_uname']         = cookie('nickname');
-   $data['audit_time']          = NOW_TIME;
-   $data['audit_remark']        = $remark;
-   $data['del_status']          = '-1'; //已处理
-   $where                       = array();
-   $where['to_uid']             = cookie('userid');
-   //if ($process_log_id)  $where['id']       = $process_log_id;
-   if ($process_node_id) $where['pnode_id'] = $process_node_id;
-   $db->where($where)->save($data);
-}

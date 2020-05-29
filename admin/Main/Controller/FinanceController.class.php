@@ -2245,11 +2245,25 @@ class FinanceController extends BaseController {
                 $data['status']         = 1;
                 $res                    = $db->where(array('op_id'=>$opid))->save($data);
                 if ($res){
-                    $record = array();
-                    $record['op_id']   = $opid;
-                    $record['optype']  = 8;
-                    $record['explain'] = '提交成本核算';
+                    $record             = array();
+                    $record['op_id']    = $opid;
+                    $record['optype']   = 8;
+                    $record['explain']  = '提交成本核算';
                     op_record($record);
+
+                    $op_list            = M('op')->where(array('op_id'=>$opid))->find();
+                    $manager_data       = get_department_manager($op_list['create_user']);
+                    $process_node       = 43; //43	确定报价
+                    $pro_status         = 2; //事前提醒
+                    $title              = $op_list['project'];
+                    $req_id             = $op_list['id'];
+                    $to_uid             = $manager_data['manager_id'];
+                    $to_uname           = $manager_data['manager_name'];
+                    save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname); //保存待办事宜
+
+                    //消除待办事宜
+                    $ok_node            = 42; //进行成本核算
+                    save_process_ok($ok_node);
 
                     $this->success('提交成功');
                 }else{
@@ -2266,6 +2280,9 @@ class FinanceController extends BaseController {
         $db                 = M('op_costacc_res');
         $res                = $db->where(array('op_id'=>$opid))->save($info);
         if ($res){
+            //消除待办事宜
+            $ok_node             = 43; //43	确定报价
+            save_process_ok($ok_node);
             $this->success('保存数据成功');
         }else{
             $this->error('保存数据失败');

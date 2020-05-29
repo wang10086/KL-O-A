@@ -1458,8 +1458,8 @@ class OpController extends BaseController {
 			$auth = M('op_auth')->where(array('op_id'=>$opid))->find();
 
             //创建工单
-            $thing  = "行程方案";
-            project_worder($info,$opid,$thing);
+            //$thing  = "行程方案";
+            //project_worder($info,$opid,$thing);
 
             if($auth){
 				M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
@@ -1493,6 +1493,81 @@ class OpController extends BaseController {
 			$this->display('assign_line');
 		}
 	}
+
+    //@@@NODE-3###assign_hesuan###指派人员跟进成本核算###
+    public function assign_hesuan(){
+        $opid               = I('opid');
+        $info               = I('info');
+        $user               =  M('account')->getField('id,nickname', true);
+
+        if(isset($_POST['dosubmit']) && $info){
+
+            $data           = array();
+            $data['hesuan'] = $info;
+            $data['yusuan'] = $info;
+            $data['jiesuan']= $info;
+            $auth           = M('op_auth')->where(array('op_id'=>$opid))->find();
+
+            //创建工单
+            //$thing          = "行程方案";
+            //project_worder($info,$opid,$thing);
+
+            if($auth){
+                $res                = M('op_auth')->data($data)->where(array('id'=>$auth['id']))->save();
+            }else{
+                $data['op_id']      = $opid;
+                $res                = M('op_auth')->add($data);
+            }
+
+            if ($res){
+                $op_list            = M('op')->where(array('op_id'=>$opid))->find();
+                $process_node       = 42; //42	进行成本核算
+                $pro_status         = 2; //事前提醒
+                $title              = $op_list['project'];
+                $req_id             = $op_list['id'];
+                $to_uname           = username($info);
+                save_process_log($process_node,$pro_status,$title,$req_id,'',$info,$to_uname); //保存待办事宜
+
+                //消除待办事宜
+                $ok_node             = 41; //安排成本核算
+                save_process_ok($ok_node);
+
+                //发送消息
+                $uid                = cookie('userid');
+                $title              = cookie('name').'指派您跟进项目成本核算';
+                $content            = '项目名称: '.$op_list['project'];
+                $url                = U('Finance/costacc',array('opid'=>$opid));
+                $users              = '['.$info.']';
+                send_msg($uid,$title,$content,$url,$users,'');
+
+                $record             = array();
+                $record['op_id']    = $opid;
+                $record['optype']   = 2;
+                $record['explain']  = '指派【'.$user[$info].'】跟进项目成本核算';
+                op_record($record);
+            }
+
+            echo '<script>window.top.location.reload();</script>';
+
+        }else{
+
+            //用户列表
+            $key = I('key');
+            $db = M('account');
+            $where          = array();
+            $where['id']    = array('gt',3);
+            $where['status']= array('eq',0);    //1=>停用, 2=>删除
+            if($key) $where['nickname'] = array('like','%'.$key.'%');
+            $pagecount = $db->where($where)->count();
+            $page = new Page($pagecount,6);
+            $this->pages = $pagecount>6 ? $page->show():'';
+            $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('roleid'))->select();
+
+            $this->role  = M('role')->getField('id,role_name', true);
+            $this->opid = $opid;
+            $this->display('assign_hesuan');
+        }
+    }
 
     //@@@NODE-3###assign_yusuan###指派人员跟进项目预算###
     public function assign_yusuan(){

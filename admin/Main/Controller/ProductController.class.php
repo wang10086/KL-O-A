@@ -2445,23 +2445,6 @@ class ProductController extends BaseController {
                 }
             }
 
-            //审核  bak_20200526
-            /*if ($savetype == 8){
-                $id                             = I('id');
-                $status                         = I('status');
-                $audit_remark                   = I('audit_remark');
-                $db                             = M('product_pro_need');
-                if (!$id){ $this->error('获取数据错误'); }
-                $data                           = array();
-                $data['status']                 = $status;
-                $data['audit_time']             = NOW_TIME;
-                $data['audit_remark']           = trim($audit_remark);
-                $data['audit_uid']              = cookie('userid');
-                $data['audit_uname']            = cookie('nickname');
-                $res                            = $db->where(array('id'=>$id))->save($data);
-                $res ? $this->success('审核成功',U('Product/public_pro_need')) : $this->error('审核失败');
-            }*/
-
             //保存科学博物院需求详情
             if ($savetype == 9){
                 $need_db                        = M('product_pro_need'); //需求表
@@ -2939,6 +2922,11 @@ class ProductController extends BaseController {
                         $process_node           = 40; //修改产品实施方案
                         $pro_status             = 3; // 反馈
                         save_process_log($process_node,$pro_status,$list['project'],$list['id'],'',$list['create_user_id'],$list['create_user_name']); //保存待办事宜
+                    }elseif ($status==1){
+                        $op_list                = M('op')->where(array('op_id'=>$list['op_id']))->find();
+                        $process_node           = 41; //41	安排成本核算
+                        $pro_status             = 2; // 事前提醒
+                        save_process_log($process_node,$pro_status,$op_list['project'],$op_list['id'],'',$op_list['line_blame_uid'],$op_list['line_blame_name']); //保存待办事宜
                     }
 
                     //消除待办事宜

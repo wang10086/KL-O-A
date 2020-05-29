@@ -174,7 +174,7 @@
 
                                        <div class="content" style="padding-top:40px;">
                                            <?php if(!$costacc_res['real_costacc']){
-                                               echo '<div class="form-group col-md-4">未完成项目报价！</div>';
+                                               echo '<div class="form-group col-md-4">未完成项目报价，<a href="'.U('Finance/costacc',array('opid'=>$op['op_id'])).'">立即报价</a>！</div>';
                                            }else{ ?>
                                                <div class="form-group col-md-4">
                                                    <label>成本价格：{$costacc_res.real_costacc} 元</label>
