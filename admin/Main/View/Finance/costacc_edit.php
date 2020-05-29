@@ -134,9 +134,9 @@
 
         <div id="formsbtn">
             <button type="button" class="btn btn-info <!--btn-sm-->" onclick="submintform()">保存</button>
-            <?php /*if ($costacc_res['status'] == 0){ */?>
+            <?php if ($costacc_res['costacc']){ ?>
                 <button type="button" class="btn btn-warning <!--btn-sm-->" onclick="$('#submitForm').submit()" >提交</button>
-            <?php /*} */?>
+            <?php } ?>
         </div>
     </div>
 </div>

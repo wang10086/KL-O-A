@@ -42,7 +42,26 @@
                             	<include file="costacc_read" />
                             <?php } ?>
 
-                            <include file="baojia_edit" />
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">项目报价</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="content">
+                                        <?php if ($costacc_res['status'] != 1){ ?>
+                                            <div class="form-group col-md-12">尚未完成成本核算！</div>
+                                        <?php }else{ ?>
+                                            <?php if (!$budget && in_array(cookie('userid'),array($manage_id,1,11))){ ?>
+                                                <include file="baojia_edit" />
+                                            <?php }else{ ?>
+                                                <include file="baojia_read" />
+                                            <?php } ?>
+                                        <?php } ?>
+
+                                    </div>
+                                </div>
+                            </div>
+
 
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->

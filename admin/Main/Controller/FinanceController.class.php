@@ -205,7 +205,8 @@ class FinanceController extends BaseController {
         $this->is_dijie         = $op['in_dijie'];
         $this->apply_to         = C('APPLY_TO');
         $this->provinces        = M('provinces')->getField('id,name',true);
-        $this->departments      =  M('salary_department')->getField('id,department',true);
+        $this->departments      = M('salary_department')->getField('id,department',true);
+        $this->manage_id        = M('salary_department')->where(array('id'=>cookie('department')))->getField('manager_id');
         $gross                  = M('gross')->where(array('kind_id'=>$op['kind']))->getField('gross');
         $this->gross            = str_replace('%','',$gross)/100;
 
