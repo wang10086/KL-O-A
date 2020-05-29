@@ -92,7 +92,7 @@
 <script type="text/javascript">
     //更多销售资料下载
     function moreCustomerFiles() {
-        art.dialog.open('<?php echo U('Customer/moreCustomerFiles'); ?>',{
+        art.dialog.open('<?php echo U('Customer/public_moreCustomerFiles'); ?>',{
             lock:true,
             title: '销售资料下载',
             width:1000,

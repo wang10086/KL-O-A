@@ -977,7 +977,7 @@ class CustomerController extends BaseController {
     }
 
     //更多销售资料下载
-    public function moreCustomerFiles(){
+    public function public_moreCustomerFiles(){
         $key                        = trim(I('key'));
         $db                         = M('customer_files');
         $where                      = array();
@@ -988,7 +988,7 @@ class CustomerController extends BaseController {
         $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order('id desc')->select();
         $this->msg_file_ids         = get_unread_req_ids(P::UNREAD_SALE_FILE);
         $this->unread_type          = P::UNREAD_SALE_FILE;
-        $this->display();
+        $this->display('moreCustomerFiles');
     }
 
     //宣传营销
