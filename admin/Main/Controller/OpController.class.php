@@ -459,6 +459,8 @@ class OpController extends BaseController {
         $this->geclist                  = $geclist;
         $this->geclist_str              = json_encode($geclist,true);
         $this->scheme_list              = M('op_scheme')->where(array('op_id'=>$opid))->find();
+        $this->costacc_res              = M('op_costacc_res')->where(array('op_id'=>$opid))->find();
+
 
         $product_need         = M()->table('__OP_COSTACC__ as c')->field('c.*,p.from,p.subject_field,p.type as ptype,p.age,p.reckon_mode')->join('left join __PRODUCT__ as p on c.product_id=p.id')->where(array('c.op_id'=>$opid,'c.type'=>5,'c.status'=>0))->select();
          foreach ($product_need as $k=>$v){
@@ -510,6 +512,7 @@ class OpController extends BaseController {
         $this->userkey      = get_username();
         $department_manager = get_department_manager($op['create_user']); //部门主管
         $this->manager_uid  = $department_manager['manager_id'];
+        $this->manager_data = $department_manager;
 
         //研发和资源人员信息(用于前期对研发和资源人员评分)
         $score_data         = $this->get_score_user($opid);

@@ -109,7 +109,7 @@
 
                                        <div class="content" style="padding-top:40px;">
                                            <?php if(!$scheme_list){
-                                               echo '<div class="form-group col-md-12">尚未编制产品实施方案，<a href="'.U('Product/add_scheme',array('opid'=>$op['op_id'])).'">立即编制</a>！</div>';
+                                               echo '<div class="form-group col-md-12">尚未编制产品实施方案，<a href="'.U('Product/scheme',array('opid'=>$op['op_id'],'fa'=>1)).'">立即编制</a>！</div>';
                                            }else{ ?>
                                                <div class="form-group col-md-12">
                                                    <label>实施方案：<a href="{:U('Product/public_view_scheme',array('id'=>$scheme_list['id']))}" target="_blank">{$scheme_list.project}</a></label>
@@ -143,29 +143,59 @@
                                     <div class="box-body">
                                     	
                                         <div class="content" style="padding-top:40px;">
-                                        	<?php if(!$costacc){ 
-												/*if(!$op['line_id']){
-													echo '<div class="form-group col-md-4">请先确认行程方案！</div>';
-												}else{*/
-													echo '<div class="form-group col-md-4">尚未核算成本，<a href="'.U('Finance/costacc',array('opid'=>$op['op_id'])).'">立即核算</a>！</div>';
-												/*}*/
+                                        	<?php if(!$costacc_res){
+                                                echo '<div class="form-group col-md-4">尚未核算成本，<a href="'.U('Finance/costacc',array('opid'=>$op['op_id'])).'">立即核算</a>！</div>';
 											}else{ ?>
                                             <div class="form-group col-md-4">
-                                                <label>成本价格：{$op.costacc} {$op.costacc_unit}</label>
+                                                <label>成本价格：{$costacc_res.costacc} 元</label>
                                             </div>
                                             
                                             <div class="form-group col-md-4">
-                                                <label>建议最低报价：{$op.costacc_min_price} {$op.costacc_min_price_unit}</label>
+                                                <label>建议最低报价：{$costacc_res.costacc_min_price} 元</label>
                                             </div>
                                             
                                             <div class="form-group col-md-4">
-                                                <label>建议最高报价：{$op.costacc_max_price} {$op.costacc_max_price_unit}</label>
+                                                <label>建议最高报价：{$costacc_res.costacc_max_price} 元</label>
                                             </div>
                                             <?php } ?>
                                         </div>
                                         
                                     </div>
                                 </div>
+
+                               <div class="box box-warning">
+                                   <div class="box-header">
+                                       <h3 class="box-title">项目报价</h3>
+                                       <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                           负责人：{$manager_data.manager_name}
+                                       </h3>
+                                   </div>
+                                   <div class="box-body">
+
+                                       <div class="content" style="padding-top:40px;">
+                                           <?php if(!$costacc_res['real_costacc']){
+                                               echo '<div class="form-group col-md-4">未完成项目报价！</div>';
+                                           }else{ ?>
+                                               <div class="form-group col-md-4">
+                                                   <label>成本价格：{$costacc_res.real_costacc} 元</label>
+                                               </div>
+
+                                               <div class="form-group col-md-4">
+                                                   <label>建议最低报价：{$costacc_res.real_min_price} 元</label>
+                                               </div>
+
+                                               <div class="form-group col-md-4">
+                                                   <label>建议最高报价：{$costacc_res.real_max_price} 元</label>
+                                               </div>
+
+                                               <div class="form-group col-md-4">
+                                                   <label>报价说明：{$costacc_res.remark} </label>
+                                               </div>
+                                           <?php } ?>
+                                       </div>
+
+                                   </div>
+                               </div>
                                 
                                 
                                 <div class="box box-warning">
