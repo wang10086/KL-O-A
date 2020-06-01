@@ -677,6 +677,8 @@ class FilesController extends BaseController {
                     $num++;
                     if ($list['type'] >= 5 && $audit_status == 1){ //直接上传文件至文件管理->****文件夹
                         save_file_data($id);
+                        $process_node_id= 12; //批准发布业务季产品手册、业务季销售PPT、公司宣传手册
+                        save_process_ok($process_node_id); //清除待办事宜
                     }
                 }
                 $msg                    = $num > 0 ? '数据保存成功' : '数据保存失败';

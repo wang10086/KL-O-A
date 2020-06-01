@@ -1042,6 +1042,21 @@ class CustomerController extends BaseController {
         }
     }
 
+    //宣传营销计划详情(审批)
+    public function public_widely_detail(){
+        $this->title('宣传营销计划');
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据失败');
+        $db                         = M('customer_widely');
+        $list                       = $db->find($id);
+
+        $process_data               = get_process_data(); //流程
+        $this->process_data         = array_column($process_data,'title','id');
+        $this->audit_status         = get_submit_audit_status();
+        $this->list                 = $list;
+        $this->display('widely_detail');
+    }
+
     public function delWidely(){
 
     }
@@ -1238,7 +1253,28 @@ class CustomerController extends BaseController {
                 $data               = array();
                 $data['status']     = 3;
                 $res                = $db->where(array('id'=>$id))->save($data);
-                $res ? $this->success('数据保存成功',U('Customer/widely')) : $this->error('数据保存失败');
+                if ($res){
+                    $list           = $db->find($id);
+                    $process_node_id= 16; //制定业务季市场营销计划及预算
+                    $node_list      = M('process_node')->find($id);
+                    $pro_status     = 2; //事前提醒
+                    $title          = $list['title'];
+                    $req_id         = $list['id'];
+                    $to_uid         = $node_list['blame_uid'];
+                    $to_uname       = $node_list['blame_name'];
+                    save_process_log($process_node_id,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+
+                    $ok_node_id     = 15; //提交业务季宣传营销需求
+                    save_process_ok($ok_node_id);
+                    $this->success('数据保存成功',U('Customer/widely'));
+                }else{
+                    $this->error('数据保存失败');
+                }
+            }
+
+            if ($saveType == 2){ //审核宣传营销计划
+
+                //P($_POST);
             }
         }
     }

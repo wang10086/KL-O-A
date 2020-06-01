@@ -44,7 +44,7 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
-                                        <td>{$row.title}</td>
+                                        <td><a href="{:U('Customer/public_widely_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
                                         <td>{$row.in_time|date='Y-m-d',###}</td>
                                         <td>{$row.blame_name}</td>
                                         <td>{$process_data[$row['process_id']]}</td>
