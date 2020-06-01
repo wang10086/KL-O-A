@@ -575,7 +575,10 @@ class FilesController extends BaseController {
         $id                         = I('id');
         if (!$id){ $this->error('数据错误'); }
         $db                         = M('process_files');
+        $attachment_id              = $db->where(array('id'=>$id))->getField('atta_id');
         $res                        = $db->where(array('id'=>$id))->delete();
+        M('customer_files')->where(array('file_id'=>$attachment_id))->delete();
+        M('unread')->where(array('type'=>P::UNREAD_SALE_FILE,'req_id'=>$id))->save(array('read_type'=>1));
         $res ? $this->success('删除成功') : $this->error('删除失败');
     }
 
@@ -619,11 +622,16 @@ class FilesController extends BaseController {
                     }
                 }
 
-                if ($res) $num++;
-                $msg                    = $num > 0 ? '保存成功' : '保存失败';
+                if ($res) {
+                    $num++;
+                    $this->success('保存成功',U('Files/public_audit_add',array('id'=>$id)));
+                }else{
+                    $this->error('保存失败');
+                }
+                /*$msg                    = $num > 0 ? '保存成功' : '保存失败';
                 $returnMsg['num']       = $num;
                 $returnMsg['msg']       = $msg;
-                $this->ajaxReturn($returnMsg);
+                $this->ajaxReturn($returnMsg);*/
             }
 
             if ($saveType == 2){
