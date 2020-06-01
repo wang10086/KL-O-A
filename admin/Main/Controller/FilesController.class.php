@@ -576,9 +576,10 @@ class FilesController extends BaseController {
         if (!$id){ $this->error('数据错误'); }
         $db                         = M('process_files');
         $attachment_id              = $db->where(array('id'=>$id))->getField('atta_id');
+        $customer_files_id          = M('customer_files')->where(array('file_id'=>$attachment_id))->getField('id');
         $res                        = $db->where(array('id'=>$id))->delete();
         M('customer_files')->where(array('file_id'=>$attachment_id))->delete();
-        M('unread')->where(array('type'=>P::UNREAD_SALE_FILE,'req_id'=>$id))->save(array('read_type'=>1));
+        M('unread')->where(array('type'=>P::UNREAD_SALE_FILE,'req_id'=>$customer_files_id))->save(array('read_type'=>1));
         $res ? $this->success('删除成功') : $this->error('删除失败');
     }
 
