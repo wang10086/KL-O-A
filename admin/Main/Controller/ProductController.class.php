@@ -1851,7 +1851,7 @@ class ProductController extends BaseController {
         $this->display('pro_need_detail');
     }
 
-    //获取详细信息数据表
+    //获取产品方案需求详细信息数据表
     private function get_product_pro_need_tetail_db($kind){
         switch ($kind){
             case 60: //60=>科学课程
@@ -1889,6 +1889,51 @@ class ProductController extends BaseController {
                 break;
             case 65: //65=>教师培训
                 $db         = M('product_pro_need_jspx');
+                break;
+            default:
+                $db         = '';
+        }
+        return $db;
+    }
+
+    //获取客户需求详情数据表
+    private function get_customer_need_tetail_db($kind){
+        switch ($kind){
+            case 60: //60=>科学课程
+                $db         = M('op_customer_need_kxkc');
+                break;
+            case 82: //82=> 科学博物园
+                $db         = M('op_customer_need_kxbwy');
+                break;
+            case 54: //54=> 研学旅行
+                $db         = M('op_customer_need_yxlx');
+                break;
+            case 90: //90=> 背景提升
+                $db         = M('op_customer_need_bjts');
+                break;
+            case 67: //67=> 实验室建设
+                $db         = M('op_customer_need_sysjs');
+                break;
+            case 69: //69=> 科学快车 product_pro_need_xykjj
+                $db         = M('op_customer_need_bus');
+                break;
+            case 56: //56=> 科学快车
+                $db         = M('op_customer_need_xykjj');
+                break;
+            case 61: //61=> 科学快车
+                $db         = M('op_customer_need_xkt');
+                break;
+            case 87: //87=> 单进院所
+                $db         = M('op_customer_need_djys');
+                break;
+            case 64: //64=>专场讲座
+                $db         = M('op_customer_need_zcjz');
+                break;
+            case 57: //57=>综合实践
+                $db         = M('op_customer_need_zhsj');
+                break;
+            case 65: //65=>教师培训
+                $db         = M('op_customer_need_jspx');
                 break;
             default:
                 $db         = '';
@@ -1993,6 +2038,31 @@ class ProductController extends BaseController {
         }else{
             $this->error('非法数据');
         }
+    }
+
+    //客户需求详情
+    public function customer_need(){
+        $this->title('客户需求详情');
+        $this->fa                            = I('fa',1);
+        $opid                                = I('opid');
+        if (!$opid) $this->error('数据错误');
+        $oplist                              = M('op')->where(array('op_id'=>$opid))->find();
+        $customer_need_db                    = $this->get_customer_need_tetail_db($oplist['kind']);
+        $customer_need_list                  = $customer_need_db ? $customer_need_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
+
+        $apply_to                            = C('APPLY_TO');
+        $oplist['apply_to']                  = $apply_to[$oplist['apply_to']];
+        $departments                         = M('salary_department')->getField('id,department',true);
+        $kinds                               = M('project_kind')->getField('id,name',true);
+        $this->list                          = $oplist;
+        $this->audit_status                  = get_submit_audit_status();
+        $this->departments                   = $departments;
+        $this->kinds                         = $kinds;
+
+        $this->opid                          = $opid;
+        $this->fa                            = I('fa',1); //导航栏,项目方案跟进
+
+        $this->display('customer_need');
     }
 
 
