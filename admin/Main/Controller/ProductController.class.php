@@ -2429,7 +2429,7 @@ class ProductController extends BaseController {
                 $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_kxkc'); //科学课程详情表
                 //$need_id                        = I('need_id');
-                //$id                             = I('id');
+                $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
@@ -2444,8 +2444,8 @@ class ProductController extends BaseController {
                 $data['lession_time']           = strtotime($data['lession_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
-                if ($opid){
-                    $res                        = $detail_db->where(array('op_id'=>$opid))->save($data);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
                 }else{
                     $res                        = $detail_db->add($data);
@@ -2455,6 +2455,7 @@ class ProductController extends BaseController {
                 $record['op_id']                = $opid;
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
+                op_record($record);
                 $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
@@ -2485,21 +2486,21 @@ class ProductController extends BaseController {
 
             //保存科学博物院需求详情
             if ($savetype == 9){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_kxbwy'); //科学博物园详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
                 $yard                           = I('yard');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['other_yf_condition']     = trim($data['other_yf_condition']);
                 $data['other_zy_condition']     = trim($data['other_zy_condition']);
                 $data['other_jd_condition']     = trim($data['other_jd_condition']);
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 $data['yf_cost']                = trim($data['yf_cost']) ? trim($data['yf_cost']) : '0';
                 $data['guide_cost']             = trim($data['guide_cost']) ? trim($data['guide_cost']) : '0';
                 $data['food_price']             = trim($data['food_price']) ? trim($data['food_price']) : '0';
@@ -2522,7 +2523,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2530,21 +2531,21 @@ class ProductController extends BaseController {
 
             //保存研学旅行需求详情
             if ($savetype == 10){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_yxlx'); //研学旅行详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
                 //$yard                           = I('yard');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['other_line_condition']   = trim($data['other_line_condition']);
                 $data['other_zy_condition']     = trim($data['other_zy_condition']);
                 $data['other_jd_condition']     = trim($data['other_jd_condition']);
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 $data['lecture_time']           = strtotime($data['lecture_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,10));
                 $data['et_time']                = strtotime(substr($in_time,-10));
@@ -2560,7 +2561,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2568,19 +2569,19 @@ class ProductController extends BaseController {
 
             //保存背景提升需求详情
             if ($savetype == 11){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_bjts'); //背景提升详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $expert_level                   = I('expert_level');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['other_yf_condition']     = trim($data['other_yf_condition']);
                 $data['other_zy_condition']     = trim($data['other_zy_condition']);
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 $data['expert_level']           = implode(',',$expert_level);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
@@ -2594,7 +2595,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2602,20 +2603,20 @@ class ProductController extends BaseController {
 
             //保存实验室建设需求详情
             if ($savetype == 12){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_sysjs'); //实验室建设详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['pro_time']               = strtotime($data['pro_time']);
                 $data['costacc_time']           = strtotime($data['costacc_time']);
                 $data['other']                  = trim($data['other']);
                 $data['content']                = trim($data['content']);
                 $data['other_condition']        = trim($data['other_condition']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2628,7 +2629,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2636,16 +2637,16 @@ class ProductController extends BaseController {
 
             //保存科学快车详情
             if ($savetype == 13){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_bus'); //科学快车详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $selfOpNeed                     = I('selfOpNeed');
                 $addOpNeed                      = I('addOpNeed');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['title']                  = trim($data['title']);
                 $data['company']                = trim($data['company']);
                 $data['company1']               = trim($data['company1']);
@@ -2656,7 +2657,7 @@ class ProductController extends BaseController {
                 $data['content']                = trim($data['content']);
                 $data['selfOpNeed']             = implode(',',$selfOpNeed);
                 $data['addOpNeed']              = implode(',',$addOpNeed);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2669,7 +2670,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2677,16 +2678,16 @@ class ProductController extends BaseController {
 
             //保存校园科技节详情
             if ($savetype == 14){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_xykjj'); //校园科技节详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
                 $yard                           = I('yard');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['addr']                   = trim($data['addr']);
                 $data['yard_more']              = trim($data['yard_more']);
                 $data['content']                = trim($data['content']);
@@ -2696,7 +2697,7 @@ class ProductController extends BaseController {
                 $data['other_jd_condition']     = trim($data['other_jd_condition']);
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
                 $data['yard']                   = implode(',',$yard);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 $data['time']                   = strtotime($data['time']);
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
@@ -2712,7 +2713,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2720,9 +2721,9 @@ class ProductController extends BaseController {
 
             //保存小课题详情
             if ($savetype == 15){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_xkt'); //校园科技节详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
@@ -2732,7 +2733,7 @@ class ProductController extends BaseController {
                 $expert_level                   = I('expert_level');
                 $resulted                       = I('resulted');
                 $match                          = I('match');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['customer']               = trim($data['customer']);
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['in_time']                = trim($data['in_time']);
@@ -2741,7 +2742,7 @@ class ProductController extends BaseController {
                 $data['expert_level']           = implode(',',$expert_level);
                 $data['resulted']               = implode(',',$resulted);
                 $data['match']                  = implode(',',$match);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2754,7 +2755,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2762,20 +2763,20 @@ class ProductController extends BaseController {
 
             //保存单进院所详情
             if ($savetype == 16){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_djys'); //单进院所详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['institutes']             = trim($data['institutes']);
                 $data['content']                = trim($data['content']);
                 $data['long']                   = trim($data['long']);
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['time']                   = strtotime($data['time']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2788,7 +2789,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2796,15 +2797,15 @@ class ProductController extends BaseController {
 
             //保存专场讲座详情
             if ($savetype == 17){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_zcjz'); //专场讲座详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $expert_level                   = I('expert_level');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['addr']                   = trim($data['addr']);
                 $data['equipment']              = trim($data['equipment']);
                 $data['field']                  = trim($data['field']);
@@ -2813,7 +2814,7 @@ class ProductController extends BaseController {
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['expert_level']           = implode(',',$expert_level);
                 $data['time']                   = strtotime($data['time']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑产品方案需求详细信息';
@@ -2826,7 +2827,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2834,19 +2835,19 @@ class ProductController extends BaseController {
 
             //保存综合实践需求详情
             if ($savetype == 18){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_zhsj'); //综合实践详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['other_yf_condition']     = trim($data['other_yf_condition']);
                 $data['other_zy_condition']     = trim($data['other_zy_condition']);
                 $data['other_jd_condition']     = trim($data['other_jd_condition']);
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 $data['time']                   = strtotime($data['time']);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
@@ -2860,7 +2861,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
@@ -2868,20 +2869,20 @@ class ProductController extends BaseController {
 
             //保存教师培训需求详情
             if ($savetype == 19){
-                $need_db                        = M('product_pro_need'); //需求表
+                $need_db                        = M('op'); //需求表
                 $detail_db                      = M('product_pro_need_jspx'); //研学旅行详情表
-                $need_id                        = I('need_id');
+                //$need_id                        = I('need_id');
                 $id                             = I('id');
                 $opid                           = I('opid');
                 $data                           = I('data'); //详情
                 $info                           = I('info'); //需求
                 $in_time                        = I('in_time');
-                if (!$need_id){ $this->error('数据错误'); }
+                if (!$opid){ $this->error('数据错误'); }
                 $data['other_line_condition']   = trim($data['other_line_condition']);
                 $data['other_zy_condition']     = trim($data['other_zy_condition']);
                 $data['other_jd_condition']     = trim($data['other_jd_condition']);
                 $data['other_sj_condition']     = trim($data['other_sj_condition']);
-                $data['product_pro_need_id']    = $need_id;
+                $data['op_id']                  = $opid;
                 $data['lecture_time']           = strtotime($data['lecture_time']);
                 $data['leader_time']            = strtotime($data['leader_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,10));
@@ -2898,7 +2899,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $need_res                       = $need_db->where(array('id'=>$need_id))->save($info);
+                $need_res                       = $need_db->where(array('op_id'=>$opid))->save($info);
                 if ($res) $num++;
                 if ($need_res) $num++;
                 $num > 0 ? $this->success('数据保存成功',U('Product/public_pro_need_follow',array('opid'=>$opid))) : $this->error('数据保存失败');
