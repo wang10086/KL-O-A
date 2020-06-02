@@ -1049,7 +1049,10 @@ class CustomerController extends BaseController {
         if (!$id) $this->error('获取数据失败');
         $db                         = M('customer_widely');
         $list                       = $db->find($id);
+        $process_node_id            = 16; //制定业务季市场营销计划及预算
+        $node_list                  = M('process_node')->find($process_node_id);
 
+        $this->node_list            = $node_list;
         $process_data               = get_process_data(); //流程
         $this->process_data         = array_column($process_data,'title','id');
         $this->audit_status         = get_submit_audit_status();
@@ -1256,7 +1259,7 @@ class CustomerController extends BaseController {
                 if ($res){
                     $list           = $db->find($id);
                     $process_node_id= 16; //制定业务季市场营销计划及预算
-                    $node_list      = M('process_node')->find($id);
+                    $node_list      = M('process_node')->find($process_node_id);
                     $pro_status     = 2; //事前提醒
                     $title          = $list['title'];
                     $req_id         = $list['id'];
@@ -1273,8 +1276,24 @@ class CustomerController extends BaseController {
             }
 
             if ($saveType == 2){ //审核宣传营销计划
-
-                //P($_POST);
+                $db                 = M('customer_widely');
+                $id                 = I('id');
+                $status             = I('status');
+                $audit_remark       = trim(I('audit_remark'));
+                $data               = array();
+                $data['status']     = $status;
+                $data['audit_user_id']  = cookie('userid');
+                $data['audit_user_name']= cookie('nickname');
+                $data['audit_time']     = NOW_TIME;
+                $data['audit_remark']   = $audit_remark;
+                $res                    = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $ok_node_id         = 16; //制定业务季市场营销计划及预算
+                    save_process_ok($ok_node_id);
+                    $this->success('审核成功');
+                }else{
+                    $this->error('审核失败');
+                }
             }
         }
     }

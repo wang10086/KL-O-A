@@ -53,7 +53,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <?php if ($list['status'] == 3 && in_array(cookie('userid'),array(1,11,$scheme_list['audit_user_id']))){ ?>
+                            <?php if ($list['status'] == 3 && in_array(cookie('userid'),array(1,11,$node_list['blame_uid']))){ ?>
                                 <div class="box box-warning">
                                     <div class="box-header">
                                         <h3 class="box-title">审核</h3>
