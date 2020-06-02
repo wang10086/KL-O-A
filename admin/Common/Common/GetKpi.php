@@ -4552,7 +4552,7 @@ function save_op_groups_settlement($op){
             $newOp['kind']          = $op['kind'];
             $newOp['sale_user']     = $v['username'];
             $newOp['customer']      = $op['customer'];
-            $newOp['op_create_date']= date('Y-m-d');
+            //$newOp['op_create_date']= date('Y-m-d');
             $newOp['op_create_user']= userRole($v['userid'])['role_name']; //角色名称
             $newOp['line_id']       = $op['line_id'];
             $newOp['apply_to']      = $op['apply_to'];
