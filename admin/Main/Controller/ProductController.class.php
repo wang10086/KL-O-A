@@ -1976,7 +1976,7 @@ class ProductController extends BaseController {
         $this->audit_status                 = get_submit_audit_status();
         $this->departments                  = $departments;
         $this->kinds                        = $kinds;
-
+        $this->yard_arr                     = $customer_need_list ? explode(',',$customer_need_list['yard']) : ($detail_list['yard'] ? explode(',',$detail_list['yard']) : '');
         $this->opid                         = $opid;
         $this->teacher_level                = C('TEACHER_LEVEL'); //教师级别
         $this->expert_level                 = C('EXPERT_LEVEL'); //专家级别
@@ -2031,6 +2031,45 @@ class ProductController extends BaseController {
                 $record['explain']              = $record_msg;
                 op_record($record);
                 $res > 0 ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情   科学博物园
+            if ($savetype == 2){
+                $detail_db                      = M('op_customer_need_kxbwy'); //科学博物园详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $in_time                        = I('in_time');
+                $yard                           = I('yard');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['other_yf_condition']     = trim($data['other_yf_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['op_id']                  = $opid;
+                $data['yf_cost']                = trim($data['yf_cost']) ? trim($data['yf_cost']) : '0';
+                $data['guide_cost']             = trim($data['guide_cost']) ? trim($data['guide_cost']) : '0';
+                $data['food_price']             = trim($data['food_price']) ? trim($data['food_price']) : '0';
+                $data['time']                   = strtotime($data['time']);
+                $data['time1']                  = strtotime($data['time1']);
+                $data['time2']                  = strtotime($data['time2']);
+                $data['time3']                  = strtotime($data['time3']);
+                $data['st_time']                = strtotime(substr($in_time,0,8));
+                $data['et_time']                = strtotime(substr($in_time,-8));
+                $data['yard']                   = implode(',',$yard);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
         }
     }
