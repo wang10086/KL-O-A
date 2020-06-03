@@ -23,9 +23,7 @@
                             <div class="box box-warning mt20">
                                 <div class="box-header">
                                     <h3 class="box-title">基本信息</h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
-                                        方案进程：{$op_process[$list['process']]}
-                                    </h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
@@ -99,33 +97,61 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <?php echo $list['kind']; ?>
-                            <?php if ($list['kind'] == 60){ ?> <!--60=>科学课程-->
-                                <include file="customer_need_60_read" />
-                            <?php }elseif ($list['kind'] == 82){ ?> <!--82=>科学博物园-->
-                                <include file="customer_need_82_read" />
-                            <?php }elseif ($list['kind'] == 54){ ?> <!--54=>研学旅行-->
-                                <include file="customer_need_54_read" />
-                            <?php }elseif ($list['kind'] == 90){ ?> <!--90=>背景提升-->
-                                <include file="customer_need_90_read" />
-                            <?php }elseif ($list['kind'] == 67){ ?> <!--67=>实验室建设-->
-                                <include file="customer_need_67_read" />
-                            <?php }elseif ($list['kind'] == 69){ ?> <!--69=>科学快车-->
-                                <include file="customer_need_69_read" />
-                            <?php }elseif ($list['kind'] == 56){ ?> <!--56=>校园科技节-->
-                                <include file="customer_need_56_read" />
-                            <?php }elseif ($list['kind'] == 61){ ?> <!--61=>小课题-->
-                                <include file="customer_need_61_read" />
-                            <?php }elseif ($list['kind'] == 87){ ?> <!--87=>单进院所-->
-                                <include file="customer_need_87_read" />
-                            <?php }elseif ($list['kind'] == 64){ ?> <!--64=>专场讲座-->
-                                <include file="customer_need_64_read" />
-                            <?php }elseif ($list['kind'] == 57){ ?> <!--57=>综合实践-->
-                                <include file="customer_need_57_read" />
-                            <?php }elseif ($list['kind'] == 65){ ?> <!--65=>教师培训-->
-                                <include file="customer_need_65_read" />
-                            <?php } ?>
+                            <?PHP echo $list['kind']; ?>
 
+                            <?php if (!$budget_list && in_array(cookie('userid'),array(10,$list['create_user'],$list['line_blame_uid']))){ ?>
+                                <?php if ($list['kind'] == 60){ ?> <!--60=>科学课程-->
+                                    <include file="customer_need_60_edit" />
+                                <?php }elseif ($list['kind'] == 82){ ?> <!--82=>科学博物园-->
+                                    <include file="customer_need_82_edit" />
+                                <?php }elseif ($list['kind'] == 54){ ?> <!--54=>研学旅行-->
+                                    <include file="customer_need_54_edit" />
+                                <?php }elseif ($list['kind'] == 90){ ?> <!--90=>背景提升-->
+                                    <include file="customer_need_90_edit" />
+                                <?php }elseif ($list['kind'] == 67){ ?> <!--67=>实验室建设-->
+                                    <include file="customer_need_67_edit" />
+                                <?php }elseif ($list['kind'] == 69){ ?> <!--69=>科学快车-->
+                                    <include file="customer_need_69_edit" />
+                                <?php }elseif ($list['kind'] == 56){ ?> <!--56=>校园科技节-->
+                                    <include file="customer_need_56_edit" />
+                                <?php }elseif ($list['kind'] == 61){ ?> <!--61=>小课题-->
+                                    <include file="customer_need_61_edit" />
+                                <?php }elseif ($list['kind'] == 87){ ?> <!--87=>单进院所-->
+                                    <include file="customer_need_87_edit" />
+                                <?php }elseif ($list['kind'] == 64){ ?> <!--64=>专场讲座-->
+                                    <include file="customer_need_64_edit" />
+                                <?php }elseif ($list['kind'] == 57){ ?> <!--57=>综合实践-->
+                                    <include file="customer_need_57_edit" />
+                                <?php }elseif ($list['kind'] == 65){ ?> <!--65=>教师培训-->
+                                    <include file="customer_need_65_edit" />
+                                <?php } ?>
+                            <?php }else{ ?>
+                                <?php if ($list['kind'] == 60){ ?> <!--60=>科学课程-->
+                                    <include file="customer_need_60_read" />
+                                <?php }elseif ($list['kind'] == 82){ ?> <!--82=>科学博物园-->
+                                    <include file="customer_need_82_read" />
+                                <?php }elseif ($list['kind'] == 54){ ?> <!--54=>研学旅行-->
+                                    <include file="customer_need_54_read" />
+                                <?php }elseif ($list['kind'] == 90){ ?> <!--90=>背景提升-->
+                                    <include file="customer_need_90_read" />
+                                <?php }elseif ($list['kind'] == 67){ ?> <!--67=>实验室建设-->
+                                    <include file="customer_need_67_read" />
+                                <?php }elseif ($list['kind'] == 69){ ?> <!--69=>科学快车-->
+                                    <include file="customer_need_69_read" />
+                                <?php }elseif ($list['kind'] == 56){ ?> <!--56=>校园科技节-->
+                                    <include file="customer_need_56_read" />
+                                <?php }elseif ($list['kind'] == 61){ ?> <!--61=>小课题-->
+                                    <include file="customer_need_61_read" />
+                                <?php }elseif ($list['kind'] == 87){ ?> <!--87=>单进院所-->
+                                    <include file="customer_need_87_read" />
+                                <?php }elseif ($list['kind'] == 64){ ?> <!--64=>专场讲座-->
+                                    <include file="customer_need_64_read" />
+                                <?php }elseif ($list['kind'] == 57){ ?> <!--57=>综合实践-->
+                                    <include file="customer_need_57_read" />
+                                <?php }elseif ($list['kind'] == 65){ ?> <!--65=>教师培训-->
+                                    <include file="customer_need_65_read" />
+                                <?php } ?>
+                            <?php } ?>
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->

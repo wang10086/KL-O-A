@@ -1871,13 +1871,13 @@ class ProductController extends BaseController {
             case 67: //67=> 实验室建设
                 $db         = M('product_pro_need_sysjs');
                 break;
-            case 69: //69=> 科学快车 product_pro_need_xykjj
+            case 69: //69=> 科学快车
                 $db         = M('product_pro_need_bus');
                 break;
-            case 56: //56=> 科学快车
+            case 56: //56=> 校园科技节
                 $db         = M('product_pro_need_xykjj');
                 break;
-            case 61: //61=> 科学快车
+            case 61: //61=> 小课题
                 $db         = M('product_pro_need_xkt');
                 break;
             case 87: //87=> 单进院所
@@ -1916,13 +1916,13 @@ class ProductController extends BaseController {
             case 67: //67=> 实验室建设
                 $db         = M('op_customer_need_sysjs');
                 break;
-            case 69: //69=> 科学快车 product_pro_need_xykjj
+            case 69: //69=> 科学快车
                 $db         = M('op_customer_need_bus');
                 break;
-            case 56: //56=> 科学快车
+            case 56: //56=> 校园科技节
                 $db         = M('op_customer_need_xykjj');
                 break;
-            case 61: //61=> 科学快车
+            case 61: //61=> 小课题
                 $db         = M('op_customer_need_xkt');
                 break;
             case 87: //87=> 单进院所
@@ -2045,26 +2045,85 @@ class ProductController extends BaseController {
     //客户需求详情
     public function customer_need(){
         $this->title('客户需求详情');
-        $this->fa                            = I('fa',1);
-        $opid                                = I('opid');
+        $this->fa                           = I('fa',1);
+        $opid                               = I('opid');
         if (!$opid) $this->error('数据错误');
-        $oplist                              = M('op')->where(array('op_id'=>$opid))->find();
-        $customer_need_db                    = $this->get_customer_need_tetail_db($oplist['kind']);
-        $customer_need_list                  = $customer_need_db ? $customer_need_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
+        $oplist                             = M('op')->where(array('op_id'=>$opid))->find();
+        $customer_need_db                   = $this->get_customer_need_tetail_db($oplist['kind']);
+        $customer_need_list                 = $customer_need_db ? $customer_need_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
+        $detail_db                          = $this->get_product_pro_need_tetail_db($oplist['kind']);
+        $detail_list                        = $detail_db ? $detail_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
+        $budget_list                        = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //审核通过的预算信息
 
-        $apply_to                            = C('APPLY_TO');
-        $oplist['apply_to']                  = $apply_to[$oplist['apply_to']];
-        $departments                         = M('salary_department')->getField('id,department',true);
-        $kinds                               = M('project_kind')->getField('id,name',true);
-        $this->list                          = $oplist;
-        $this->audit_status                  = get_submit_audit_status();
-        $this->departments                   = $departments;
-        $this->kinds                         = $kinds;
 
-        $this->opid                          = $opid;
-        $this->fa                            = I('fa',1); //导航栏,项目方案跟进
+        $this->budget_list                  = $budget_list;
+        $this->need                         = $customer_need_list;
+        $this->detail                       = $detail_list;
+        $apply_to                           = C('APPLY_TO');
+        $oplist['apply_to']                 = $apply_to[$oplist['apply_to']];
+        $departments                        = M('salary_department')->getField('id,department',true);
+        $kinds                              = M('project_kind')->getField('id,name',true);
+        $this->list                         = $oplist;
+        $this->audit_status                 = get_submit_audit_status();
+        $this->departments                  = $departments;
+        $this->kinds                        = $kinds;
+
+        $this->opid                         = $opid;
+        $this->teacher_level                = C('TEACHER_LEVEL'); //教师级别
+        $this->expert_level                 = C('EXPERT_LEVEL'); //专家级别
+        $this->producted_list               = $oplist['producted_id'] ? M('producted')->find($oplist['producted_id']) : ''; //标准化产品
+        $this->fa                           = I('fa',1); //导航栏,项目方案跟进
+
+        //$this->provinces                = M('provinces')->getField('id,name',true);
+        //$geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
+        //$this->geclist                  = $geclist;
+        //$this->geclist_str              = json_encode($geclist,true);
+        //$this->kinds                    = get_project_kinds();
+        /*$this->apply_to                 = C('APPLY_TO');
+        //$this->dijie_data               = get_dijie_department_data();
+        $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
+        $this->expert_level             = C('EXPERT_LEVEL'); //专家级别*/
+        //$this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
+        //$this->departments              =  M('salary_department')->getField('id,department',true);
 
         $this->display('customer_need');
+    }
+
+    public function public_save_customer_need(){
+        $savetype                                   = I('savetype');
+        if (isset($_POST['dosubmit']) && $savetype) {
+            //保存客户需求详情   科学课城
+            if ($savetype == 1){
+                $detail_db                      = M('op_customer_need_kxkc'); //科学课程详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $in_time                        = I('in_time');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['title']                  = trim($data['title']);
+                $data['addr']                   = trim($data['addr']);
+                $data['teacher_condition']      = trim($data['teacher_condition']);
+                $data['other_res_condition']    = trim($data['other_res_condition']);
+                $data['remark']                 = trim($data['remark']);
+                $data['op_id']                  = $opid;
+                $data['lession_time']           = strtotime($data['lession_time']);
+                $data['st_time']                = strtotime(substr($in_time,0,8));
+                $data['et_time']                = strtotime(substr($in_time,-8));
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res > 0 ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+        }
     }
 
 
