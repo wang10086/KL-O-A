@@ -2030,7 +2030,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res > 0 ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情   科学博物园
@@ -2057,6 +2057,37 @@ class ProductController extends BaseController {
                 $data['st_time']                = strtotime(substr($in_time,0,8));
                 $data['et_time']                = strtotime(substr($in_time,-8));
                 $data['yard']                   = implode(',',$yard);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情      研学旅行
+            if ($savetype == 3){
+                $detail_db                      = M('op_customer_need_yxlx'); //研学旅行详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $in_time                        = I('in_time');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['other_line_condition']   = trim($data['other_line_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['op_id']                  = $opid;
+                $data['lecture_time']           = strtotime($data['lecture_time']);
+                $data['st_time']                = strtotime(substr($in_time,0,10));
+                $data['et_time']                = strtotime(substr($in_time,-10));
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑客户需求详情';
