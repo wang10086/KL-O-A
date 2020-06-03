@@ -2131,6 +2131,34 @@ class ProductController extends BaseController {
                 op_record($record);
                 $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
+
+            //保存实验室建设需求详情
+            if ($savetype == 5){
+                $detail_db                      = M('op_customer_need_sysjs'); //实验室建设详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                if (!$opid){ $this->error('数据错误'); }
+                $data['pro_time']               = strtotime($data['pro_time']);
+                $data['costacc_time']           = strtotime($data['costacc_time']);
+                $data['other']                  = trim($data['other']);
+                $data['content']                = trim($data['content']);
+                $data['other_condition']        = trim($data['other_condition']);
+                $data['op_id']                  = $opid;
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
         }
     }
 

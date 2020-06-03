@@ -38,29 +38,29 @@
 
                             <!--客户需求详情-->
                             <?php if ($op['kind'] == 60){ ?> <!--60=>科学课程-->
-                                <include file="customer_need_60_read" />
+                                <include file="Product:customer_need_60_read" />
                             <?php }elseif ($op['kind'] == 82){ ?> <!--82=>科学博物园-->
-                                <include file="customer_need_82_read" />
+                                <include file="Product:customer_need_82_read" />
                             <?php }elseif ($op['kind'] == 54){ ?> <!--54=>研学旅行-->
-                                <include file="customer_need_54_read" />
+                                <include file="Product:customer_need_54_read" />
                             <?php }elseif ($op['kind'] == 90){ ?> <!--90=>背景提升-->
-                                <include file="customer_need_90_read" />
+                                <include file="Product:customer_need_90_read" />
                             <?php }elseif ($op['kind'] == 67){ ?> <!--67=>实验室建设-->
-                                <include file="customer_need_67_read" />
+                                <include file="Product:customer_need_67_read" />
                             <?php }elseif ($op['kind'] == 69){ ?> <!--69=>科学快车-->
-                                <include file="customer_need_69_read" />
+                                <include file="Product:customer_need_69_read" />
                             <?php }elseif ($op['kind'] == 56){ ?> <!--56=>校园科技节-->
-                                <include file="customer_need_56_read" />
+                                <include file="Product:customer_need_56_read" />
                             <?php }elseif ($op['kind'] == 61){ ?> <!--61=>小课题-->
-                                <include file="customer_need_61_read" />
+                                <include file="Product:customer_need_61_read" />
                             <?php }elseif ($op['kind'] == 87){ ?> <!--87=>单进院所-->
-                                <include file="customer_need_87_read" />
+                                <include file="Product:customer_need_87_read" />
                             <?php }elseif ($op['kind'] == 64){ ?> <!--64=>专场讲座-->
-                                <include file="customer_need_64_read" />
+                                <include file="Product:customer_need_64_read" />
                             <?php }elseif ($op['kind'] == 57){ ?> <!--57=>综合实践-->
-                                <include file="customer_need_57_read" />
+                                <include file="Product:customer_need_57_read" />
                             <?php }elseif ($op['kind'] == 65){ ?> <!--65=>教师培训-->
-                                <include file="customer_need_65_read" />
+                                <include file="Product:customer_need_65_read" />
                             <?php } ?>
                             
                             

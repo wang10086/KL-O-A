@@ -1,6 +1,6 @@
 <div class="box box-warning">
     <div class="box-header">
-        <h3 class="box-title">详细信息</h3>
+        <h3 class="box-title">客户需求详情</h3>
     </div><!-- /.box-header -->
     <div class="box-body">
         <div class="content">
