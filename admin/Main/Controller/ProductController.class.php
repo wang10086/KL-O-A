@@ -1982,6 +1982,7 @@ class ProductController extends BaseController {
         $this->expert_level                 = C('EXPERT_LEVEL'); //专家级别
         $this->producted_list               = $oplist['producted_id'] ? M('producted')->find($oplist['producted_id']) : ''; //标准化产品
         $this->fa                           = I('fa',1); //导航栏,项目方案跟进
+        $this->detail_expert_level          = $customer_need_list ? explode(',',$customer_need_list['expert_level']) : ($detail_list ? explode(',',$detail_list['expert_level']) : '');
 
         //$this->provinces                = M('provinces')->getField('id,name',true);
         //$geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
@@ -2072,7 +2073,7 @@ class ProductController extends BaseController {
                 $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
-            //保存客户需求详情      研学旅行
+            //保存客户需求详情   研学旅行
             if ($savetype == 3){
                 $detail_db                      = M('op_customer_need_yxlx'); //研学旅行详情表
                 $id                             = I('id');
@@ -2088,6 +2089,34 @@ class ProductController extends BaseController {
                 $data['lecture_time']           = strtotime($data['lecture_time']);
                 $data['st_time']                = strtotime(substr($in_time,0,10));
                 $data['et_time']                = strtotime(substr($in_time,-10));
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情   背景提升
+            if ($savetype == 4){
+                $detail_db                      = M('op_customer_need_bjts'); //背景提升详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $expert_level                   = I('expert_level');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['other_yf_condition']     = trim($data['other_yf_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['op_id']                  = $opid;
+                $data['expert_level']           = implode(',',$expert_level);
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑客户需求详情';
