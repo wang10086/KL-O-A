@@ -23,11 +23,12 @@
                             <div class="box box-warning mt20">
                                 <div class="box-header">
                                     <h3 class="box-title">基本信息</h3>
-                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
+                                        <span class="green">项目编号：{$list.op_id}</span> &nbsp;&nbsp;创建者：{$list.create_user_name}
+                                    </h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-
                                         <div class="form-group col-md-12">
                                             <div class="form-group col-md-12">
                                                 <label>客户名称：{$list.project}</label>

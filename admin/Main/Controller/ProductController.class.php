@@ -1765,7 +1765,7 @@ class ProductController extends BaseController {
             $db                         = M('op');
             $list                       = $db -> find($id);
             $this->list                 = $list;
-            $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
+            $detail_db                  = get_product_pro_need_tetail_db($list['kind']);
             $detail                     = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
             $this->detail               = $detail;
             $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
@@ -1799,7 +1799,7 @@ class ProductController extends BaseController {
             $list                       = $db ->where(array('op_id'=>$opid)) -> find();
             $this->list                 = $list;
             $this->opid                 = $opid;
-            $detail_db                  = $this->get_product_pro_need_tetail_db($list['kind']);
+            $detail_db                  = get_product_pro_need_tetail_db($list['kind']);
             $detail                     = $detail_db ? $detail_db->where(array('op_id'=>$opid))->find() : '';
             $this->detail               = $detail;
             $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
@@ -1833,7 +1833,7 @@ class ProductController extends BaseController {
         $opid                           = I('opid') ? I('opid') : $oplist['op_id'];
         if (!$opid) $this->error('获取数据失败');
         $list                           = $oplist ? $oplist : $need_db -> where(array('op_id'=>$opid)) -> find();
-        $detail_db                      = $this->get_product_pro_need_tetail_db($list['kind']);
+        $detail_db                      = get_product_pro_need_tetail_db($list['kind']);
         $detail                         = $detail_db ? $detail_db->where(array('op_id'=>$opid))->find() : '';
 
         $this->opid                     = $opid;
@@ -1853,103 +1853,13 @@ class ProductController extends BaseController {
         $this->display('pro_need_detail');
     }
 
-    //获取产品方案需求详细信息数据表
-    private function get_product_pro_need_tetail_db($kind){
-        switch ($kind){
-            case 60: //60=>科学课程
-                $db         = M('product_pro_need_kxkc');
-                break;
-            case 82: //82=> 科学博物园
-                $db         = M('product_pro_need_kxbwy');
-                break;
-            case 54: //54=> 研学旅行
-                $db         = M('product_pro_need_yxlx');
-                break;
-            case 90: //90=> 背景提升
-                $db         = M('product_pro_need_bjts');
-                break;
-            case 67: //67=> 实验室建设
-                $db         = M('product_pro_need_sysjs');
-                break;
-            case 69: //69=> 科学快车
-                $db         = M('product_pro_need_bus');
-                break;
-            case 56: //56=> 校园科技节
-                $db         = M('product_pro_need_xykjj');
-                break;
-            case 61: //61=> 小课题
-                $db         = M('product_pro_need_xkt');
-                break;
-            case 87: //87=> 单进院所
-                $db         = M('product_pro_need_djys');
-                break;
-            case 64: //64=>专场讲座
-                $db         = M('product_pro_need_zcjz');
-                break;
-            case 57: //57=>综合实践
-                $db         = M('product_pro_need_zhsj');
-                break;
-            case 65: //65=>教师培训
-                $db         = M('product_pro_need_jspx');
-                break;
-            default:
-                $db         = '';
-        }
-        return $db;
-    }
-
-    //获取客户需求详情数据表
-    private function get_customer_need_tetail_db($kind){
-        switch ($kind){
-            case 60: //60=>科学课程
-                $db         = M('op_customer_need_kxkc');
-                break;
-            case 82: //82=> 科学博物园
-                $db         = M('op_customer_need_kxbwy');
-                break;
-            case 54: //54=> 研学旅行
-                $db         = M('op_customer_need_yxlx');
-                break;
-            case 90: //90=> 背景提升
-                $db         = M('op_customer_need_bjts');
-                break;
-            case 67: //67=> 实验室建设
-                $db         = M('op_customer_need_sysjs');
-                break;
-            case 69: //69=> 科学快车
-                $db         = M('op_customer_need_bus');
-                break;
-            case 56: //56=> 校园科技节
-                $db         = M('op_customer_need_xykjj');
-                break;
-            case 61: //61=> 小课题
-                $db         = M('op_customer_need_xkt');
-                break;
-            case 87: //87=> 单进院所
-                $db         = M('op_customer_need_djys');
-                break;
-            case 64: //64=>专场讲座
-                $db         = M('op_customer_need_zcjz');
-                break;
-            case 57: //57=>综合实践
-                $db         = M('op_customer_need_zhsj');
-                break;
-            case 65: //65=>教师培训
-                $db         = M('op_customer_need_jspx');
-                break;
-            default:
-                $db         = '';
-        }
-        return $db;
-    }
-
     public function del_pro_need(){
         $id                             = I('id');
         if (!$id){ $this->error('获取数据错误'); }
         $num                            = 0;
         $db                             = M('product_pro_need');
         $kind                           = $db->where(array('id'=>$id))->getField('kind');
-        $detail_db                      = $this->get_product_pro_need_tetail_db($kind);
+        $detail_db                      = get_product_pro_need_tetail_db($kind);
         $res1                           = $db->where(array('id'=>$id))->delete();
         $res2                           = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->delete() : '';
         if ($res1) $num++;
@@ -2049,12 +1959,11 @@ class ProductController extends BaseController {
         $opid                               = I('opid');
         if (!$opid) $this->error('数据错误');
         $oplist                             = M('op')->where(array('op_id'=>$opid))->find();
-        $customer_need_db                   = $this->get_customer_need_tetail_db($oplist['kind']);
+        $customer_need_db                   = get_customer_need_tetail_db($oplist['kind']);
         $customer_need_list                 = $customer_need_db ? $customer_need_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
-        $detail_db                          = $this->get_product_pro_need_tetail_db($oplist['kind']);
+        $detail_db                          = get_product_pro_need_tetail_db($oplist['kind']);
         $detail_list                        = $detail_db ? $detail_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
         $budget_list                        = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //审核通过的预算信息
-
 
         $this->budget_list                  = $budget_list;
         $this->need                         = $customer_need_list;

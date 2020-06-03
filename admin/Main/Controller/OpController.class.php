@@ -2787,6 +2787,31 @@ class OpController extends BaseController {
             $this->additive_con     = $additive_con;
             $this->businessDep      = C('DIJIE_NAME');
             $this->groups           = M('op_group')->where(array('op_id'=>$opid))->select();
+            $this->provinces        = M('provinces')->getField('id,name',true);
+            $this->departments      = M('salary_department')->getField('id,department',true);
+
+            /*********************客户需求详情 start***********************/
+            $customer_need_db                   = get_customer_need_tetail_db($op['kind']);
+            $customer_need_list                 = $customer_need_db ? $customer_need_db->where(array('op_id'=>$op['op_id']))->find() : '';
+            $detail_db                          = get_product_pro_need_tetail_db($op['kind']);
+            $detail_list                        = $detail_db ? $detail_db->where(array('op_id'=>$op['op_id']))->find() : '';
+            $budget_list                        = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //审核通过的预算信息
+            $this->budget_list                  = $budget_list;
+            $this->need                         = $customer_need_list;
+            $this->detail                       = $detail_list;
+            $apply_to                           = C('APPLY_TO');
+            $op['apply_to']                     = $apply_to[$op['apply_to']];
+            $departments                        = M('salary_department')->getField('id,department',true);
+            $kinds                              = M('project_kind')->getField('id,name',true);
+            $this->list                         = $op;
+            $this->audit_status                 = get_submit_audit_status();
+            $this->departments                  = $departments;
+            $this->kinds                        = $kinds;
+            $this->teacher_level                = C('TEACHER_LEVEL'); //教师级别
+            $this->expert_level                 = C('EXPERT_LEVEL'); //专家级别
+            $this->producted_list               = $op['producted_id'] ? M('producted')->find($op['producted_id']) : ''; //标准化产品
+            /**********************客户需求详情 end************************/
+
 
 			$this->display('confirm');
 		}

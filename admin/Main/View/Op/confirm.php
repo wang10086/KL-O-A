@@ -28,25 +28,40 @@
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="content">
-                                        <table width="100%" id="font-14" rules="none" border="0" cellpadding="0" cellspacing="0">
-                                        	<tr>
-                                            	<td colspan="3">项目名称：{$op.project}</td>
-                                            </tr>
-                                            <tr>
-                                            	<td width="33.33%">项目类型：<?php echo $kinds[$op['kind']]; ?></td>
-                                                <td width="33.33%">预计人数：{$op.number}人</td>
-                                                <td width="33.33%">预计出团日期：{$op.departure}</td>
-                                            </tr>
-                                            <tr>
-                                            	<td width="33.33%">预计行程天数：{$op.days}天</td>
-                                                <td width="33.33%">目的地：{$op.destination}</td>
-                                                <td width="33.33%">立项时间：{$op.op_create_date}</td>
-                                            </tr>
-                                        </table>
+
+                                        <include file="op_pro" />
+
                                     </div>
                                     
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
+
+                            <!--客户需求详情-->
+                            <?php if ($op['kind'] == 60){ ?> <!--60=>科学课程-->
+                                <include file="customer_need_60_read" />
+                            <?php }elseif ($op['kind'] == 82){ ?> <!--82=>科学博物园-->
+                                <include file="customer_need_82_read" />
+                            <?php }elseif ($op['kind'] == 54){ ?> <!--54=>研学旅行-->
+                                <include file="customer_need_54_read" />
+                            <?php }elseif ($op['kind'] == 90){ ?> <!--90=>背景提升-->
+                                <include file="customer_need_90_read" />
+                            <?php }elseif ($op['kind'] == 67){ ?> <!--67=>实验室建设-->
+                                <include file="customer_need_67_read" />
+                            <?php }elseif ($op['kind'] == 69){ ?> <!--69=>科学快车-->
+                                <include file="customer_need_69_read" />
+                            <?php }elseif ($op['kind'] == 56){ ?> <!--56=>校园科技节-->
+                                <include file="customer_need_56_read" />
+                            <?php }elseif ($op['kind'] == 61){ ?> <!--61=>小课题-->
+                                <include file="customer_need_61_read" />
+                            <?php }elseif ($op['kind'] == 87){ ?> <!--87=>单进院所-->
+                                <include file="customer_need_87_read" />
+                            <?php }elseif ($op['kind'] == 64){ ?> <!--64=>专场讲座-->
+                                <include file="customer_need_64_read" />
+                            <?php }elseif ($op['kind'] == 57){ ?> <!--57=>综合实践-->
+                                <include file="customer_need_57_read" />
+                            <?php }elseif ($op['kind'] == 65){ ?> <!--65=>教师培训-->
+                                <include file="customer_need_65_read" />
+                            <?php } ?>
                             
                             
                             <div class="box box-warning">
