@@ -1753,8 +1753,6 @@ class ProductController extends BaseController {
         $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
         $lists                          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
 
-        echo M()->getlastsql();
-
         $this->lists                    = $lists;
         $this->kinds                    = M('project_kind')->getField('id,name',true);
         $this->provinces                = M('provinces')->getField('id,name',true);
