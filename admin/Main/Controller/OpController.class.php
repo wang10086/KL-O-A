@@ -2642,6 +2642,10 @@ class OpController extends BaseController {
 			$info['user_name']		= cookie('nickname');
 			$info['dep_time']		= $info['dep_time'] ? strtotime($info['dep_time']) : 0;
 			$info['ret_time']		= $info['ret_time'] ? strtotime($info['ret_time']) : 0;
+			$info['contract_sign_time']		= $info['contract_sign_time'] ? strtotime($info['contract_sign_time']) : 0;
+			$info['contract_back_time']		= $info['contract_back_time'] ? strtotime($info['contract_back_time']) : 0;
+			$info['back_money_time']		= $info['back_money_time'] ? strtotime($info['back_money_time']) : 0;
+			$info['jiaowei_remark']         = trim($info['jiaowei_remark']);
 
             if (!$info['group_id']) $this->error('团号填写有误');
             if (!$info['dep_time'] || $info['dep_time']==0) $this->error('出团时间填写有误');

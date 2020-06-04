@@ -12,6 +12,15 @@
             <td width="33.33%">实际天数：{$confirm.days}</td>
             <td width="33.33%">是否拼团：<?php echo $op['add_group']==1 ? '拼团' : '不拼团'; ?></td>
         </tr>
+        <tr>
+            <td width="33.33%">合同签订完成时间：<if condition="$confirm['contract_sign_time']">{$confirm.contract_sign_time|date='Y-m-d',###}</if></td>
+            <td width="33.33%">合同签订完成时间：<if condition="$confirm['contract_back_time']">{$confirm.contract_back_time|date='Y-m-d',###}</if></td>
+            <td width="33.33%">合同签订完成时间：<if condition="$confirm['back_money_time']">{$confirm.back_money_time|date='Y-m-d',###}</if></td>
+        </tr>
+        <tr>
+            <td width="33.33%">是否需要教委外出审批材料：{$confirm['jiaowei']==1 ? '是' : '否'}</td>
+            <td colspan="2">教委外出审批材料及时间节点：{$confirm.jiaowei_remark}</td>
+        </tr>
     </table>
 
     <?php if ($op['add_group']==1){ ?>

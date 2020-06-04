@@ -22,7 +22,9 @@
 
                             <div class="box box-warning mt20">
                                 <div class="box-header">
-                                    <h3 class="box-title">基本信息</h3>
+                                    <h3 class="box-title">基本信息
+                                        <?php echo $list['group_id'] ? "<span style='font-weight:normal; color:#ff3300;'>（团号：".$list['group_id']."）</span>" : ' <span style=" color:#999999;">(该项目暂未成团)</span>'; ?>
+                                    </h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                         <span class="green">项目编号：{$list.op_id}</span> &nbsp;&nbsp;创建者：{$list.create_user_name}
                                     </h3>

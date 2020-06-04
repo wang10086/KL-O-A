@@ -11,7 +11,7 @@
 <div class="content" style="padding-bottom:20px;">
 
     <div style="width:100%; float:left;">
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-4">
             <label>项目团号：</label>
             <input type="text" name="info[group_id]"  class="form-control" onblur="check_group_id()" value="<?php if($confirm['group_id']){ echo $confirm['group_id'];}else{ echo $op['group_id'];} ?>" required />
         </div>
@@ -37,6 +37,32 @@
         <div class="form-group col-md-4">
             <label>实际天数：</label>
             <input type="text" name="info[days]"  class="form-control" value="{$confirm.days}" required />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>合同签订完成时间：</label>
+            <input type="text" name="info[contract_sign_time]" class="form-control inputdate" value="<if condition="$confirm['contract_sign_time']">{$confirm.contract_sign_time|date='Y-m-d',###}</if>" required />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>合同收回时间：</label>
+            <input type="text" name="info[contract_back_time]" class="form-control inputdate" value="<if condition="$confirm['contract_back_time']">{$confirm.contract_back_time|date='Y-m-d',###}</if>" required />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>回款时间：</label>
+            <input type="text" name="info[back_money_time]"  class="form-control inputdate" value="<if condition="$confirm['back_money_time']">{$confirm.back_money_time|date='Y-m-d',###}</if>" required />
+        </div>
+
+        <div class="form-group col-md-4">
+            <p><label>是否需要教委外出审批材料：</label></p>
+            <input type="radio" name="info[jiaowei]" value="1" <?php if ($confirm['jiaowei'] == 1) echo "checked"; ?>> &#8194;需要 &#12288;
+            <input type="radio" name="info[jiaowei]" value="0" <?php if ($confirm['jiaowei'] == 0) echo "checked"; ?>> &#8194;不需要
+        </div>
+
+        <div class="form-group col-md-4">
+            <label>教委外出审批材料及时间节点：</label>
+            <input type="text" name="info[jiaowei_remark]"  class="form-control" value="{$confirm.jiaowei_remark}" />
         </div>
 
         <div class="form-group col-md-4">
