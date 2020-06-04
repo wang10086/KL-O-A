@@ -209,19 +209,19 @@
                             <option value="2" <?php if ($need ? ($need['star']==2) : ($detail['star']==2)) echo 'selected'; ?>>二星级</option>
                             <option value="1" <?php if ($need ? ($need['star']==1) : ($detail['star']==1)) echo 'selected'; ?>>一星级</option>
                         </select> &emsp;&emsp;
-                        预算价格：<input type="text" name="data[stay_price]" value="{$need ? $need['stay_price'] : $detail['stay_price']} {$detail['']}" style="border: none; border-bottom: solid 1px; width: 100px;" > &#12288;&#12288;
-                        房间数：<input type="text" name="data[house_num]" value="{$need ? $need['house_num'] : $detail['house_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; width: 100px;" > &#12288;&#12288;
-                        要求：<input type="text" name="data[house_condition]" value="{$need ? $need['house_condition'] : $detail['house_condition']} {$detail['']}" style="border: none; border-bottom: solid 1px; width: 120px;" > &#12288;&#12288;
+                        预算价格：<input type="text" name="data[stay_price]" value="{$need ? $need['stay_price'] : $detail['stay_price']}" style="border: none; border-bottom: solid 1px; width: 100px;" > &#12288;&#12288;
+                        房间数：<input type="text" name="data[house_num]" value="{$need ? $need['house_num'] : $detail['house_num']}" style="border: none; border-bottom: solid 1px; width: 100px;" > &#12288;&#12288;
+                        要求：<input type="text" name="data[house_condition]" value="{$need ? $need['house_condition'] : $detail['house_condition']}" style="border: none; border-bottom: solid 1px; width: 120px;" > &#12288;&#12288;
                     </div>
                 </div>
 
                 <div class="form-group col-md-12" style="overflow: hidden;">
                     <label style="float: left; width: 80px;">餐食</label>
                     <div style="width: 70%; float: left;">
-                        早餐数：<input type="text" name="data[breakfast_num]" value="{$need ? $need['breakfast_num'] : $detail['breakfast_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; width: 60px;" > &#12288;&#12288;
-                        正餐数：<input type="text" name="data[dinner_num]" value="{$need ? $need['dinner_num'] : $detail['dinner_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; width: 60px;" > &#12288;&#12288;
-                        餐标：<input type="text" name="data[dinner_price]" value="{$need ? $need['dinner_price'] : $detail['dinner_price']} {$detail['']}" style="border: none; border-bottom: solid 1px; width: 125px;" > &#12288;&#12288;
-                        要求：<input type="text" name="data[dinner_condition]" value="{$need ? $need['dinner_condition'] : $detail['dinner_condition']} {$detail['']}" style="border: none; border-bottom: solid 1px; width: 140px;" > &#12288;&#12288;
+                        早餐数：<input type="text" name="data[breakfast_num]" value="{$need ? $need['breakfast_num'] : $detail['breakfast_num']}" style="border: none; border-bottom: solid 1px; width: 60px;" > &#12288;&#12288;
+                        正餐数：<input type="text" name="data[dinner_num]" value="{$need ? $need['dinner_num'] : $detail['dinner_num']}" style="border: none; border-bottom: solid 1px; width: 60px;" > &#12288;&#12288;
+                        餐标：<input type="text" name="data[dinner_price]" value="{$need ? $need['dinner_price'] : $detail['dinner_price']}" style="border: none; border-bottom: solid 1px; width: 125px;" > &#12288;&#12288;
+                        要求：<input type="text" name="data[dinner_condition]" value="{$need ? $need['dinner_condition'] : $detail['dinner_condition']}" style="border: none; border-bottom: solid 1px; width: 140px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -232,8 +232,8 @@
                         <input type="radio" name="data[is_need_train_meal]" value="0" <?php if ($need ? ($need['is_need_train_meal']==0) : ($detail['is_need_train_meal'] == 0)) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="width: 70%; float: left;">
-                        数量：<input type="text" name="data[train_meal_num]" value="{$need ? $need['train_meal_num'] : $detail['train_meal_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        价格：<input type="text" name="data[train_meal_price]" value="{$need ? $need['train_meal_price'] : $detail['train_meal_price']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        数量：<input type="text" name="data[train_meal_num]" value="{$need ? $need['train_meal_num'] : $detail['train_meal_num']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        价格：<input type="text" name="data[train_meal_price]" value="{$need ? $need['train_meal_price'] : $detail['train_meal_price']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -244,9 +244,9 @@
                         <input type="radio" name="data[is_need_transfer]" value="0" <?php if ($need ? ($need['is_need_transfer']==0) : ($detail['is_need_transfer'] == 0)) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="width: 70%; float: left;">
-                        数量：<input type="text" name="data[transfer_num]" value="{$need ? $need['transfer_num'] : $detail['transfer_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        几座车：<input type="text" name="data[transfer_seat]" value="{$need ? $need['transfer_seat'] : $detail['transfer_seat']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
-                        要求：<input type="text" name="data[transfer_condition]" value="{$need ? $need['transfer_condition'] : $detail['transfer_condition']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        数量：<input type="text" name="data[transfer_num]" value="{$need ? $need['transfer_num'] : $detail['transfer_num']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        几座车：<input type="text" name="data[transfer_seat]" value="{$need ? $need['transfer_seat'] : $detail['transfer_seat']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
+                        要求：<input type="text" name="data[transfer_condition]" value="{$need ? $need['transfer_condition'] : $detail['transfer_condition']}" style="border: none; border-bottom: solid 1px; min-width: 160px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -257,9 +257,9 @@
                         <input type="radio" name="data[is_need_bus]" value="0" <?php if ($need ? ($need['is_need_bus']==0) : ($detail['is_need_bus'] == 0)) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="width: 70%; float: left;">
-                        数量：<input type="text" name="data[bus_num]" value="{$need ? $need['bus_num'] : $detail['bus_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
-                        几座车：<input type="text" name="data[bus_seat]" value="{$need ? $need['bus_seat'] : $detail['bus_seat']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
-                        要求：<input type="text" name="data[bus_condition]" value="{$need ? $need['bus_condition'] : $detail['bus_condition']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 200px;" > &#12288;&#12288;
+                        数量：<input type="text" name="data[bus_num]" value="{$need ? $need['bus_num'] : $detail['bus_num']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        几座车：<input type="text" name="data[bus_seat]" value="{$need ? $need['bus_seat'] : $detail['bus_seat']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        要求：<input type="text" name="data[bus_condition]" value="{$need ? $need['bus_condition'] : $detail['bus_condition']}" style="border: none; border-bottom: solid 1px; min-width: 200px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -270,9 +270,9 @@
                         <input type="radio" name="data[is_need_guider]" value="0" <?php if ($need ? ($need['is_need_guider']==0) : ($detail['is_need_guider'] == 0)) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="width: 70%; float: left;">
-                        数量：<input type="text" name="data[guider_num]" value="{$need ? $need['guider_num'] : $detail['guider_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
-                        要求：<input type="text" name="data[guider_condition]" value="{$need ? $need['guider_condition'] : $detail['guider_condition']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 200px;" > &#12288;&#12288;
-                        性别：<input type="text" name="data[guider_sex]" value="{$need ? $need['guider_sex'] : $detail['guider_sex']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        数量：<input type="text" name="data[guider_num]" value="{$need ? $need['guider_num'] : $detail['guider_num']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        要求：<input type="text" name="data[guider_condition]" value="{$need ? $need['guider_condition'] : $detail['guider_condition']}" style="border: none; border-bottom: solid 1px; min-width: 200px;" > &#12288;&#12288;
+                        性别：<input type="text" name="data[guider_sex]" value="{$need ? $need['guider_sex'] : $detail['guider_sex']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -292,7 +292,7 @@
                         <input type="radio" name="data[is_need_relation]" value="0" <?php if ($need ? ($need['is_need_relation']==0) : ($detail['is_need_relation'] == 0)) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="float: left;">
-                        金额：<input type="text" name="data[relation_price]" value="{$need ? $need['relation_price'] : $detail['relation_price']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        金额：<input type="text" name="data[relation_price]" value="{$need ? $need['relation_price'] : $detail['relation_price']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -303,7 +303,7 @@
                         <input type="radio" name="data[is_need_banner]" value="0" <?php if ($need ? ($need['is_need_banner']==0) : ($detail['is_need_banner'] == 0)) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="float: left;">
-                        数量：<input type="text" name="data[banner_num]" value="{$need ? $need['banner_num'] : $detail['banner_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        数量：<input type="text" name="data[banner_num]" value="{$need ? $need['banner_num'] : $detail['banner_num']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
                     </div>
                 </div>
 
@@ -314,25 +314,25 @@
                         <input type="radio" name="data[is_need_flag]" value="0" <?php if ($need ? ($need['is_need_flag']==0) : ($detail['is_need_flag'] == 0)) echo "checked"; ?>> &#8194;否
                     </div>
                     <div style="float: left;">
-                        数量：<input type="text" name="data[flag_num]" value="{$need ? $need['flag_num'] : $detail['flag_num']} {$detail['']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
+                        数量：<input type="text" name="data[flag_num]" value="{$need ? $need['flag_num'] : $detail['flag_num']}" style="border: none; border-bottom: solid 1px; min-width: 100px;" > &#12288;&#12288;
                     </div>
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label>其他计调物资需求 <font color="#999">(矿泉水、耳机、营服、营帽、医药箱、证书、手册、行李帖等)</font></label><input type="text" name="data[other_jd_condition]"  value="{$need ? $need['aaaa'] : $detail['aaaa']} {$detail['other_jd_condition']}" class="form-control" />
+                    <label>其他计调物资需求 <font color="#999">(矿泉水、耳机、营服、营帽、医药箱、证书、手册、行李帖等)</font></label><input type="text" name="data[other_jd_condition]"  value="{$need ? $need['other_jd_condition'] : $detail['other_jd_condition']}" class="form-control" />
                 </div>
 
                 <P class="border-bottom-line"> 市场设计需求</P>
                 <div class="form-group col-md-12" style="overflow: hidden;">
                     <label style="float: left; width: 100px;">培训手册</label>
                     <div style="width: 70%; float: left;">
-                        页数：<input type="text" name="data[page_num]" value="{$need ? $need['aaaa'] : $detail['aaaa']} {$detail['page_num']}" style="border: none; border-bottom: solid 1px; width: 150px;" > &#12288;&#12288;
-                        设计要求：<input type="text" name="data[manual_condition]" value="{$need ? $need['aaaa'] : $detail['aaaa']} {$detail['manual_condition']}" style="border: none; border-bottom: solid 1px; width: 300px;" > &#12288;&#12288;
+                        页数：<input type="text" name="data[page_num]" value="{$need ? $need['page_num'] : $detail['page_num']}" style="border: none; border-bottom: solid 1px; width: 150px;" > &#12288;&#12288;
+                        设计要求：<input type="text" name="data[manual_condition]" value="{$need ? $need['manual_condition'] : $detail['manual_condition']}" style="border: none; border-bottom: solid 1px; width: 300px;" > &#12288;&#12288;
                     </div>
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label>其他设计需求</label><input type="text" name="data[other_sj_condition]"  value="{$need ? $need['aaaa'] : $detail['aaaa']} {$detail['other_sj_condition']}" class="form-control" />
+                    <label>其他设计需求</label><input type="text" name="data[other_sj_condition]"  value="{$need ? $need['other_sj_condition'] : $detail['other_sj_condition']}" class="form-control" />
                 </div>
             </form>
 
