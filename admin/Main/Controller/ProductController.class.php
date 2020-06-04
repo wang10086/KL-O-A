@@ -2276,9 +2276,8 @@ class ProductController extends BaseController {
                 $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
-            /****************************/
             //保存客户需求详情  单进院所
-            if ($savetype == 16){
+            if ($savetype == 9){
                 $detail_db                      = M('op_customer_need_djys'); //单进院所详情表
                 $id                             = I('id');
                 $opid                           = I('opid');
@@ -2304,6 +2303,9 @@ class ProductController extends BaseController {
                 op_record($record);
                 $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
+
+            /****************************/
+
 
             //保存客户需求详情  专场讲座
             if ($savetype == 17){

@@ -100,7 +100,7 @@
 
                             <?PHP echo $list['kind']; ?>
 
-                            <?php if (!$budget_list && in_array(cookie('userid'),array(10,$list['create_user'],$list['line_blame_uid']))){ ?>
+                            <?php if (!$budget_list && in_array(cookie('userid'),array(1,10,$list['create_user'],$list['line_blame_uid']))){ ?>
                                 <?php if ($list['kind'] == 60){ ?> <!--60=>科学课程-->
                                     <include file="customer_need_60_edit" />
                                 <?php }elseif ($list['kind'] == 82){ ?> <!--82=>科学博物园-->
