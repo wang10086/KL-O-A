@@ -1990,6 +1990,7 @@ class ProductController extends BaseController {
         $this->detail_expert_level          = $customer_need_list ? explode(',',$customer_need_list['expert_level']) : ($detail_list ? explode(',',$detail_list['expert_level']) : '');
         $this->selfOpNeeds                  = $customer_need_list ? explode(',',$customer_need_list['selfOpNeed']) : ($detail_list['selfOpNeed'] ? explode(',',$detail_list['selfOpNeed']) : '');
         $this->addOpNeeds                   = $customer_need_list ? explode(',',$customer_need_list['addOpNeed']) : ($detail_list['addOpNeed'] ? explode(',',$detail_list['addOpNeed']) : '');
+        $this->yards                        = $customer_need_list ? explode(',',$customer_need_list['yard']) : ($detail_list['yard'] ? explode(',',$detail_list['yard']) : '');
 
         //$this->provinces                = M('provinces')->getField('id,name',true);
         //$geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
@@ -2204,7 +2205,7 @@ class ProductController extends BaseController {
 
             /****************************/
             //保存客户需求详情  校园科技节
-            if ($savetype == 14){
+            if ($savetype == 7){
                 $detail_db                      = M('op_customer_need_xykjj'); //校园科技节详情表
                 $id                             = I('id');
                 $opid                           = I('opid');
