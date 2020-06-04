@@ -1958,7 +1958,7 @@ class ProductController extends BaseController {
     }
 
     //客户需求详情
-    public function customer_need(){
+    public function public_customer_need(){
         $this->title('客户需求详情');
         $this->fa                           = I('fa',1);
         $opid                               = I('opid');
@@ -1991,18 +1991,6 @@ class ProductController extends BaseController {
         $this->selfOpNeeds                  = $customer_need_list ? explode(',',$customer_need_list['selfOpNeed']) : ($detail_list['selfOpNeed'] ? explode(',',$detail_list['selfOpNeed']) : '');
         $this->addOpNeeds                   = $customer_need_list ? explode(',',$customer_need_list['addOpNeed']) : ($detail_list['addOpNeed'] ? explode(',',$detail_list['addOpNeed']) : '');
         $this->yards                        = $customer_need_list ? explode(',',$customer_need_list['yard']) : ($detail_list['yard'] ? explode(',',$detail_list['yard']) : '');
-
-        //$this->provinces                = M('provinces')->getField('id,name',true);
-        //$geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
-        //$this->geclist                  = $geclist;
-        //$this->geclist_str              = json_encode($geclist,true);
-        //$this->kinds                    = get_project_kinds();
-        /*$this->apply_to                 = C('APPLY_TO');
-        //$this->dijie_data               = get_dijie_department_data();
-        $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
-        $this->expert_level             = C('EXPERT_LEVEL'); //专家级别*/
-        //$this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
-        //$this->departments              =  M('salary_department')->getField('id,department',true);
 
         $this->display('customer_need');
     }
@@ -2039,7 +2027,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情   科学博物园
@@ -2078,7 +2066,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情   研学旅行
@@ -2109,7 +2097,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情   背景提升
@@ -2137,7 +2125,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情  实验室建设
@@ -2165,7 +2153,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情  科学快车
@@ -2200,7 +2188,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情  校园科技节
@@ -2237,7 +2225,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情  小课题
@@ -2273,7 +2261,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情  单进院所
@@ -2301,7 +2289,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情  专场讲座
@@ -2333,16 +2321,11 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
-            /****************************/
-
-
-
-
             //保存客户需求详情  综合实践
-            if ($savetype == 18){
+            if ($savetype == 11){
                 $detail_db                      = M('op_customer_need_zhsj'); //综合实践详情表
                 $id                             = I('id');
                 $opid                           = I('opid');
@@ -2366,11 +2349,11 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
             //保存客户需求详情  教师培训
-            if ($savetype == 19){
+            if ($savetype == 12){
                 $detail_db                      = M('op_customer_need_jspx'); //研学旅行详情表
                 $id                             = I('id');
                 $opid                           = I('opid');
@@ -2398,7 +2381,7 @@ class ProductController extends BaseController {
                 $record['optype']               = 1;
                 $record['explain']              = $record_msg;
                 op_record($record);
-                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+                $res ? $this->success('数据保存成功',U('Product/public_customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
         }
     }

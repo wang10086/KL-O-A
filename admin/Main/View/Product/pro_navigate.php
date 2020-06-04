@@ -7,6 +7,6 @@
 <?php } ?>
     <a href="{:U('Op/plans_follow',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='plans_follow'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">项目方案跟进</a>
     <a href="{:U('Product/public_scheme',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='public_scheme'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">产品实施方案</a>
-    <a href="{:U('Product/customer_need',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='customer_need'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">客户需求详情</a>
+    <a href="{:U('Product/public_customer_need',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='public_customer_need'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">客户需求详情</a>
     <a href="javascript:;" class="btn <?php if(ACTION_NAME==''){ echo 'btn-info';}else{ echo 'btn-default';} ?>">业务实施方案</a>
 </div>
