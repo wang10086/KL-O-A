@@ -1988,6 +1988,8 @@ class ProductController extends BaseController {
         $this->producted_list               = $oplist['producted_id'] ? M('producted')->find($oplist['producted_id']) : ''; //标准化产品
         $this->fa                           = I('fa',1); //导航栏,项目方案跟进
         $this->detail_expert_level          = $customer_need_list ? explode(',',$customer_need_list['expert_level']) : ($detail_list ? explode(',',$detail_list['expert_level']) : '');
+        $this->selfOpNeeds                  = $customer_need_list ? explode(',',$customer_need_list['selfOpNeed']) : ($detail_list['selfOpNeed'] ? explode(',',$detail_list['selfOpNeed']) : '');
+        $this->addOpNeeds                   = $customer_need_list ? explode(',',$customer_need_list['addOpNeed']) : ($detail_list['addOpNeed'] ? explode(',',$detail_list['addOpNeed']) : '');
 
         //$this->provinces                = M('provinces')->getField('id,name',true);
         //$geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
