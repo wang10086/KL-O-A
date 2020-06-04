@@ -7,7 +7,7 @@
             <div class="form-group col-md-12">
                 <P class="border-bottom-line"> 研发方案需求</P>
                 <div class="form-group col-md-4">
-                    <label>培训时间： <?php echo $detail['st_time'] ? date('Y-m-d', $detail['st_time']) : ''; ?> - <?php echo $detail['et_time'] ? date('Y-m-d', $detail['et_time']) : ''; ?></label>
+                    <label>培训时间： <?php echo $need['st_time'] ? date('Y-m-d',$need['st_time']).' - '.date('Y-m-d',$need['et_time']) : ($detail['st_time'] ? date('Y-m-d',$detail['st_time']).' - '.date('Y-m-d',$detail['et_time']) : ''); ?></label>
                 </div>
 
                 <div class="form-group col-md-4">
