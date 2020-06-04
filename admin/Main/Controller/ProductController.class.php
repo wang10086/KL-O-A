@@ -1740,13 +1740,20 @@ class ProductController extends BaseController {
         $this->title('产品方案需求');
         $db                             = M('op');
         $title                          = trim(I('title'));
-        $where                          = array();
-        $where['id']                    = array('gt',3604);
-        if ($title) $where['project']   = array('like','%'.$title.'%');
+        $where                          = '';
+        $where                          .= "id > 3604 ";
+        if ($title){
+            $where                      .= " AND project LIKE '%".$title."%' ";
+            $where                      .= " AND project not LIKE '%【拼团】%' ";
+        }else{
+            $where                      .= " AND project not LIKE '%【拼团】%' ";
+        }
         $pagecount                      = $db->where($where)->count();
         $page                           = new Page($pagecount,P::PAGE_SIZE);
         $this->pages                    = $pagecount>P::PAGE_SIZE ? $page->show():'';
         $lists                          = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+
+        echo M()->getlastsql();
 
         $this->lists                    = $lists;
         $this->kinds                    = M('project_kind')->getField('id,name',true);
@@ -2132,7 +2139,7 @@ class ProductController extends BaseController {
                 $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
             }
 
-            //保存实验室建设需求详情
+            //保存客户需求详情  实验室建设
             if ($savetype == 5){
                 $detail_db                      = M('op_customer_need_sysjs'); //实验室建设详情表
                 $id                             = I('id');
@@ -2145,6 +2152,235 @@ class ProductController extends BaseController {
                 $data['content']                = trim($data['content']);
                 $data['other_condition']        = trim($data['other_condition']);
                 $data['op_id']                  = $opid;
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情  科学快车
+            if ($savetype == 6){
+                $detail_db                      = M('op_customer_need_bus'); //科学快车详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $selfOpNeed                     = I('selfOpNeed');
+                $addOpNeed                      = I('addOpNeed');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['title']                  = trim($data['title']);
+                $data['company']                = trim($data['company']);
+                $data['company1']               = trim($data['company1']);
+                $data['time']                   = trim($data['time']);
+                $data['addr']                   = trim($data['addr']);
+                $data['area']                   = trim($data['area']);
+                $data['post']                   = trim($data['post']);
+                $data['content']                = trim($data['content']);
+                $data['selfOpNeed']             = implode(',',$selfOpNeed);
+                $data['addOpNeed']              = implode(',',$addOpNeed);
+                $data['op_id']                  = $opid;
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            /****************************/
+            //保存客户需求详情  校园科技节
+            if ($savetype == 14){
+                $detail_db                      = M('op_customer_need_xykjj'); //校园科技节详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $in_time                        = I('in_time');
+                $yard                           = I('yard');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['addr']                   = trim($data['addr']);
+                $data['yard_more']              = trim($data['yard_more']);
+                $data['content']                = trim($data['content']);
+                $data['gift_condition']         = trim($data['gift_condition']);
+                $data['other_yf_condition']     = trim($data['other_yf_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['yard']                   = implode(',',$yard);
+                $data['op_id']                  = $opid;
+                $data['time']                   = strtotime($data['time']);
+                $data['st_time']                = strtotime(substr($in_time,0,8));
+                $data['et_time']                = strtotime(substr($in_time,-8));
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情  小课题
+            if ($savetype == 15){
+                $detail_db                      = M('op_customer_need_xkt'); //校园科技节详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $pro_type                       = I('pro_type');
+                $pro_addr                       = I('pro_addr');
+                $expert_level                   = I('expert_level');
+                $resulted                       = I('resulted');
+                $match                          = I('match');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['customer']               = trim($data['customer']);
+                $data['other_condition']        = trim($data['other_condition']);
+                $data['in_time']                = trim($data['in_time']);
+                $data['pro_type']               = implode(',',$pro_type);
+                $data['pro_addr']               = implode(',',$pro_addr);
+                $data['expert_level']           = implode(',',$expert_level);
+                $data['resulted']               = implode(',',$resulted);
+                $data['match']                  = implode(',',$match);
+                $data['op_id']                  = $opid;
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情  单进院所
+            if ($savetype == 16){
+                $detail_db                      = M('op_customer_need_djys'); //单进院所详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                if (!$opid){ $this->error('数据错误'); }
+                $data['institutes']             = trim($data['institutes']);
+                $data['content']                = trim($data['content']);
+                $data['long']                   = trim($data['long']);
+                $data['other_condition']        = trim($data['other_condition']);
+                $data['time']                   = strtotime($data['time']);
+                $data['op_id']                  = $opid;
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情  专场讲座
+            if ($savetype == 17){
+                $detail_db                      = M('op_customer_need_zcjz'); //专场讲座详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $expert_level                   = I('expert_level');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['addr']                   = trim($data['addr']);
+                $data['equipment']              = trim($data['equipment']);
+                $data['field']                  = trim($data['field']);
+                $data['expert_type']            = trim($data['expert_type']);
+                $data['type']                   = trim($data['type']);
+                $data['other_condition']        = trim($data['other_condition']);
+                $data['expert_level']           = implode(',',$expert_level);
+                $data['time']                   = strtotime($data['time']);
+                $data['op_id']                  = $opid;
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情  综合实践
+            if ($savetype == 18){
+                $detail_db                      = M('op_customer_need_zhsj'); //综合实践详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                if (!$opid){ $this->error('数据错误'); }
+                $data['other_yf_condition']     = trim($data['other_yf_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['op_id']                  = $opid;
+                $data['time']                   = strtotime($data['time']);
+                if ($id){
+                    $res                        = $detail_db->where(array('id'=>$id))->save($data);
+                    $record_msg                 = '编辑客户需求详情';
+                }else{
+                    $res                        = $detail_db->add($data);
+                    $record_msg                 = '添加客户需求详情';
+                }
+                $record                         = array();
+                $record['op_id']                = $opid;
+                $record['optype']               = 1;
+                $record['explain']              = $record_msg;
+                op_record($record);
+                $res ? $this->success('数据保存成功',U('Product/customer_need',array('opid'=>$opid))) : $this->error('数据保存失败');
+            }
+
+            //保存客户需求详情  教师培训
+            if ($savetype == 19){
+                $detail_db                      = M('op_customer_need_jspx'); //研学旅行详情表
+                $id                             = I('id');
+                $opid                           = I('opid');
+                $data                           = I('data'); //详情
+                $in_time                        = I('in_time');
+                if (!$opid){ $this->error('数据错误'); }
+                $data['other_line_condition']   = trim($data['other_line_condition']);
+                $data['other_zy_condition']     = trim($data['other_zy_condition']);
+                $data['other_jd_condition']     = trim($data['other_jd_condition']);
+                $data['other_sj_condition']     = trim($data['other_sj_condition']);
+                $data['op_id']                  = $opid;
+                $data['lecture_time']           = strtotime($data['lecture_time']);
+                $data['leader_time']            = strtotime($data['leader_time']);
+                $data['st_time']                = strtotime(substr($in_time,0,10));
+                $data['et_time']                = strtotime(substr($in_time,-10));
                 if ($id){
                     $res                        = $detail_db->where(array('id'=>$id))->save($data);
                     $record_msg                 = '编辑客户需求详情';
