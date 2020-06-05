@@ -30,7 +30,7 @@
                                 <div class="box-body">
                                     <div class="content">
 
-                                        <?php if ((1 == 1 && in_array(cookie('userid'), array(1,11,$list['create_user'])))){ ?>
+                                        <?php if (!$budget_list && in_array(cookie('userid'), array(1,11,$list['create_user']))){ ?>
                                             <include file="Product:pro_need_base_edit" />
                                         <?php }else{ ?>
                                             <include file="Product:pro_need_base_read" />

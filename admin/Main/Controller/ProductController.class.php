@@ -1765,21 +1765,6 @@ class ProductController extends BaseController {
     public function public_pro_need_add(){
         $this->title('产品方案需求');
         $PinYin                         = new Pinyin();
-        //$id                             = I('id');
-        /*if ($id){
-            $db                         = M('op');
-            $list                       = $db -> find($id);
-            $this->list                 = $list;
-            $detail_db                  = get_product_pro_need_tetail_db($list['kind']);
-            $detail                     = $detail_db ? $detail_db->where(array('product_pro_need_id'=>$id))->find() : '';
-            $this->detail               = $detail;
-            $this->yard_arr             = $detail['yard'] ? explode(',',$detail['yard']) : '';
-            $this->detail_expert_level  = $detail['expert_level'] ? explode(',',$detail['expert_level']) : '';
-            $this->selfOpNeeds          = $detail['selfOpNeed'] ? explode(',',$detail['selfOpNeed']) : '';
-            $this->addOpNeeds           = $detail['addOpNeed'] ? explode(',',$detail['addOpNeed']) : '';
-            $this->yards                = $detail['yard'] ? explode(',',$detail['yard']) : '';
-        }*/
-
         $this->provinces                = M('provinces')->getField('id,name',true);
         $geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
         $this->geclist                  = $geclist;
@@ -1789,7 +1774,6 @@ class ProductController extends BaseController {
         $this->dijie_data               = get_dijie_department_data();
         $this->teacher_level            = C('TEACHER_LEVEL'); //教师级别
         $this->expert_level             = C('EXPERT_LEVEL'); //专家级别
-        $this->producted_list           = $list['producted_id'] ? M('producted')->find($list['producted_id']) : ''; //标准化产品
         $this->departments              =  M('salary_department')->getField('id,department',true);
         $this->fa                       = I('fa',1);
         $this->display('pro_need_add');
@@ -1856,6 +1840,7 @@ class ProductController extends BaseController {
         $this->op_process               = C('OP_PROCESS'); //方案进程
         $this->fa                       = I('fa',1); //导航栏,项目方案跟进
         //编辑
+        $this->budget_list              = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //审核通过的预算信息
         $PinYin                         = new Pinyin();
         $geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
         $this->geclist                  = $geclist;
