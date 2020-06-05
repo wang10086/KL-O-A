@@ -1,6 +1,7 @@
 <?php
 namespace Main\Controller;
 use FontLib\Table\Type\post;
+use phpDocumentor\Reflection\Types\Array_;
 use Sys\P;
 
 ulib('Page');
@@ -2621,14 +2622,14 @@ class OpController extends BaseController {
         $upd_num                    = $confirm['upd_num'];
 
 		if(isset($_POST['dosubmit']) && $_POST['dosubmit']){
-
 			$info	                = I('info');
 			$add_group              = I('add_group',0); //拼团
             $group                  = I('group');
             $resid                  = I('resid','');
             $num                    = 0;
 
-            if($add_group == 1 && !$group){ $this->error('拼团信息填写有误'); }
+            if($add_group == 1 && !$group){$this->error('拼团信息填写有误'); }
+
 			//判断团号是否可用
 			$where                  = array();
 			$where['group_id']	    = $info['group_id'];
@@ -2677,7 +2678,27 @@ class OpController extends BaseController {
                 $info['confirm_time']   = time();
                 $res                    = M('op_team_confirm')->add($info);
                 if ($res) $num++;
-			}
+
+                //成团确认后可以共享给线控负责人(提醒),业务部门经理和接待实施部门经理(未读)，并设置时间节点的考核；(流程->待办事宜)
+                $returnMsgDepartmentIds = array_unique(array($op['create_user_department_id'],$op['dijie_department_id']));
+                $uids                   = M('salary_department')->where(array('id'=>array('in',$returnMsgDepartmentIds)))->getField('manager_id',true);
+                $process_node           = 49; //填写成团信息
+                $title                  = $op['project'];
+                $req_id                 = $op['id'];
+
+                foreach ($uids as $v){ //发送给业务部门经理和接待实施部门经理
+                    $pro_status         = 1; //未读
+                    $to_uid             = $v;
+                    $to_uname           = username($v);
+                    save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+                }
+
+                //发送给线控部门负责人
+                $pro_status             = 2; //事前提醒
+                $to_uid                 = $op['line_blame_uid'];
+                $to_uname               = $op['line_blame_name'];
+                save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+            }
 
 			if ($num) {
                 $this->save_add_group($opid,$resid,$group); //保存拼团信息
