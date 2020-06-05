@@ -54,7 +54,7 @@
                                             <select  class="form-control"  name="info[apply_to]" required>
                                                 <option value="" selected disabled>请选择适合人群</option>
                                                 <foreach name="apply_to" key="k" item="v">
-                                                    <option value="{$k}" <?php if ($row && ($k == $row['grade'])) echo ' selected'; ?> >{$v}</option>
+                                                    <option value="{$k}" <?php if ($list && ($k == $list['apply_to'])) echo ' selected'; ?> >{$v}</option>
                                                 </foreach>
                                             </select>
                                         </div>

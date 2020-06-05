@@ -1855,6 +1855,13 @@ class ProductController extends BaseController {
         $this->yards                    = $detail['yard'] ? explode(',',$detail['yard']) : '';
         $this->op_process               = C('OP_PROCESS'); //方案进程
         $this->fa                       = I('fa',1); //导航栏,项目方案跟进
+        //编辑
+        $PinYin                         = new Pinyin();
+        $geclist                        = get_customerlist(1,$PinYin); //客户名称关键字
+        $this->geclist                  = $geclist;
+        $this->geclist_str              = json_encode($geclist,true);
+        $this->departments              =  M('salary_department')->getField('id,department',true);
+        $this->dijie_data               = get_dijie_department_data();
         $this->display('pro_need_detail');
     }
 
