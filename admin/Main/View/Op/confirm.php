@@ -94,6 +94,24 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
+                                    <h3 class="box-title">客户需求变更</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">审核状态: <?php echo $cneed_edit['audit_status']==1 ? "<span class='green'>审核通过</span>" : ($cneed_edit['audit_status']==2 ? "<span class='red'>审核未通过</span>" : "未审核") ?></h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <?php if(!$jiesuan && ((NOW_TIME + 2*24*3600) < $confirm['dep_time']) && in_array(cookie('userid'),array(1,11,$op['create_user']))){ ?>
+                                        <include file="customer_need_table_edit" />
+                                    <?php }else{ ?>
+                                        <?php if ($cneed_edit){ ?>
+                                            <include file="customer_need_table_read" />
+                                        <?php }else{ ?>
+                                            <div class="content"> 距离实际出发时间已不足2天,客户需求信息不可更改!</div>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+                            <div class="box box-warning">
+                                <div class="box-header">
                                     <h3 class="box-title">资源需求单</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
                                         <?php  if((rolemenu(array('Op/public_save')) && $op['group_id'] && ($op['create_user'] == cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('userid') == 11 )) && ($resource  || $work_plan || $design)){ ?>

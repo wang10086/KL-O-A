@@ -1390,6 +1390,83 @@ class OpController extends BaseController {
                 $this->ajaxReturn($returnMsg);
             }
 
+            if ($opid && $savetype==24){
+                $cneed_db                   = M('op_customer_need_edit');
+                $id                         = I('id');
+                $data                       = I('cneed');
+                if (!$data['dep_time'])     $this->error('实际出发时间填写有误');
+                if (!$data['ret_time'])     $this->error('实际返回时间填写有误');
+                if (!trim($data['title']))  $this->error('活动名称不能为空');
+                if (!trim($data['why']))    $this->error('更改原因不能为空');
+                if (!trim($data['ffect']))  $this->error('变更后的影响不能为空');
+                if (!trim($data['right']))  $this->error('变更后的纠正措施不能为空');
+                if (!trim($data['before'])) $this->error('变更前要素不能为空');
+                if (!trim($data['after']))  $this->error('变更后要素不能为空');
+                $data['op_id']              = $opid;
+                $data['dep_time']           = strtotime($data['dep_time']);
+                $data['ret_time']           = strtotime($data['ret_time']);
+                $data['title']              = trim($data['title']);
+                $data['why']                = trim($data['why']);
+                $data['ffect']              = trim($data['ffect']);
+                $data['right']              = trim($data['right']);
+                $data['before']             = trim($data['before']);
+                $data['after']              = trim($data['after']);
+                if ($id){
+                    $res                    = $cneed_db->where(array('id'=>$id))->save($data);
+                    $explain                = '编辑客户需求变更信息';
+                }else{
+                    $data['input_time']     = NOW_TIME;
+                    $res                    = $cneed_db->add($data);
+                    $explain                = '填写客户需求变更信息';
+                }
+                if ($res){
+                    $record             = array();
+                    $record['op_id']    = $opid;
+                    $record['optype']   = 4;
+                    $record['explain']  = $explain;
+                    op_record($record);
+
+                    //发送系统消息
+                    $op                 = $db->where(array('op_id'=>$opid))->find();
+                    $department_manager = get_department_manager(cookie('userid'));
+
+                    $uid                = cookie('userid');
+                    $title              = '您有来自['.cookie('nickname').']的客户需求变更待审核!';
+                    $content            = '项目名称：'.$op['project'].'；团号：'.$op['group_id'];
+                    $url                = U('Op/confirm',array('opid'=>$opid));
+                    $user               = '['.$department_manager["manager_id"].']';
+                    send_msg($uid,$title,$content,$url,$user,'');
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存数据失败');
+                }
+            }
+
+            if ($opid && $savetype==25){
+                $status                     = I('status');
+                $audit_remark               = trim(I('audit_remark'));
+                if (!$status){ $this->error('请选择是否审批通过'); }
+                $cneed_db                   = M('op_customer_need_edit');
+                $data                       = array();
+                $data['audit_status']       = $status;
+                $data['audit_remark']       = $audit_remark;
+                $data['audit_uid']          = cookie('userid');
+                $data['audit_uname']        = cookie('nickname');
+                $data['audit_time']         = NOW_TIME;
+                $res                        = $cneed_db->where(array('op_id'=>$opid))->save($data);
+                if ($res){
+                    $record             = array();
+                    $record['op_id']    = $opid;
+                    $record['optype']   = 4;
+                    $record['explain']  = '审核客户变更需求';
+                    op_record($record);
+
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存数据失败');
+                }
+            }
+
 
             echo $num;
         }
@@ -2814,6 +2891,7 @@ class OpController extends BaseController {
             $this->groups           = M('op_group')->where(array('op_id'=>$opid))->select();
             $this->provinces        = M('provinces')->getField('id,name',true);
             $this->departments      = M('salary_department')->getField('id,department',true);
+            $this->cneed_edit       = M('op_customer_need_edit')->where(array('op_id'=>$opid))->find(); //客户需求变更
 
             /*********************客户需求详情 start***********************/
             $customer_need_db                   = get_customer_need_tetail_db($op['kind']);
