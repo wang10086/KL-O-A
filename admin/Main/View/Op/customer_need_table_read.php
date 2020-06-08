@@ -63,13 +63,13 @@
 
             <div class="form-group box-float-12">
                 <label class="">审核意见：</label>
-                <input type="radio" name="status" value="1"> &#8194;审核通过 &#12288;&#12288;&#12288;
-                <input type="radio" name="status" value="2"> &#8194;审核不通过
+                <input type="radio" name="status" value="1" <?php if ($cneed_edit['audit_status']==1) echo 'checked'; ?>> &#8194;审核通过 &#12288;&#12288;&#12288;
+                <input type="radio" name="status" value="2" <?php if ($cneed_edit['audit_status']==2) echo 'checked'; ?>> &#8194;审核不通过
             </div>
 
             <div class="form-group box-float-12">
                 <label>备注</label>
-                <textarea class="form-control" name="audit_remark"></textarea>
+                <textarea class="form-control" name="audit_remark">{$cneed_edit.audit_remark}</textarea>
             </div>
 
             <div id="formsbtn">
