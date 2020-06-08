@@ -2782,13 +2782,15 @@ class ProductController extends BaseController {
                 $data                           = array();
                 $data['process']                = 1; //已提交产品方案需求
                 $res                            = $db->where(array('id'=>$id))->save($data);
-                if ($res){
-                    $process_node1              = 36; //接受客户对产品实施方案需求信息
-                    $pro_status1                = 1; // 未读
-                    $process_node2              = 38; //组织编制产品实施方案
-                    $pro_status2                = 2; // 事前提醒
-                    save_process_log($process_node1,$pro_status1,$list['project'],$list['id'],'',$list['line_blame_uid'],$list['line_blame_name']); //保存待办事宜
-                    save_process_log($process_node2,$pro_status2,$list['project'],$list['id'],'',$list['line_blame_uid'],$list['line_blame_name']); //保存待办事宜
+                if ($res){ //3=>其他, 63=>学趣课程, 68=>常规旅游, 86=>南北极合作
+                    if (!in_array($list['kind'], array(3,63,68,86))){
+                        $process_node1          = 36; //接受客户对产品实施方案需求信息
+                        $pro_status1            = 1; // 未读
+                        $process_node2          = 38; //组织编制产品实施方案
+                        $pro_status2            = 2; // 事前提醒
+                        save_process_log($process_node1,$pro_status1,$list['project'],$list['id'],'',$list['line_blame_uid'],$list['line_blame_name']); //保存待办事宜
+                        save_process_log($process_node2,$pro_status2,$list['project'],$list['id'],'',$list['line_blame_uid'],$list['line_blame_name']); //保存待办事宜
+                    }
                     $this->success('提交成功',U('Product/public_pro_need'));
                 }else{
                     $this->error('提交申请失败');

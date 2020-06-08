@@ -136,8 +136,19 @@
                                                     <h4>提示：如果无法提交需求,请按要求及时完善客户信息！</h4>
                                                 </div>
                                             <button type="button" onclick="check_dijie_province_data()" class="btn btn-info btn-sm" id="base_btn">保存</button>
+                                            <?php if ($list && in_array($list['kind'], array(3,63,68,86)) && $list['process'] == 0){ ?>
+                                            <button type="button" onclick="$('#otherKindOpSubmitForm').submit()" class="btn btn-warning btn-sm">提交</button>
+                                            <?php } ?>
                                         </div>
                                     </form>
+
+                                    <?php if ($list && in_array($list['kind'], array(3,63,68,86)) && $list['process'] == 0){ ?>
+                                    <form method="post" action="{:U('Product/public_save')}" name="otherKindOpSubmitForm" id="otherKindOpSubmitForm">
+                                        <input type="hidden" name="dosubmit" value="1">
+                                        <input type="hidden" name="savetype" value="7">
+                                        <input type="hidden" name="id" value="{$list.id}">
+                                    </form>
+                                    <?php } ?>
                                 </div>
                             </div><!-- /.box-body -->
                         </div><!-- /.box -->
