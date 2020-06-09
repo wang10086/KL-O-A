@@ -11,9 +11,15 @@
 <div class="content" style="padding-bottom:20px;">
 
     <div style="width:100%; float:left;">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-12">
             <label>项目团号：</label>
             <input type="text" name="info[group_id]"  class="form-control" onblur="check_group_id()" value="<?php if($confirm['group_id']){ echo $confirm['group_id'];}else{ echo $op['group_id'];} ?>" required />
+        </div>
+
+        <div class="form-group col-md-4">
+            <p><label>是否有业务实施方案需求：</label></p>
+            <input type="radio" name="info[is_need_project]" value="1" <?php if ($confirm['is_need_project'] == 1) echo "checked"; ?>> &#8194;需要 &#12288;
+            <input type="radio" name="info[is_need_project]" value="0" <?php if ($confirm['is_need_project'] == 0) echo "checked"; ?>> &#8194;不需要
         </div>
 
         <div class="form-group col-md-4">

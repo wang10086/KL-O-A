@@ -1467,6 +1467,26 @@ class OpController extends BaseController {
                 }
             }
 
+            if ($opid && $savetype==26){
+                $id                         = I('id');
+                if (!$id) $this->error('提交失败');
+                $op                         = M('op')->where(array('op_id'=>$opid))->find();
+                $db                         = M('op_project');
+                $data                       = array();
+                $data['audit_status']       = 3; //已提交,未审核
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $process_node           = 52; //确认业务实施方案
+                    $pro_status             = 2; // 事前提醒
+                    save_process_log($process_node,$pro_status,$op['project'],$op['id'],'',$op['create_user'],$op['create_user_name']); //保存待办事宜
+                    $ok_node_id             = 51; //编制业务实施方案
+                    save_process_ok($ok_node_id);
+                    $this->success('提交成功',U('Product/public_pro_need'));
+                }else{
+                    $this->error('提交申请失败');
+                }
+            }
+
 
             echo $num;
         }
@@ -2762,22 +2782,34 @@ class OpController extends BaseController {
                 $process_node           = 49; //填写成团信息
                 $title                  = $op['project'];
                 $req_id                 = $op['id'];
+                $pro_status             = 1; //未读
 
                 foreach ($uids as $v){ //发送给业务部门经理和接待实施部门经理
-                    $pro_status         = 1; //未读
                     $to_uid             = $v;
                     $to_uname           = username($v);
                     save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
                 }
 
                 //发送给线控部门负责人
-                $pro_status             = 2; //事前提醒
+                $process_node           = 50; //提前安排采购事项
                 $to_uid                 = $op['line_blame_uid'];
                 $to_uname               = $op['line_blame_name'];
                 save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
             }
 
 			if ($num) {
+			    $project                = M('op_project')->where(array('op_id'=>$opid))->find();
+			    if ($info['is_need_project'] == 1 && !$project){
+                    //需要业务实施方案需求(发送待办事宜给线控)
+                    $title                  = $op['project'];
+                    $req_id                 = $op['id'];
+                    $process_node           = 51; //编制业务实施方案
+                    $pro_status             = 2; //事前提醒
+                    $to_uid                 = $op['line_blame_uid'];
+                    $to_uname               = $op['line_blame_name'];
+                    save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+                }
+
                 $this->save_add_group($opid,$resid,$group); //保存拼团信息
                 //如果是内部地接, 生成一个新地接团
                 if ($op['in_dijie'] == 1 && !$op['dijie_opid'] && $op['kind'] != 87) { //87=>单进院所不生成地接团
@@ -2893,7 +2925,7 @@ class OpController extends BaseController {
             $this->departments      = M('salary_department')->getField('id,department',true);
             $this->cneed_edit       = M('op_customer_need_edit')->where(array('op_id'=>$opid))->find(); //客户需求变更
 
-            /*********************客户需求详情 start***********************/
+            ///客户需求详情
             $customer_need_db                   = get_customer_need_tetail_db($op['kind']);
             $customer_need_list                 = $customer_need_db ? $customer_need_db->where(array('op_id'=>$op['op_id']))->find() : '';
             $detail_db                          = get_product_pro_need_tetail_db($op['kind']);
@@ -2913,8 +2945,6 @@ class OpController extends BaseController {
             $this->teacher_level                = C('TEACHER_LEVEL'); //教师级别
             $this->expert_level                 = C('EXPERT_LEVEL'); //专家级别
             $this->producted_list               = $op['producted_id'] ? M('producted')->find($op['producted_id']) : ''; //标准化产品
-            /**********************客户需求详情 end************************/
-
 
 			$this->display('confirm');
 		}
@@ -3382,5 +3412,73 @@ class OpController extends BaseController {
         $res                        = $db->where(array('id'=>$id))->delete();
         $del                        = $res ? $this->success('删除数据成功') : $this->error('删除失败');
     }
+
+    //业务实施方案
+    public function project(){
+	    $this->title('业务实施方案');
+	    $db                 = M('op_project');
+	    if (isset($_POST['dosubmint'])){
+	        $opid                   = I('opid');
+	        $remark                 = trim(I('remark'));
+	        $newname                = I('newname');
+	        $resfiles               = I('resfiles');
+            save_new_file_name($newname);
+	        $id                     = I('id');
+	        if (!$opid) $this->error('获取项目信息错误');
+	        $data                   = array();
+	        $data['op_id']          = $opid;
+	        $data['remark']         = $remark;
+	        $data['atta_ids']       = $resfiles ? implode(',',$resfiles) : '';
+	        $data['input_user_name']= cookie('nickname');
+	        $data['input_user_id']  = cookie('userid');
+            $data['input_time']     = NOW_TIME;
+
+            if ($id){
+                $res                = $db->where(array('id'=>$id))->save($data);
+                $explain            = '编辑业务实施方案';
+            }else{
+                $res                = $db->add($data);
+                $explain            = '新增业务实施方案';
+            }
+            if ($res){
+                $record                 = array();
+                $record['op_id']        = $opid;
+                $record['optype']       = 4;
+                $record['explain']      = $explain;
+                op_record($record);
+
+                $this->success('保存成功',U('Op/project',array('opid'=>$opid)));
+            }else{
+                $this->error('保存失败',U('Op/project',array('opid'=>$opid)));
+            }
+        }else{
+	        $id                     = I('id'); //待办事宜
+	        $opid                   = $id ? M('op')->where(array('id'=>$id))->getField('op_id') : I('opid');
+	        if (!$opid) $this->error('获取数据失败');
+	        $fa                     = I('fa',1);
+	        $list                   = M('op')->where(array('op_id'=>$opid))->find();
+	        $project_list           = M('op_project')->where(array('op_id'=>$opid))->find();
+	        $atta_ids               = $project_list ? explode(',',$project_list['atta_ids']) : '';
+	        $file_lists             = $atta_ids ? M('attachment')->where(array('id'=>array('in',$atta_ids)))->select() : '';
+
+            $apply_to               = C('APPLY_TO');
+            $list['apply_to']       = $apply_to[$list['apply_to']];
+            $departments            = M('salary_department')->getField('id,department',true);
+            $kinds                  = M('project_kind')->getField('id,name',true);
+
+            $this->provinces        = M('provinces')->getField('id,name',true);
+            $this->kinds            = $kinds;
+            $this->departments      = $departments;
+	        $this->list             = $list;
+	        $this->project_list     = $project_list;
+	        $this->atta_lists       = $file_lists;
+	        $this->jiesuan          = M('op_settlement')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //结算审批通过
+            $this->audit_status     = get_submit_audit_status();
+	        $this->opid             = $opid;
+	        $this->fa               = $fa;
+	        $this->display('project');
+        }
+    }
+
 
 }

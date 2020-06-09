@@ -6251,3 +6251,13 @@ function get_dijie_department_data(){
      $data                  = M('salary_department')->where(array('id'=>array('in',$department_ids)))->select();
      return $data;
 }
+
+//保存已更改的文件名
+function save_new_file_name($newname=''){
+    $db                     = M('attachment');
+    if ($newname){
+        foreach ($newname as $k=>$v){
+            $db->where(array('id'=>$k))->data(array('filename'=>trim($v)))->save();
+        }
+    }
+}
