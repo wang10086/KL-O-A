@@ -4,11 +4,12 @@
         <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">  审核状态：{$audit_status[$project_list['audit_status']]}</h3>
     </div>
     <div class="box-body">
-        <div class="form-group ">
-            <label>方案说明：</label>  {$project_list.remark}
-        </div>
 
         <?php if($atta_lists){ ?>
+            <div class="form-group ">
+                <label>方案说明：</label>  {$project_list.remark}
+            </div>
+
             <table class="table table-bordered dataTable fontmini" id="tablelist">
                 <tr role="row" class="orders" >
                     <th style="width: 50px">编号</th>

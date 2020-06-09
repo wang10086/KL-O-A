@@ -2709,7 +2709,8 @@ class OpController extends BaseController {
 
 	// @@@NODE-3###confirm###出团确认###
 	public  function confirm(){
-		$opid                       = I('opid');
+	    $id                         = I('id'); //流程管理
+		$opid                       = $id ? M('op')->where(array('id'=>$id))->getField('op_id') : I('opid');
 		if(!$opid) $this->error('项目不存在');
 
 		$where                      = array();
@@ -2945,6 +2946,12 @@ class OpController extends BaseController {
             $this->teacher_level                = C('TEACHER_LEVEL'); //教师级别
             $this->expert_level                 = C('EXPERT_LEVEL'); //专家级别
             $this->producted_list               = $op['producted_id'] ? M('producted')->find($op['producted_id']) : ''; //标准化产品
+            //产品实施方案
+            $project_list                       = M('op_project')->where(array('op_id'=>$opid))->find();
+            $atta_ids                           = $project_list ? explode(',',$project_list['atta_ids']) : '';
+            $file_lists                         = $atta_ids ? M('attachment')->where(array('id'=>array('in',$atta_ids)))->select() : '';
+            $this->project_list                 = $project_list;
+            $this->atta_lists                   = $file_lists;
 
 			$this->display('confirm');
 		}

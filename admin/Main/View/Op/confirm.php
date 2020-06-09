@@ -94,6 +94,47 @@
 
                             <div class="box box-warning">
                                 <div class="box-header">
+                                    <h3 class="box-title">业务实施方案</h3>
+                                    <?php if(project_list){ ?>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">  审核状态：{$audit_status[$project_list['audit_status']]}</h3>
+                                    <?php } ?>
+                                </div>
+                                <div class="box-body">
+
+                                    <?php if(project_list && in_array($project_list['audit_status'],array(1,2,3))){ ?>
+                                        <div class="form-group ">
+                                            <label>方案说明：</label>  {$project_list.remark}
+                                        </div>
+
+                                        <table class="table table-bordered dataTable fontmini" id="tablelist">
+                                            <tr role="row" class="orders" >
+                                                <th style="width: 50px">编号</th>
+                                                <th>文件名</th>
+                                                <th>文件类型</th>
+                                                <th>文件大小</th>
+                                                <th style="width: 80px">下载</th>
+                                            </tr>
+                                            <foreach name="atta_lists" key="k" item="row">
+                                                <tr>
+                                                    <td><?php echo $k+1; ?></td>
+                                                    <td>{$row.filename}</td>
+                                                    <td>{$row.fileext}</td>
+                                                    <td><?php echo sprintf("%.1f", $row['filesize']/1024); ?>K</td>
+                                                    <td><a href="{$row.filepath}" class="badge bg-red">下载</a></td>
+                                                </tr>
+                                            </foreach>
+                                        </table>
+                                    <?php }else{ echo '<div style="padding:25px;">暂未制定业务实施方案</div>';} ?>
+
+                                    <?php if (in_array(cookie('userid'), array($list['create_user'],1,11)) && ($project_list['audit_status']==3)){ ?>
+
+                                    <?php } ?>
+                                </div>
+                            </div>
+
+
+                            <div class="box box-warning">
+                                <div class="box-header">
                                     <h3 class="box-title">客户需求变更</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">审核状态: <?php echo $cneed_edit['audit_status']==1 ? "<span class='green'>审核通过</span>" : ($cneed_edit['audit_status']==2 ? "<span class='red'>审核未通过</span>" : "未审核") ?></h3>
                                 </div><!-- /.box-header -->
