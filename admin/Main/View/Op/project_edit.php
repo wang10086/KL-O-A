@@ -3,7 +3,6 @@
         <div class="box box-warning">
             <div class="box-header">
                 <h3 class="box-title">业务实施方案</h3>
-                <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">  审核状态：{$audit_status[$project_list['audit_status']]}</h3>
             </div>
             <div class="box-body">
                 <div class="content">

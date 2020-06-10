@@ -5,7 +5,7 @@
     </div>
     <div class="box-body">
 
-        <?php if($atta_lists){ ?>
+        <?php if($project_list ||$atta_lists){ ?>
             <div class="form-group ">
                 <label>方案说明：</label>  {$project_list.remark}
             </div>

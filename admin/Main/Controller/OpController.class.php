@@ -1481,9 +1481,37 @@ class OpController extends BaseController {
                     save_process_log($process_node,$pro_status,$op['project'],$op['id'],'',$op['create_user'],$op['create_user_name']); //保存待办事宜
                     $ok_node_id             = 51; //编制业务实施方案
                     save_process_ok($ok_node_id);
-                    $this->success('提交成功',U('Product/public_pro_need'));
+                    $this->success('提交成功',U('Op/project',array('opid'=>$opid)));
                 }else{
                     $this->error('提交申请失败');
+                }
+            }
+
+            if ($opid && $savetype==27){
+                $id                         = I('id');
+                $status                     = I('status');
+                $audit_remark               = trim(I('audit_remark'));
+                if (!$id)       $this->error('获取数据错误');
+                if (!$status)   $this->error('请选择审核结果');
+                $db                         = M('op_project');
+                $data                       = array();
+                $data['audit_status']       = $status;
+                $data['audit_remark']       = $audit_remark;
+                $data['audit_time']         = NOW_TIME;
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $op         = M('op')->where(array('op_id'=>$opid))->find();
+                    if ($status == 2){ //审核未通过,反馈给线控
+                        $process_node       = 51; //编制业务实施方案
+                        $pro_status         = 2; // 事前提醒
+                        save_process_log($process_node,$pro_status,$op['project'],$op['id'],'',$op['line_blame_uid'],$op['line_blame_name']); //保存待办事宜
+                    }
+
+                    $ok_node_id             = 52; //确认业务实施方案
+                    save_process_ok($ok_node_id);
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
                 }
             }
 
@@ -3426,6 +3454,7 @@ class OpController extends BaseController {
 	    $db                 = M('op_project');
 	    if (isset($_POST['dosubmint'])){
 	        $opid                   = I('opid');
+            $list                   = M('op')->where(array('op_id'=>$opid))->find();
 	        $remark                 = trim(I('remark'));
 	        $newname                = I('newname');
 	        $resfiles               = I('resfiles');
@@ -3439,6 +3468,8 @@ class OpController extends BaseController {
 	        $data['input_user_name']= cookie('nickname');
 	        $data['input_user_id']  = cookie('userid');
             $data['input_time']     = NOW_TIME;
+            $data['audit_uid']      = $list['create_user']; //业务人员审核
+            $data['audit_uname']    = $list['create_user_name'];
 
             if ($id){
                 $res                = $db->where(array('id'=>$id))->save($data);

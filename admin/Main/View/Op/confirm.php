@@ -124,10 +124,34 @@
                                                 </tr>
                                             </foreach>
                                         </table>
-                                    <?php }else{ echo '<div style="padding:25px;">暂未制定业务实施方案</div>';} ?>
+                                    <?php }else{ ?>
+                                        <div style="padding:25px;">暂未制定业务实施方案</div>
+                                    <?php } ?>
 
-                                    <?php if (in_array(cookie('userid'), array($list['create_user'],1,11)) && ($project_list['audit_status']==3)){ ?>
+                                    <?php if (in_array(cookie('userid'), array($project_list['audit_uid'],1,11)) && ($project_list['audit_status']==3)){ ?>
+                                        <div class="content">
+                                            <form method="post" action="{:U('Op/public_save')}" id="audit_form">
+                                                <input type="hidden" name="dosubmint" value="1">
+                                                <input type="hidden" name="savetype" value="27">
+                                                <input type="hidden" name="id" value="{$project_list.id}">
+                                                <input type="hidden" name="opid" value="{$list.op_id}">
 
+                                                <div class="form-group box-float-12">
+                                                    <label class="">审核意见：</label>
+                                                    <input type="radio" name="status" value="1"> &#8194;审核通过 &#12288;&#12288;&#12288;
+                                                    <input type="radio" name="status" value="2"> &#8194;审核不通过
+                                                </div>
+
+                                                <div class="form-group box-float-12">
+                                                    <label>备注</label>
+                                                    <textarea class="form-control" name="audit_remark"></textarea>
+                                                </div>
+
+                                                <div id="formsbtn">
+                                                    <button type="button" class="btn btn-info btn-sm" onclick="$('#audit_form').submit()">保存</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     <?php } ?>
                                 </div>
                             </div>
