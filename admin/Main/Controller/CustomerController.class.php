@@ -1251,11 +1251,16 @@ class CustomerController extends BaseController {
     public function public_salePro_add(){
         $this->title('销售支持方案');
         $sale_db                    = M('customer_sale');
-        $sale_lists                 = $sale_db->where(array('status'=>1))->order('id desc')->limit(50)->getField('id,title',true);
-        $this->sale_lists           = $sale_lists;
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $list                       = $sale_db->find($id);
+        $pro_list                   = M('customer_sale_project')->where(array('sale_id'=>$id))->find();
+        $costacc                    = M('customer_sale_project_cost')->where(array('pro_id'=>$pro_list['id']))->select();
 
-        //人员名单关键字
-        //$this->userkey              = get_username();
+        $this->types                = get_sale_type(); //获取销售支持类型
+        $this->list                 = $list;
+        $this->pro_list             = $pro_list;
+        $this->costacc              = $costacc;
         $this->display('sale_pro_add');
     }
 
@@ -1353,6 +1358,53 @@ class CustomerController extends BaseController {
                 }else{
                     $this->error('审核失败');
                 }
+            }
+
+            if ($saveType == 5){
+                $id                 = I('id');
+                $sale_id            = I('sale_id');
+                $info               = I('info');
+                $costacc            = I('costacc');
+                $resid              = I('resid');
+                $db                 = M('customer_sale_project');
+                $cost_db            = M('customer_sale_project_cost');
+                $info['addr']       = trim($info['addr']);
+                $info['hope']       = trim($info['hope']);
+                $info['content']    = trim($info['content']);
+                $info['sale_id']    = $sale_id;
+                $num                = 0;
+                if ($sale_id){
+                    $pro_list       = $db->where(array('sale_id'=>$sale_id))->find();
+                    $res            = $pro_list ? $db->where(array('id'=>$pro_list['id']))->save($info) : $db->add($info);
+                    if ($res) $num++;
+                    foreach($costacc as $k=>$v){
+                        $data           = $v;
+                        $data['pro_id'] = $pro_list['id'];
+                        if($resid && $resid[$k]['id']){
+                            $edits      = $cost_db->data($data)->where(array('id'=>$resid[$k]['id']))->save();
+                            $delid[]    = $resid[$k]['id'];
+                            if ($edits) $num++;
+                        }else{
+                            $savein     = $cost_db->add($data);
+                            $delid[]    = $savein;
+                            if($savein) $num++;
+                        }
+                    }
+                    $del = $cost_db->where(array('pro_id'=>$pro_list['id'],'id'=>array('not in',$delid)))->delete();
+                    if($del) $num++;
+                    if ($num){
+                        $this->success('保存成功');
+                    }else{
+                        $this->error('保存失败');
+                    }
+                }else{
+                    $res            = $db->add($info);
+                    foreach ($costacc as $v){
+                        $v['pro_id']= $res;
+                        $cost_db->add($v);
+                    }
+                }
+
             }
         }
     }

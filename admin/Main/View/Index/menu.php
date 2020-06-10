@@ -309,6 +309,7 @@
                                 <if condition="rolemenu(array('Customer/IC'))">
                                 	<li class="{:on('Customer/IC')} {:on('Customer/IC_edit')}"><a href="{:U('Customer/IC')}"><i class="fa fa-angle-right"></i> 营员管理</a></li>
                                 </if>
+                                <li class="{:on('Customer/public_sale')} {:on('Customer/public_sale_add')} {:on('Customer/public_sale_detail')} {:on('Customer/public_salePro_add')}"><a href="{:U('Customer/public_sale')}"><i class="fa fa-angle-right"></i> 销售支持</a></li>
 
                             </ul>
                         </li>

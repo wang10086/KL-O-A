@@ -71,7 +71,7 @@
 
                                             <div id="formsbtn">
                                                 <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
-                                                <?php if ($list && in_array($list['status'],0,2)){ ?>
+                                                <?php if ($list && in_array($list['status'],array(0,2))){ ?>
                                                 <button type="button" onclick="$('#submitForm').submit()" class="btn btn-warning btn-lg" id="lrpd">提交</button>
                                                 <?php } ?>
                                             </div>

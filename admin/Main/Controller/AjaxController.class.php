@@ -2242,8 +2242,8 @@ class AjaxController extends BasepubController {
         $this->ajaxReturn($data);
     }*/
 
-    //获取销售支持信息
-    function get_customer_sale_data(){
+    //获取销售支持信息  bak_20200610
+    /*function get_customer_sale_data(){
         $sale_id                        = I('sale_id');
         $list                           = M('customer_sale')->where(array('id'=>$sale_id))->find();
         $list['st_time']                = date('Y-m-d',$list['st_time']);
@@ -2251,6 +2251,6 @@ class AjaxController extends BasepubController {
         $types                          = get_sale_type(); //获取销售支持类型
         $list['type']                   = $types[$list['type']];
         $this->ajaxReturn($list);
-    }
+    }*/
 }
 

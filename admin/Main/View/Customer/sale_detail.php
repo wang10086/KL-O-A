@@ -18,7 +18,9 @@
                          <!-- right column -->
                         <div class="col-md-12">
 
-                            <div class="box box-warning">
+                            <include file="Customer:sale_navigate" />
+
+                            <div class="box box-warning mt20">
                                 <div class="box-header">
                                     <h3 class="box-title">销售支持计划</h3>
                                     <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">审核状态：{$audit_status[$list['status']]} &emsp;

@@ -16,9 +16,9 @@
                     <div class="row">
                         <div class="col-xs-12">
 
-                            <include file="Customer:sale_navigate" />
+                            <!--<include file="Customer:sale_navigate" />-->
 
-                            <div class="box box-warning mt20">
+                            <div class="box box-warning">
                                 <div class="box-header">
                                     <h3 class="box-title">{$_action_}</h3>
                                     <div class="box-tools pull-right">
