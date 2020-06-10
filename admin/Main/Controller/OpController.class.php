@@ -1481,7 +1481,7 @@ class OpController extends BaseController {
                     save_process_log($process_node,$pro_status,$op['project'],$op['id'],'',$op['create_user'],$op['create_user_name']); //保存待办事宜
                     $ok_node_id             = 51; //编制业务实施方案
                     save_process_ok($ok_node_id);
-                    $this->success('提交成功',U('Op/project',array('opid'=>$opid)));
+                    $this->success('提交成功',U('Op/public_project',array('opid'=>$opid)));
                 }else{
                     $this->error('提交申请失败');
                 }
@@ -3449,7 +3449,7 @@ class OpController extends BaseController {
     }
 
     //业务实施方案
-    public function project(){
+    public function public_project(){
 	    $this->title('业务实施方案');
 	    $db                 = M('op_project');
 	    if (isset($_POST['dosubmint'])){
@@ -3485,9 +3485,9 @@ class OpController extends BaseController {
                 $record['explain']      = $explain;
                 op_record($record);
 
-                $this->success('保存成功',U('Op/project',array('opid'=>$opid)));
+                $this->success('保存成功',U('Op/public_project',array('opid'=>$opid)));
             }else{
-                $this->error('保存失败',U('Op/project',array('opid'=>$opid)));
+                $this->error('保存失败',U('Op/public_project',array('opid'=>$opid)));
             }
         }else{
 	        $id                     = I('id'); //待办事宜

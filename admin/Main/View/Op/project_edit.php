@@ -7,7 +7,7 @@
             <div class="box-body">
                 <div class="content">
 
-                    <form method="post" action="{:U('Op/project')}" name="myform" id="myform">
+                    <form method="post" action="{:U('Op/public_project')}" name="myform" id="myform">
                         <input type="hidden" name="dosubmint" value="1" />
                         <input type="hidden" name="savetype" value="1" />
                         <input type="hidden" name="opid" value="{$list.op_id}" />
