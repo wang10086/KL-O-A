@@ -1165,7 +1165,7 @@ class CustomerController extends BaseController {
         $this->display('bid_pro_add');
     }
 
-    /*********************start*************************/
+
     //组织业务投标
     public function public_sale(){
         $process_id                 = I('process_id');
@@ -1180,7 +1180,21 @@ class CustomerController extends BaseController {
         $this->pages                = $pagecount>P::PAGE_SIZE ? $page->show():'';
         $this->lists                = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
         $this->types                = get_sale_type(); //获取销售支持类型
+        $this->audit_status         = get_submit_audit_status();
         $this->display('sale');
+    }
+
+    //销售支持计划详情
+    public function public_sale_detail(){
+        $this->title('销售支持计划');
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $db                         = M('customer_sale');
+        $list                       = $db->find($id);
+        $this->list                 = $list;
+        $this->types                = get_sale_type(); //获取销售支持类型
+        $this->audit_status         = get_submit_audit_status();
+        $this->display('sale_detail');
     }
 
     //添加销售支持计划
@@ -1237,14 +1251,14 @@ class CustomerController extends BaseController {
     public function public_salePro_add(){
         $this->title('销售支持方案');
         $sale_db                    = M('customer_sale');
-        $sale_lists                  = $sale_db->order('id desc')->limit(50)->select();
+        $sale_lists                 = $sale_db->where(array('status'=>1))->order('id desc')->limit(50)->getField('id,title',true);
         $this->sale_lists           = $sale_lists;
 
         //人员名单关键字
-        $this->userkey              = get_username();
+        //$this->userkey              = get_username();
         $this->display('sale_pro_add');
     }
-    /**********************end************************/
+
 
     //
     public function public_save_process(){
@@ -1290,6 +1304,51 @@ class CustomerController extends BaseController {
                 if ($res){
                     $ok_node_id         = 16; //制定业务季市场营销计划及预算
                     save_process_ok($ok_node_id);
+                    $this->success('审核成功');
+                }else{
+                    $this->error('审核失败');
+                }
+            }
+
+            if ($saveType == 3){
+                $id                 = I('id');
+                if (!$id) $this->error('提交失败');
+                $db                 = M('customer_sale');
+                $data               = array();
+                $data['status']     = 3;
+                $res                = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $list           = $db->where(array('id'=>$id))->find();
+                    $process_node_id= 33; //审批协助销售申请
+                    $pro_status     = 2; //事前提醒
+                    $title          = $list['title'];
+                    $req_id         = $list['id'];
+                    $to_uid         = $list['audit_uid'];
+                    $to_uname       = $list['audit_uname'];
+                    save_process_log($process_node_id,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+
+                    $ok_node_id     = 32; //提交协助销售申请
+                    save_process_ok($ok_node_id);
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
+            }
+
+            if ($saveType == 4){ //审核销售支持计划
+                $db                 = M('customer_sale');
+                $id                 = I('id');
+                $status             = I('status');
+                $audit_remark       = trim(I('audit_remark'));
+                if (!$status) $this->error('请选择是否审核通过');
+                $data               = array();
+                $data['status']     = $status;
+                $data['audit_time']     = NOW_TIME;
+                $data['audit_remark']   = $audit_remark;
+                $res                    = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $ok_node_id         = 16; //制定业务季市场营销计划及预算
+                    save_process_ok($ok_node_id,$audit_remark);
                     $this->success('审核成功');
                 }else{
                     $this->error('审核失败');

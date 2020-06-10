@@ -25,48 +25,47 @@
                                     <div class="content">
                                         <div class="form-group col-md-4">
                                             <label>销售支持标题</label>
-                                            <select class="form-control" name="bid_id" id="bid_id">
+                                            <select class="form-control" name="sale_id" onchange="get_customer_sale_data($(this).val())">
                                                 <option value="">==请选择==</option>
-                                                <foreach name="bid_lists" item="v">
-                                                    <option value="{$v.id}">{$v.title}</option>
+                                                <foreach name="sale_lists" key="k" item="v">
+                                                    <option value="{$k}">{$v}</option>
                                                 </foreach>
                                             </select>
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>申请人</label>
-                                            <input type="text" name="info[blame_name]" value="{$list['blame_name']}" class="form-control" placeholder="申请人" id="blame_name" readonly />
-                                            <input type="hidden" name="info[blame_uid]" value="{$list['blame_uid']}" class="form-control" id="blame_uid" />
+                                            <input type="text" class="form-control" id="blame_name" readonly />
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>销售支持类型</label>
-                                            <input type="text" name="" value="{$list['type']}" class="form-control" readonly />
+                                            <input type="text" class="form-control" id="type" readonly />
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>客户</label>
-                                            <input type="text" name="" class="form-control" value="{$list.customer}" readonly />
+                                            <input type="text" class="form-control" id="customer" readonly />
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>起始日期</label>
-                                            <input type="text" name="info[bid_time]" class="form-control inputdate" value="<if condition="$list['bid_time']">{$list.bid_time|date='Y-m-d',###}</if>" readonly />
+                                            <input type="text"  class="form-control" id="st_time" readonly />
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>结束日期</label>
-                                            <input type="text" name="info[bid_time]" class="form-control inputdate" value="<if condition="$list['bid_time']">{$list.bid_time|date='Y-m-d',###}</if>" readonly />
+                                            <input type="text"  class="form-control" id="et_time" readonly />
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>计划费用</label>
-                                            <input type="text" name="cost" value="{$list['cost']}" class="form-control" readonly />
+                                            <input type="text" class="form-control" id="cost" readonly />
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             <label>目的地</label>
-                                            <input type="text" name="info[manager_name1]" value="{$list['manager_name1']}" class="form-control" id="manager_name1" />
+                                            <input type="text" name="info[addr]" value="{$list['addr']}" class="form-control" />
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -75,111 +74,56 @@
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                            <label>活动安排：</label><textarea class="form-control"  name="info[context]" id="context"></textarea>
+                                            <label>活动安排：</label><textarea class="form-control"  name="info[content]">{$list.content}</textarea>
                                             <span id="contextTip"></span>
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                            <P class="border-bottom-line"> 活动预算</P>
-                                            <div class="form-group col-md-12" id="payment">
+                                            <P class="border-bottom-line"> 活动预算 &emsp;&emsp;&emsp;&emsp;
+                                                <label>是否需要借款</label> &emsp;
+                                                <input type="radio" name="info[jiekuan]" value="0"  <?php if($list['jiekuan']==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
+                                                <input type="radio" name="info[jiekuan]" value="1"  <?php if($list['jiekuan']==1){ echo 'checked';} ?>> &#8194;需要
+                                            </P>
+
+                                            <div id="costacc">
                                                 <div class="userlist">
-                                                    <div class="unitbox_15">项目</div>
-                                                    <div class="unitbox_15">单位</div>
-                                                    <div class="unitbox_15">单价</div>
-                                                    <div class="unitbox_15">数量</div>
-                                                    <div class="unitbox_15">费用</div>
-                                                    <!--<div class="unitbox_15">受款方</div>-->
-                                                    <div class="unitbox_20">备注</div>
+                                                    <div class="unitbox">费用项</div>
+                                                    <div class="unitbox">单价</div>
+                                                    <div class="unitbox">数量</div>
+                                                    <div class="unitbox">合计</div>
+                                                    <div class="unitbox longinput">备注</div>
                                                 </div>
-                                                <?php if($timeLists){ ?>
-                                                    <foreach name="timeLists" key="kk" item="pp">
-                                                        <div class="userlist" id="pretium_8888{$pp.id}">
-                                                            <span class="title"><?php echo $kk+1; ?></span>
-                                                            <input type="hidden" name="payment[8888{$pp.id}][reset_id]" value="{$pp.id}">
 
-                                                            <div class="f_15">
-                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][title]" value="{$pp.title}">
-                                                            </div>
-
-                                                            <div class="f_15">
-                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][unit]" value="{$pp.unit}">
-                                                            </div>
-
-                                                            <div class="f_15">
-                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][unitcost]" value="{$pp.unitcost}">
-                                                            </div>
-
-                                                            <div class="f_15">
-                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][num]" value="{$pp.num}">
-                                                            </div>
-
-                                                            <div class="f_15">
-                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][total]" value="{$pp.total}">
-                                                            </div>
-
-                                                            <!--<div class="f_15">
-                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][supplierRes]" value="{$pp.supplierRes}">
-                                                            </div>-->
-
-                                                            <div class="f_20">
-                                                                <input type="text" class="form-control" name="payment[8888{$pp.id}][remark]" value="{$pp.remark}">
-                                                            </div>
-
-                                                            <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_8888{$pp.id}')">删除</a>
-
-                                                        </div>
-                                                    </foreach>
-                                                <?php }else{ ?>
-                                                    <div class="userlist" id="pretium_id">
-                                                        <span class="title">1</span>
-
-                                                        <div class="f_15">
-                                                            <input type="text" class="form-control" name="payment[1][title]" value="">
-                                                        </div>
-
-                                                        <div class="f_15">
-                                                            <input type="text" class="form-control" name="payment[1][unit]" value="">
-                                                        </div>
-
-                                                        <div class="f_15">
-                                                            <input type="text" class="form-control" name="payment[1][unitcost]" value="">
-                                                        </div>
-
-                                                        <div class="f_15">
-                                                            <input type="text" class="form-control" name="payment[1][num]" value="">
-                                                        </div>
-
-                                                        <div class="f_15">
-                                                            <input type="text" class="form-control" name="payment[1][total]" value="">
-                                                        </div>
-
-                                                        <!--<div class="f_15">
-                                                            <input type="text" class="form-control" name="payment[1][supplierRes]" value="">
-                                                        </div>-->
-
-                                                        <div class="f_20">
-                                                            <input type="text" class="form-control" name="payment[1][remark]" value="">
-                                                        </div>
-
-                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('pretium_id')">删除</a>
+                                                <foreach name="costacc" key="k" item="v">
+                                                    <div class="userlist cost_expense" id="costacc_id_b_{$k}">
+                                                        <span class="title"><?php echo $k+1; ?></span>
+                                                        <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" >
+                                                        <input type="hidden" class="form-control" name="costacc[888{$k}][supplier_id]" value="{$v.supplier_id}">
+                                                        <input type="hidden" class="form-control" name="costacc[888{$k}][supplier_name]" value="{$v.supplier_name}">
+                                                        <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}">
+                                                        <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
+                                                        <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
+                                                        <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
+                                                        <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$v.remark}">
+                                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_b_{$k}')">删除</a>
                                                     </div>
-                                                <?php } ?>
-                                            </div>
+                                                </foreach>
 
-                                            <div class="form-group col-md-6">
-                                                <label>费用合计</label>
-                                                <!--<input type="text" name="info[total]" value="{$list['total']}" class="form-control" id="total" />-->
                                             </div>
-
-                                            <div class="form-group col-md-6 ">
-                                                <label>是否需要借款</label>
-                                                <input type="radio" name="jiekuan" value="0"  <?php if($list['jiekuan']==0){ echo 'checked';} ?>> &#8194;不需要 &#12288;&#12288;&#12288;
-                                                <input type="radio" name="jiekuan" value="1"  <?php if($list['jiekuan']==1){ echo 'checked';} ?>> &#8194;需要
+                                            <div id="costacc_sum">
+                                                <div class="userlist">
+                                                    <div class="unitbox"></div>
+                                                    <div class="unitbox"></div>
+                                                    <div class="unitbox" style="  text-align:right;">合计</div>
+                                                    <div class="unitbox" id="costaccsum"></div>
+                                                    <div class="unitbox longinput"></div>
+                                                </div>
                                             </div>
-                                            <div id="payment_val">1</div>
-                                            <div class="form-group col-md-12" id="useraddbtns">
-                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_cost()"><i class="fa fa-fw fa-plus"></i> 增加活动安排</a>
+                                            <div id="costacc_val">1</div>
+                                            <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
+                                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="add_costacc()"><i class="fa fa-fw fa-plus"></i> 新增活动预算</a>
                                             </div>
+                                            <div class="form-group">&nbsp;</div>
                                         </div>
 
                                         <div id="formsbtn">
@@ -198,20 +142,56 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
-    const keywords = <?php echo $userkey; ?>;
-    $(document).ready(function(e){
-        autocomplete_id('blame_name','blame_uid',keywords);
-        //autocomplete_id('manager_name1','manager_uid1',keywords);
-        //autocomplete_id('manager_name2','manager_uid2',keywords);
-    })
+    $(document).ready(function(e) {
+        cost_total();
+    });
+
+    //获取销售支持内容
+    function get_customer_sale_data(sid) {
+        if (sid){
+            $.ajax({
+                type:"POST",
+                url:"{:U('Ajax/get_customer_sale_data')}",
+                data:{sale_id:sid},
+                success:function(data){
+                    if (data){
+                        $('#blame_name').val(data.blame_name);
+                        $('#type').val(data.type);
+                        $('#customer').val(data.customer);
+                        $('#st_time').val(data.st_time);
+                        $('#et_time').val(data.et_time);
+                        $('#cost').val(data.cost);
+                    }
+                }
+            })
+        } else{
+            art_show_msg('请选择正确的标题',2)
+        }
+    }
+
+    //新增活动预算
+    function add_costacc(){
+        var i = parseInt($('#costacc_val').text())+1;
+
+        var html = '<div class="userlist cost_expense" id="costacc_'+i+'">' +
+            '<span class="title"></span>' +
+            '<input type="text" class="form-control" name="costacc['+i+'][title]">' +
+            '<input type="text"  class="form-control cost" name="costacc['+i+'][unitcost]"  value="0">' +
+            '<input type="text" class="form-control amount" name="costacc['+i+'][amount]" value="1">' +
+            '<input type="text" class="form-control totalval" name="costacc['+i+'][total]"  value="0">' +
+            '<input type="text" class="form-control longinput" name="costacc['+i+'][remark]">' +
+            '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'costacc_'+i+'\')">删除</a>' +
+            '</div>';
+        $('#costacc').append(html);
+        $('#costacc_val').html(i);
+        orderno();
+        cost_total();
+    }
 
     //编号
     function orderno(){
-        $('#payment').find('.title').each(function(index, element) {
+        $('#costacc').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
-        });
-        $('#payment').find('.payno').each(function(index, element) {
-            $(this).val(parseInt(index)+1);
         });
     }
 
@@ -219,28 +199,48 @@
     function delbox(obj){
         $('#'+obj).remove();
         orderno();
+        cost_total();
     }
 
+    //更新成本核算
+    function cost_total(){
+        var costaccsum      = get_costaccsum();
 
-    //新增
-    function add_cost(){
-        var i = parseInt($('#payment_val').text())+1;
+        $('#costaccsum').html('&yen; '+costaccsum.toFixed(2));
+        $('#costaccsumval').val(costaccsum.toFixed(2));
+    }
 
-        var html = '<div class="userlist" id="pretium_id_'+i+'">';
-        html += '<span class="title"></span>';
-        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][title]" value=""></div>';
-        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][unit]" value=""></div>';
-        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][unitcost]" value=""></div>';
-        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][num]" value=""></div>';
-        html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][total]" value=""></div>';
-        /*html += '<div class="f_15"><input type="text" class="form-control" name="payment['+i+'][supplierRes]" value=""></div>';*/
-        html += '<div class="f_20"><input type="text" class="form-control" name="payment['+i+'][remark]" value=""></div>';
-        html += '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(`pretium_id_'+i+'`)">删除</a>';
-        html += '</div>'
-        $('#payment').append(html);
-        $('#payment_val').html(i);
-        orderno();
-        //relaydate();
+    function get_costaccsum() {
+        var costaccsum          = 0;
+        var untraffic_sum       = 0; //不含大交通合计
+        $('.cost_expense').each(function(index, element) {
+            $(this).find('.cost').blur(function(){
+                var cost        = $(this).val();
+                var amount      = $(this).parent().find('.amount').val();
+                var ct          = accMul(cost,amount);
+                $(this).parent().find('.totalval').val(ct.toFixed(2));
+                cost_total();
+            });
+            $(this).find('.amount').blur(function(){
+                var amount      = $(this).val();
+                var cost        = $(this).parent().find('.cost').val();
+                var ct          = accMul(cost,amount);
+                $(this).parent().find('.totalval').val(ct.toFixed(2));
+                cost_total();
+            });
+            $(this).find('.costaccType').change(function () {
+                cost_total();
+            })
+
+            var costacctype     = $(this).find('.costaccType').val();
+            var untraffictotalval = costacctype == 12 ? 0 : $(this).find('.totalval').val();
+            untraffic_sum       += parseFloat(untraffictotalval);
+        });
+        $('#untraffic_sum').val(untraffic_sum.toFixed(2));
+        $('.totalval').each(function(index, element) {
+            costaccsum += parseFloat($(this).val());
+        });
+        return costaccsum;
     }
 </script>
 

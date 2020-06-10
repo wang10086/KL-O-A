@@ -35,6 +35,7 @@
                                         <th class="sorting" data="">起始时间</th>
                                         <th class="sorting" data="">结束时间</th>
                                         <th class="sorting" data="">申请人</th>
+                                        <th class="sorting" data="">状态</th>
                                         <th width="40" class="taskOptions">编辑</th>
 
                                         <if condition="rolemenu(array('Customer/del_sale'))">
@@ -43,14 +44,19 @@
                                     </tr>
                                     <foreach name="lists" item="row">
                                     <tr>
-                                        <td>{$row.title}</td>
+                                        <td><a href="{:U('Customer/public_sale_detail',array('id'=>$row['id']))}">{$row.title}</a></td>
                                         <td>{$types[$row['type']]}</td>
                                         <td>{$row.customer}</td>
                                         <td>{$row.st_time|date='Y-m-d',###}</td>
                                         <td>{$row.et_time|date='Y-m-d',###}</td>
                                         <td>{$row.blame_name}</td>
+                                        <td>{$audit_status[$row['status']]}</td>
                                         <td class="taskOptions">
-                                        <a href="{:U('Customer/public_sale_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            <?php if (in_array(cookie('userid'),array($row['create_user_id'],1,11)) && in_array($row['status'],array(0,2))){ ?>
+                                                <a href="{:U('Customer/public_sale_add',array('id'=>$row['id']))}" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            <?php }else{ ?>
+                                                <a href="javascript:;" title="编辑" class="btn btn-default btn-smsm"><i class="fa fa-pencil"></i></a>
+                                            <?php } ?>
                                         </td>
                                         <if condition="rolemenu(array('Customer/del_sale'))">
                                         <td class="taskOptions">

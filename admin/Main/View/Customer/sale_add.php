@@ -71,7 +71,16 @@
 
                                             <div id="formsbtn">
                                                 <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                                <?php if ($list && in_array($list['status'],0,2)){ ?>
+                                                <button type="button" onclick="$('#submitForm').submit()" class="btn btn-warning btn-lg" id="lrpd">提交</button>
+                                                <?php } ?>
                                             </div>
+                                        </form>
+
+                                        <form method="post" action="{:U('Customer/public_save_process')}" name="myform" id="submitForm">
+                                            <input type="hidden" name="dosubmint" value="1">
+                                            <input type="hidden" name="saveType" value="3">
+                                            <input type="hidden" name="id" value="{$list.id}">
                                         </form>
                                     </div>
                                 </div><!-- /.box-body -->
