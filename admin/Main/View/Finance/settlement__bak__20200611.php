@@ -53,11 +53,18 @@
                                     <h3 class="box-title">项目结算</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <?php if(!in_array($audit['dst_status'],array(1,3)) || session('userid')==11){ ?>
-                                        <include file="settlement_edit" />
+                                    <?php if($is_zutuan == 1 && $op['kind'] != 87){ ?> <!--87=>排除单进院所,单进院所暂时未生成地接团-->
+                                        <?php if (($dijie_shouru && !in_array($audit['dst_status'],array(1,3))) || session('userid')==11){ ?>
+                                            <include file="settlement_edit" />
+                                        <?php }else{ ?>
+                                            <include file="settlement_read" />
+                                        <?php } ?>
                                     <?php }else{ ?>
-                                        <include file="settlement_read" />
-                                    <?php } ?>
+                                        <?php if(!in_array($audit['dst_status'],array(1,3)) || session('userid')==11){ ?>
+                                            <include file="settlement_edit" />
+                                        <?php }else{ ?>
+                                            <include file="settlement_read" />
+                                        <?php } } ?>
                                 </div>
                             </div>
                                      
@@ -73,7 +80,7 @@
                                         <div id="formsbtn" style="padding-bottom:20px; margin-top:10px; color:#ff3300;">请确认各项结算费用是否正确，请务必确认，不可反复提交申请</div>
                                         <button type="button" onClick="$('#save_settlement').submit()" class="btn btn-info btn-lg" style=" padding-left:40px; padding-right:40px; margin-right:10px;">保存结算</button>
                                         <!--<button type="button" onClick="check_huikuan()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>-->
-                                        <button type="button" onClick="check_huikuan()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
+                                        <button type="button" onClick="check_settlement_submit()" class="btn btn-success btn-lg" style=" padding-left:40px; padding-right:40px; margin-left:10px;">申请审批</button>
 
                                     <?php } ?>
                                 </div>    
@@ -90,8 +97,9 @@
 <include file="Index:footer2" />
 
 <script>
-    //const userkey = {$userkey};
+    const userkey = {$userkey};
 	$(document).ready(function(e) {
+	    autocomplete_id('djop_create_user_name','djop_create_user_id',userkey);
         get_total_group_shouru(); //各拼团收入之和
         cost_total();
 		orderno();
@@ -237,7 +245,56 @@
 			var renjunmaoli       = accDiv(maoli,renshu).toFixed(2);
 			$('#renjunmaoli').val(renjunmaoli);
 		}
+
+        //自动匹配组团地接毛利额
+        let kind                = {$op.kind};
+        let in_dijie            = {$op.in_dijie};
+        if (kind == 87 && in_dijie == 1) { //单进院所 + 内部地接
+            set_group_land_maoli();
+        }
 	}
+
+	//自动匹配组团地接毛利额
+	function set_group_land_maoli() {
+        let group_gross_profit_ratio = {$kinds.group_gross_profit_ratio}; //组团方结算毛利比率
+        let land_gross_profit_ratio  = {$kinds.land_gross_profit_ratio} //地接方结算毛利比率
+        let maoli                    = $('#maoli').val(); //总毛利
+        let maoli1                   = accDiv(maoli,10);
+        let group_maoli              = accMul(maoli1,group_gross_profit_ratio);
+        let land_maoli               = accMul(maoli1,land_gross_profit_ratio);
+        $('input[name="info[maoli]"]').val(group_maoli);
+        $('input[name="djop[maoli]"]').val(land_maoli)
+    }
+
+    //自动保存相关地接团(单进院所 + 内部地接)
+    function save_dijie() {
+	    //let arr                      = new Array();
+	    let obj                      = {};
+        let group_opid               = {$op.op_id};
+        obj.op_id                    = {$dijie_op_data ? $dijie_op_data[op_id] : 0};
+        obj.group_id                 = "{$dijie_op_data ? $dijie_op_data[group_id] : 0}";
+        obj.project                  = "{$dijie_op_data ? $dijie_op_data[project] : 0}";
+        obj.maoli                    = $('input[name="djop[maoli]"]').val();
+        obj.create_user_name         = $('#djop_create_user_name').val();
+        obj.create_user_id           = $('#djop_create_user_id').val();
+        //arr.push(obj)
+        if (!obj.create_user_name || !obj.create_user_id){
+            art_show_msg('地接团实施负责人填写错误',3); return false;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url : "{:U('Ajax/save_settlement_dijie_op')}",
+            data: {group_opid:group_opid,data:obj},
+            success: function () {
+                //alert('yes');
+                //console.log(data);
+            },
+            error:function () {
+                console.log("it's wrong");
+            }
+        })
+    }
 
 	/*function appcost(){
 		if (confirm("您确认要提交审批吗？审批后您将无法修改预算？")){
@@ -254,6 +311,20 @@
 		}
 	}*/
 
+	//提交结算前检查
+    function check_settlement_submit() {
+        let kind                = {$op.kind};
+        let in_dijie            = {$op.in_dijie};
+        if (kind == 87 && in_dijie == 1){ //单进院所 + 内部地接
+            let djop_create_user_name = $('#djop_create_user_name').val().trim();
+            let djop_create_user_id = $('#djop_create_user_id').val();
+            if (!djop_create_user_name || !djop_create_user_id) {
+                art_show_msg('地接团实施负责人填写错误',3); return false;
+            }
+        }
+        check_huikuan();
+    }
+
 	//检查是否全部回款
     function check_huikuan(){
         let add_group           = {$op.add_group};
@@ -268,21 +339,24 @@
         let noSupplierResNum = {$noSupplierResNum};
         if(noSupplierResNum){ art_show_msg('您有结算项未填写合格供方',3); return false; }
         let yihuikuan  = <?php echo $yihuikuan?$yihuikuan:0; ?>;
+        let is_dijie   = {$is_dijie};
 
-        if (yihuikuan){
+        if (yihuikuan || (!yihuikuan && is_dijie)){
            checkGrossRate();
         }else{
             art_show_msg('该团未全部回款',5);
             return false;
         }
     }
-    
+
     //检查最低毛利率
     function checkGrossRate() {
         let opid        = {$op['op_id']};
         let maolilv     = $('#maolilv').val();
         let untraffic_maolilv = $('#untraffic_maolilv').val(); //不含大交通毛利率
         if (!maolilv) { art_show_msg('毛利率不能为空',3); return false; }
+        let kind                = {$op.kind};
+        let in_dijie            = {$op.in_dijie};
 
         $.ajax({
             type : 'POST',
@@ -290,9 +364,11 @@
             data : {opid:opid, maolilv:untraffic_maolilv},
             success : function(data){
                 if (data.stu == 1){
+                    if (kind == 87 && in_dijie == 1){ save_dijie(); } //单进院所 + 内部地接
                     $('#appsubmint').submit();
                 }else if(data.stu == 2){
                     if (confirm(data.msg)){ //未达到规定毛利率
+                        if (kind == 87 && in_dijie == 1){ save_dijie(); } //单进院所 + 内部地接
                         $('#appsubmint').submit();
                     }else{
                         return false;

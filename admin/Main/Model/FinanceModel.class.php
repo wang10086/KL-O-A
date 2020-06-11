@@ -118,7 +118,8 @@ class FinanceModel extends Model{
             $costacc[]              = $v;
         }
 
-        if ($is_zutuan == 1 && $op['kind'] != 87){ //87=>排除单进院所,单进院所暂时未生成地接团
+        //删除内部地接  bak__20200611
+        /*if ($is_zutuan == 1 && $op['kind'] != 87){ //87=>排除单进院所,单进院所暂时未生成地接团
             $dijie_shouru           = $this->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
             $op_types               = array_column($costacc,'type');
 
@@ -138,10 +139,11 @@ class FinanceModel extends Model{
 
                 $costacc[]          = $arr;
             }
-        }
+        }*/
         return $costacc;
     }
 
+    /*//删除内部地接  bak__20200611
     public function get_landAcquisitionAgency_money($op,$req_type){
         switch ($req_type){
             case 800:
@@ -156,7 +158,7 @@ class FinanceModel extends Model{
         $where['audit_status']  = 1;
         $money                  = $db->where($where)->getField('shouru');
         return $money;
-    }
+    }*/
 
     /**
      * 保存回款计划

@@ -287,8 +287,8 @@
         </div>
     </div>
 
-    <?php if ($op['kind']==87 && $op['in_dijie'] ==1){ ?> <!--单进院所 + 地接团-->
-        <div class="form-group col-md-12 box-title" style="margin:20px 0 10px 0;">内部地接核算（组团毛利：地接毛利 = {$kinds.group_gross_profit_ratio}：{$kinds.land_gross_profit_ratio}）</div>
+    <?php /*if ($op['kind']==87 && $op['in_dijie'] ==1){ */?><!-- <!--单进院所 + 地接团-->
+        <!--<div class="form-group col-md-12 box-title" style="margin:20px 0 10px 0;">内部地接核算（组团毛利：地接毛利 = {$kinds.group_gross_profit_ratio}：{$kinds.land_gross_profit_ratio}）</div>
         <div class="content line-gray">
             <div class="form-group col-md-3">
                 <label>发起团号：</label>
@@ -330,8 +330,8 @@
                 <input type="text" name="djop[create_user_name]" id="djop_create_user_name" class="form-control" value="{$dijie_op_data['create_user_name']}" />
                 <input type="hidden" name="djop[create_user_id]" id="djop_create_user_id" value="{$dijie_op_data['create_user']}" />
             </div>
-        </div>
-    <?php } ?>
+        </div>-->
+    <?php /*} */?>
 
     <?php if ($op['add_group']==1){ ?> <!--内部拼团数据-->
         <include file="settlement_op_group" />

@@ -53,15 +53,26 @@
                                     <h3 class="box-title">项目预算</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body">
-                                    <?php if(!in_array($audit['dst_status'],array(1,3)) && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
-                                        <include file="op_edit" />
-                                    <?php }else{ ?>
-                                        <?php if (in_array(cookie('userid'),array(1,11))){ ?>
+                                    <?php if($is_zutuan == 1 && $op['kind'] != 87){ ?> <!--87=>排除单进院所,单进院所暂时未生成地接团-->
+                                        <?php if ($dijie_shouru && !in_array($audit['dst_status'],array(1,3))  && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
                                             <include file="op_edit" />
                                         <?php }else{ ?>
-                                            <include file="op_read" />
+                                            <?php if ($dijie_shouru && in_array(cookie('userid'),array(1,11))){ ?>
+                                                <include file="op_edit" />
+                                            <?php }else{ ?>
+                                                <include file="op_read" />
+                                            <?php } ?>
+                                        <?php } ?>
+                                    <?php }else{ ?>
+                                        <?php if(!in_array($audit['dst_status'],array(1,3)) && (!$jd || in_array(cookie('userid'),array($jd,1,11)))){ ?>
+                                            <include file="op_edit" />
+                                        <?php }else{ ?>
+                                            <?php if (in_array(cookie('userid'),array(1,11))){ ?>
+                                                <include file="op_edit" />
+                                            <?php }else{ ?>
+                                                <include file="op_read" />
+                                            <?php } ?>
                                     <?php } } ?>
-
                                 </div>
                             </div>
 
@@ -95,7 +106,9 @@
 	$(document).ready(function(e) {
         cost_total();
     });
-
+    /*$('.costaccType').change(function () {
+        console.log('aa');
+    })*/
 	//新成本核算项
 	function add_costacc(){
 		var i = parseInt($('#costacc_val').text())+1;
@@ -266,8 +279,22 @@
 		if (confirm("您确认要提交审批吗？")){
 			var renshu   = parseInt($('#renshu').val());        //人数
 			var shouru   = parseInt($('#shouru').val());        //收入
+            var maolilv  = toPoint($('#maolilv').val());        //毛利率
+            var is_dijie = <?php echo $is_dijie; ?>;            //内部地接毛利率不能大于10%
+            var userid   = <?php echo session('userid'); ?>;
 			if(shouru && renshu){
-                checkGrossRate();
+                if (is_dijie != 0 && maolilv > 0.1){
+                    if (userid == 11){
+                        //$('#appsubmint').submit();
+                        checkGrossRate();
+                    }else{
+                        art.dialog.alert('该团为内部地接团,毛利额不能超过10%');
+                        return false;
+                    }
+                }else{
+                    //$('#appsubmint').submit();
+                    checkGrossRate();
+                }
 			}else{
 				alert('请填写人数和预算收入');
 				return false;
@@ -276,6 +303,14 @@
 			return false;
 		}
 	}
+
+	//百分数转化为小数
+    function toPoint(percent){
+        var str=percent.replace("%","");
+            str= str/100;
+        var res = str.toFixed(2);
+        return res;
+    }
 
     //自动计算回款比例
     function check_ratio(num,obj) {
@@ -294,6 +329,7 @@
     }
     
     function check_appcost() {
+        var dijie           = {$is_dijie};
         var shouru          = $('#shouru').val().trim();
         if (!shouru || shouru==0){ art_show_msg('收入不能为空',3); return false; }
         var money_return_plan = 0;
@@ -301,7 +337,7 @@
             money_return_plan += parseFloat($(this).val());
         })
 
-        if (money_return_plan != shouru){ art_show_msg('请确保回款总金额和收入一致',3); return false; }
+        if (money_return_plan != shouru && dijie == 0){ art_show_msg('请确保回款总金额和收入一致',3); return false; }
         $('#save_appcost').submit();
     }
 

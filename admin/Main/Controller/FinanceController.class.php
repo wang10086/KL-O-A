@@ -103,6 +103,8 @@ class FinanceController extends BaseController {
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
 		$this->kinds          =  M('project_kind')->getField('id,name', true);
+
+        /* //地接_bak____20200611
         $is_dijie             = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
         $this->is_dijie       = $is_dijie?$is_dijie:0;
         $is_zutuan            = $op['in_dijie'];
@@ -129,8 +131,8 @@ class FinanceController extends BaseController {
                 $costacc[]          = $arr;
             }
         }
+        $this->dijie_shouru         = $dijie_shouru?$dijie_shouru:0;*/
 
-        $this->dijie_shouru         = $dijie_shouru?$dijie_shouru:0;
         $this->costacc              = $costacc;
         $this->type                 = C('JIEKUAN_TYPE'); //回款方式
         $this->company              = C('COMPANY'); //回款单位
@@ -620,7 +622,8 @@ class FinanceController extends BaseController {
                     $costacc[$k]['beizhu']  = $really_cost['upd_remark']?$really_cost['upd_remark']:$g;
                 }
             }
-            //$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();*/
+            //$qita   = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>4))->order('id')->select();
+                    $this->qita				= $qita;*/
         }
         $budget                 = M('op_budget')->where(array('op_id'=>$opid))->find();
         $settlement             = M('op_settlement')->where(array('op_id'=>$opid))->find();
@@ -664,20 +667,15 @@ class FinanceController extends BaseController {
         $op['show_reason']      = $show_reason;
 
         $this->noSupplierResNum = count($noSupplierResData);
-        $is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
-        $this->is_dijie         = $is_dijie?$is_dijie:0;
-        $dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
         $this->kind				= M('supplierkind')->where(array('id'=>array('neq',2)))->getField('id,name',true);
         $this->kind_all		    = M('supplierkind')->getField('id,name',true);
         //$this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
         $budget_list            = M('op_budget')->where(array('op_id'=>$opid))->find();
-        $this->should_back_money= $is_dijie?$settlement['shouru']:($budget_list['should_back_money']?$budget_list['should_back_money']:$budget['shouru']); //回款金额(带入结算收入)
         $this->op				= $op;
         $this->costacc			= $costacc;
         $this->jiesuan			= $jiesuan;
         $this->budget			= $budget;
         $this->settlement		= $settlement;
-        $this->qita				= $qita;
         $this->audit			= $audit;
         $this->business_depts	= C('BUSINESS_DEPT');
         $this->subject_fields	= C('SUBJECT_FIELD');
@@ -685,7 +683,12 @@ class FinanceController extends BaseController {
         //$this->kinds			=  M('project_kind')->getField('id,name', true);
         $this->kinds			=  M('project_kind')->where(array('id'=>$op['kind']))->find();
         $this->is_zutuan        = $is_zutuan;
-        $this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
+        //$is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
+        //$this->is_dijie         = $is_dijie?$is_dijie:0;
+        //$dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
+        //$this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
+
+        $this->should_back_money= $budget_list['should_back_money']?$budget_list['should_back_money']:$budget['shouru']; //回款金额(带入结算收入)
         $this->op_cost_type     = $op_cost_type;
         $this->op_cost_type_str = implode(',',$op_cost_type);
         //检查先回款,在做结算  //已回款金额
@@ -694,10 +697,10 @@ class FinanceController extends BaseController {
         $this->guide            = M()->table('__GUIDE_PAY__ as p')->field('g.name as title,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id=g.id')->where(array('p.op_id'=>$opid,'p.status'=>2))->select();
         $this->businessDep      = C('DIJIE_NAME');
         $this->groups           = M('op_group')->where(array('op_id'=>$opid))->select(); //拼团信息
-        $this->userkey          = get_username(); //人员名单关键字
-        if ($op['kind']==87 && $op['in_dijie'] ==1) {  //单进院所 + 地接团
+        //$this->userkey          = get_username(); //人员名单关键字
+        /*if ($op['kind']==87 && $op['in_dijie'] ==1) {  //单进院所 + 地接团
             $this->dijie_op_data= $this->get_dijie_op_data($op);
-        }
+        }*/
         $this->display('settlement');
     }
 
