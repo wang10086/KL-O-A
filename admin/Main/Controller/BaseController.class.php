@@ -217,6 +217,21 @@ class BaseController extends Controller {
         if ($row['dst_status'] != P::AUDIT_STATUS_NOT_AUDIT ) {
             // return P::ERROR;
         }
+
+        if ($row['req_type'] == P::REQ_TYPE_BUDGET) { //审核预算
+            $field          = 'o.op_id,o.group_id,o.project,o.create_user,o.create_user_name,o.create_user_department_id';
+            $list           = M()->table('__'.strtoupper($row['req_table']).'__  as b')->join('__OP__ as o on o.op_id=b.op_id','left')->field($field)->where(array('b.id'=>$row['req_id']))->find();
+            $manager_data   = get_manage_uid($list['create_user']);
+            $manager_jk_uid = $manager_data['jk_audit_user_id'];
+            if (!in_array(cookie('userid'),array($manager_jk_uid,11))){
+                $this->msg  = '<span class="red">您只能审核本部门的预算信息</span>';
+                $this->display('audit_ok');
+                die;
+            }
+        }else{
+            P('bbb');
+        }
+
         $data = array();
 
         $data['audit_uid']   = session('userid');
