@@ -1,6 +1,4 @@
-<?php if($is_zutuan == 1 && $dijie_shouru == 0 && $op['kind'] != 87){ ?>  <!--87=>排除单进院所,单进院所暂时未生成地接团-->
-    <div class="content" style="margin-left:15px;">地接部门尚未做该地接项目的结算！</div>
-<?php }else{ ?>
+
     <div class="content" style="padding-top:0px;">
          <table class="table table-striped" id="font-14-p">
             <thead>
@@ -128,4 +126,3 @@
         <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> 打印</button>
         <a href="{:U('Export/settlement',array('opid'=>$op['op_id']))}" class="btn btn-default"><i class="fa fa-arrow-circle-down"></i> 导出</a>
     </div>
-<?php } ?>

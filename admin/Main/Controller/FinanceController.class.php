@@ -590,11 +590,10 @@ class FinanceController extends BaseController {
         $where                  = array();
         $where['op_id']         = $opid;
         $op                     = M('op')->where($where)->find();
-        $is_zutuan              = $op['in_dijie'];
 
         $jiesuan                = M('op_costacc')->where(array('op_id'=>$opid,'status'=>2))->order('id')->select();
         if(count($jiesuan)==0){
-            $costacc            = $mod->get_budget_costacc($op,$is_zutuan);
+            $costacc            = $mod->get_budget_costacc($op);
 
             /*$costacc    = M('op_cost')->where(array('op_id'=>$opid))->order('cost_type')->select();
             foreach($costacc as $k=>$v){
@@ -669,7 +668,6 @@ class FinanceController extends BaseController {
         $this->noSupplierResNum = count($noSupplierResData);
         $this->kind				= M('supplierkind')->where(array('id'=>array('neq',2)))->getField('id,name',true);
         $this->kind_all		    = M('supplierkind')->getField('id,name',true);
-        //$this->costtype			= array('1'=>'其他','2'=>'专家辅导员','3'=>'合格供方','4'=>'物资');
         $budget_list            = M('op_budget')->where(array('op_id'=>$opid))->find();
         $this->op				= $op;
         $this->costacc			= $costacc;
@@ -682,11 +680,6 @@ class FinanceController extends BaseController {
         $this->ages 			= C('AGE_LIST');
         //$this->kinds			=  M('project_kind')->getField('id,name', true);
         $this->kinds			=  M('project_kind')->where(array('id'=>$op['kind']))->find();
-        $this->is_zutuan        = $is_zutuan;
-        //$is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
-        //$this->is_dijie         = $is_dijie?$is_dijie:0;
-        //$dijie_shouru           = $mod->get_landAcquisitionAgency_money($op,P::REQ_TYPE_SETTLEMENT);   //801 获取地接结算收入
-        //$this->dijie_shouru     = $dijie_shouru?$dijie_shouru:0;
 
         $this->should_back_money= $budget_list['should_back_money']?$budget_list['should_back_money']:$budget['shouru']; //回款金额(带入结算收入)
         $this->op_cost_type     = $op_cost_type;
@@ -698,9 +691,6 @@ class FinanceController extends BaseController {
         $this->businessDep      = C('DIJIE_NAME');
         $this->groups           = M('op_group')->where(array('op_id'=>$opid))->select(); //拼团信息
         //$this->userkey          = get_username(); //人员名单关键字
-        /*if ($op['kind']==87 && $op['in_dijie'] ==1) {  //单进院所 + 地接团
-            $this->dijie_op_data= $this->get_dijie_op_data($op);
-        }*/
         $this->display('settlement');
     }
 

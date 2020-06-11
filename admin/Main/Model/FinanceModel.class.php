@@ -93,7 +93,7 @@ class FinanceModel extends Model{
      * @param $is_zutuan    是否是内部地接 1=>是 0=>否
      * @return array
      */
-    public function get_budget_costacc($op,$is_zutuan=0){
+    public function get_budget_costacc($op){
         $opid                       = $op['op_id'];
         $guide                      = M()->table('__GUIDE_PAY__ as p')->field('g.name,p.op_id,p.num,p.price,p.total,p.really_cost,p.remark')->join('left join __GUIDE__ as g on p.guide_id = g.id')->where(array('p.op_id'=>$opid))->select();
         $costa                      = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1,'type'=>array('not in',array(2,13))))->order('type')->select();  //排除专家辅导员和地接预算
