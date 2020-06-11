@@ -114,9 +114,9 @@ class OpController extends BaseController {
             $province                   = I('province');
             $addr                       = I('addr');
             $info['op_create_user']     = cookie('rolename');
-            if ($info['in_dijie'] == 1) {
+            /*if ($info['in_dijie'] == 1) {
                 $info['project']        = '【发起团】'.$info['project'];
-            }
+            }*/
 
             $exe_user_id                = I('exe_user_id');
             $customer                   = get_customerlist();
@@ -2841,13 +2841,13 @@ class OpController extends BaseController {
 
                 $this->save_add_group($opid,$resid,$group); //保存拼团信息
                 //如果是内部地接, 生成一个新地接团
-                if ($op['in_dijie'] == 1 && !$op['dijie_opid'] && $op['kind'] != 87) { //87=>单进院所不生成地接团
+                /*if ($op['in_dijie'] == 1 && !$op['dijie_opid'] && $op['kind'] != 87) { //87=>单进院所不生成地接团
                     $mod                = D('Op');
                     $new_op_id          = $mod -> create_dejie_op($opid , $info ,$op);
-                }
+                }*/
 
                 $infos                  = array();
-                $infos['dijie_opid']    = $new_op_id ? $new_op_id : '';
+                //$infos['dijie_opid']    = $new_op_id ? $new_op_id : '';
                 $infos['group_id']	    = $info['group_id'];
                 $infos['status']	    = 1;
                 M('op')->data($infos)->where(array('op_id'=>$opid))->save();

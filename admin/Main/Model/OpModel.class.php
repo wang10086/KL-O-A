@@ -12,15 +12,9 @@ use Sys\P;
 
 class OpModel extends Model{
 
-    //创建一个地接团
+    /*//创建一个地接团    bak__20200611
     public function create_dejie_op($opid , $info ,$op){
         $new_op                         = array();
-        /*$project                        = '【地接团】'.$op['project'];
-        $new_op['project']              = str_replace('【发起团】','',$project);*/
-        /*$groupid                        = $op['dijie_name'].date('Ymd',$gtime);
-        //团号信息
-        $count_groupids                 = M('op')->where(array('group_id'=>array('like','%'.$groupid.'%')))->count();
-        $new_op['group_id']             = $count_groupids?$groupid.'-1'.$count_groupids:$groupid;*/
         $new_op['project']              = create_dj_project($op['project']);
         $new_op['op_id']                = opid();
         $gtime                          = $info['dep_time']?$info['dep_time']:time();
@@ -95,7 +89,7 @@ class OpModel extends Model{
         }
 
         return $new_op['op_id'];
-    }
+    }*/
 
     //保存标准化模块
     public function save_create_op_product($opid , $costacc, $resid='', $num=0){
