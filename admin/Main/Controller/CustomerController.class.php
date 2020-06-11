@@ -1250,10 +1250,9 @@ class CustomerController extends BaseController {
     //销售支持方案
     public function public_salePro_add(){
         $this->title('销售支持方案');
-        $sale_db                    = M('customer_sale');
         $id                         = I('id');
         if (!$id) $this->error('获取数据错误');
-        $list                       = $sale_db->find($id);
+        $list                       = M('customer_sale')->find($id);
         $pro_list                   = M('customer_sale_project')->where(array('sale_id'=>$id))->find();
         $costacc                    = M('customer_sale_project_cost')->where(array('pro_id'=>$pro_list['id']))->select();
 
@@ -1373,13 +1372,12 @@ class CustomerController extends BaseController {
                 $info['content']    = trim($info['content']);
                 $info['sale_id']    = $sale_id;
                 $num                = 0;
-                if ($sale_id){
-                    $pro_list       = $db->where(array('sale_id'=>$sale_id))->find();
-                    $res            = $pro_list ? $db->where(array('id'=>$pro_list['id']))->save($info) : $db->add($info);
+                if ($id){
+                    $res            = $db->where(array('id'=>$id))->save($info);
                     if ($res) $num++;
                     foreach($costacc as $k=>$v){
                         $data           = $v;
-                        $data['pro_id'] = $pro_list['id'];
+                        $data['pro_id'] = $id;
                         if($resid && $resid[$k]['id']){
                             $edits      = $cost_db->data($data)->where(array('id'=>$resid[$k]['id']))->save();
                             $delid[]    = $resid[$k]['id'];
@@ -1390,21 +1388,86 @@ class CustomerController extends BaseController {
                             if($savein) $num++;
                         }
                     }
-                    $del = $cost_db->where(array('pro_id'=>$pro_list['id'],'id'=>array('not in',$delid)))->delete();
+                    $del = $cost_db->where(array('pro_id'=>$id,'id'=>array('not in',$delid)))->delete();
                     if($del) $num++;
-                    if ($num){
-                        $this->success('保存成功');
-                    }else{
-                        $this->error('保存失败');
-                    }
                 }else{
-                    $res            = $db->add($info);
+                    $res1           = $db->add($info);
+                    if ($res1) $num++;
                     foreach ($costacc as $v){
                         $v['pro_id']= $res;
-                        $cost_db->add($v);
+                        $res2       = $cost_db->add($v);
+                        if ($res2) $num++;
                     }
                 }
+                if ($num){
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
 
+            }
+
+            if ($saveType == 6){
+                $id                         = I('id');
+                if (!$id) $this->error('数据保存失败');
+                $manager_data               = get_manage_uid(cookie('userid'));
+
+                $db                         = M('customer_sale_project');
+                $data                       = array();
+                $data['audit_status']       = 3;
+                $data['audit_uid']          = $manager_data['manager_id'];
+                $data['audit_uname']        = $manager_data['manager_name'];
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                if ($res) {
+                    $pro_list               = M()->table('__CUSTOMER_SALE_PROJECT__ as p')->join('__CUSTOMER_SALE__ as s on s.id=p.sale_id','left')->field('s.title,p.*')->where(array('p.id'=>$id))->find();
+                    $process_node_id        = 33; //审批协助销售申请
+                    $pro_status             = 2; //事前提醒
+                    $title                  = $pro_list['title'];
+                    $req_id                 = $pro_list['sale_id'];
+                    $to_uid                 = $pro_list['audit_uid'];
+                    $to_uname               = $pro_list['audit_uname'];
+                    save_process_log($process_node_id, $pro_status, $title, $req_id, '', $to_uid, $to_uname);
+
+                    $ok_node_id = 32; //提交协助销售申请
+                    save_process_ok($ok_node_id);
+                    $this->success('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
+            }
+
+            if ($saveType == 7){
+                $id                         = I('id');
+                $status                     = I('status');
+                $audit_remark               = trim(I('audit_remark'));
+                if (!id) $this->error('获取数据错误');
+                if (!status) $this->error('请先选择是否审核通过');
+                $db                         = M('customer_sale_project');
+                $data                       = array();
+                $data['audit_status']       = $status;
+                $data['audit_time']         = NOW_TIME;
+                $data['audit_remark']       = $audit_remark;
+                $res                        = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    if ($status == 1){ //审核通过
+                        $pro_list               = M()->table('__CUSTOMER_SALE_PROJECT__ as p')->join('__CUSTOMER_SALE__ as s on s.id=p.sale_id','left')->field('s.title,p.*')->where(array('p.id'=>$id))->find();
+                        $process_node_id        = 33; //审批协助销售申请
+                        $pro_status             = 1; //未读
+                        $title                  = $pro_list['title'];
+                        $req_id                 = $pro_list['sale_id'];
+                        $to_uid1                = $pro_list['create_user_id']; //反馈给业务
+                        $to_uname1              = $pro_list['create_user_name'];
+                        $to_uid2                = 55; //反馈给财务经理
+                        $to_uname2              = '程小平';
+                        save_process_log($process_node_id, $pro_status, $title, $req_id, '', $to_uid1, $to_uname1);
+                        save_process_log($process_node_id, $pro_status, $title, $req_id, '', $to_uid2, $to_uname2);
+                    }
+                    $ok_node_id             = 33; //审批协助销售申请
+                    save_process_ok($ok_node_id,$audit_remark);
+                    $this->success('审核成功');
+                }else{
+                    $this->error('审核失败');
+                }
             }
         }
     }
