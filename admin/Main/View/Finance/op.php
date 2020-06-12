@@ -243,7 +243,14 @@
         //毛利
         if(shouru && chengben){
             var maoli    = accSub(shouru,chengben).toFixed(2);
+            var zt_rate  = {$maoli_rate['zt_rate'] ? $maoli_rate['zt_rate'] : 0};
+            var dj_rate  = {$maoli_rate['dj_rate'] ? $maoli_rate['dj_rate'] : 0};
+            var one_maoli= accDiv(maoli,10); //毛利/10
+            var zt_maoli = accMul(one_maoli,zt_rate).toFixed(2);
+            var dj_maoli = accMul(one_maoli,dj_rate).toFixed(2);
             $('#maoli').val(maoli);
+            $('#zt_maoli').val(zt_maoli);
+            $('#dj_maoli').val(dj_maoli);
         }
 
         //毛利率

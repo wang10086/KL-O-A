@@ -1,7 +1,7 @@
 <div class="form-group col-md-6" id="standard_box">
     <p><label>是否标准化产品</label></p>
     <input type="radio" name="info[standard]" value="1" <?php if ($list['standard'] == 1) echo "checked"; ?>> &#8194;标准化 &#12288;
-    <input type="radio" name="info[standard]" value="2" <?php if (in_array($list['standard'], array(0,2))) echo "checked"; ?>> &#8194;非标准化
+    <input type="radio" name="info[standard]" value="0" <?php if ($list['standard'] == 0) echo "checked"; ?>> &#8194;非标准化
 </div>
 
 <div class="form-group col-md-6" style="clear: right;" id="line_or_product">

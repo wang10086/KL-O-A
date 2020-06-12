@@ -328,4 +328,15 @@ class FinanceModel extends Model{
         }
         return $data;
     }
+
+    //获取组团\地接毛利所占比例
+    public function get_maoli_rate($opid){
+        $op                         = M('op')->where(array('op_id'=>$opid))->field('op_id,group_id,project,create_user,create_user_name,kind,standard')->find();
+        $standard                   = $op['standard'];
+        $kind_list                  = M('project_kind')->where(array('id'=>$op['kind']))->find();
+        $data                       = array();
+        $data['zt_rate']            = $standard == 1 ? $kind_list['group_gross_profit_ratio'] : $kind_list['group_ratio_unique'];
+        $data['dj_rate']            = $standard == 1 ? $kind_list['land_gross_profit_ratio'] : $kind_list['land_ratio_unique'];
+        return $data;
+    }
 }

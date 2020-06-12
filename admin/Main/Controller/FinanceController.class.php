@@ -103,6 +103,8 @@ class FinanceController extends BaseController {
 		$this->subject_fields = C('SUBJECT_FIELD');
 		$this->ages           = C('AGE_LIST');
 		$this->kinds          =  M('project_kind')->getField('id,name', true);
+		$this->maoli_rate     = $mod->get_maoli_rate($opid);
+
 
         /* //地接_bak____20200611
         $is_dijie             = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
