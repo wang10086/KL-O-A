@@ -236,43 +236,51 @@
         <input type="hidden" name="info[budget]" id="costaccsumval" value="">
         <input type="hidden" name="info[untraffic_sum]" id="untraffic_sum" value="{$budget.untraffic_sum}" />
         <div style="width:100%; float:left;">
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>实际人数：</label>
                 <input type="text" name="info[renshu]" id="renshu" class="form-control" value="{$settlement.renshu}" onBlur="lilv()" />
             </div>
 
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>实际收入：</label>
-                <?php if ($is_dijie) { ?>
-                <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" />
-                <?php } else { ?>
                 <?php if ($op['create_time'] < strtotime('20190101')) { ?>
                 <!--兼容之前的旧数据手动填写-->
                 <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$settlement.shouru}" onBlur="lilv()" />
                 <?php } else { ?>
                 <input type="text" name="info[shouru]" id="shouru" class="form-control" value="{$should_back_money}" onBlur="lilv()" readonly />
                 <?php } ?>
-                <?php } ?>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label>收入(不含大交通)：</label>
-                <!--<input type="text" name="info[untraffic_maoli]" id="untraffic_maoli" class="form-control" value="{$budget.untraffic_maoli}" />-->
                 <input type="text" name="info[untraffic_shouru]" id="untraffic_shouru" class="form-control" value="{$budget.untraffic_shouru}" readonly />
             </div>
-
-            <div class="form-group col-md-3">
+        </div>
+        <div style="width:100%; float:left;">
+            <div class="form-group col-md-4">
                 <label>毛利率(不含大交通)：</label>
                 <input type="text" name="info[untraffic_maolilv]" id="untraffic_maolilv" class="form-control" value="{$budget.untraffic_maolilv}" readonly />
+            </div>
+
+            <div class="form-group col-md-4">
+                <label>组团方毛利（<span class="" id="zt">{$maoli_rate.zt_rate}</span>）：</label>
+                <input type="hidden" name="info[zt_rate]" id="zt_rate" value="{$maoli_rate['zt_rate']}" />
+                <input type="text" name="info[zt_maoli]" id="zt_maoli" class="form-control" value="{$settlement.zt_maoli}" readonly />
+            </div>
+
+            <div class="form-group col-md-4">
+                <label>接待方毛利（<span class="" id="dj">{$maoli_rate.dj_rate}</span>）：</label>
+                <input type="hidden" name="info[dj_rate]" id="dj_rate" value="{$maoli_rate['dj_rate']}" />
+                <input type="text" name="info[dj_maoli]" id="dj_maoli" class="form-control" value="{$settlement.dj_maoli}" readonly />
             </div>
         </div>
         <div style="width:100%;float:left;">
             <div class="form-group col-md-4">
                 <label>毛利：</label>
-                <?php if ($op['kind']==87 && $op['in_dijie'] ==1){ ?> <!--单进院所 + 地接团-->
-                    <input type="text" name="info[false_maoli]" id="maoli" class="form-control" value="{$settlement.false_maoli}" />
-                <?php }else{ ?>
+                <?php /*if ($op['kind']==87 && $op['in_dijie'] ==1){ */?><!-- <!--单进院所 + 地接团-->
+                    <!--<input type="text" name="info[false_maoli]" id="maoli" class="form-control" value="{$settlement.false_maoli}" />-->
+                <?php /*}else{ */?>
                     <input type="text" name="info[maoli]" id="maoli" class="form-control" value="{$settlement.maoli}" />
-                <?php } ?>
+                <?php /*} */?>
             </div>
 
             <div class="form-group col-md-4">

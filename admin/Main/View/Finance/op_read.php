@@ -1,6 +1,4 @@
-<?php if($is_zutuan == 1 && $dijie_shouru == 0 && !in_array($op['kind'],array(87))){ ?> <!--87单进院所-->
-    <div class="content" style="margin-left:15px;">地接部门尚未做该地接项目的预算！</div>
-<?php }else{ ?>
+
     <?php if($op['costacc']!='0.00'){ ?>
         <div class="content" style="padding-top:0px;">
             <table class="table table-striped" id="font-14-p">
@@ -52,6 +50,11 @@
                     <td>人均毛利：{$budget.renjunmaoli}</td>
                 </tr>
                 <tr>
+                    <td>组团/接待方毛利占比：{$budget.zt_rate} : {$budget.dj_rate}</td>
+                    <td>组团方毛利：{$budget.zt_maoli}</td>
+                    <td>接待方毛利：{$budget.dj_maoli}</td>
+                </tr>
+                <tr>
                     <td width="33.33%">实际收入(不含大交通)：{$budget.untraffic_shouru}</td>
                     <td width="33.33%">毛利率(不含大交通)：{$budget.untraffic_maolilv}</td>
                     <td width="33.33%"></td>
@@ -85,6 +88,6 @@
         </div>
     <?php }else{ ?>
             <div class="content" style="margin-left:15px;">请先核算成本，再进行项目预算！</div>
-    <?php } } ?>
+    <?php } ?>
 
 

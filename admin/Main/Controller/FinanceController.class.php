@@ -297,34 +297,6 @@ class FinanceController extends BaseController {
 	}
 
 
-	// @@@NODE-3###costacclist###成本核算记录###(删除20181228_bak)
-    /*public function costacclist_bak(){
-		$this->title('成本核算记录');
-
-		$db = M('op');
-		$title = I('title');
-		$opid = I('opid');
-		$oid = I('oid');
-		$cname = I('cname');
-
-		$where = array();
-		$where['costacc'] = array('gt',0);
-		if($title)  $where['project'] = array('like','%'.$title.'%');
-		if($oid)    $where['group_id'] = array('like','%'.$oid.'%');
-		if($cname)  $where['create_user_name'] = array('like','%'.$cname.'%');
-		if($opid)   $where['op_id'] = $opid;
-
-		//分页
-		$pagecount = $db->where($where)->count();
-		$page = new Page($pagecount, P::PAGE_SIZE);
-		$this->pages = $pagecount>P::PAGE_SIZE ? $page->show():'';
-
-        $this->lists = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('create_time'))->select();
-
-		$this->display('costacclist');
-	}*/
-
-
 	// @@@NODE-3###costapply###费用申请记录###
     public function costapply(){
         $this->title('费用申请记录');
@@ -682,6 +654,7 @@ class FinanceController extends BaseController {
         $this->ages 			= C('AGE_LIST');
         //$this->kinds			=  M('project_kind')->getField('id,name', true);
         $this->kinds			=  M('project_kind')->where(array('id'=>$op['kind']))->find();
+        $this->maoli_rate       = $mod->get_maoli_rate($opid);
 
         $this->should_back_money= $budget_list['should_back_money']?$budget_list['should_back_money']:$budget['shouru']; //回款金额(带入结算收入)
         $this->op_cost_type     = $op_cost_type;

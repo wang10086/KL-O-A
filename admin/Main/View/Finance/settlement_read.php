@@ -100,6 +100,11 @@
                 <td width="33.33%">人均毛利：{$settlement.renjunmaoli}</td>
             </tr>
             <tr>
+                <td>组团/接待方毛利占比：{$settlement.zt_rate} : {$settlement.dj_rate}</td>
+                <td>组团方毛利：{$settlement.zt_maoli}</td>
+                <td>接待方毛利：{$settlement.dj_maoli}</td>
+            </tr>
+            <tr>
                 <td width="33.33%">实际收入(不含大交通)：{$settlement.untraffic_shouru}</td>
                 <td width="33.33%">毛利率(不含大交通)：{$settlement.untraffic_maolilv}</td>
                 <td width="33.33%"></td>
