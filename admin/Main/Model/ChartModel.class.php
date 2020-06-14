@@ -29,10 +29,10 @@ class ChartModel extends Model
 
         if ($pin == 0){
             //预算及结算分部门汇总
-            $lists                          = D('Chart')->ysjs_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
+            $lists                          = $this->ysjs_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
         }else{
             //结算分部门汇总
-            $lists                          = D('Chart')->js_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
+            $lists                          = $this->js_deplist($userlists,$yearMonth,$yeartimes,$pin,$quartertimes);
         }
         return $lists;
     }
@@ -49,6 +49,7 @@ class ChartModel extends Model
         $Ym                         = $month;
         $monthtime                  = intval($month);
         $month                      = get_cycle($monthtime, 26);
+        $dep_maoli_opid             = P::DEP_MAOLI_OPID; //202006150000 之后的团部门"毛利"按照另一种算法
         //$quarterbegintime           = $quartertimes['begin_time'];
         //$quarterendtime             = $quartertimes['end_time'];
         $lists                      = array();
@@ -57,28 +58,55 @@ class ChartModel extends Model
             $quarterendtime         = $quartertimes['end_time'];
             $monthBeginTime         = $month['begintime'];
             $monthEndTime           = $month['endtime'];
-            //年度累计
+            //年度累计(全部)
             $where                  = array();
             $where['b.audit_status']= 1;
             $where['l.req_type']    = 801;
             $where['l.audit_time']  = array('between', "$yeartimes[yearBeginTime],$yeartimes[yearEndTime]");
             $where['a.id']          = array('in', $v['users']);
             $where['o.add_group']   = array('neq',1);
-
             $field                  = array();
             $field[]                = 'count(o.id) as xms';
             $field[]                = 'sum(c.num_adult) as renshu';
             $field[]                = 'sum(b.shouru) as zsr';
-            $field[]                = 'sum(b.maoli) as zml';
+            //$field[]                = 'sum(b.maoli) as zml';
             $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
-
             $yearopid_lists         = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
             $yearlist               = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+
+            //20200615以前的毛利
+            $where['b.op_id']       = array('lt',$dep_maoli_opid);
+            $maili_field            = array();
+            $maili_field[]          = 'sum(b.maoli) as zml';
+            $yearlist_maoli1        = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->find();
+            $yearzml1               = $yearlist_maoli1['zml'] ? $yearlist_maoli1['zml'] : 0;
+            //20200615以后的总毛利
+            $where                  = array();
+            $where['b.audit_status']= 1;
+            $where['l.req_type']    = 801;
+            $where['l.audit_time']  = array('between', "$yeartimes[yearBeginTime],$yeartimes[yearEndTime]");
+            $where['b.op_id']       = array('gt',$dep_maoli_opid); //20200615以后的毛利
+            $where1                 = $where;
+            $where1['o.create_user_department_id'] = $v['id'];
+            $maili_field            = array();
+            $maili_field[]          = 'sum(b.zt_maoli) as zml'; //组团毛利
+            $yearlist_maoli2        = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where1)->find();
+            $where2                 = $where;
+            $where2['o.dijie_department_id'] = $v['id'];
+            $maili_field            = array();
+            $maili_field[]          = 'sum(b.dj_maoli) as zml'; //接待方毛利
+            $yearlist_maoli3        = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where2)->find();
+
+            $yearzml2               = $yearlist_maoli2['zml'] ? $yearlist_maoli2['zml'] : 0;
+            $yearzml3               = $yearlist_maoli3['zml'] ? $yearlist_maoli3['zml'] : 0;
+            $yearzml                = $yearzml1 + $yearzml2 + $yearzml3;
+
 
             $lists[$v['id']]['yearxms']     = $yearlist['xms'] ? $yearlist['xms'] : 0;
             $lists[$v['id']]['yearrenshu']  = $yearlist['renshu'] ? $yearlist['renshu'] : 0;
             $lists[$v['id']]['yearzsr']     = $yearlist['zsr'] ? $yearlist['zsr'] : "0.00";
-            $lists[$v['id']]['yearzml']     = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
+            //$lists[$v['id']]['yearzml']     = $yearlist['zml'] ? $yearlist['zml'] : "0.00";
+            $lists[$v['id']]['yearzml']     = $yearzml;
             $lists[$v['id']]['yearmll']     = $yearlist['mll'] ? sprintf("%.2f", $yearlist['mll'] * 100) : "0.00";
             $lists[$v['id']]['yearopids']   = implode(',',array_column($yearopid_lists,'op_id'));
             $lists[$v['id']]['yearparameter'] = array('uids'=>implode(',',$v['users']),'depid'=>$v['id'],'depname'=>$v['depname'],'pin'=>$pin,'st'=>$yeartimes[yearBeginTime],'et'=>$yeartimes[yearEndTime]);
@@ -102,15 +130,44 @@ class ChartModel extends Model
                 $field[]                = 'count(o.id) as xms';
                 $field[]                = 'sum(c.num_adult) as renshu';
                 $field[]                = 'sum(b.shouru) as zsr';
-                $field[]                = 'sum(b.maoli) as zml';
+                //$field[]                = 'sum(b.maoli) as zml';
                 $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
                 $quarteropid_lists      = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
                 $quarterlist            = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
 
+                //20200615以前的毛利
+                $where['b.op_id']       = array('lt',$dep_maoli_opid);
+                $maili_field            = array();
+                $maili_field[]          = 'sum(b.maoli) as zml';
+                $quarterlist_maoli1     = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->find();
+                $quarterzml1            = $quarterlist_maoli1['zml'] ? $quarterlist_maoli1['zml'] : 0;
+                //20200615以后的总毛利
+                $where                  = array();
+                $where['b.audit_status']= 1;
+                $where['l.req_type']    = 801;
+                $where['l.audit_time']  = array('between', "$quarterbegintime,$quarterendtime");
+                $where['b.op_id']       = array('gt',$dep_maoli_opid); //20200615以后的毛利
+                $where1                 = $where;
+                $where1['o.create_user_department_id'] = $v['id'];
+                $maili_field            = array();
+                $maili_field[]          = 'sum(b.zt_maoli) as zml'; //组团毛利
+                $quarterlist_maoli2     = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where1)->find();
+                $where2                 = $where;
+                $where2['o.dijie_department_id'] = $v['id'];
+                $maili_field            = array();
+                $maili_field[]          = 'sum(b.dj_maoli) as zml'; //接待方毛利
+                $quarterlist_maoli3     = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where2)->find();
+
+                $quarterzml2            = $quarterlist_maoli2['zml'] ? $quarterlist_maoli2['zml'] : 0;
+                $quarterzml3            = $quarterlist_maoli3['zml'] ? $quarterlist_maoli3['zml'] : 0;
+                $quarterzml             = $quarterzml1 + $quarterzml2 + $quarterzml3;
+
+
                 $lists[$v['id']]['quarterxms']      = $quarterlist['xms'] ? $quarterlist['xms'] : 0;
                 $lists[$v['id']]['quarterrenshu']   = $quarterlist['renshu'] ? $quarterlist['renshu'] : 0;
                 $lists[$v['id']]['quarterzsr']      = $quarterlist['zsr'] ? $quarterlist['zsr'] : "0.00";
-                $lists[$v['id']]['quarterzml']      = $quarterlist['zml'] ? $quarterlist['zml'] : "0.00";
+                //$lists[$v['id']]['quarterzml']      = $quarterlist['zml'] ? $quarterlist['zml'] : "0.00";
+                $lists[$v['id']]['quarterzml']      = $quarterzml;
                 $lists[$v['id']]['quartermll']      = $quarterlist['mll'] ? sprintf("%.2f", $quarterlist['mll'] * 100) : "0.00";
                 $lists[$v['id']]['quarteropids']    = implode(',',array_column($quarteropid_lists,'op_id'));
                 $lists[$v['id']]['quarterparameter']= array('uids'=>implode(',',$v['users']),'depid'=>$v['id'],'depname'=>$v['depname'],'pin'=>$pin,'st'=>$quarterbegintime,'et'=>$quarterendtime);
@@ -133,14 +190,41 @@ class ChartModel extends Model
                 $field[]                = 'sum(b.shouru) as zsr';
                 $field[]                = 'sum(b.maoli) as zml';
                 $field[]                = '(sum(b.maoli)/sum(b.shouru)) as mll';
-
                 $monthopid_lists        = M()->table('__OP_SETTLEMENT__ as b')->field('o.op_id')->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->select();
                 $monthlist              = M()->table('__OP_SETTLEMENT__ as b')->field($field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->order('zsr DESC')->find();
+
+                //20200615以前的毛利
+                $where['b.op_id']       = array('lt',$dep_maoli_opid);
+                $maili_field            = array();
+                $maili_field[]          = 'sum(b.maoli) as zml';
+                $monthlist_maoli1       = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__ACCOUNT__ as a on a.id = o.create_user', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->join('__OP_TEAM_CONFIRM__ as c on c.op_id=o.op_id', 'left')->where($where)->find();
+                $monthzml1              = $monthlist_maoli1['zml'] ? $monthlist_maoli1['zml'] : 0;
+                //20200615以后的总毛利
+                $where                  = array();
+                $where['b.audit_status']= 1;
+                $where['l.req_type']    = 801;
+                $where['l.audit_time']  = array('between', "$monthBeginTime,$monthEndTime");
+                $where['b.op_id']       = array('gt',$dep_maoli_opid); //20200615以后的毛利
+                $where1                 = $where;
+                $where1['o.create_user_department_id'] = $v['id'];
+                $maili_field            = array();
+                $maili_field[]          = 'sum(b.zt_maoli) as zml'; //组团毛利
+                $monthlist_maoli2     = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where1)->find();
+                $where2                 = $where;
+                $where2['o.dijie_department_id'] = $v['id'];
+                $maili_field            = array();
+                $maili_field[]          = 'sum(b.dj_maoli) as zml'; //接待方毛利
+                $monthlist_maoli3     = M()->table('__OP_SETTLEMENT__ as b')->field($maili_field)->join('__OP__ as o on b.op_id = o.op_id', 'LEFT')->join('__AUDIT_LOG__ as l on l.req_id = b.id', 'LEFT')->where($where2)->find();
+
+                $monthzml2            = $monthlist_maoli2['zml'] ? $monthlist_maoli2['zml'] : 0;
+                $monthzml3            = $monthlist_maoli3['zml'] ? $monthlist_maoli3['zml'] : 0;
+                $monthzml             = $monthzml1 + $monthzml2 + $monthzml3;
 
                 $lists[$v['id']]['monthxms']    = $monthlist['xms'] ? $monthlist['xms'] : 0;
                 $lists[$v['id']]['monthrenshu'] = $monthlist['renshu'] ? $monthlist['renshu'] : 0;
                 $lists[$v['id']]['monthzsr']    = $monthlist['zsr'] ? $monthlist['zsr'] : "0.00";
-                $lists[$v['id']]['monthzml']    = $monthlist['zml'] ? $monthlist['zml'] : "0.00";
+                //$lists[$v['id']]['monthzml']    = $monthlist['zml'] ? $monthlist['zml'] : "0.00";
+                $lists[$v['id']]['monthzml']    = $monthzml;
                 $lists[$v['id']]['monthmll']    = $monthlist['mll'] ? sprintf("%.2f", $monthlist['mll'] * 100) : "0.00";
                 $lists[$v['id']]['monthopids']  = implode(',',array_column($monthopid_lists,'op_id'));
                 $lists[$v['id']]['monthparameter'] = array('uids'=>implode(',',$v['users']),'depid'=>$v['id'],'depname'=>$v['depname'],'pin'=>$pin,'st'=>$month['begintime'],'et'=>$month['endtime']);

@@ -140,6 +140,9 @@ final class P {
     const FILE_DOWNLOAD_SALE_RES    = 1;    //销售资料下载
     const FILE_DOWNLOAD_YWJCP_PPT   = 2;    //业务季产品审定培训PPT下载
 
+    //部门毛利统计更改时间 从2020年6月15日后部门毛利统计改动
+    const DEP_MAOLI_OPID            = 202006150000;
+
 }
 
 
