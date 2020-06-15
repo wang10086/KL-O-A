@@ -228,8 +228,6 @@ class BaseController extends Controller {
                 $this->display('audit_ok');
                 die;
             }
-        }else{
-            P('bbb');
         }
 
         $data = array();
