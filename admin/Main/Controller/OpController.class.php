@@ -3526,5 +3526,39 @@ class OpController extends BaseController {
         }
     }
 
+    //线控 项目交接
+    public function handover(){
+	    $this->title('项目实施前的培训及交接');
+	    if (isset($_POST['dosubmint'])){
+
+
+        }else{
+            $id                     = I('id'); //待办事宜
+            $opid                   = $id ? M('op')->where(array('id'=>$id))->getField('op_id') : I('opid');
+            if (!$opid) $this->error('获取数据失败');
+            $fa                     = I('fa',1);
+            $list                   = M('op')->where(array('op_id'=>$opid))->find();
+            $handover_list          = M('op_handover')->where(array('op_id'=>$opid))->find();
+
+            $apply_to               = C('APPLY_TO');
+            $list['apply_to']       = $apply_to[$list['apply_to']];
+            $departments            = M('salary_department')->getField('id,department',true);
+            $kinds                  = M('project_kind')->getField('id,name',true);
+
+            $this->provinces        = M('provinces')->getField('id,name',true);
+            $this->kinds            = $kinds;
+            $this->departments      = $departments;
+            $this->list             = $list;
+            $this->handover_list    = $handover_list;
+            $this->jiesuan          = M('op_settlement')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //结算审批通过
+            $this->audit_status     = get_submit_audit_status();
+            $this->opid             = $opid;
+            $this->fa               = $fa;
+
+            $this->opid             = $opid;
+            $this->display('handover');
+        }
+    }
+
 
 }

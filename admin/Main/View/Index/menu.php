@@ -45,7 +45,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <if condition="rolemenu(array('Product/line','Op/plans_follow'))">
-                                    <li class="{:on('Product/public_pro_need')} {:on('Product/public_pro_need_add')} {:on('Product/public_pro_need_detail')} {:on('Product/public_scheme')} {:on('Product/add_scheme')} {:on('Product/public_view_scheme')} {:on('Product/public_customer_need')}"><a href="{:U('Product/public_pro_need')}"><i class="fa fa-angle-right"></i> 项目方案</a></li>
+                                    <li class="{:on('Product/public_pro_need')} {:on('Product/public_pro_need_follow')} {:on('Op/plans_follow')} {:on('Product/public_pro_need_add')} {:on('Product/public_pro_need_detail')} {:on('Product/public_scheme')} {:on('Product/add_scheme')} {:on('Product/public_view_scheme')} {:on('Product/public_customer_need')} {:on('Op/public_project')}"><a href="{:U('Product/public_pro_need')}"><i class="fa fa-angle-right"></i> 项目方案</a></li>
                                 </if>
                                 <!--<if condition="rolemenu(array('Op/plans'))">
                                     <li><a href="{:U('Op/plans')}"><i class="fa fa-angle-right"></i> 我要立项</a></li>

@@ -9,4 +9,8 @@
     <a href="{:U('Product/public_scheme',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='public_scheme'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">产品实施方案</a>
     <a href="{:U('Product/public_customer_need',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='public_customer_need'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">客户需求详情</a>
     <a href="{:U('Op/public_project',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='public_project'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">业务实施方案</a>
+    <if condition="rolemenu(array('Op/handover'))">
+        <a href="{:U('Op/handover',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='handover'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">项目交接</a>
+    </if>
+    <a href="{:U('',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME==''){ echo 'btn-info';}else{ echo 'btn-default';} ?>">项目评价</a>
 </div>
