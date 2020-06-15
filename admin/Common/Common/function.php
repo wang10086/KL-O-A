@@ -1614,7 +1614,7 @@ function up_file_level($fid){
 }
 
 //获取用户姓名
-function username($userid){
+function username($userid=0){
 	if($userid){
 		$user = get_userinfo($userid);
 		return $user['nickname'];
@@ -4235,7 +4235,7 @@ function get_partner_list($uid,$beginTime,$endTime){
     return $lists;
 }
 
-function get_userinfo($uid){
+function get_userinfo($uid=0){
     $list                                   = $uid ? M('account')->where(array('id'=>$uid))->find() :'';
     return $list;
 }

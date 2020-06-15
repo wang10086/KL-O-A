@@ -2824,6 +2824,14 @@ class OpController extends BaseController {
                 $to_uid                 = $op['line_blame_uid'];
                 $to_uname               = $op['line_blame_name'];
                 save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+
+                //发送给计调
+                $process_node           = 54; //编制项目预算
+                $op_auth_list           = M('op_auth')->where(array('op_id'=>$opid))->find();
+                $to_uid                 = $op_auth_list['yusuan'] ? $op_auth_list['yusuan'] : $op_auth_list['hesuan'];
+                $to_uname               = username($to_uid);
+                $pro_status             = 2; //事前提醒
+                save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
             }
 
 			if ($num) {

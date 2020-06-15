@@ -38,21 +38,20 @@ class FinanceController extends BaseController {
     public function op(){
         $mod                = D('Finance');
 		$opid               = I('opid');
-		$id                 = I('id');
+		$id                 = I('id'); //流程
+
 		if($id){
-			$budget         = M('op_budget')->find($id);
-			$opid           = $budget['op_id'];
+			//$budget         = M('op_budget')->find($id);
+			//$opid           = $budget['op_id'];
+            $oplist         = M('op')->where(array('id'=>$id))->find();
+            $opid           = $oplist['op_id'];
 		}
 		if(!$opid) $this->error('项目不存在');
-        $op                 = M('op')->where(array('op_id'=>$opid))->find();
+        $op                 = $oplist ? $oplist : M('op')->where(array('op_id'=>$opid))->find();
 
-		$where = array();
-		$where['op_id'] = $opid;
-
-        $isCost     = M('op_costacc')->where(array('op_id'=>$opid))->count();
-		$op         = M('op')->where($where)->find();
-        $op['costacc'] = $isCost;
-		$costacc    = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
+        $isCost             = M('op_costacc')->where(array('op_id'=>$opid))->count();
+        $op['costacc']      = $isCost;
+		$costacc            = M('op_costacc')->where(array('op_id'=>$opid,'status'=>1))->order('id')->select();
 		if(count($costacc)==0){
 			$costacc = 	M('op_costacc')->where(array('op_id'=>$opid,'status'=>0))->order('id')->select();
 			foreach($costacc as $k=>$v){
@@ -539,6 +538,20 @@ class FinanceController extends BaseController {
                     $record['optype']       = 8;
                     $record['explain']      = '提交预算审核';
                     op_record($record);
+
+                    //发送给预算审核人
+                    $field                  = 'o.id as oid,o.op_id,o.group_id,o.project,o.create_user,o.create_user_name,s.*';
+                    $audit_user             = M()->table('__OP__ as o')->join('__SALARY_DEPARTMENT__ as s on s.id=o.create_user_department_id','left')->where(array('o.op_id'=>$op_id))->field($field)->find();
+                    $title                  = $audit_user['project'];
+                    $req_id                 = $audit_user['oid'];
+                    $process_node           = 55; //审核项目预算
+                    $to_uid                 = $audit_user['jk_audit_user_id'];
+                    $to_uname               = $audit_user['jk_audit_user_name'];
+                    $pro_status             = 2; //事前提醒
+                    save_process_log($process_node,$pro_status,$title,$req_id,'',$to_uid,$to_uname);
+
+                    $ok_node_id             = 54; //编制项目预算
+                    save_process_ok($ok_node_id);
 					$this->request_audit(P::REQ_TYPE_BUDGET, $ifok['id']);
 				}
 				$this->success('已提交申请等待审批！');

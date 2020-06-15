@@ -218,7 +218,7 @@ class BaseController extends Controller {
             // return P::ERROR;
         }
 
-        if ($row['req_type'] == P::REQ_TYPE_BUDGET) { //审核预算
+        if ($row['req_type'] == P::REQ_TYPE_BUDGET) { //审核预算(判断只能审核本部门预算)
             $field          = 'o.op_id,o.group_id,o.project,o.create_user,o.create_user_name,o.create_user_department_id';
             $list           = M()->table('__'.strtoupper($row['req_table']).'__  as b')->join('__OP__ as o on o.op_id=b.op_id','left')->field($field)->where(array('b.id'=>$row['req_id']))->find();
             $manager_data   = get_manage_uid($list['create_user']);
@@ -376,6 +376,8 @@ class BaseController extends Controller {
             }else{
                 $record['explain'] = '预算审核未通过';
             }
+            $ok_node_id             = 55; //审批项目预算
+            save_process_ok($ok_node_id);
             op_record($record);
 
         }
