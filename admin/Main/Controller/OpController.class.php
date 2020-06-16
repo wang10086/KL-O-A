@@ -2737,8 +2737,9 @@ class OpController extends BaseController {
 
 	// @@@NODE-3###confirm###出团确认###
 	public  function confirm(){
-	    $id                         = I('id'); //流程管理
-		$opid                       = $id ? M('op')->where(array('id'=>$id))->getField('op_id') : I('opid');
+
+        $id                         = I('id'); //流程管理
+		$opid                       = I('opid') ? I('opid') : ($id ? M('op')->where(array('id'=>$id))->getField('op_id') : '');
 		if(!$opid) $this->error('项目不存在');
 
 		$where                      = array();
