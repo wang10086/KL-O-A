@@ -497,7 +497,22 @@ $config = array(
         4           => '秋季'
     ),
 
-    'process_submit_file_node_id' => array(6,7) //提交文件即触发完成的node_id 6=>提交业务季产品手册、业务季销售PPT、公司宣传手册; 7=>制定业务季产品培训方案;
+    'process_submit_file_node_id' => array(6,7), //提交文件即触发完成的node_id 6=>提交业务季产品手册、业务季销售PPT、公司宣传手册; 7=>制定业务季产品培训方案;
+
+    'handover'      => array( //项目交接清单
+        'line'	        => '项目方案/行程方案',
+        'once_goods'    => '一次性物资',
+        'cycle_goods'   => '可回收物资',
+        'money'	        => '备用金',
+        'op_table'	    => '项目交接实施表',
+        'standard'	    => '业务实施规范',
+        'workers'	    => '工作人员联系清单',
+        'houseBus'	    => '分房分车表',
+        'members'	    => '学生老师名单',
+        'op_log'	    => '活动日志/总结表',
+        'safe'	        => '安全手册',
+        'health'	    => '医药箱'
+    )
 
 );
 

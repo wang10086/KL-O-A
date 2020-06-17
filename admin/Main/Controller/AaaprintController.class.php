@@ -756,4 +756,26 @@ class AaaprintController extends BasepubController {
         $title = array('项目编号','团号','项目名称','业务','返回时间');
         exportexcel($list,$title,$begin.'至'.$end.'返回项目');
     }
+
+    //导出工资信息
+    public function test_salary(){
+        $dateTime               = array('201901','201902','201903','201904','201905','201906','201907','201908','201909','201910','201911','201912','202001','202002','202003','202004','202005','202006','202007','202008','202009','202010','202011','202012');
+        $field                  = array('account_id','user_name','department','datetime','post_name','standard','basic_salary','performance_salary','withdrawing','Achievements_withdrawing','Subsidy','total','Should_distributed','bonus','medical_care','pension_ratio','unemployment','welfare','accumulation_fund','insurance_Total','housing_subsidy','summoney','Other','tax_counting','personal_tax','specialdeduction','Labour','real_wages');
+        $title                  = array('ID','姓名','部门','年月','岗位','岗位工资','基本薪资','绩效薪资','考勤扣款','绩效扣款','带团补助','提成','应发工资','奖金','医疗保险','养老保险','失业保险','年终奖','公积金','个人保险合计','住房补贴','代扣代缴','其他补款','计税工资','个人所得税','专项附加扣除','工会会费','实际发放工资');
+        $salary_lists           = M('salary_wages_month')->where(array('datetime'=>array('in',$dateTime),'status'=>4))->field($field)->order('id asc')->select();
+        $uids                   = array_unique(array_column($salary_lists,'account_id'));
+        $export_data            = array();
+        foreach ($uids as $v){
+            foreach ($salary_lists as $vv){
+                if ($vv['account_id'] == $v){
+                    $export_data[] = $vv;
+                }
+            }
+        }
+
+        exportexcel($export_data,$title,'2019年1月至2020年5月公司全员工资表');
+
+
+    }
+
 }

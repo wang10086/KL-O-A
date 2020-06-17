@@ -117,87 +117,45 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
-    $(document).ready(function(e) {
-        var uploader = new plupload.Uploader({
-            runtimes : 'html5,flash,silverlight,html4',
-            browse_button : 'pickupfile', // you can pass in id...
-            container: document.getElementById('container'), // ... or DOM Element itself
-            url : 'index.php?m=Main&c=File&a=upload_file',
-            flash_swf_url : '__HTML__/comm/plupload/Moxie.swf',
-            silverlight_xap_url : '__HTML__/comm/plupload/Moxie.xap',
-            multiple_queues:false,
-            multipart_params: {
-                catid: 1
-            },
 
-            filters : {
-                max_file_size : '20mb',
-                mime_types: [
-                    {title : "Files", extensions : "jpg,jpeg,png,zip,rar,7z,doc,docx,ppt,pptx,xls,xlsx,txt,pdf"}
-                ]
-            },
+    //增加交接项目
+    function task(obj){
 
-            init: {
-                PostInit: function() {
-                    //$('div.moxie-shim').width(104).height(67);
-                },
+        var i = parseInt($('#task_val').text())+1;
 
-                FilesAdded: function(up, files) {
-                    plupload.each(files, function(file) {
-                        var time = new Date();
-                        var month = time.getMonth() +1;
-                        if (month < 10) month = "0" + month;
+        var header = '<div class="daylist" id="task_ti_'+i+'">'+
+            '<a class="aui_close" href="javascript:;" style="right:25px;" onclick="del_timu(\'task_ti_'+i+'\')">×</a>'+
+            '<div class="col-md-12 pd">'+
+            '<label class="titou"><strong>第<span class="tihao">'+i+'</span>项</strong></label>';
+        var content = '<div class="form-group input-group-3"> <input type="text" name="info['+i+'][day]" class="form-control inputdate" value="" placeholder="活动日期" /> </div>'+
+            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][in_time]" class="form-control inputdate_b" value="" placeholder="活动时间" /> </div>'+
+            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][addr]" class="form-control" value="" placeholder="活动地点" /> </div>'+
+            '<div class="form-group input-group-3"> <input type="text" name="info['+i+'][plan]" class="form-control" value="" placeholder="活动安排" /> </div>'+
+            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][material]" class="form-control" value="" placeholder="物资情况" /> </div>'+
+            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][blame]" class="form-control" value="" placeholder="项目负责人" /> </div>'+
+            '<div class="input-group"><input type="text" name="info['+i+'][note]" class="form-control" value="" placeholder="注意事项" /></div>'+
+            '<div class="input-group pads"><textarea class="form-control" name="info['+i+'][remark]" placeholder="备注"></textarea></div>';
+        var footer = '</div></div>';
 
-                        var t = time.getFullYear()+ "/"+ month + "/" + time.getDate()+ " "+time.getHours()+ ":"+ time.getMinutes() + ":" +time.getSeconds();
-                        $('#flist').append(
-                            '<tr id="' + file.id + '"  valign="middle"><td>'
-                            + '<input type="text" name="nm_' + file.id + '" value="'+ file.name +'" class="form-control" />'
-                            + '</td> <td width="10%">' + plupload.formatSize(file.size) +''
-                            + '</td> <td width="30%">'
-                            + '<div class="progress sm"> '
-                            + '<div class="progress-bar progress-bar-aqua" rel="'+ file.id +'"  role="progressbar"  aria-valuemin="0" aria-valuemax="100">'
-                            + '</div></div></td>'
-                            + '<td width="15%"><a class="btn btn-danger btn-xs " href="javascript:;" onclick="removeThisFile(\''+ file.id +'\');"><i class="fa fa-times"></i>删除</a></td></tr>'
-                        );
+        var html = header+content+footer;
 
-                    });
-
-                    uploader.start();
-
-                },
-
-                FileUploaded: function(up, file, res) {
-                    var rs = eval('(' + res.response +')');
-                    if (rs.rs ==  'ok') {
-                        $('div[rel=' + file.id + ']').css('width', '100%');
-                        $('#container').append('<input type="hidden" rel="'+file.id+'" name="resfiles[]" value="' + rs.aid + '" />');
-                        $('input[name=nm_' + file.id +']').prop('name', 'newname['+rs.aid+']');
-                    } else {
-                        alert('上传文件失败，请重试');
-                    }
-
-                },
-
-                UploadProgress: function(up, file) {
-                    $('div[rel=' + file.id + ']').css('width', file.percent + '%');
-                },
-
-                Error: function(up, err) {
-                    alert(err.code + ": " + err.message);
-                }
-            }
+        $('#task_timu').append(html);
+        $('#task_val').html(i);
+        relaydate();
+        //重编题号
+        $('.tihao').each(function(index, element) {
+            var no = index*1+1;
+            $(this).text(no);
         });
+    }
 
-        uploader.init();
-
-        //closebtns();
-    });
-
-    function removeThisFile(fid) {
-        if (confirm('确定要删除此附件吗？')) {
-            $('#' + fid).empty().remove();
-            $('input[rel=' + fid +']').remove();
-        }
+    //删除日程
+    function del_timu(obj){
+        $('#'+obj).remove();
+        $('.tihao').each(function(index, element) {
+            var no = index*1+1;
+            $(this).text(no);
+        });
     }
 </script>
 

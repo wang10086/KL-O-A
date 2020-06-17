@@ -13,127 +13,59 @@
                         <input type="hidden" name="opid" value="{$list.op_id}" />
                         <input type="hidden" name="id" value="{$handover_list.id}" />
 
-                        <!-----------------------------------start----------------------------------------->
-                        <div class="content" style="padding-top:0px;">
-                            <div id="costacc">
-                                <div class="userlist">
-                                    <div class="unitbox">活动日期</div>
-                                    <div class="unitbox">活动时间</div>
-                                    <div class="unitbox">活动地点</div>
-                                    <div class="unitbox">活动安排</div>
-                                    <div class="unitbox">物资情况</div>
-                                    <div class="unitbox">注意事项</div>
-                                    <div class="unitbox">项目负责人</div>
-                                    <div class="unitbox">备注</div>
-                                </div>
+                        <P class="border-bottom-line"> 交接清单是否交接</P>
+                        <foreach name="handover_types" key="kk" item="vv">
+                            <div class="form-group col-md-4">
+                                <label>{$vv}：</label>
+                                <input type="radio" name="data[{$kk}]" value="1" <?php if ($need ? $need['is_comeOut']==1 : $detail['is_comeOut']==1) echo 'checked'; ?>> &#8194;是 &#12288;
+                                <input type="radio" name="data[{$kk}]" value="0" <?php if ($need ? $need['is_comeOut']==0 : $detail['is_comeOut']==0) echo 'checked'; ?>> &#8194;否
+                            </div>
+                        </foreach>
 
-                                <foreach name="costacc" key="k" item="v">
-                                    <div class="userlist cost_expense" id="costacc_id_b_{$k}">
-                                        <span class="title"><?php echo $k+1; ?></span>
-                                        <input type="hidden" name="resid[888{$k}][id]" value="{$v.id}" >
-                                        <input type="hidden" class="form-control" name="costacc[888{$k}][supplier_id]" value="{$v.supplier_id}">
-                                        <input type="hidden" class="form-control" name="costacc[888{$k}][supplier_name]" value="{$v.supplier_name}">
-                                        <input type="text" class="form-control" name="costacc[888{$k}][title]" value="{$v.title}">
-                                        <input type="text" class="form-control cost" name="costacc[888{$k}][unitcost]" value="{$v.unitcost}">
-                                        <input type="text" class="form-control amount" name="costacc[888{$k}][amount]" value="{$v.amount}">
-                                        <input type="text" class="form-control totalval" name="costacc[888{$k}][total]" value="{$v.total}">
-                                        <select class="form-control costaccType"  name="costacc[888{$k}][type]" >
-                                            <foreach name="kind" key="kk" item="vv">
-                                                <option value="{$kk}" <?php if($kk==$v['type']){ echo 'selected';} ?> >{$vv}</option>
-                                            </foreach>
-                                        </select>
-                                        <input type="text" class="form-control longinput" name="costacc[888{$k}][remark]" value="{$v.remark}">
-                                        <a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox('costacc_id_b_{$k}')">删除</a>
+                        <P class="border-bottom-line"> 项目交接实施表</P>
+                        <div id="task_timu">
+                            <?php if (!$days){ ?>
+                                <div class="daylist" id="task_ti_id_1">
+                                    <a class="aui_close" href="javascript:;" style="right:25px;" onclick="del_timu('task_ti_id_1')">×</a>
+                                    <div class="col-md-12 pd">
+                                        <label class="titou"><strong>第<span class="tihao">1</span>项</strong></label>
+                                        <div class="form-group input-group-3"> <input type="text" name="info[1][day]" class="form-control inputdate" value="{$v.day}" placeholder="活动日期" /> </div>
+                                        <div class="form-group input-group-3 ml4r"> <input type="text" name="info[1][in_time]" class="form-control inputdate_b" value="{$v.in_time}" placeholder="活动时间" /> </div>
+                                        <div class="form-group input-group-3 ml4r"> <input type="text" name="info[1][addr]" class="form-control" value="{$v.addr}" placeholder="活动地点" /> </div>
+                                        <div class="form-group input-group-3"> <input type="text" name="info[1][plan]" class="form-control" value="{$v.plan}" placeholder="活动安排" /> </div>
+                                        <div class="form-group input-group-3 ml4r"> <input type="text" name="info[1][material]" class="form-control" value="{$v.material}" placeholder="物资情况" /> </div>
+                                        <div class="form-group input-group-3 ml4r"> <input type="text" name="info[1][blame]" class="form-control" value="{$v.blame}" placeholder="项目负责人" /> </div>
+                                        <div class="input-group"><input type="text" placeholder="注意事项" name="info[1][note]" value="{$v.note}" class="form-control"></div>
+                                        <div class="input-group pads"><textarea class="form-control" placeholder="备注" name="info[1][remark]">{$v.remark}</textarea></div>
+                                    </div>
+                                </div>
+                                <div style="display:none" id="task_val">1</div>
+                            <?php }else{ ?>
+                                <foreach name="days" key="k" item="v">
+                                    <div class="daylist" id="task_ti_id_{$k}">
+                                        <a class="aui_close" href="javascript:;" style="right:25px;" onclick="del_timu('task_ti_id_{$k}')">×</a>
+                                        <div class="col-md-12 pd">
+                                            <label class="titou"><strong>第<span class="tihao"><?php echo $k+1; ?></span>项</strong></label>
+                                            <input type="hidden" name="resid[]" value="{$v.id}">
+                                            <div class="form-group input-group-3"> <input type="text" name="info[8888{$v.id}][day]" class="form-control inputdate" value="{$v.day}" placeholder="活动日期" /> </div>
+                                            <div class="form-group input-group-3 ml4r"> <input type="text" name="info[8888{$v.id}][in_time]" class="form-control inputdate_b" value="{$v.in_time}" placeholder="活动时间" /> </div>
+                                            <div class="form-group input-group-3 ml4r"> <input type="text" name="info[8888{$v.id}][addr]" class="form-control" value="{$v.addr}" placeholder="活动地点" /> </div>
+                                            <div class="form-group input-group-3"> <input type="text" name="info[8888{$v.id}][plan]" class="form-control" value="{$v.plan}" placeholder="活动安排" /> </div>
+                                            <div class="form-group input-group-3 ml4r"> <input type="text" name="info[8888{$v.id}][material]" class="form-control" value="{$v.material}" placeholder="物资情况" /> </div>
+                                            <div class="form-group input-group-3 ml4r"> <input type="text" name="info[8888{$v.id}][blame]" class="form-control" value="{$v.blame}" placeholder="项目负责人" /> </div>
+                                            <div class="input-group"><input type="text" placeholder="注意事项" name="info[8888{$v.id}][note]" value="{$v.note}" class="form-control"></div>
+                                            <div class="input-group pads"><textarea class="form-control" placeholder="备注" name="info[8888{$v.id}][remark]">{$v.remark}</textarea></div>
+                                        </div>
                                     </div>
                                 </foreach>
-
-                            </div>
-                            <!--<div id="costacc_sum">
-                                <div class="userlist">
-                                    <div class="unitbox"></div>
-                                    <div class="unitbox"></div>
-                                    <div class="unitbox" style="  text-align:right;">合计</div>
-                                    <div class="unitbox" id="costaccsum"></div>
-                                    <div class="unitbox longinput"></div>
-                                </div>
-                            </div>-->
-                            <div id="costacc_val">1</div>
-                            <div class="form-group col-md-12" id="useraddbtns" style="margin-left:15px;">
-                                <a href="javascript:;" class="btn btn-success btn-sm" onClick="/*add_costacc();*/ art_show_msg('开发中...')"><i class="fa fa-fw fa-plus"></i> 新增交接项</a>
-                            </div>
-                            <div class="form-group">&nbsp;</div>
+                                <div style="display:none" id="task_val"><?php echo count(days); ?></div>
+                            <?php } ?>
                         </div>
 
-                        <!--<div class="content">
-                            <input type="hidden" name="info[op_id]" value="{$op.op_id}" />
-                            <input type="hidden" name="info[name]" value="{$op.project}" />
-                            <input type="hidden" name="info[budget]" id="costaccsumval" value="{$op.costacc}" />
-                            <input type="hidden" name="info[untraffic_sum]" id="untraffic_sum" value="{$budget.untraffic_sum}" />
-                            <input type="hidden" name="budget" value="{$budget.id}" />
-                            <div style="width:100%; float:left;">
-                                <div class="form-group col-md-4">
-                                    <label>人数：</label>
-                                    <input type="text" name="info[renshu]" id="renshu" class="form-control" value="<?php /*if($budget['renshu']){ echo $budget['renshu'];}else{ echo $op['number'];} */?>" onBlur="lilv()" />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>预算收入：</label>
-                                    <input type="text" name="info[shouru]" id="shouru" class="form-control" value="<?php /*if($budget['shouru']){ echo $budget['shouru'];}else{ echo 0;} */?>" onBlur="lilv(),untraffic_lilv()"/>
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>收入性质：</label>
-                                    <div style="margin-top:5px;">
-                                        <input type="checkbox" name="xinzhi[]" <?php /*if(in_array('单位',$budget['xz'])){ echo 'checked';} */?> value="单位"> 单位 &nbsp;&nbsp;
-                                        <input type="checkbox" name="xinzhi[]" <?php /*if(in_array('个人',$budget['xz'])){ echo 'checked';} */?> value="个人"> 个人 &nbsp;&nbsp;
-                                        <input type="checkbox" name="xinzhi[]" <?php /*if(in_array('政府',$budget['xz'])){ echo 'checked';} */?> value="政府"> 政府 &nbsp;&nbsp;
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style="width:100%; float:left;">
-                                <div class="form-group col-md-4">
-                                    <label>毛利：</label>
-                                    <input type="text" name="info[maoli]" id="maoli" class="form-control" value="{$budget.maoli}" />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>组团方毛利（<span class="" id="zt">{$maoli_rate.zt_rate}</span>）：</label>
-                                    <input type="hidden" name="info[zt_rate]" id="zt_rate" value="{$maoli_rate['zt_rate']}" />
-                                    <input type="text" name="info[zt_maoli]" id="zt_maoli" class="form-control" value="{$budget.zt_maoli}" readonly />
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label>接待方毛利（<span class="" id="dj">{$maoli_rate.dj_rate}</span>）：</label>
-                                    <input type="hidden" name="info[dj_rate]" id="dj_rate" value="{$maoli_rate['dj_rate']}" />
-                                    <input type="text" name="info[dj_maoli]" id="dj_maoli" class="form-control" value="{$budget.dj_maoli}" readonly />
-                                </div>
-                            </div>
-
-                            <div style="width:100%;float:left; padding-bottom:50px;">
-                                <div class="form-group col-md-3">
-                                    <label>毛利率：</label>
-                                    <input type="text" name="info[maolilv]" id="maolilv" class="form-control" value="{$budget.maolilv}" />
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label>人均毛利：</label>
-                                    <input type="text" name="info[renjunmaoli]" id="renjunmaoli" class="form-control" value="{$budget.renjunmaoli}" />
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label>收入(不含大交通)：</label>
-                                    <input type="text" name="info[untraffic_shouru]" id="untraffic_shouru" class="form-control" value="{$budget.untraffic_shouru}" readonly />
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label>毛利率(不含大交通)：</label>
-                                    <input type="text" name="info[untraffic_maolilv]" id="untraffic_maolilv" class="form-control" value="{$budget.untraffic_maolilv}" readonly />
-                                </div>
-                            </div>
-                        </div>-->
-                        <!------------------------------------end------------------------------------------>
-
+                        <div class="form-group col-md-12" id="addti_btn">
+                            <a href="javascript:;" class="btn btn-success btn-sm" onClick="task(1)" ><i class="fa fa-fw  fa-plus"></i> 新增交接项</a>
+                            <!--<a  href="javascript:;" class="btn btn-info btn-sm" onClick="javascript:public_save('myform','<?php /*echo U('Op/public_save_handover'); */?>');">保存</a>-->
+                        </div>
                     </form>
                 </div>
             </div>

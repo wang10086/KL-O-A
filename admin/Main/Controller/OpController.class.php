@@ -3531,7 +3531,12 @@ class OpController extends BaseController {
     public function handover(){
 	    $this->title('项目实施前的培训及交接');
 	    if (isset($_POST['dosubmint'])){
+            $opid                   = I('opid');
+            $id                     = I('id');
+            $data                   = I('data');
+            $info                   = I('info');
 
+	        P($_POST);
 
         }else{
             $id                     = I('id'); //待办事宜
@@ -3555,6 +3560,7 @@ class OpController extends BaseController {
             $this->audit_status     = get_submit_audit_status();
             $this->opid             = $opid;
             $this->fa               = $fa;
+            $this->handover_types   = C('handover');
 
             $this->opid             = $opid;
             $this->display('handover');
