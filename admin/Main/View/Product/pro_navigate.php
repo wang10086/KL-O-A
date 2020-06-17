@@ -12,5 +12,5 @@
     <if condition="rolemenu(array('Op/handover'))">
         <a href="{:U('Op/handover',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='handover'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">项目交接</a>
     </if>
-    <a href="{:U('',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME==''){ echo 'btn-info';}else{ echo 'btn-default';} ?>">项目评价</a>
+    <a href="{:U('Op/public_eval',array('opid'=>$opid,'fa'=>1))}" class="btn <?php if(ACTION_NAME=='public_eval'){ echo 'btn-info';}else{ echo 'btn-default';} ?>">项目评价</a>
 </div>

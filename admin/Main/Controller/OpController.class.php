@@ -3644,32 +3644,32 @@ class OpController extends BaseController
 
 
         } else {
-            $id = I('id'); //待办事宜
-            $opid = $id ? M('op')->where(array('id' => $id))->getField('op_id') : I('opid');
+            $id                     = I('id'); //待办事宜
+            $opid                   = I('opid') ? I('opid') : M('op')->where(array('id' => $id))->getField('op_id');
             if (!$opid) $this->error('获取数据失败');
-            $fa = I('fa', 1);
-            $list = M('op')->where(array('op_id' => $opid))->find();
-            $handover_list = M('op_handover')->where(array('op_id' => $opid))->find();
+            $fa                     = I('fa', 1);
+            $list                   = M('op')->where(array('op_id' => $opid))->find();
+            $handover_list          = M('op_handover')->where(array('op_id' => $opid))->find();
 
-            $apply_to = C('APPLY_TO');
-            $list['apply_to'] = $apply_to[$list['apply_to']];
-            $departments = M('salary_department')->getField('id,department', true);
-            $kinds = M('project_kind')->getField('id,name', true);
+            $apply_to               = C('APPLY_TO');
+            $list['apply_to']       = $apply_to[$list['apply_to']];
+            $departments            = M('salary_department')->getField('id,department', true);
+            $kinds                  = M('project_kind')->getField('id,name', true);
 
-            $this->days = $day_db->where(array('op_id' => $opid))->select();
-            $this->provinces = M('provinces')->getField('id,name', true);
-            $this->kinds = $kinds;
-            $this->departments = $departments;
-            $this->list = $list;
-            $this->handover_list = $handover_list;
-            $this->jiesuan = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
-            $this->confirm = M('op_team_confirm')->where(array('op_id' => $opid))->find();
-            $this->audit_status = get_submit_audit_status();
-            $this->opid = $opid;
-            $this->fa = $fa;
-            $this->handover_types = C('handover');
+            $this->days             = $day_db->where(array('op_id' => $opid))->select();
+            $this->provinces        = M('provinces')->getField('id,name', true);
+            $this->kinds            = $kinds;
+            $this->departments      = $departments;
+            $this->list             = $list;
+            $this->handover_list    = $handover_list;
+            $this->jiesuan          = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
+            $this->confirm          = M('op_team_confirm')->where(array('op_id' => $opid))->find();
+            $this->audit_status     = get_submit_audit_status();
+            $this->opid             = $opid;
+            $this->fa               = $fa;
+            $this->handover_types   = C('handover');
 
-            $this->opid = $opid;
+            $this->opid             = $opid;
             $this->display('handover');
         }
     }
@@ -3692,6 +3692,126 @@ class OpController extends BaseController
             }else{
                 $this->error('数据保存失败');
             }
+        }
+    }
+
+    //评价
+    public function public_eval(){
+        $this->title('项目评价');
+        $id                     = I('id'); //待办事宜
+        $opid                   = I('opid') ? I('opid') : M('op')->where(array('id' => $id))->getField('op_id');
+        if (!$opid) $this->error('获取数据失败');
+        $fa                     = I('fa', 1);
+        $list                   = M('op')->where(array('op_id' => $opid))->find();
+        $eval_lists             = M('op_evaluate')->where(array('op_id'=>$opid))->select();
+
+        $apply_to               = C('APPLY_TO');
+        $list['apply_to']       = $apply_to[$list['apply_to']];
+        $departments            = M('salary_department')->getField('id,department', true);
+        $kinds                  = M('project_kind')->getField('id,name', true);
+
+        $this->provinces        = M('provinces')->getField('id,name', true);
+        $this->kinds            = $kinds;
+        $this->departments      = $departments;
+        $this->list             = $list;
+        $this->eval_lists       = $eval_lists;
+        $this->jiesuan          = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
+        $this->audit_status     = get_submit_audit_status();
+
+        $this->opid             = $opid;
+        $this->fa               = $fa;
+        $this->display('eval');
+    }
+
+    //获取相关二维码
+    public function public_qrcode(){
+        $opid                       = I('opid','');
+
+        $server_name                = $_SERVER['SERVER_NAME'];
+        $this->url                  = "http://".$server_name.U('Op/public_op_eval',array('opid'=>$opid));
+        $this->title                = M('op')->where(array('op_id'=>$opid))->getField('project');
+        $this->display('op_qrcode');
+    }
+
+    public function public_eval_score(){
+        if (isset($_POST['dosubmint'])){
+            $id                     = I('id');
+            $token                  = I('token');
+            $num                    = 0;
+            if ($token == session('token')){
+                $db                 = M('op_evaluate');
+                $problem            = trim(I('problem'));
+                $content            = trim(I('content'));
+                $data               = array();
+                $data['problem']    = $problem;
+                $data['content']    = $content;
+                $data['score_stu']  = 1; //已评价
+                $data['score_time'] = NOW_TIME;
+                $res                = $db->where(array('id'=>$id))->save($data);
+                if ($res){
+                    $num++;
+                    $msg            = '保存成功';
+                    session(null);
+                }
+            }else{
+                $msg                = '保存失败';
+            }
+            $returnMsg              = array();
+            $returnMsg['num']       = $num;
+            $returnMsg['msg']       = $msg;
+            $this->ajaxReturn($returnMsg);
+        }else{
+            $opid                   = I('opid');
+            $list                   = M('op')->where(array('op_id'=>$opid))->find();
+            $this->list             = $list;
+            $this->token            = make_token();
+            $this->mobile           = session('scoreMobile');
+            $this->id               = session('reg_id');
+            $this->display('eval_score');
+        }
+    }
+
+    public function public_eval_login(){
+        $db                             = M('op_evaluate');
+        if (isset($_POST['dosubmit'])) {
+            $mobile                     = trim(I('mobile'));
+            $mobile_code                = I('mobile_code');
+            $opid                       = I('opid','');
+
+            //验证手机验证码
+            if ($mobile_code != session('code')) {
+                die(return_msg('n','您输入的手机验证码有误,请重新输入'));
+            }else{
+                if (!$mobile) { die(return_msg('n','手机号码错误')); }
+                $register_record        = $db->where(array('op_id'=>$opid,'mobile'=>$mobile,'score_stu'=>0))->find();
+                if ($register_record){
+                    $register_id        = $register_record['id'];
+                    $info               = array();
+                    $info['reg_time']   = NOW_TIME;
+                    $db->where(array('id'=>$register_id))->save($info);
+                }else{
+                    $info               = array();
+                    $info['mobile']     = $mobile;
+                    $info['reg_time']   = NOW_TIME;
+                    $info['op_id']      = $opid;
+                    $res                = $db->add($info);
+                    $register_id        = $res;
+                }
+
+                if ($register_id) {
+                    session('scoreMobile',$mobile);
+                    session('reg_id',$register_id);
+                    die(return_msg('y','登录成功'));
+                    //die(return_msg('y', "登录成功<script type='text/javascript'> setTimeout('location=\"$referer\"',1000);</script>"));
+                }else{
+                    die(return_msg('n','登录失败'));
+                }
+            }
+        }else{
+            $opid                   = I('opid');
+            $this->opid             = $opid;
+            $this->token            = make_token();
+            $this->display('eval_login');
         }
     }
 

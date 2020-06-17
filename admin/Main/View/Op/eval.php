@@ -99,11 +99,38 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <?php if (!$jiesuan && in_array(cookie('userid'), array($list['line_blame_uid'],1,11)) && !$jiesuan){ ?>
-                                <include file="handover_edit" />
-                            <?php }else{ ?>
-                                <include file="handover_read" />
-                            <?php } ?>
+                            <div class="box box-warning mt20">
+                                <div class="box-header">
+                                    <h3 class="box-title">项目评价</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"><a style="color: #0BABD4;" href="javascript:;" onClick="get_qrcode(`/index.php?m=Main&c=Op&a=public_qrcode&opid={$list[op_id]}`)">获取二维码</a></h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="form-group col-md-12">
+                                            <?php if ($eval_lists){ ?>
+                                                <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                                    <tr role="row" class="orders" >
+                                                        <td>手机号</td>
+                                                        <td>评价时间</td>
+                                                        <td>问题反馈</td>
+                                                        <td>意见建议</td>
+                                                    </tr>
+                                                    <foreach name="eval_lists" item="row">
+                                                        <tr>
+                                                            <td>{$row.mobile}</td>
+                                                            <td>{$row.score_time|date='Y-m-d',###}</td>
+                                                            <td>{$row.problem}</td>
+                                                            <td>{$row.content}</td>
+                                                        </tr>
+                                                    </foreach>
+                                                </table>
+                                            <?php }else{ ?>
+                                                暂无评价记录!
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
 
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
@@ -117,45 +144,15 @@
 <include file="Index:footer2" />
 
 <script type="text/javascript">
-
-    //增加交接项目
-    function task(obj){
-
-        var i = parseInt($('#task_val').text())+1;
-
-        var header = '<div class="daylist" id="task_ti_'+i+'">'+
-            '<a class="aui_close" href="javascript:;" style="right:25px;" onclick="del_timu(\'task_ti_'+i+'\')">×</a>'+
-            '<div class="col-md-12 pd">'+
-            '<label class="titou"><strong>第<span class="tihao">'+i+'</span>项</strong></label>';
-        var content = '<div class="form-group input-group-3"> <input type="text" name="info['+i+'][day]" class="form-control inputdate" value="" placeholder="活动日期" /> </div>'+
-            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][in_time]" class="form-control inputdate_b" value="" placeholder="活动时间" /> </div>'+
-            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][addr]" class="form-control" value="" placeholder="活动地点" /> </div>'+
-            '<div class="form-group input-group-3"> <input type="text" name="info['+i+'][plan]" class="form-control" value="" placeholder="活动安排" /> </div>'+
-            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][material]" class="form-control" value="" placeholder="物资情况" /> </div>'+
-            '<div class="form-group input-group-3 ml4r"> <input type="text" name="info['+i+'][blame]" class="form-control" value="" placeholder="项目负责人" /> </div>'+
-            '<div class="input-group"><input type="text" name="info['+i+'][note]" class="form-control" value="" placeholder="注意事项" /></div>'+
-            '<div class="input-group pads"><textarea class="form-control" name="info['+i+'][remark]" placeholder="备注"></textarea></div>';
-        var footer = '</div></div>';
-
-        var html = header+content+footer;
-
-        $('#task_timu').append(html);
-        $('#task_val').html(i);
-        relaydate();
-        //重编题号
-        $('.tihao').each(function(index, element) {
-            var no = index*1+1;
-            $(this).text(no);
-        });
-    }
-
-    //删除日程
-    function del_timu(obj){
-        $('#'+obj).remove();
-        $('.tihao').each(function(index, element) {
-            var no = index*1+1;
-            $(this).text(no);
+    //获取评分二维码
+    function get_qrcode(url) {
+        art.dialog.open(url,{
+            id:'qrcode',
+            lock:true,
+            title: '二维码',
+            width:600,
+            height:400,
+            fixed: true,
         });
     }
 </script>
-
