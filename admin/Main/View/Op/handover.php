@@ -99,7 +99,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <?php if (!$jiesuan && in_array(cookie('userid'), array($list['line_blame_uid'],1,11)) && (!$handover_list || in_array($handover_list['audit_status'],array(0,2)))){ ?>
+                            <?php if (!$jiesuan && in_array(cookie('userid'), array($list['line_blame_uid'],11111,11)) && !$jiesuan){ ?>
                                 <include file="handover_edit" />
                             <?php }else{ ?>
                                 <include file="handover_read" />
