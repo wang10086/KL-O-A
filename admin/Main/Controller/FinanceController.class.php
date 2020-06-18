@@ -41,13 +41,12 @@ class FinanceController extends BaseController {
 		$id                 = I('id'); //流程
 
 		if($id){
-			//$budget         = M('op_budget')->find($id);
-			//$opid           = $budget['op_id'];
-            $oplist         = M('op')->where(array('id'=>$id))->find();
-            $opid           = $oplist['op_id'];
+			$budget         = M('op_budget')->find($id);
+			$opid           = $budget['op_id'];
 		}
 		if(!$opid) $this->error('项目不存在');
-        $op                 = $oplist ? $oplist : M('op')->where(array('op_id'=>$opid))->find();
+        //$op                 = $oplist ? $oplist : M('op')->where(array('op_id'=>$opid))->find();
+        $op                 = M('op')->where(array('op_id'=>$opid))->find();
 
         $isCost             = M('op_costacc')->where(array('op_id'=>$opid))->count();
         $op['costacc']      = $isCost;
@@ -543,7 +542,8 @@ class FinanceController extends BaseController {
                     $field                  = 'o.id as oid,o.op_id,o.group_id,o.project,o.create_user,o.create_user_name,s.*';
                     $audit_user             = M()->table('__OP__ as o')->join('__SALARY_DEPARTMENT__ as s on s.id=o.create_user_department_id','left')->where(array('o.op_id'=>$op_id))->field($field)->find();
                     $title                  = $audit_user['project'];
-                    $req_id                 = $audit_user['oid'];
+                    //$req_id                 = $audit_user['oid'];
+                    $req_id                 = $ifok['id'];
                     $process_node           = 55; //审核项目预算
                     $to_uid                 = $audit_user['jk_audit_user_id'];
                     $to_uname               = $audit_user['jk_audit_user_name'];
