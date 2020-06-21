@@ -850,10 +850,22 @@ class FinanceController extends BaseController {
 		$this->pays 			= $mod->get_money_back_lists($opid);
         $budget_list            = M('op_budget')->where(array('op_id'=>$opid))->find();
         $this->should_back_money= $budget_list['should_back_money']?$budget_list['should_back_money']:$budget_list['shouru'];
-        $is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
-        $this->is_dijie         = $is_dijie?$is_dijie:0;
+        //$is_dijie               = M('op')->where(array('dijie_opid'=>$opid))->getField('op_id');
+        //$this->is_dijie         = $is_dijie?$is_dijie:0;
+        $this->ticketAskFor     = M('op_ticket')->where(array('op_id'=>$opid))->select();
+        $this->ticket_status    = $this->ticket_audit_stu();
 		$this->display('huikuan');
 	}
+
+	private function ticket_audit_stu(){
+        $data                   = array( //开票状态
+            0                   => '<span class="yellow">待审核</span>',
+            1                   => '<span class="blue">审核通过,开票中</span>',
+            2                   => '<span class="red">审核不通过</span>',
+            3                   => '<span class="green">开票完成</span>'
+        );
+        return $data;
+    }
 
 
 	//@@@NODE-3###save_huikuan###保存回款###
@@ -902,11 +914,165 @@ class FinanceController extends BaseController {
 		}else{
 			$this->error('保存失败');
 		}
-
-
-
-
 	}
+
+	//新增开票申请
+    public function addAskFor(){
+        $db                         = M('op_ticket');
+        if (isset($_POST['dosubmint'])){
+            $opid                   = I('opid');
+            $id                     = I('id');
+            $info                   = I('info');
+            $info['op_id']          = $opid;
+            $info['day']            = strtotime($info['day']);
+            $info['contract_num']   = trim($info['contract_num']);
+            $info['debt']           = trim($info['debt']);
+            $info['type']           = trim($info['type']);
+            $info['money']          = trim($info['money']);
+            $info['name']           = trim($info['name']);
+            $info['num']            = trim($info['num']);
+            $info['addr']           = trim($info['addr']);
+            $info['mobile']         = trim($info['mobile']);
+            $info['bank_name']      = trim($info['bank_name']);
+            $info['bank_name']      = trim($info['bank_name']);
+            $info['remark']         = trim($info['remark']);
+            //$info['create_user_id'] = cookie('userid');
+            //$info['create_user_name']= cookie('nickname');
+            if ($id){
+                $list               = $db->where(array('id'=>$id))->find();
+                if ($list['audit_status']==2){ //审核不通过
+                    $info['audit_status'] = 0;
+                    $send_msg       = 1;
+                }
+                $res                = $db->where(array('id'=>$id))->save($info);
+                $explain            = '编辑开票申请';
+            }else{
+                $info['create_time']= NOW_TIME;
+                $info['audit_uid']  = '27';
+                $info['audit_uname']= '殷洪';
+                $res                = $db->add($info);
+
+                $explain            = '填写开票申请';
+                $send_msg           = 1;
+            }
+            if ($res){
+                $record             = array();
+                $record['op_id']    = $opid;
+                $record['optype']   = 4;
+                $record['explain']  = $explain;
+                op_record($record);
+
+                if ($send_msg == 1){
+                    //发送系统消息
+                    $op             = M('op')->where(array('op_id'=>$opid))->find();
+                    $uid            = cookie('userid');
+                    $title          = '您有来自[' . session('rolename') . '--' . session('nickname') . ']的开票申请!';
+                    $content        = '项目名称：' . $op['project'] . '；团号：' . $op['group_id'];
+                    $url            = U('Finance/huikuan', array('opid' => $opid));
+                    $user           = '[' . $info['audit_uid'] . ']';
+                    send_msg($uid, $title, $content, $url, $user, '');
+                }
+
+                $this->msg          = '保存成功';
+            }else{
+                $this->msg          = '保存失败';
+            }
+            $this->display('Index:public_audit');
+
+        }else{
+            $opid                   = I('opid');
+            $id                     = I('id');
+            if ($id){
+                $list               = $db->where(array('id'=>$id))->find();
+                $this->list         = $list;
+            }
+
+            $this->companys         = C('COMPANY');
+            $this->opid             = $opid;
+
+            $this->display('addAskFor');
+        }
+    }
+
+    //开票详情
+    public function public_ticket_detail(){
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $db                         = M('op_ticket');
+        $this->list                 = $db->where(array('id'=>$id))->find();
+        $this->companys             = C('COMPANY');
+        $this->ticket_status        = $this->ticket_audit_stu();
+
+        $this->display('ticket_detail');
+    }
+
+    //保存审核开票申请
+    public function public_save_ticket(){
+        $savetype                   = I('savetype');
+        $db                         = M('op_ticket');
+
+        if ($savetype == 1 && $_POST['dosubmint']){
+            $id                     = I('id');
+            $audit_status           = I('audit_status');
+            $audit_remark           = trim(I('audit_remark'));
+            $data                   = array();
+            $data['audit_status']   = $audit_status;
+            $data['audit_remark']   = $audit_remark;
+            $data['audit_time']     = NOW_TIME;
+            $res                    = $db->where(array('id'=>$id))->save($data);
+            if ($res){
+                $list               = $db->find($id);
+                $record             = array();
+                $record['op_id']    = $list['op_id'];
+                $record['optype']   = 4;
+                $record['explain']  = $audit_status == 1 ? '审核开票申请: 审核通过' : '审核开票申请: 审核不通过';
+                op_record($record);
+
+                $op                 = M('op')->where(array('op_id'=>$list['op_id']))->find();
+                $uid                = cookie('userid');
+                $title              = '您有来自[' . session('rolename') . '--' . session('nickname') . ']的开票申请反馈!';
+                $content            = '项目名称：' . $op['project'] . '；团号：' . $op['group_id'];
+                $url                = U('Finance/huikuan', array('opid' => $op['op_id']));
+                $user               = '[' . $list['create_user_id'] . ']';
+                send_msg($uid, $title, $content, $url, $user, '');
+
+                $this->msg          = '保存成功';
+            }else{
+                $this->msg          = '保存失败';
+            }
+            $this->display('Index:public_audit');
+        }
+    }
+
+    //开票完成
+    public function public_ConfirmTicket(){
+        $id                         = I('id');
+        if (!$id) $this->error('获取数据错误');
+        $db                         = M('op_ticket');
+        $data                       = array();
+        $data['audit_status']       = 3; //开票完成
+        $data['ok_time']            = NOW_TIME;
+        $res                        = $db->where(array('id'=>$id))->save($data);
+        if ($res){
+            $list               = $db->find($id);
+            $record             = array();
+            $record['op_id']    = $list['op_id'];
+            $record['optype']   = 4;
+            $record['explain']  = '开票完成';
+            op_record($record);
+
+            $op                 = M('op')->where(array('op_id'=>$list['op_id']))->find();
+            $uid                = cookie('userid');
+            $title              = '您有来自[' . session('rolename') . '--' . session('nickname') . ']的开票完成反馈,请及时领取发票!';
+            $content            = '项目名称：' . $op['project'] . '；团号：' . $op['group_id'];
+            $url                = U('Finance/huikuan', array('opid' => $op['op_id']));
+            $user               = '[' . $list['create_user_id'] . ']';
+            send_msg($uid, $title, $content, $url, $user, '');
+            $this->success('保存成功');
+        }else{
+            $this->error('保存失败');
+        }
+    }
 
 
 	//@@@NODE-3###payment###回款管理###

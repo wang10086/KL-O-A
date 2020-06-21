@@ -167,7 +167,7 @@
                                            <!-- --><?php /*if($pays){ */?>
                                             <div class="form-group">
                                                 <h2 style="font-size:16px; border-bottom:2px solid #dedede; padding-bottom:10px;"> <span class="black">回款计划</span> (应回款总金额：{$should_back_money}元)&emsp;
-                                                    <?php if (in_array(cookie('userid'),array($jd)) && !$is_dijie){ ?> <!--地接团不可以修改-->
+                                                    <?php if (in_array(cookie('userid'),array($jd))){ ?>
                                                     <div style="display: inline-block" id="upd_money_back_div"><button class="btn btn-success btn-sm edit_money_back_btn">修改总回款金额</button></div>
                                                     <?php } ?>
                                                 </h2>
@@ -209,18 +209,66 @@
                                             </div>
                                         <?php /*}} */?>
                                         <?php } ?>
-
                                     </div>
-                                    
-                                    
-                                    
-                                
-                                    
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
-                            
-                        	
-                            
+
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">开票申请</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="content">
+                                        <?php if ($ticketAskFor){ ?>  <!--开票申请记录-->
+                                            <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
+                                                <tr role="row" class="orders" >
+                                                    <th class="taskOptions">开票主体</th>
+                                                    <th class="taskOptions">开票类型</th>
+                                                    <th class="taskOptions">开票金额</th>
+                                                    <th class="taskOptions">申请时间</th>
+                                                    <th class="taskOptions" width="80">状态</th>
+                                                    <if condition="rolemenu(array('Finance/addAskFor'))">
+                                                        <td class="taskOptions">操作</td>
+                                                    </if>
+                                                    <th class="taskOptions" width="80">开票完成</th>
+                                                </tr>
+                                                <foreach name="ticketAskFor" item="row">
+                                                    <tr>
+                                                        <td class="taskOptions"><a href="javascript:;" onclick="ticket_detail({$row.id},{$row.audit_uid})">{$company[$row['company']]}</a></td>
+                                                        <td class="taskOptions">{$row.type}</td>
+                                                        <td class="taskOptions">{$row.money}</td>
+                                                        <td class="taskOptions">{$row.create_time|date='Y-m-d H:i:s',###}</td>
+                                                        <td class="taskOptions">{$ticket_status[$row['audit_status']]}</td>
+                                                        <if condition="rolemenu(array('Finance/addAskFor'))">
+                                                            <td class="taskOptions">
+                                                                <?php if (in_array($row['audit_status'],array(0,2))){ ?>
+                                                                    <a href="javascript:;" onclick="addTicketAskFor({$op.op_id},{$row.id})" title="编辑" class="btn btn-info btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                                <?php }else{ ?>
+                                                                    <a href="javascript:;" title="编辑" class="btn btn-default btn-smsm"><i class="fa fa-pencil"></i></a>
+                                                                <?php } ?>
+                                                            </td>
+                                                        </if>
+                                                        <td class="taskOptions">
+                                                            <?php if (in_array(cookie('userid'),array($row['audit_uid'],1)) && $row['audit_status']==1){ ?>
+                                                                <button onClick="javascript:ConfirmTicket('{:U('Finance/public_ConfirmTicket',array('id'=>$row['id']))}')" title="完成" class="btn btn-warning btn-smsm"><i class="fa fa-check"></i></button>
+                                                            <?php }else{ ?>
+                                                                <button onClick="javascript:;" title="完成" class="btn btn-default btn-smsm"><i class="fa fa-check"></i></button>
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr>
+                                                </foreach>
+                                            </table>
+                                        <?php }else{ ?>
+                                            <div class="form-group col-md-12"> 暂无开票申请记录! </div>
+                                        <?php } ?>
+                                        <?php if (in_array(cookie('userid'),array(1,$op['create_user']))){ ?>
+                                        <div class="form-group col-md-12" id="useraddbtns">
+                                            <a href="javascript:;" class="btn btn-success btn-sm" onClick="addTicketAskFor({$op.op_id})"><i class="fa fa-fw fa-plus"></i> 新增开票申请</a>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
                             
                             <div class="box box-warning">
                                 <div class="box-header">
@@ -425,6 +473,82 @@
             var average     = accMul(ratio,'100')+'%'; //相加
             $('input[name="payment['+num+'][ratio]"]').val(average);
         /*}*/
+
+    }
+
+    //新增开票申请
+    function addTicketAskFor(opid,id=0) {
+        let url = '/index.php?m=Main&c=Finance&a=addAskFor&opid='+opid+'&id='+id;
+        art.dialog.open(url,{
+            lock:true,
+            id: 'audit_win',
+            title: '开票申请',
+            width:1000,
+            height:550,
+            okVal: '提交至出纳',
+            fixed: true,
+            ok: function () {
+                this.iframe.contentWindow.gosubmint();
+                return false;
+            },
+            cancelVal:'取消',
+            cancel: function () {
+            }
+        });
+    }
+
+    //开票详情 + 审核
+    function ticket_detail(id,audit_uid) {
+        let uid = <?php echo cookie('userid'); ?>;
+        let url = '/index.php?m=Main&c=Finance&a=public_ticket_detail&id='+id;
+        if (uid == audit_uid || uid == 1){
+            art.dialog.open(url,{
+                lock:true,
+                id: 'audit_win',
+                title: '开票申请',
+                width:1000,
+                height:550,
+                okVal: '确定',
+                fixed: true,
+                ok: function () {
+                    this.iframe.contentWindow.gosubmint();
+                    return false;
+                }
+                /*cancelVal:'取消',
+                cancel: function () {
+                }*/
+            });
+        } else{
+            art.dialog.open(url,{
+                lock:true,
+                id: 'audit_win',
+                title: '开票申请',
+                width:1000,
+                height:550,
+                okVal: '确定',
+                fixed: true,
+                ok: function () { }
+            });
+        }
+    }
+
+    //确认开票完成
+    function ConfirmTicket(url) {
+        art.dialog({
+            title: '提示',
+            width:400,
+            height:100,
+            lock:true,
+            fixed: true,
+            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">确定已开本次发票？<br/>将会通知相关业务人员领取发票!</span>',
+            ok: function () {
+                window.location.href=url;
+                //this.title('3秒后自动关闭').time(3);
+                return false;
+            },
+            cancelVal: '取消',
+            cancel: true //为true等价于function(){}
+        });
 
     }
 
