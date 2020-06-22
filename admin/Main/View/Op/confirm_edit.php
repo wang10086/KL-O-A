@@ -37,7 +37,7 @@
         </div>
         <div class="form-group col-md-4">
             <label>实际返回时间：</label>
-            <input type="text" name="info[ret_time]" class="form-control inputdate" value="<if condition="$confirm['ret_time']">{$confirm.ret_time|date='Y-m-d',###}</if>" required />
+            <input type="text" name="info[ret_time]" class="form-control inputdate" onblur="set_contract_back_time()" value="<if condition="$confirm['ret_time']">{$confirm.ret_time|date='Y-m-d',###}</if>" required />
         </div>
 
         <div class="form-group col-md-4">
@@ -52,7 +52,7 @@
 
         <div class="form-group col-md-4">
             <label>合同收回时间：</label>
-            <input type="text" name="info[contract_back_time]" class="form-control inputdate" value="<if condition="$confirm['contract_back_time']">{$confirm.contract_back_time|date='Y-m-d',###}</if>" required />
+            <input type="text" name="info[contract_back_time]" class="form-control inputdate" value="<if condition="$confirm['contract_back_time']">{$confirm.contract_back_time|date='Y-m-d',###}</if>" readonly />
         </div>
 
         <div class="form-group col-md-4">
@@ -130,7 +130,29 @@
 </div>
 </form>
 
-<script>
+<script type="text/javascript">
+    /**
+     * function set_contract_back_time() {
+                let ret_time = $('input[name="info[ret_time]"]').val();
+                if (ret_time){
+                    let time1 = new Date(ret_time);
+                    let day   = time1.getDate();
+                    let month = time1.getMonth()+1;
+                    let year  = time1.getFullYear();
+                    day       = (day < 10) ? '0'+day : day;
+                    if ( month === 12 ) {
+                        year += 1;
+                        month = '01';
+                    } else {
+                        month += 1;
+                        month = (month < 10) ? '0'+month : month;
+                    }
+
+                    let nextMonth = year +'-'+month+'-'+day;
+                    $('input[name="info[contract_back_time]"]').val(nextMonth)
+                }
+            }
+     */
     //var keywords = <?php echo $userkey; ?>;
     $(function () {
        // autocomplete_id('name_1','uid_1',keywords);
@@ -138,6 +160,13 @@
         if (!groups){
             $('#add_group_box').hide();
         }
+
+        $('input[name="info[ret_time]"]').blur(function () {
+            set_contract_back_time();
+        });
+        $('input[name="info[days]"]').blur(function () {
+            set_contract_back_time();
+        });
     })
 
     function check_group_id() {
@@ -168,6 +197,7 @@
     }
 
     function check_confirm() {
+        set_contract_back_time(); //自动填充合同收回时间
         let group_id    = $('input[name="info[group_id]"]').val().trim();
         let num_adult   = $('input[name="info[num_adult]"]').val().trim();
         let num_children= $('input[name="info[num_children]"]').val().trim();
@@ -225,6 +255,48 @@
         $('#group_val').html(i);
         orderno();
         autocomplete_id('name_'+i,'uid_'+i,keywords);
+    }
+
+    //自动填充合同收回时间
+    function set_contract_back_time() {
+        let ret_time = $('input[name="info[ret_time]"]').val();
+        if (ret_time){
+            /*let time1 = new Date(ret_time);
+            let day   = time1.getDate();
+            let month = time1.getMonth()+1;
+            let year  = time1.getFullYear();
+            day       = (day < 10) ? '0'+day : day;
+            if ( month === 12 ) {
+                year += 1;
+                month = '01';
+            } else {
+                month += 1;
+                month = (month < 10) ? '0'+month : month;
+            }
+
+            let nextMonth = year +'-'+month+'-'+day;
+            $('input[name="info[contract_back_time]"]').val(nextMonth)*/
+
+            let time1 = new Date(ret_time);
+            let seconds = 60*60*24*31*1000;
+            let timestamp = time1.getTime();
+            let newDate = timestamp+seconds;
+            let str_time = format(newDate);
+            $('input[name="info[contract_back_time]"]').val(str_time)
+        }
+    }
+
+    function add0(m){
+        return m<10?'0'+m:m
+    }
+
+    //时间戳转化为时间格式
+    function format(intTime) {  //intTime是整数(毫秒)，否则要parseInt转换
+        var time = new Date(intTime);
+        var y = time.getFullYear();
+        var m = time.getMonth()+1;
+        var d = time.getDate();
+        return y+'-'+add0(m)+'-'+add0(d);
     }
 
 </script>
