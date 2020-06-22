@@ -1281,7 +1281,8 @@ function get_op_guide($userid,$beginTime,$endTime){
         $data['op_num']                     = $op_num;
         $data['contract_num']               = $contract_num;
         $data['target']                     = $target?$target:'0.00';
-        $data['average']                    = $target?($op_num ? (round($contract_num/$op_num,4)*100).'%' : '0%'):'100%';
+        //$data['average']                    = $target?($op_num ? (round($contract_num/$op_num,4)*100).'%' : '0%'):'100%'; //无项目 0%
+        $data['average']                    = $target?($op_num ? (round($contract_num/$op_num,4)*100).'%' : '100%'):'100%'; //无项目 100%
         return $data;
     }
 

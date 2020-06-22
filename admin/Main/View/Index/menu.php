@@ -509,7 +509,7 @@
                                 </if>
 
                                 <if condition="rolemenu(array('Contract/statis'))">
-                                    <li><a href="{:U('Contract/statis')}"><i class="fa fa-angle-right"></i> 合同统计</a></li>
+                                    <li><a href="{:U('Contract/public_statis')}"><i class="fa fa-angle-right"></i> 合同统计</a></li>
                                 </if>
 
                                 <if condition="rolemenu(array('Contract/contract_tpl'))">

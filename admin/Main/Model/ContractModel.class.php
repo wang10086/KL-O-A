@@ -39,10 +39,11 @@ class ContractModel extends Model{
     public function get_user_op_list($userid='',$begintime,$endtime){
         $where 							    = array();
         if($userid) $where['o.create_user'] = $userid;
-        $where['c.dep_time']			    = array('between',array($begintime,$endtime));
+        //$where['c.dep_time']			    = array('between',array($begintime,$endtime)); //出行时间
+        $where['c.contract_back_time']	    = array('between',array($begintime,$endtime)); //合同返回时间
         $dj_opids                           = get_djopid();
         $where['o.op_id']                   = array('not in',$dj_opids);   //排除地接团
-        $op_list	                        = M()->table('__OP__ as o')->field('o.*,c.dep_time,c.ret_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
+        $op_list	                        = M()->table('__OP__ as o')->field('o.*,c.dep_time,c.ret_time,c.contract_back_time')->join('left join __OP_TEAM_CONFIRM__ as c on o.op_id=c.op_id')->where($where)->select();
         return $op_list;
     }
 }
