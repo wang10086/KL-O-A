@@ -61,7 +61,7 @@ $config = array(
 	'NOT_AUTH_MODULE'  => 'Api,Attachment', // 无需认证模块
 	'USER_AUTH_GATEWAY'=> '/Index/login',// 认证网关
 	//'RBAC_DB_DSN' //  数据库连接DSN
-	'NOT_AUTH_ACTION'  => 'login,logout,reg,backpassword,online,postkpi,pplist,tplist,tpavglist,tpmore,finance,kpiChart，month_detail',
+	'NOT_AUTH_ACTION'  => 'login,logout,reg,backpassword,online,postkpi,pplist,tplist,tpavglist,tpmore,finance,kpiChart，month_detail,public_eval_score,public_eval_login',
 	'RBAC_ROLE_TABLE'  => 'oa_role', // 角色表名称
 	'RBAC_USER_TABLE'  => 'oa_role_user',  // 用户表名称
 	'RBAC_ACCESS_TABLE'=> 'oa_access', // 权限表名称

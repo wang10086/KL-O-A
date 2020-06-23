@@ -3728,7 +3728,8 @@ class OpController extends BaseController
         $opid                       = I('opid','');
 
         $server_name                = $_SERVER['SERVER_NAME'];
-        $this->url                  = "http://".$server_name.U('Op/public_op_eval',array('opid'=>$opid));
+        //$this->url                  = "http://".$server_name.U('Op/public_op_eval',array('opid'=>$opid));
+        $this->url                  = "http://".$server_name.U('Op/public_eval_score',array('opid'=>$opid));
         $this->title                = M('op')->where(array('op_id'=>$opid))->getField('project');
         $this->display('op_qrcode');
     }
