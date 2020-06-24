@@ -132,6 +132,50 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
+                            <div class="box box-warning mt20">
+                                <div class="box-header">
+                                    <h3 class="box-title">项目总结</h3>
+                                    <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;"></h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="content">
+                                        <div class="form-group col-md-12">
+                                            <?php /*if (cookie('userid') == $list['line_blame_uid']){ */?>
+                                            <?php if (cookie('userid') == 1){ ?>
+                                                <?php if (!$jiesuan){ ?>
+                                                    <form method="post" action="{:U('Op/public_save')}">
+                                                        <input type="hidden" name="dosubmint" value="1" />
+                                                        <input type="hidden" name="savetype" value="28" />
+                                                        <input type="hidden" name="opid" value="{$list.op_id}" />
+                                                        <input type="hidden" name="id" value="{$summary_list.id}" />
+                                                        <label>项目总结</label>
+                                                        <?php echo editor('content',$summary_list['content']); ?>
+                                                        <!--<textarea class="form-control"  name="info[content]" rows="6" id="context"></textarea>-->
+                                                        <div class="mt20" id="formsbtn">
+                                                            <button type="submit" class="btn btn-info btn-lg" id="lrpd">保存</button>
+                                                        </div>
+                                                    </form>
+                                                <?php }else{ ?>
+                                                    <?php if ($summary_list){ ?>
+                                                        <div class="form-group col-md-12">
+                                                            <label>项目总结：</label> <?php echo htmlspecialchars_decode($summary_list['content']); ?>
+                                                        </div>
+                                                    <?php }else{ ?>
+                                                        暂无总结记录!
+                                                    <?php } ?>
+                                                <?php } ?>
+                                            <?php }else{ ?>
+                                                <?php if ($summary_list){ ?>
+                                                    <label>项目总结：</label> <?php echo htmlspecialchars_decode($summary_list['content']); ?>
+                                                <?php }else{ ?>
+                                                    暂无总结记录!
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+
                         </div><!--/.col (right) -->
                     </div>   <!-- /.row -->
                 </section><!-- /.content -->

@@ -1534,6 +1534,44 @@ class OpController extends BaseController
                 }
             }
 
+            if ($opid && $savetype == 28){
+                $content            = trim(I('content'));
+                $id                 = I('id');
+                $summary_db         = M('op_summary');
+                $data               = array();
+                $data['op_id']      = $opid;
+                $data['content']    = stripslashes($content);
+                $data['user_id']    = cookie('userid');
+                $data['user_name']  = cookie('nickname');
+                $data['create_time']= NOW_TIME;
+                if ($id){
+                    $res            = $summary_db -> where(array('id'=>$id))->save($data);
+                }else{
+                    $res            = $summary_db -> add($data);
+                }
+                if ($res){
+                    $record             = array();
+                    $record['op_id']    = $opid;
+                    $record['optype']   = 1;
+                    $record['explain']  = '保存项目总结';
+
+                    //流程    反馈给实施部门经理、业务部门经理、业务人
+                    $oplist             = $db->where(array('op_id'=>$opid))->find();
+                    $departments        = array_unique(array($oplist['create_user_department_id'],$oplist['dijie_department_id']));
+                    $users              = M('salary_department')->where(array('id'=>array('in',$departments)))->getField('manager_id,manager_name',true);
+                    $users[$oplist['create_user']]  = $oplist['create_user_name'];
+                    $process_node       = 85; //填写项目总结记录
+                    $pro_status         = 1; // 未读信息
+                    foreach ($users as $k=>$v){
+                        save_process_log($process_node, $pro_status, $oplist['project'], $oplist['id'], '',$k, $v); //保存待办事宜
+                    }
+                    $this->success('保存成功');
+                }else{
+                    $this->error('数据保存失败');
+                }
+
+            }
+
 
             echo $num;
         }
@@ -3717,6 +3755,7 @@ class OpController extends BaseController
         $this->eval_lists       = $eval_lists;
         $this->jiesuan          = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
         $this->audit_status     = get_submit_audit_status();
+        $this->summary_list     = M('op_summary')->where(array('op_id'=>$opid))->find(); //项目总结
 
         $this->opid             = $opid;
         $this->fa               = $fa;
