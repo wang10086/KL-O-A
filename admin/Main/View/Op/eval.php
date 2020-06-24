@@ -140,8 +140,7 @@
                                 <div class="box-body">
                                     <div class="content">
                                         <div class="form-group col-md-12">
-                                            <?php /*if (cookie('userid') == $list['line_blame_uid']){ */?>
-                                            <?php if (cookie('userid') == 1){ ?>
+                                            <?php if (cookie('userid') == $list['line_blame_uid']){ ?>
                                                 <?php if (!$jiesuan){ ?>
                                                     <form method="post" action="{:U('Op/public_save')}">
                                                         <input type="hidden" name="dosubmint" value="1" />
