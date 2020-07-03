@@ -948,8 +948,10 @@ class FinanceController extends BaseController {
                 $explain            = '编辑开票申请';
             }else{
                 $info['create_time']= NOW_TIME;
-                $info['audit_uid']  = '27';
-                $info['audit_uname']= '殷洪';
+                //$info['audit_uid']  = '27';
+                //$info['audit_uname']= '殷洪';
+                $info['audit_uid']  = '33';
+                $info['audit_uname']= '李婷';
                 $res                = $db->add($info);
 
                 $explain            = '填写开票申请';
@@ -1511,7 +1513,8 @@ class FinanceController extends BaseController {
                     $audit_zhuangtai= C('AUDIT_STATUS');
                     $zhuangtai      = $audit_zhuangtai[$info['cw_audit_status']];
                     if ($info['cw_audit_status'] ==1){
-                        $cn_userid  = 27;   //出纳(殷红)
+                        //$cn_userid  = 27;   //出纳(殷红)
+                        $cn_userid  = 33;   //出纳(李婷)
                         //审核通过发送系统消息(出纳)
                         $uid     = cookie('userid');
                         $title   = '您有来自['.$jk_info['jk_user'].']的借款单,请及时跟进!';
@@ -1747,7 +1750,8 @@ class FinanceController extends BaseController {
                 if ($res){
                     if ($info['cw_audit_status']==1){
                         //审核通过(通知出纳)
-                        $cn_userid  = 27;   //出纳(殷红)
+                        //$cn_userid  = 27;   //出纳(殷红)
+                        $cn_userid  = 33;   //出纳(李婷)
                         //发送系统消息
                         $uid     = cookie('userid');
                         $title   = '您有来自['.$bx_info['bx_user'].']的报销单,请及时跟进!';
@@ -1961,7 +1965,8 @@ class FinanceController extends BaseController {
                     $audit_zhuangtai= C('AUDIT_STATUS');
                     $zhuangtai      = $audit_zhuangtai[$info['cw_audit_status']];
                     if ($info['cw_audit_status'] ==1){
-                        $cn_userid  = 27;   //出纳(殷红)
+                        //$cn_userid  = 27;   //出纳(殷红)
+                        $cn_userid  = 33;   //出纳(李婷)
                         //审核通过发送系统消息(出纳)
                         $uid     = cookie('userid');
                         $title   = '您有来自['.$jk_info['jk_user'].']的借款单,请及时跟进!';
@@ -2237,7 +2242,8 @@ class FinanceController extends BaseController {
                 if ($res){
                     if ($info['cw_audit_status']==1){
                         //审核通过(通知出纳)
-                        $cn_userid  = 27;   //出纳(殷红)
+                        //$cn_userid  = 27;   //出纳(殷红)
+                        $cn_userid  = 33;   //出纳(李婷)
                         //发送系统消息
                         $uid     = cookie('userid');
                         $title   = '您有来自['.$bx_info['bx_user'].']的报销单,请及时跟进!';
