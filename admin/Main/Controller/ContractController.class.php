@@ -255,6 +255,11 @@ class ContractController extends BaseController {
                     $record['explain']      = '确认合同信息';
                     contract_record($record);
 
+                    //合同审核通过后,反馈给线控
+                    $op                 = M('op')->where(array('op_id'=>$row['op_id']))->field('id,op_id,project,create_user,create_user_name,create_user_department_id,line_blame_uid,line_blame_name')->find();
+                    $process_node       = 47; //合同签订
+                    $pro_status         = 1; // 未读提醒
+                    save_process_log($process_node, $pro_status, $op['project'], $op['id'], '', $op['line_blame_uid'], $op['line_blame_name']); //保存待办事宜
                     $this->success('已保存确认信息！',$referer);
                 } else {
                     $this->error('保存确认失败：' . $db->getError());

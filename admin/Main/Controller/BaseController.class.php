@@ -455,9 +455,7 @@ class BaseController extends Controller {
             $record['op_id']   = $dstdata['op_id'];
             $record['optype']  = 10;
             if($dst_status == P::AUDIT_STATUS_PASS){
-
-
-
+                
                 //回款计划处理
                 if($dstdata['payid']){
                     $paydata	= array();
@@ -479,8 +477,12 @@ class BaseController extends Controller {
                     M('contract')->data(array('payment'=>$huikuan))->where(array('id'=>$pay['cid']))->save();
                 }
 
-
                 $record['explain'] = '回款审核通过';
+                //回款审核通过后,反馈给线控
+                $op                 = M('op')->where(array('op_id'=>$dstdata['op_id']))->field('id,op_id,project,line_blame_uid,line_blame_name')->find();
+                $process_node       = 81; //确认回款
+                $pro_status         = 1; // 未读提醒
+                save_process_log($process_node, $pro_status, $op['project'], $op['id'], '', $op['line_blame_uid'], $op['line_blame_name']); //保存待办事宜
             }else{
                 $record['explain'] = '回款审核未通过';
             }
