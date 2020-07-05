@@ -455,7 +455,7 @@ class BaseController extends Controller {
             $record['op_id']   = $dstdata['op_id'];
             $record['optype']  = 10;
             if($dst_status == P::AUDIT_STATUS_PASS){
-                
+
                 //回款计划处理
                 if($dstdata['payid']){
                     $paydata	= array();

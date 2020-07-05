@@ -88,8 +88,28 @@
                                                 <label>业务人员：{$list.sale_user}</label>
                                             </div>
 
-                                            <div class="form-group col-md-8">
+                                            <div class="form-group col-md-4">
                                                 <label>业务部门：<?php echo $departments[$list['create_user_department_id']] ?></label>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label>合同签订完成时间：{$confirm['contract_sign_time'] ? date('Y-m-d',$confirm['contract_sign_time']) : ''}</label>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label>合同收回时间：{$confirm['contract_back_time'] ? date('Y-m-d',$confirm['contract_back_time']) : ''}</label>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label>回款时间：{$confirm['back_money_time'] ? date('Y-m-d',$confirm['back_money_time']) : ''}</label>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <label>是否需要教委审批材料：{$confirm['jiaowei']==1 ? '需要' : '不需要'}</label>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label>教委审批材料及时间节点：{$confirm['jiaowei_remark']}</label>
                                             </div>
 
                                             <div class="form-group col-md-12">

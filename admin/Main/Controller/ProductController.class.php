@@ -1961,7 +1961,9 @@ class ProductController extends BaseController {
         $detail_db                          = get_product_pro_need_tetail_db($oplist['kind']);
         $detail_list                        = $detail_db ? $detail_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
         $budget_list                        = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //审核通过的预算信息
+        $confirm                            = M('op_team_confirm')->where(array('op_id'=>$opid))->find();
 
+        $this->confirm                      = $confirm;
         $this->budget_list                  = $budget_list;
         $this->need                         = $customer_need_list;
         $this->detail                       = $detail_list;
