@@ -504,12 +504,12 @@ class OpController extends BaseController
 
         //资源需求单接收人员(资源管理部经理)
         //$this->men            = M('account')->field('id,nickname')->where(array('roleid'=>52))->find();
-        $this->tcs = M()->table('__OP_GUIDE_PRICE__ as gp')
+        /*$this->tcs = M()->table('__OP_GUIDE_PRICE__ as gp')
             ->field('gp.*,gk.name as gkname,gpk.name as gpkname')
             ->join('left join __GUIDEKIND__ as gk on gp.guide_kind_id = gk.id')
             ->join('left join __GUIDE_PRICEKIND__ as gpk on gp.gpk_id = gpk.id')
             ->where(array('gp.op_id' => $opid, 'gp.confirm_id' => '0'))
-            ->select();
+            ->select();*/
 
         //客户名称关键字
         $where = array();
@@ -873,8 +873,8 @@ class OpController extends BaseController
 
             }
 
-            //保存辅导员/教师,专家需求
-            if ($opid && $savetype == 12) {
+            //保存辅导员/教师,专家需求  bak_20200705
+            /*if ($opid && $savetype == 12) {
                 $data = I('data');
                 $op = $db->where(array('op_id' => $opid))->find();
 
@@ -922,9 +922,9 @@ class OpController extends BaseController
                     op_record($record);
                 }
 
-            }
+            }*/
 
-            //保存辅导员/教师,专家具体需求信息
+            /*//保存辅导员/教师,专家具体需求信息  bak_20200705
             if ($opid && $savetype == 13) {
                 $data = I('data');
                 $in_day = I('in_day');
@@ -983,7 +983,7 @@ class OpController extends BaseController
                 } else {
                     $this->error('请填写完整信息!');
                 }
-            }
+            }*/
 
 
             //保存项目跟进保存产品模块需求(14 can delete 20191224)
@@ -2960,14 +2960,14 @@ class OpController extends BaseController
 
             $this->op = $op;
             $this->kinds = M('project_kind')->getField('id,name', true);
-            $this->guide_kind = M('guidekind')->getField('id,name', true);
+            //$this->guide_kind = M('guidekind')->getField('id,name', true);
             //获取职能类型
-            $priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id" => $opid))->select();
-            $this->price_kind = $priceKind;
-            $this->fields = C('GUI_FIELDS');
-            $jiesuan = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
-            $this->jiesuan = $jiesuan;
-            $resource = M('op_res')->where(array('op_id' => $opid))->find();
+            //$priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id" => $opid))->select();
+            //$this->price_kind = $priceKind;
+            $this->fields   = C('GUI_FIELDS');
+            $jiesuan        = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
+            $this->jiesuan  = $jiesuan;
+            $resource       = M('op_res')->where(array('op_id' => $opid))->find();
             $this->resource = $resource; //资源需求单
             if ($resource) {
                 $this->rad = 1;
@@ -2978,25 +2978,10 @@ class OpController extends BaseController
 
             //辅导员/教师、专家
             $guide_price = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id' => $opid, 'p.op_id' => $opid))->select();
-            foreach ($guide_price as $k => $v) {
-                //职务信息
-                foreach ($this->guide_kind as $key => $value) {
-                    if ($v['guide_kind_id'] == $key) {
-                        $guide_price[$k]['zhiwu'] = $value;
-                    }
-                }
-
-                //所属领域
-                foreach ($this->fields as $key => $value) {
-                    if ($v['field'] == $key) {
-                        $guide_price[$k]['lingyu'] = $value;
-                    }
-                }
-            }
             $this->guide_price = $guide_price;
 
             //项目跟进时提出的需求信息
-            $this->guide_need = M('op_guide_price')->where(array('op_id' => $opid))->select();
+            //$this->guide_need = M('op_guide_price')->where(array('op_id' => $opid))->select();
 
             //人员名单关键字
             $this->userkey = get_username();

@@ -77,20 +77,14 @@
                                 </div>
                             </div>
 
-                            <?php if ($guide_need){ ?>
-                                <div class="box box-warning">
-                                    <div class="box-header">
-                                        <h3 class="box-title">辅导员/教师、专家需求</h3>
-                                    </div><!-- /.box-header -->
-                                    <div class="box-body" >
-                                        <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
-                                            <include file="confirm_tcs_need_edit" />
-                                        <?php }else{ ?>
-                                            <include file="confirm_tcs_need_read" />
-                                        <?php }?>
-                                    </div>
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">辅导员/教师、专家需求</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body" >
+                                    <include file="confirm_tcs_need_read" />
                                 </div>
-                            <?php } ?>
+                            </div>
 
                             <div class="box box-warning">
                                 <div class="box-header">
@@ -225,9 +219,9 @@
 
 <script type="text/javascript">
 
-    var price_kind = '';
+    //var price_kind = '';
     var opid        = <?php echo $op['op_id']; ?>;
-    var fields      = <?php echo $fields; ?>;
+    //var fields      = <?php echo $fields; ?>;
     var group_id    = "<?php echo $op['group_id']; ?>";
     var op_kind     = <?php echo $op_kind;?>;
     var resource    = "<?php echo $resource['op_id']; ?>";
@@ -383,7 +377,7 @@
         })
     }*/
 
-    //新增辅导员/教师、专家
+    /*//新增辅导员/教师、专家  bak_20200705
     function add_tcs(){
         var i = parseInt($('#tcs_val').text())+1;
         var html = '<div class="userlist no-border" id="tcs_'+i+'">' +
@@ -401,9 +395,9 @@
         $('#tcs_val').html(i);
         assign_option(i);
         orderno();
-    }
+    }*/
 
-    function assign_option(a){
+    /*function assign_option(a){
         if(price_kind){
             $("#gpk_id_"+a).empty();
             var count = price_kind.length;
@@ -419,9 +413,9 @@
             var b='<option value="" disabled selected>无数据</option>';
             $("#gpk_id_"+a).append(b);
         }
-    }
+    }*/
 
-    //获取单价信息
+    /*//获取单价信息
     function getPrice(a){
         var guide_kind_id = $('#se_'+a).val();
         var gpk_id        = $('#gpk_id_'+a).val();
@@ -443,7 +437,7 @@
         var days    = parseInt($('#days_'+a).val());
         var total   = num*price*days;
         $('#total_'+a).val(total);
-    }
+    }*/
 
     //移除
     function delbox(obj){
@@ -453,9 +447,9 @@
 
     //编号
     function orderno(){
-        $('#tcs').find('.title').each(function(index, element) {
+        /*$('#tcs').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
-        });
+        });*/
 
         $('#plans').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
@@ -500,7 +494,7 @@
         });
     };
 
-    function upd_tcs_need(confirm_id,op_id){
+    /*function upd_tcs_need(confirm_id,op_id){
         var confirm_id  = confirm_id;
         var op_id       = op_id;
         $('#fdy_lit-title').text('编辑辅导员/教师、专家需求');
@@ -561,9 +555,9 @@
             }
         })
 
-    }
+    }*/
 
-    function timestampToDay(timestamp) {
+    /*function timestampToDay(timestamp) {
         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
         Y = date.getFullYear() + '-';
         M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -585,7 +579,7 @@
         s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
         //return Y+M+D+h+m+s;
         return h+m+s;
-    }
+    }*/
 
     //物资需求单
     function show_res_need(){

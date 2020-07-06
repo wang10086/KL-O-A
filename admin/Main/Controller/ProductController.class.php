@@ -1962,7 +1962,31 @@ class ProductController extends BaseController {
         $detail_list                        = $detail_db ? $detail_db->where(array('op_id'=>$oplist['op_id']))->find() : '';
         $budget_list                        = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //审核通过的预算信息
         $confirm                            = M('op_team_confirm')->where(array('op_id'=>$opid))->find();
+        //项目跟进时提出的需求信息
+        //$this->guide_need = M('op_guide_price')->where(array('op_id' => $opid))->select();
+        //辅导员/教师、专家
+        $guide_price = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id' => $opid, 'p.op_id' => $opid))->select();
+        echo M()->getlastsql();
+        //P($guide_price);
 
+
+        foreach ($guide_price as $k => $v) {
+            //职务信息
+            foreach ($this->guide_kind as $key => $value) {
+                if ($v['guide_kind_id'] == $key) {
+                    $guide_price[$k]['zhiwu'] = $value;
+                }
+            }
+
+            /*//所属领域
+            foreach ($this->fields as $key => $value) {
+                if ($v['field'] == $key) {
+                    $guide_price[$k]['lingyu'] = $value;
+                }
+            }*/
+        }
+        $this->guide_price                  = $guide_price;
+        $this->fields                       = C('GUI_FIELDS');
         $this->confirm                      = $confirm;
         $this->budget_list                  = $budget_list;
         $this->need                         = $customer_need_list;
@@ -1985,7 +2009,7 @@ class ProductController extends BaseController {
         $this->selfOpNeeds                  = $customer_need_list ? explode(',',$customer_need_list['selfOpNeed']) : ($detail_list['selfOpNeed'] ? explode(',',$detail_list['selfOpNeed']) : '');
         $this->addOpNeeds                   = $customer_need_list ? explode(',',$customer_need_list['addOpNeed']) : ($detail_list['addOpNeed'] ? explode(',',$detail_list['addOpNeed']) : '');
         $this->yards                        = $customer_need_list ? explode(',',$customer_need_list['yard']) : ($detail_list['yard'] ? explode(',',$detail_list['yard']) : '');
-
+        $this->fields                       = C('GUI_FIELDS'); //辅导员领域
         $this->display('customer_need');
     }
 
@@ -3290,6 +3314,66 @@ class ProductController extends BaseController {
                     $this->success('数据保存成功');
                 }else{
                     $this->error('保存数据失败');
+                }
+            }
+
+            //保存辅导员/教师,专家具体需求信息
+            if ($savetype == 22) {
+                //P($_POST);
+                $op_guide_price_db  = M('op_guide_price');
+                $opid               = I('opid');
+                $data               = I('data');
+                $in_day             = I('in_day');
+                $address            = trim(I('address'));
+                $confirm_id         = I('confirm_id');
+                $in_begin_day       = substr($in_day, 0, 10);
+                $in_end_day         = substr($in_day, 13, 10);
+                $info['in_begin_day'] = strtotime($in_begin_day);
+                $info['in_day']     = strtotime($in_end_day);
+                $info['address']    = $address;
+                $info['op_id']      = $opid;
+                $info['tcs_stu']    = 2;    //已确认需求(已成团)
+
+                if ($info['in_begin_day'] <= 0 || $info['in_day'] <= 0 || ($info['in_begin_day'] > $info['in_day'])) $this->error('请正确填写出行时间');
+                if (!$info['address']) $this->error('请填写实施地点');
+
+                if ($data) {
+                    if ($confirm_id) {
+                        $res        = M('op_guide_confirm')->where(array('id' => $confirm_id))->save($info);
+                    } else {
+                        //更改项目跟进时提出的需求信息
+                        $list       = M('op_guide_confirm')->where(array('op_id' => $opid, 'tcs_stu' => 1))->find();
+                        if ($list) {
+                            $confirm_id = $list['id'];
+                            $res    = M('op_guide_confirm')->where(array('id' => $confirm_id))->save($info);
+                        } else {
+                            $res    = M('op_guide_confirm')->add($info);
+                            $confirm_id = $res;
+                        }
+                    }
+                    if ($res) $num++;
+                    if ($confirm_id) {
+                        $res = $op_guide_price_db->where(array('op_id' => $opid, 'confirm_id' => $confirm_id))->delete();
+                        if ($res) $num++;
+                        foreach ($data as $k => $v) {
+                            $v['op_id'] = $opid;
+                            $v['confirm_id'] = $confirm_id;
+                            $savein = $op_guide_price_db->add($v);
+                            if ($savein) $num++;
+                        }
+                    }
+                    if ($num) {
+                        $record             = array();
+                        $record['op_id']    = $opid;
+                        $record['optype']   = 4;
+                        $record['explain']  = '线控提辅导员需求';
+                        op_record($record);
+                        $this->success('保存成功');
+                    } else {
+                        $this->error('保存失败');
+                    }
+                } else {
+                    $this->error('请填写完整信息!');
                 }
             }
         }

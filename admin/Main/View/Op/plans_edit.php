@@ -72,7 +72,7 @@
 
 
                            <?php  if($op['audit_status']==1){ ?>
-                               <div class="box box-warning">
+                               <!--<div class="box box-warning">
                                    <div class="box-header">
                                        <h3 class="box-title">专家/辅导员需求</h3>
                                        <h3 class="box-title pull-right" style="font-weight:normal; color:#333333;">
@@ -81,14 +81,14 @@
                                    </div>
 
                                    <div class="box-body">
-                                       <?php if((($op['create_user']==cookie('userid') && !$guide_confirm) || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) && $settlement['audit']!=1){ ?>
+                                       <?php /*if((($op['create_user']==cookie('userid') && !$guide_confirm) || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10) && $settlement['audit']!=1){ */?>
                                            <include file="op_tcs_sure_edit" />
-                                       <?php }else{ ?>
+                                       <?php /*}else{ */?>
                                            <include file="op_tcs_sure_read" />
-                                       <?php } ?>
+                                       <?php /*} */?>
                                        <div class="form-group">&nbsp;</div>
                                    </div>
-                               </div>
+                               </div>-->
 
                                <div class="box box-warning">
                                    <div class="box-header">
