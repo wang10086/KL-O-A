@@ -5,7 +5,6 @@
             <tr role="row" class="orders" >
                 <th class="taskOptions">活动时间</th>
                 <th class="taskOptions">活动地点</th>
-                <th class="taskOptions">职务信息</th>
                 <th class="taskOptions">所属领域</th>
                 <th class="taskOptions" width="80">人数</th>
                 <th class="taskOptions" width="80">单次价格</th>
@@ -18,7 +17,6 @@
                     <input type="hidden" name="confirm_id" value="{$row.confirm_id}">
                     <td class="taskOptions">{$row.in_begin_day|date='Y-m-d',###}--{$row.in_day|date='Y-m-d',###}</td>
                     <td class="taskOptions">{$row.address}</td>
-                    <td class="taskOptions">{$row.gkname}</td>
                     <td class="taskOptions">{$fields[$row['field']]}</td>
                     <td class="taskOptions">{$row.num}</td>
                     <td class="taskOptions">&yen;{$row.price}</td>

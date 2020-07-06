@@ -180,7 +180,7 @@
                                     <h3 class="box-title">辅导员/教师、专家需求</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body" >
-                                    <?php if(!$jiesuan && ($op['create_user']==cookie('userid') || C('RBAC_SUPER_ADMIN')==cookie('username') || cookie('roleid')==10)){ ?>
+                                    <?php if(!$jiesuan && ($list['line_blame_uid']==cookie('userid') || in_array(cookie('userid'),array(1,11,$department_manager['manager_id'])))){ ?>
                                         <include file="confirm_tcs_need_edit" />
                                     <?php }else{ ?>
                                         <include file="confirm_tcs_need_read" />

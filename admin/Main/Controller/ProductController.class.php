@@ -1963,28 +1963,9 @@ class ProductController extends BaseController {
         $budget_list                        = M('op_budget')->where(array('op_id'=>$opid,'audit_status'=>1))->find(); //审核通过的预算信息
         $confirm                            = M('op_team_confirm')->where(array('op_id'=>$opid))->find();
         //项目跟进时提出的需求信息
-        //$this->guide_need = M('op_guide_price')->where(array('op_id' => $opid))->select();
+        //$this->guide_need                 = M('op_guide_price')->where(array('op_id' => $opid))->select();
         //辅导员/教师、专家
-        $guide_price = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id' => $opid, 'p.op_id' => $opid))->select();
-        echo M()->getlastsql();
-        //P($guide_price);
-
-
-        foreach ($guide_price as $k => $v) {
-            //职务信息
-            foreach ($this->guide_kind as $key => $value) {
-                if ($v['guide_kind_id'] == $key) {
-                    $guide_price[$k]['zhiwu'] = $value;
-                }
-            }
-
-            /*//所属领域
-            foreach ($this->fields as $key => $value) {
-                if ($v['field'] == $key) {
-                    $guide_price[$k]['lingyu'] = $value;
-                }
-            }*/
-        }
+        $guide_price                        = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id' => $opid, 'p.op_id' => $opid))->select();
         $this->guide_price                  = $guide_price;
         $this->fields                       = C('GUI_FIELDS');
         $this->confirm                      = $confirm;
@@ -1993,11 +1974,11 @@ class ProductController extends BaseController {
         $this->detail                       = $detail_list;
         $apply_to                           = C('APPLY_TO');
         $oplist['apply_to']                 = $apply_to[$oplist['apply_to']];
-        $departments                        = M('salary_department')->getField('id,department',true);
+        $this->departments                  = M('salary_department')->getField('id,department',true);
         $kinds                              = M('project_kind')->getField('id,name',true);
         $this->list                         = $oplist;
         $this->audit_status                 = get_submit_audit_status();
-        $this->departments                  = $departments;
+        $this->department_manager           = get_department_manager($oplist['line_blame_uid']);
         $this->kinds                        = $kinds;
         $this->yard_arr                     = $customer_need_list ? explode(',',$customer_need_list['yard']) : ($detail_list['yard'] ? explode(',',$detail_list['yard']) : '');
         $this->opid                         = $opid;
@@ -2010,6 +1991,7 @@ class ProductController extends BaseController {
         $this->addOpNeeds                   = $customer_need_list ? explode(',',$customer_need_list['addOpNeed']) : ($detail_list['addOpNeed'] ? explode(',',$detail_list['addOpNeed']) : '');
         $this->yards                        = $customer_need_list ? explode(',',$customer_need_list['yard']) : ($detail_list['yard'] ? explode(',',$detail_list['yard']) : '');
         $this->fields                       = C('GUI_FIELDS'); //辅导员领域
+        $this->jiesuan                      = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
         $this->display('customer_need');
     }
 
