@@ -1741,7 +1741,8 @@ class ProductController extends BaseController {
         $db                             = M('op');
         $title                          = trim(I('title'));
         $where                          = '';
-        $where                          .= "id > 3604 ";
+        //$where                          .= "id > 3604 ";
+        $where                          .= "id > 1 ";
         if ($title){
             $where                      .= " AND project LIKE '%".$title."%' ";
             $where                      .= " AND project not LIKE '%【拼团】%' ";
