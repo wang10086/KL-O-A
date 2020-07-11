@@ -82,7 +82,11 @@
                                     <h3 class="box-title">辅导员/教师、专家需求</h3>
                                 </div><!-- /.box-header -->
                                 <div class="box-body" >
-                                    <include file="confirm_tcs_need_read" />
+                                    <?php if(!$jiesuan && in_array(cookie('userid'), array(1,11,$op['create_user']))){ ?>
+                                        <include file="confirm_tcs_need_edit" />
+                                    <?php }else{ ?>
+                                        <include file="confirm_tcs_need_read" />
+                                    <?php }?>
                                 </div>
                             </div>
 
@@ -219,7 +223,7 @@
 
 <script type="text/javascript">
 
-    //var price_kind = '';
+    var price_kind = '';
     var opid        = <?php echo $op['op_id']; ?>;
     //var fields      = <?php echo $fields; ?>;
     var group_id    = "<?php echo $op['group_id']; ?>";
@@ -377,27 +381,27 @@
         })
     }*/
 
-    /*//新增辅导员/教师、专家  bak_20200705
+    //新增辅导员/教师、专家  bak_20200705
     function add_tcs(){
         var i = parseInt($('#tcs_val').text())+1;
         var html = '<div class="userlist no-border" id="tcs_'+i+'">' +
             '<span class="title"></span> ' +
-            '<select  class="form-control" style="width:12%" name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
-            '<select  class="form-control gpk" style="width:12%" name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
-            '<select  class="form-control" style="width:12%"  name="data['+i+'][field]"><option value="" selected disabled>请选择</option> <foreach name="fields" key="key" item="value"> <option value="{$key}">{$value}</option> </foreach> </select>'+
+            /*'<select  class="form-control" style="width:12%" name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="guide_kind" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +
+            '<select  class="form-control gpk" style="width:12%" name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')"><option value="" selected disabled>请选择</option> <foreach name="hotel_start" key="k" item="v"> <option value="{$k}">{$v}</option></foreach></select> ' +*/
+            '<select  class="form-control" style="width:22%"  name="data['+i+'][field]"><option value="" selected disabled>请选择</option> <foreach name="fields" key="key" item="value"> <option value="{$key}">{$value}</option> </foreach> </select>'+
             '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][days]" id="days_'+i+'" value="1" onblur="getTotal('+i+')" >'+
             '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][num]"  id="num_'+i+'" value="1" onblur="getTotal('+i+')" > ' +
-            '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][price]" id="dj_'+i+'" value="" onblur="getTotal('+i+')">' +
-            '<input type="text"  class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'">' +
-            '<input type="text"  class="form-control" style="width:18%" name="data['+i+'][remark]">' +
+            '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][price]" id="dj_'+i+'" value="" onblur="getTotal('+i+')">' +
+            '<input type="text"  class="form-control" style="width:10%" name="data['+i+'][total]" id="total_'+i+'">' +
+            '<input type="text"  class="form-control" style="width:28%" name="data['+i+'][remark]">' +
             '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'tcs_'+i+'\')">删除</a></div>';
         $('#tcs').append(html);
         $('#tcs_val').html(i);
         assign_option(i);
         orderno();
-    }*/
+    }
 
-    /*function assign_option(a){
+    function assign_option(a){
         if(price_kind){
             $("#gpk_id_"+a).empty();
             var count = price_kind.length;
@@ -413,9 +417,9 @@
             var b='<option value="" disabled selected>无数据</option>';
             $("#gpk_id_"+a).append(b);
         }
-    }*/
+    }
 
-    /*//获取单价信息
+    /*//获取单价信息  bak_20200711
     function getPrice(a){
         var guide_kind_id = $('#se_'+a).val();
         var gpk_id        = $('#gpk_id_'+a).val();
@@ -428,7 +432,7 @@
                 getTotal(a);
             }
         })
-    }
+    }*/
 
     //获取人数,计算出总价格\
     function getTotal(a){
@@ -437,7 +441,7 @@
         var days    = parseInt($('#days_'+a).val());
         var total   = num*price*days;
         $('#total_'+a).val(total);
-    }*/
+    }
 
     //移除
     function delbox(obj){
@@ -447,9 +451,9 @@
 
     //编号
     function orderno(){
-        /*$('#tcs').find('.title').each(function(index, element) {
+        $('#tcs').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
-        });*/
+        });
 
         $('#plans').find('.title').each(function(index, element) {
             $(this).text(parseInt(index)+1);
@@ -494,7 +498,7 @@
         });
     };
 
-    /*function upd_tcs_need(confirm_id,op_id){
+    function upd_tcs_need(confirm_id,op_id){
         var confirm_id  = confirm_id;
         var op_id       = op_id;
         $('#fdy_lit-title').text('编辑辅导员/教师、专家需求');
@@ -527,23 +531,23 @@
                     var i = parseInt(Math.random()*100000)+j;
                     con += '<div class="userlist no-border" id="tcs_'+ i +'">'+
                         '<span class="title">'+(j+1)+'</span>'+
-                        '<select  class="form-control" style="width:12%"  name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')">'+
+                        /*'<select  class="form-control" style="width:12%"  name="data['+i+'][guide_kind_id]" id="se_'+i+'" onchange="getPrice('+i+')">'+
                         '<foreach name="guide_kind" key="k" item="v">'+
                         '<option value="{$k}" <?php if('+msg[j].guide_kind_id+'== $k) echo "selected"; ?>>{$v}</option>'+
                         '</foreach>'+
                         '</select>'+
                         '<select  class="form-control gpk" style="width:12%"  name="data['+i+'][gpk_id]" id="gpk_id_'+i+'" onchange="getPrice('+i+')">'+
-                        '</select>'+
-                        '<select  class="form-control" style="width:12%"  name="data['+i+'][field]">'+
+                        '</select>'+*/
+                        '<select  class="form-control" style="width:22%"  name="data['+i+'][field]">'+
                         '<foreach name="fields" key="key" item="value">'+
                         '<option value="{$key}" <?php if('+msg[j].field+'==$key) echo "selected"; ?>>{$value}</option>'+
                         '</foreach>'+
                         '</select>'+
                         '<input type="text"  class="form-control" style="width:5%" name="data['+i+'][days]" id="days_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].days+'"  >'+
                         '<input type="text" class="form-control" style="width:5%" name="data['+i+'][num]" id="num_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].num+'">'+
-                        '<input type="text" class="form-control" style="width:8%" name="data['+i+'][price]" id="dj_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].price+'">'+
-                        '<input type="text" class="form-control" style="width:8%" name="data['+i+'][total]" id="total_'+i+'" value="'+msg[j].total+'">'+
-                        '<input type="text" class="form-control" style="width:18%" name="data['+i+'][remark]" value="'+msg[j].remark+'">'+
+                        '<input type="text" class="form-control" style="width:10%" name="data['+i+'][price]" id="dj_'+i+'" onblur="getTotal('+i+')" value="'+msg[j].price+'">'+
+                        '<input type="text" class="form-control" style="width:10%" name="data['+i+'][total]" id="total_'+i+'" value="'+msg[j].total+'">'+
+                        '<input type="text" class="form-control" style="width:28%" name="data['+i+'][remark]" value="'+msg[j].remark+'">'+
                         '<a href="javascript:;" class="btn btn-danger btn-flat" onclick="delbox(\'tcs_'+i+'\')">删除</a>'+
                         '<div id="tcs_val">1</div></div>';
                 }
@@ -555,9 +559,9 @@
             }
         })
 
-    }*/
+    }
 
-    /*function timestampToDay(timestamp) {
+    function timestampToDay(timestamp) {
         var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
         Y = date.getFullYear() + '-';
         M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -579,7 +583,7 @@
         s = (date.getSeconds() < 10 ? '0'+(date.getSeconds()) : date.getSeconds());
         //return Y+M+D+h+m+s;
         return h+m+s;
-    }*/
+    }
 
     //物资需求单
     function show_res_need(){

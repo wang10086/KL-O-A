@@ -924,11 +924,12 @@ class OpController extends BaseController
 
             }*/
 
-            /*//保存辅导员/教师,专家具体需求信息  bak_20200705
+            //保存辅导员/教师,专家具体需求信息  bak_20200705
             if ($opid && $savetype == 13) {
+                //P($_POST);
                 $data = I('data');
                 $in_day = I('in_day');
-                $tcs_time = I('tcs_time');
+                //$tcs_time = I('tcs_time');
                 $address = trim(I('address'));
                 $confirm_id = I('confirm_id');
                 $in_begin_day = substr($in_day, 0, 10);
@@ -983,7 +984,7 @@ class OpController extends BaseController
                 } else {
                     $this->error('请填写完整信息!');
                 }
-            }*/
+            }
 
 
             //保存项目跟进保存产品模块需求(14 can delete 20191224)
@@ -2822,15 +2823,15 @@ class OpController extends BaseController
     public function confirm()
     {
 
-        $id = I('id'); //流程管理
-        $opid = I('opid') ? I('opid') : ($id ? M('op')->where(array('id' => $id))->getField('op_id') : '');
+        $id             = I('id'); //流程管理
+        $opid           = I('opid') ? I('opid') : ($id ? M('op')->where(array('id' => $id))->getField('op_id') : '');
         if (!$opid) $this->error('项目不存在');
 
-        $where = array();
+        $where          = array();
         $where['op_id'] = $opid;
-        $op = M('op')->where($where)->find();
-        $confirm = M('op_team_confirm')->where($where)->find();
-        $upd_num = $confirm['upd_num'];
+        $op             = M('op')->where($where)->find();
+        $confirm        = M('op_team_confirm')->where($where)->find();
+        $upd_num        = $confirm['upd_num'];
 
         if (isset($_POST['dosubmit']) && $_POST['dosubmit']) {
             $info = I('info');
@@ -2958,8 +2959,8 @@ class OpController extends BaseController
             }
         } else {
 
-            $this->op = $op;
-            $this->kinds = M('project_kind')->getField('id,name', true);
+            $this->op       = $op;
+            $this->kinds    = M('project_kind')->getField('id,name', true);
             //$this->guide_kind = M('guidekind')->getField('id,name', true);
             //获取职能类型
             //$priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id" => $opid))->select();
@@ -2977,11 +2978,10 @@ class OpController extends BaseController
             }
 
             //辅导员/教师、专家
-            $guide_price = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id' => $opid, 'p.op_id' => $opid))->select();
-            $this->guide_price = $guide_price;
+            $this->guide_price = M()->table('__OP_GUIDE_CONFIRM__ as c')->field('c.id as cid,c.*,p.id as pid,p.*')->join('left join __OP_GUIDE_PRICE__ as p on p.confirm_id = c.id')->where(array('c.op_id' => $opid, 'p.op_id' => $opid))->select();
 
             //项目跟进时提出的需求信息
-            //$this->guide_need = M('op_guide_price')->where(array('op_id' => $opid))->select();
+            $this->guide_need = M('op_guide_price')->where(array('op_id' => $opid))->select();
 
             //人员名单关键字
             $this->userkey = get_username();

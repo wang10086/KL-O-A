@@ -3,10 +3,9 @@
         <table class="table table-bordered dataTable fontmini" id="tablelist" style="margin-top:10px;">
             <tr role="row" class="orders" >
                 <th class="sorting" data="" width="80">日期</th>
-                <!--<th class="sorting" data="">活动时间</th>-->
                 <th class="sorting" data="">活动地点</th>
-                <th class="sorting" data="">职务信息</th>
-                <th class="sorting" data="">职能类型</th>
+                <!--<th class="sorting" data="">职务信息</th>
+                <th class="sorting" data="">职能类型</th>-->
                 <th class="sorting" data="">所属领域</th>
                 <th class="sorting" data="" width="50">天数</th>
                 <th class="sorting" data="" width="50">人数</th>
@@ -28,11 +27,10 @@
                         {$row.in_day|date='Y-m-d',###}
                     </if>
                     </td>
-                    <!--<td>{$row.tcs_begin_time|date='H:i:s',###}--{$row.tcs_end_time|date='H:i:s',###}</td>-->
                     <td>{$row.address}</td>
-                    <td>{$row.zhiwu}</td>
-                    <td>{$row.zhineng}</td>
-                    <td>{$row.lingyu}</td>
+                    <!--<td>{$row.zhiwu}</td>
+                    <td>{$row.zhineng}</td>-->
+                    <td>{$fields[$row['field']]}</td>
                     <td>{$row.days}</td>
                     <td>{$row.num}</td>
                     <td>&yen;{$row.price}</td>
