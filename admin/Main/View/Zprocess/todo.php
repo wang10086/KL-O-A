@@ -67,13 +67,9 @@
                             <th width="20"></th>
                             <th width="">提醒类型</th>
                             <th width="">标题</th>
-                            <?php /*if (cookie('userid')==1){ */?>
                             <th width="">节点类型</th>
-                            <?php /*} */?>
                             <th width="">创建时间</th>
                             <th width="">督办</th>
-                            <!--<th width="">操作者</th>
-                            <th width="">操作时间</th>-->
                         </tr>
                         </thead>
                         <tbody>
@@ -82,13 +78,15 @@
                                     <td></td>
                                     <td>{$pro_status_arr[$v['pro_status']]}</td>
                                     <td><a href="{:U($v['url'],array('id'=>$v['req_id']))}" onclick="read_log({$v.id},{$v.to_uid},{$v.pro_status})">{$v.title}</a></td>
-                                    <?php /*if (cookie('userid')==1){ */?>
                                     <td>{$v.nodeTitle}</td>
-                                    <?php /*} */?>
                                     <td>{$v.req_time|date='Y-m-d H:i:s',###}</td>
-                                    <td><a href="javascript:;" onclick="javascript:urge('{:U('Zprocess/urge',array('id'=>$v['id']))}')" class="btn btn-info btn-smsm">督办</a></td>
-                                    <!--<td></td>
-                                    <td>{$v.}</td>-->
+                                    <td>
+                                        <?php if($v['pro_status'] == 5){ ?>
+                                            <a href="javascript:;" onclick="javascript:;" class="btn btn-default btn-smsm">督办</a>
+                                        <?php }else{ ?>
+                                            <a href="javascript:;" onclick="javascript:urge('{:U('Zprocess/urge',array('id'=>$v['id']))}')" class="btn btn-info btn-smsm">督办</a>
+                                        <?php } ?>
+                                    </td>
                                 </tr>
                             </foreach>
                         </tbody>

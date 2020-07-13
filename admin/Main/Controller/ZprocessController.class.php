@@ -521,7 +521,7 @@ class ZprocessController extends BaseController{
         if (!$id) $this->error('获取数据失败');
 	    $db                     = M('process_log');
 	    $data                   = array();
-	    $data['pro_status']     = 5;
+	    $data['pro_status']     = 5; //被督办
 	    $res                    = $db->where(array('id'=>$id))->save($data);
 	    if ($res){
 	        $this->success('数据保存成功',session('refer'));
