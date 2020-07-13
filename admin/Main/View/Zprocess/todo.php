@@ -53,6 +53,7 @@
                                     <!--<input type="button" class="btn btn-info btn-sm" style="width: 80px; margin-right: 20px;" onclick="others()" value="查看他人">-->
                                     <a href="javascript:;" class="btn btn-info btn-sm" onclick="javascript:opensearch('searchtext',500,180);autocomp('user_name','user_id')"><i class="fa fa-search"></i> 查看他人</a>
                                     <form action="{:U('Zprocess/public_todo')}" method="post" style="display: inline-block;">
+                                        <input type="hidden" name="uid" value="{$uid}">
                                         <input type="text" name="key" class="" style="height: 30px;" placeholder="搜索关键字">
                                         <input type="submit" class="btn btn-default btn-sm" value="提交">
                                     </form>
@@ -85,7 +86,7 @@
                                     <td>{$v.nodeTitle}</td>
                                     <?php /*} */?>
                                     <td>{$v.req_time|date='Y-m-d H:i:s',###}</td>
-                                    <td><a href="javascript:;" onclick="art_show_msg('开发中...',1000)" class="btn btn-info btn-smsm">督办</a></td>
+                                    <td><a href="javascript:;" onclick="javascript:urge('{:U('Zprocess/urge',array('id'=>$v['id']))}')" class="btn btn-info btn-smsm">督办</a></td>
                                     <!--<td></td>
                                     <td>{$v.}</td>-->
                                 </tr>
@@ -136,6 +137,28 @@
                 return false;
             }
         })
+    }
+
+    function urge(url,msg) {
+        if(!msg){ var msg = '确定要督办此事项吗？'; }
+        var refer   = window.location.host;
+
+        art.dialog({
+            title: '提示',
+            width:400,
+            height:100,
+            lock:true,
+            fixed: true,
+            content: '<span style="width:100%; text-align:center; font-size:18px;float:left; clear:both;">'+msg+'</span>',
+            ok: function (msg) {
+                window.location.href=url;
+                //this.title('3秒后自动关闭').time(3);
+                return false;
+            },
+            cancelVal: '取消',
+            cancel: true //为true等价于function(){}
+        });
+
     }
 </script>
 

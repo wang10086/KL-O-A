@@ -15,8 +15,9 @@ class ZprocessController extends BaseController{
 	// @@@NODE-3###record###待办事宜###
     public function public_todo(){
         $this->title('待办事宜');
-        $stu                    = I('stu',0);
-        $p                      = I('p',0); // process
+        session('refer', $_SERVER['REQUEST_URI']);
+        $stu                    = I('stu',0); //
+        $p                      = I('p',0); //process
         $t                      = I('t',0); //type
         $uid                    = I('uid',cookie('userid'));
         $key                    = trim(I('key'));
@@ -512,6 +513,21 @@ class ZprocessController extends BaseController{
         $ids                    = array(); //已有表单页面的process_id
         $formView               = in_array($id,ids) ? 'form'.$id : 'formDefault';
         $this->display($formView);
+    }
+
+    //督办
+    public function urge(){
+        $id                     = I('id');
+        if (!$id) $this->error('获取数据失败');
+	    $db                     = M('process_log');
+	    $data                   = array();
+	    $data['pro_status']     = 5;
+	    $res                    = $db->where(array('id'=>$id))->save($data);
+	    if ($res){
+	        $this->success('数据保存成功',session('refer'));
+        }else{
+	        $this->error('数据保存失败');
+        }
     }
 
 }
