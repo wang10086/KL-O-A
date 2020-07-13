@@ -36,7 +36,7 @@
                                 </div><!-- /.box-body -->
                             </div><!-- /.box -->
 
-                            <?php if(!$budget && $op['standard'] != 1 && $costacc_res['status'] != 1){ ?>
+                            <?php if(!$budget && $costacc_res['status'] != 1){ ?>
                             	<include file="costacc_edit" />
                             <?php }else{ ?>
                             	<include file="costacc_read" />
