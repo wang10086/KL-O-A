@@ -895,7 +895,7 @@ class AjaxController extends BasepubController {
         $datetime                   = trim(I('datetime'));
 
         $remsg                      = array();
-        if (!in_array(session('userid'),array(1,11,77))){
+        if (!in_array(session('userid'),array(1,11,13))){
             $remsg['num']           = 0;
             $remsg['msg']           = '您的权限不足!请联系管理员！';
             $this->ajaxReturn($remsg);
@@ -970,6 +970,7 @@ class AjaxController extends BasepubController {
         $userid['user_id']                      = $_SESSION['userid'];
         $datetime                               = trim($_POST['datetime']);
         $sign                                   = M('user_sign')->where($userid)->find();
+
         if($sign){
 
             if (in_array($status,array(0,1,3))){
@@ -1093,7 +1094,7 @@ class AjaxController extends BasepubController {
         $title   = '您的'.$datetime['datetime'].'月的系统工资被'.cookie('nickname').'驳回，请及时处理!';
         $content = '您的'.$datetime['datetime'].'月的系统工资被'.cookie('nickname').'驳回，请及时处理!';
         $url     = U('Salary/salary_excel_list',array('datetime'=>$datetime['datetime']));
-        $user    = '[77]'; //王茜
+        $user    = '[13]'; //杜莹
         $roleid  = '';
         send_msg($uid,$title,$content,$url,$user,$roleid);
 
@@ -1194,7 +1195,7 @@ class AjaxController extends BasepubController {
      */
     function Ajax_file_delete(){
 
-        $arr                    = array("11", "55", "77", "32","38","1","12","13");
+        $arr                    = array("11", "55", "32","38","1","12","13");
         if(in_array($_SESSION['userid'],$arr)){
         }else{
             echo json_encode(array('sum' => 0, 'msg' => "删除失败！您没有权限删除！"));die;

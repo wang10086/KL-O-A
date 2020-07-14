@@ -198,7 +198,7 @@
                     </div><!-- /.box-body -->
 
                     <div style="margin-top:2em;text-align:center;" id="shr_qianzi"><br><br><br><br>
-                        <?php if($status==1 && session('userid')== 77){ ?>
+                        <?php if($status==1 && session('userid')== 13){ ?>
                             <a  class="btn btn-info salary_excel1_submit" style="width:10em;margin-top:2em;" onclick="show_qianzi(0)">提交审核</a>
                         <?php }?>
                         <?php if($status==2 && session('userid') == 55){ ?>
