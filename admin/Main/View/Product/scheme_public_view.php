@@ -11,7 +11,7 @@
             </div><!-- /.box-header -->
             <div class="box-body" style=" padding-top:30px; padding-bottom:0px;">
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-12">
                     <label>项目名称：{$oplist.project}</label>
                 </div>
 
@@ -40,11 +40,11 @@
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label>客户单位：{$oplist.customer}</label>
+                    <label>接待实施部门：{$oplist.dijie_department}</label>
                 </div>
 
-                <div class="form-group col-md-4">
-                    <label>接待实施部门：{$oplist.dijie_department}</label>
+                <div class="form-group col-md-8">
+                    <label>客户单位：{$oplist.customer}</label>
                 </div>
 
                 <div class="form-group col-md-4">
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="form-group col-md-4">
-                    <label>是否请研发部研发新模块: <?php echo $oplist['new_model']==1 ? '是' : '否'; ?></label>
+                    <label><!--是否请研发部研发新模块-->是否标准化模块: <?php echo $oplist['new_model']==1 ? '是' : '否'; ?></label>
                 </div>
 
                 <div class="form-group col-md-12">

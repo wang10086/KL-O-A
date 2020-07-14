@@ -12,13 +12,13 @@
                             <div class="box-header">
                                 <h3 class="box-title">选择产品模块</h3>
                                 <div class="box-tools pull-right">
-                                     <a href="javascript:;" class="btn btn-success btn-sm" onclick="selectmodel()">选择模块</a>
+                                     <a href="javascript:;" class="btn btn-success btn-sm" onclick="is_standard_model()">选择模块</a>
                                 </div>
                             </div><!-- /.box-header -->
                             <div class="box-body">
 
-                                <div class="form-group col-md-4">
-                                    <label>是否请研发部研发新模块：</label>
+                                <div class="form-group col-md-4" id="standard_box">
+                                    <label>是否标准化模块：</label>
                                     <input type="radio" name="new_model" value="1" <?php if ($scheme_list['new_model']==1) echo "checked"; ?>> &#8194;是 &#12288;
                                     <input type="radio" name="new_model" value="0" <?php if ($scheme_list['new_model']==0) echo "checked"; ?>> &#8194;否 &#12288;
                                 </div>
@@ -33,7 +33,11 @@
 
                                 <?php
                                 foreach($pro_lists as $row){
-                                    echo '<tr id="tpl_a99999'.$row['id'].'"><td><input type="hidden" name="pro[]" value="'.$row['id'].'">'.$row['id'].'</td><td><a href="'.U('Product/view', array('id'=>$row['id'])).'" target="_blank">'.$row['title'].'</a></td><td>'.$row['input_uname'].'</td><td class="taskOptions"><button onClick="javascript:del_timu(\'tpl_a99999'.$row['id'].'\')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td></tr>';
+                                    if ($scheme_list['new_model']==1){ //标准化
+                                        echo '<tr id="tpl_a99999'.$row['id'].'"><td><input type="hidden" name="pro[]" value="'.$row['id'].'">'.$row['id'].'</td><td><a href="'.U('Product/standard_producted_detail', array('id'=>$row['id'])).'" target="_blank">'.$row['title'].'</a></td><td>'.$row['input_uname'].'</td><td class="taskOptions"><button onClick="javascript:del_timu(\'tpl_a99999'.$row['id'].'\')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td></tr>';
+                                    }else{ //飞标准化
+                                        echo '<tr id="tpl_a99999'.$row['id'].'"><td><input type="hidden" name="pro[]" value="'.$row['id'].'">'.$row['id'].'</td><td><a href="'.U('Product/view', array('id'=>$row['id'])).'" target="_blank">'.$row['title'].'</a></td><td>'.$row['input_uname'].'</td><td class="taskOptions"><button onClick="javascript:del_timu(\'tpl_a99999'.$row['id'].'\')" title="删除" class="btn btn-warning btn-smsm"><i class="fa fa-times"></i></button></td></tr>';
+                                    }
                                 }
                                 ?>
 
@@ -327,12 +331,18 @@
 			});
 		}
 
+        //是否标准化模块
+            function is_standard_model() {
+                var is_standard = $('#standard_box').find('div[class="iradio_minimal checked"]').find('input[name="new_model"]').val();
+                console.log(is_standard);
+                selectmodel(is_standard);
+            }
 
-
-		//选择模块
-		function selectmodel() {
+		//选择模块(边准化)
+		function selectmodel(is_standard) {
+            var url = '/index.php?m=Main&c=Product&a=select_product&is_standard='+is_standard;
 			var mokuaihtml = '';
-			art.dialog.open('<?php echo U('Product/select_product'); ?>',{
+			art.dialog.open(url,{
 				lock:true,
 				title: '选择模块',
 				width:1100,

@@ -422,43 +422,41 @@ class ProductController extends BaseController {
 		}
     }
 
-    // @@@NODE-3###select_product###建模板时选择产品###
+    // @@@NODE-3###select_product###产品实施方案 选择产品###
     public function select_product(){
-
+        $is_standard                            = I('is_standard',0);
 		$key                                    = I('key');
 		$status                                 = I('status','-1');
 		$pro                                    = I('pro');
 		$zj                                     = I('zj');
 		$age                                    = I('age');
 
-		$db                                     = M('product');
-		$this->status                           = $status;
-		$where                                  = array();
-		if($this->status != '-1') $where['p.audit_status'] = $this->status;
-		if($key)    $where['p.title']           = array('like','%'.$key.'%');
-		if($pro)    $where['p.business_dept']   = array('like','%'.$pro.'%');
-		if($age)    $where['p.age']             = array('like','%'.$age.'%');
-		if($zj)     $where['p.input_uname']     = array('like','%'.$zj.'%');
-        //$where['disting']                       = 0;
+        $where                                  = array();
+        $where['audit_status']                  = 1; //审核通过
+        if ($key)   $where['title']             = array('like','%'.$key.'%');
+        if($pro)    $where['business_dept']     = array('like','%'.$pro.'%');
+        if($zj)     $where['input_uname']       = array('like','%'.$zj.'%');
+		if ($is_standard == 1){ //标准化
+		    $db                                 = M('producted');
+            $page                               = new Page($db->where($where)->count(), P::PAGE_SIZE);
+            $this->pages                        = $page->show();
+            $lists                              = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+        }else{ //非标准化
+            $db                                 = M('product');
+            //if($this->status != '-1') $where['audit_status'] = $this->status;
+            if($age)    $where['age']           = array('like','%'.$age.'%');
 
-		$business_depts                         = C('BUSINESS_DEPT');
-        $page                                   = new Page($db->table('__PRODUCT__ as p')->where($where)->count(), P::PAGE_SIZE);
-        $this->pages                            = $page->show();
-		$lists                                  = $db->table('__PRODUCT__ as p')->field('p.*')->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('p.id'))->select();
-		$kinds                                  = M('project_kind')->getField('id,name');
-		foreach($lists as $k=>$v){
-			$depts                              = explode(',',$v['business_dept']);
-			$deptval                            = array();
-			foreach($depts as $kk=>$vv){
-				$deptval[]                      = $kinds[$vv];
-			}
+            $page                               = new Page($db->where($where)->count(), P::PAGE_SIZE);
+            $this->pages                        = $page->show();
+            $lists                              = $db->where($where)->limit($page->firstRow . ',' . $page->listRows)->order($this->orders('id'))->select();
+        }
 
-			$lists[$k]['dept']                  = implode(',',$deptval);
-		}
-		$this->lists                            = $lists;
-
-		$this->ages                             = C('AGE_LIST');
-		$this->kinds                            = $kinds;
+        //$business_depts                         = C('BUSINESS_DEPT');
+        $this->lists                            = $lists;
+        $this->is_standard                      = $is_standard;
+        $this->status                           = $status;
+        $this->ages                             = C('AGE_LIST');
+		$this->kinds                            = M('project_kind')->getField('id,name');
     	$this->display('select_product');
     }
 
@@ -1886,7 +1884,7 @@ class ProductController extends BaseController {
        $pro_model_ids                       = $scheme_list['pro_model_ids'] ? explode(',',$scheme_list['pro_model_ids']) : '';
        $line_ids                            = $scheme_list['line_ids'] ? explode(',',$scheme_list['line_ids']) : '';
        $atta_ids                            = $scheme_list['atta_ids'] ? explode(',',$scheme_list['atta_ids']) : '';
-       if ($pro_ids) $this->pro_lists              = M('product')->where(array('id'=>array('in',$pro_ids)))->select();
+       if ($pro_ids) $this->pro_lists              = $scheme_list['new_model'] == 1 ? M('producted')->where(array('id'=>array('in',$pro_ids)))->select() : M('product')->where(array('id'=>array('in',$pro_ids)))->select(); // 1 ? 标准化 : 非标准化
        if ($pro_model_ids) $this->pro_model_lists  = M('product_model')->where(array('id'=>array('in',$pro_model_ids)))->select();
        if ($line_ids) $this->line_lists            = M('product_line')->where(array('id'=>array('in',$line_ids)))->select();
        if ($atta_ids) $this->atta_lists            = M('attachment')->where(array('id'=>array('in',$atta_ids)))->select();

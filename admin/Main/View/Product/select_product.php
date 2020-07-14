@@ -86,6 +86,7 @@
             <input type="hidden" name="m" value="Main">
             <input type="hidden" name="c" value="Product">
             <input type="hidden" name="a" value="select_product">
+            <input type="hidden" name="is_standard" value="{$is_standard}">
             
             <input type="text" class="form-control" name="key"  placeholder="关键字" value="{$keywords}">
             <select class="form-control" name="pro">
@@ -124,7 +125,13 @@
                         <input type="hidden" name="input_uname" value="{$row.input_uname}">
                         </td>
                         <td>{$row.id}</td>
-                        <td><div style="width:180px;display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><a href="{:U('Product/view', array('id'=>$row['id']))}" target="_blank" title="{$row.title}">{$row.title}</a></div></td>
+                        <td><div style="width:180px;display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                <?php if ($is_standard == 1){ ?>
+                                    <a href="{:U('Product/standard_producted_detail', array('id'=>$row['id']))}" target="_blank" title="{$row.title}">{$row.title}</a>
+                                <?php }else{ ?>
+                                    <a href="{:U('Product/view', array('id'=>$row['id']))}" target="_blank" title="{$row.title}">{$row.title}</a>
+                                <?php } ?>
+                            </div></td>
                         
                         <td>{$row.input_uname}</td>
                         <td>{$row.sales_price}</td>
