@@ -399,7 +399,7 @@ class SalaryModel extends Model
             $data[$k]['attendance_id']      = $attendance_list['id']?$attendance_list['id']:'0';
             $data[$k]['withdrawing']        = $attendance_list['withdrawing']?$attendance_list['withdrawing']:'0.00';//考勤扣款
             $data[$k]['performance_salary'] = round(($salary['standard_salary']/10)*$salary['performance_salary'],2); //岗位绩效工资
-            $kpi_pdca_score                 = $this->get_kpi_salary($v,$salary,$datetime); //绩效得分AAAA
+            $kpi_pdca_score                 = $this->get_kpi_salary($v,$salary,$datetime); //绩效得分
             $data[$k]['Achievements_withdrawing']= $kpi_pdca_score['count_money']?$kpi_pdca_score['count_money']:'0.00'; //绩效增减
             $op_guide_info                  = $this->get_op_guide($v,$datetime); //带团补助信息
             $data[$k]['Subsidy']            = $op_guide_info['guide_salary']?$op_guide_info['guide_salary']:'0.00'; //带团补助金额
@@ -426,9 +426,9 @@ class SalaryModel extends Model
             //应发工资 = (基本工资 - 考勤扣款) + (绩效工资 - 绩效增减) + 业绩提成 + 带团补助 + 奖金 + 年终奖 + 住房补贴 + 其他补款;
             //4月份发绩效工资40%,5月份发60%, 6月份发80%, 7月份发100% , 7月份删除下面一行 , 恢复下面一行
             /*******************start**********************/
-            $data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + round(($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) * 0.8 , 2) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
+            //$data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + round(($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) * 0.8 , 2) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
             /********************end************************/
-            //$data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + ($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
+            $data[$k]['Should_distributed'] = ($data[$k]['basic_salary'] - $data[$k]['withdrawing']) + ($data[$k]['performance_salary'] + $data[$k]['Achievements_withdrawing']) + $data[$k]['total'] + $data[$k]['Subsidy'] + $data[$k]['bonus'] + $data[$k]['welfare'] + $data[$k]['housing_subsidy'] + $data[$k]['Other']; //应发工资 = (基本工资 - 考勤扣款) + (绩效工资标准-绩效增减)+业绩提成+带团补助+ 奖金+年终奖+住房补贴+其他补款
 
             $salary_insurance_list          = M('salary_insurance')->where(array('account_id'=>$v['id']))->order('id desc')->find(); //五险一金
             $data[$k]['insurance_id']       = $salary_insurance_list['id']?$salary_insurance_list['id']:'0';
@@ -577,14 +577,14 @@ class SalaryModel extends Model
         $base_money                             = ($salary['standard_salary']/10)*$salary['basic_salary'];    //基本工资
         $branch                                 = 100;//给总共100分
 
+        //2020年07月后不考核KPI, 后期考核时删除下面三行即可
+        $use1               = 0;
+        $use2               = 0;
+        $use3               = 0;
+
         if($userinfo['formal']==0 || $userinfo['formal']==4) {$use3 = 0;} //排除试用期和实习期
         $f      = $use2+$use3;//获得总分    品质检查+kpi从绩效工资取值
         $fpdca  = $use1;
-
-        //2020年2、3月份不发绩效工资，4月份删除以下内容
-        /*****************start******************/
-        //$f      = -100;
-        /*******************end****************/
 
         $balance1                           = round(($money/$branch*$f),2); //绩效工资余额
         $balance2                           = round(($base_money/$branch*$fpdca),2);    //基本工资余额
