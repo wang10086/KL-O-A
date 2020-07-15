@@ -2253,5 +2253,32 @@ class AjaxController extends BasepubController {
         $list['type']                   = $types[$list['type']];
         $this->ajaxReturn($list);
     }*/
+
+    //结算时检查辅导员是否已调度完成
+    function check_settlement_guide(){
+        $op_id                          = I('opid');
+        if (!$op_id){
+            $data                       = array();
+            $data['num']                = 0;
+            $data['msg']                = '获取辅导员调度信息失败';
+            $this->ajaxReturn($data);
+        }
+        $db                             = M('op_guide_confirm');
+        $where                          = array();
+        $where['op_id']                 = $op_id;
+        $where['tcs_stu']               = array('neq',5); //5=>已核实人员(数据不可修改)
+        $list                           = $db -> where($where) -> find();
+        if ($list){
+            $num                        = 0;
+            $msg                        = '您有辅导员需求未核实,请及时核实辅导员信息';
+        }else{
+            $num                        = 1;
+            $msg                        = '辅导员调度已完成';
+        }
+        $data                           = array();
+        $data['num']                    = $num;
+        $data['msg']                    = $msg;
+        $this->ajaxReturn($data);
+    }
 }
 

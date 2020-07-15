@@ -277,11 +277,34 @@
         let yihuikuan  = <?php echo $yihuikuan?$yihuikuan:0; ?>;
 
         if (yihuikuan){
-           checkGrossRate();
+            checkGuide();
         }else{
             art_show_msg('该团未全部回款',5);
             return false;
         }
+    }
+    
+    //检查辅导员调度
+    function checkGuide() {
+        let opid        = {$op['op_id']};
+        $.ajax({
+            type : 'POST',
+            url : "{:U('Ajax/check_settlement_guide')}",
+            dataType : "JSON",
+            data : {opid:opid},
+            success : function (data) {
+                if (data.num == 1){
+                    checkGrossRate();
+                }else{
+                    art_show_msg(data.msg, 3);
+                    return false;
+                }
+            },
+            error : function () {
+                console.log('error');
+                return false;
+            }
+        })
     }
     
     //检查最低毛利率
