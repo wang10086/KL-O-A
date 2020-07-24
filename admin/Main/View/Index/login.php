@@ -41,7 +41,7 @@
         </div>
 
         <a href="{:U('Staff/login')}">
-            <div class="employee-aspirations"><i class="fa fa-hand-o-right"></i>&emsp14;员工心声测试
+            <div class="employee-aspirations"><i class="fa fa-hand-o-right"></i>&emsp14;员工心声
                 <if condition="$new_staff">
                     <img src="__HTML__/img/new.png" width="30rem" alt="" class="newStaff">
                 </if>
