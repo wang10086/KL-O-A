@@ -4970,7 +4970,7 @@ function query_department(){//部门
 return M('salary_department')->select();
 
 }
-function code_number($number,$style){//数字验证
+function code_number($number='',$style=''){//数字验证
 
 	if(!is_numeric($number)){
         if($style==1){

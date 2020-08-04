@@ -48,7 +48,7 @@
                                 <td>{$row.employee_member}</td>
                                 <td>{$row.department}</td>
                                 <td>{$row.post_name}</td>
-                                <td><?php echo date('Y-m-d',$row['entry_time'])?></td>
+                                <td><?php echo $row['entry_time'] ? date('Y-m-d',$row['entry_time']) : ''; ?></td>
                                 <td class="salary_probation"><input type="text" class="form-control" value="{$row.standard_salary}" /></td>
                                 <td class="salary_basic" style="text-align: center">
                                     <input type="text" style="width:5em;float:left;" class="form-control salary_basic1" value="{$row.basic_salary}" placeholder="例 : 7"/>
