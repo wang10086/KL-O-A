@@ -358,7 +358,8 @@ class AjaxController extends BasepubController {
             $salar_r                            = M('salary')->field('id,type,status')->where($id)->order('id desc')->find();
             if($salar_r){
 
-                if(strlen($add['type']) !== 1 || ($add['basic_salary'] + $add['performance_salary'])!==10){
+                //if(strlen($add['type']) !== 1 || ($add['basic_salary'] + $add['performance_salary'])!==10){
+                if(in_array($add['type'], array(1,2,3,5)) && ($add['basic_salary'] + $add['performance_salary'])!==10){
                     $sum = 0;
                     $msg = "数据有误!请查证后提交!";
                     echo json_encode(array('sum'=>$sum,'msg'=>$msg));die;
