@@ -97,14 +97,14 @@ class SalaryModel extends Model
             $data['status']             = 1;
         }elseif ($list['submission_status']==2 && $list['examine_status']==1 && $list['approval_status']==1){ //待财务审核
             $data['status']             = 2;
-            $data['url1']               = $sign_db->where(array('user_id'=>77))->getField('file_url'); //人事签字
+            $data['url1']               = $sign_db->where(array('user_id'=>13))->getField('file_url'); //人事签字
         }elseif ($list['submission_status']==2 && $list['examine_status']==2 && $list['approval_status']==1){ //待总经理审核
             $data['status']             = 3;
-            $data['url1']               = $sign_db->where(array('user_id'=>77))->getField('file_url'); //人事签字
+            $data['url1']               = $sign_db->where(array('user_id'=>13))->getField('file_url'); //人事签字
             $data['url2']               = $sign_db->where(array('user_id'=>55))->getField('file_url'); //财务签字
         }elseif ($list['submission_status']==2 && $list['examine_status']==2 && $list['approval_status']==2) { //已全部签字
             $data['status']             = 4;
-            $data['url1']               = $sign_db->where(array('user_id'=>77))->getField('file_url'); //人事签字
+            $data['url1']               = $sign_db->where(array('user_id'=>13))->getField('file_url'); //人事签字
             $data['url2']               = $sign_db->where(array('user_id'=>55))->getField('file_url'); //财务签字
             $data['url3']               = $sign_db->where(array('user_id'=>11))->getField('file_url'); //总经理
         }
