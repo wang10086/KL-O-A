@@ -2128,7 +2128,7 @@ class AjaxController extends BasepubController {
         $lists                              = get_dijie_department_data();
         $data                               = array();
         switch ($department_id){
-            case in_array($department_id,array(2,6,12,13,14,16)): //业务部门id 2=>市场部 6=>京区业务中心, 12=>南京; 13=>武汉; 14=> 沈阳; 16=>长春;
+            case in_array($department_id,array(2,6,12,13,14,16,5)): //业务部门id 2=>市场部 6=>京区业务中心, 12=>南京; 13=>武汉; 14=> 沈阳; 16=>长春;
                 foreach ($lists as $v){
                     if ($v['id'] == $department_id){
                         $data['line_blame_uid'] = $v['line_blame_uid'];
@@ -2136,7 +2136,7 @@ class AjaxController extends BasepubController {
                     }
                 }
                 break;
-            case 5: //5=>计调部
+            /* case 5: //5=>计调部
                 switch ($kind){
                     case 54: //54=>研学旅行
                         $data['line_blame_uid'] = 39;
@@ -2154,7 +2154,7 @@ class AjaxController extends BasepubController {
                         $data['line_blame_uid'] = 12;
                         $data['line_blame_name']= '秦鸣';
                 }
-                break;
+                break; */
             default:
                 $data['line_blame_uid'] = 0;
                 $data['line_blame_name']= '';
