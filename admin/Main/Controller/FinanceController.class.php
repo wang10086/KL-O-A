@@ -781,7 +781,13 @@ class FinanceController extends BaseController {
 					M('audit_log')->data(array('dst_status'=>0))->where(array('id'=>$audit['id']))->save();
 				}else{
 					$this->request_audit(P::REQ_TYPE_SETTLEMENT, $ifok['id']);
-				}
+                }
+                //操作记录
+                $record = array();
+                $record['op_id'] = $op_id;
+                $record['optype'] = 4;
+                $record['explain'] = '提交结算审批申请';
+                op_record($record);
 				$this->success('已提交申请等待审批！');
 			}else{
 				$this->error('您的结算已被通过，无需重复申请！');
