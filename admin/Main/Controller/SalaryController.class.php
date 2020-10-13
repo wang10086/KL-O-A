@@ -1234,7 +1234,7 @@ class SalaryController extends BaseController {
         $where['id']                            = $id;
         $userid                                 = session('userid');
 
-        if (!in_array($userid,array(1,11,12,32,38,55,77,185,100,109))){
+        if (!in_array($userid,array(1,11,12,13,32,38,55,77,185,100,109))){
             $where['account_id']                = $userid;
         }
         $wages_list                             = M('salary_wages_month')->where($where)->find();
