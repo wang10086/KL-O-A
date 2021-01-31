@@ -10,7 +10,7 @@
         <form method="post" action="{:U('Finance/set_depart_boss')}" name="myform" id="gosub">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="id" value="{$list.id}">
-        <input type="hidden" name="info[boss_id]" id="boss_id" value="{$row.boss_id}">
+        <input type="hidden" name="info[boss_id]" id="boss_id" value="">
         
         <div class="form-group box-float-12">
             <label>部门</label>
@@ -18,7 +18,7 @@
         </div>
         <div class="form-group box-float-12">
             <label>评分人<font color="#999999">（可通过姓名拼音快速检索）</font></label>
-            <input type="text" name="info[boss_name]" value="{$row.boss_name}"  class="form-control keywords" />
+            <input type="text" name="info[boss_name]" value="{$list.boss_name}"  class="form-control keywords" />
         </div>
         </form>
         

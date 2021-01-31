@@ -10,7 +10,7 @@
         <form method="post" action="{:U('Finance/set_manager')}" name="myform" id="gosub">
         <input type="hidden" name="dosubmint" value="1">
         <input type="hidden" name="id" value="{$list.id}">
-        <input type="hidden" name="info[manager_id]" id="manager_id" value="{$row.manager_id}">
+        <input type="hidden" name="info[manager_id]" id="manager_id" value="">
         
         <div class="form-group box-float-12">
             <label>部门</label>
@@ -18,7 +18,7 @@
         </div>
         <div class="form-group box-float-12">
             <label>评分人<font color="#999999">（可通过姓名拼音快速检索）</font></label>
-            <input type="text" name="info[manager_name]" value="{$row.manager_name}"  class="form-control keywords" />
+            <input type="text" name="info[manager_name]" value="{$list.manager_name}"  class="form-control keywords" />
         </div>
         </form>
         

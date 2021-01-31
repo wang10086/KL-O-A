@@ -2611,6 +2611,28 @@ class FinanceController extends BaseController {
         }
     }
 
+    //@@@NODE-3###set_manager###配置部门线控负责人###
+    public function set_line_blame(){
+        if(isset($_POST['dosubmint'])){
+            $db             = M('salary_department');
+            $id             = I('id');
+            $info           = I('info');
+            //dump($info);die;
+
+            if ($info['line_blame_uid']){
+                $res            = $db->where(array('id'=>$id))->save($info);
+            }
+
+            echo "<script>window.top.location.reload();</script>";
+        }else{
+            $id             = I('id');
+            $list           = M('salary_department')->where(array('id'=>$id))->find();
+            $this->list     = $list;
+            $this->userkey  = get_userkey();
+            $this->display();
+        }
+    }
+
     //@@@NODE-3###del_jkd###删除借款单###
     public function del_jkd(){
         $id                 = I('id');
