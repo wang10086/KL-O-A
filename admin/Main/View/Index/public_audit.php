@@ -16,8 +16,9 @@
 <script type="text/javascript" >
 $(document).ready(function(e) {
 	setTimeout(function(){ 
-		parent.art.dialog.list["audit_win"].close();
-		parent.art.top.location.reload();
+        parent.art.dialog.list["audit_win"].close();
+        //parent.art.top.location.reload();
+        art.dialog.open.origin.location.reload();
 	}, 2000);
 });
 </script>

@@ -1777,4 +1777,79 @@ class RbacController extends BaseController {
         $this->display('HR_cost_detail');
     }
 
+    //部门管理
+    public function department(){
+        $db                     = M('salary_department');
+        //分页
+        //$pagecount		        = $db->count();
+        //$page			        = new Page($pagecount, 20);
+        //$this->pages	        = $pagecount>P::PAGE_SIZE ? $page->show():'';
+        //$this->lists    = $db->limit($page->firstRow,$page->listRows)->select();
+
+        $this->lists            = $db->select();
+        $this->display();
+    }
+
+    public function add_department(){
+        $db = M('salary_department');
+        if(isset($_POST['dosubmint'])){
+            $id                 = I('id');
+            $department         = trim(I('department'));
+            $letter             = trim(I('letter'));
+            $groupno            = trim(I('groupno'));
+            if(!$department) $this->audit_return('部门名称不能为空');
+            if(!preg_match('/^[A-Z]+$/', $letter)) $this->audit_return('部门字母只能是大写字母！');
+            if(!preg_match('/^[A-Z]{4,6}$/', $groupno)) $this->audit_return('团号编码只能是4~6位大写字母！');
+
+            $data               = array();
+            $data['department'] = $department;
+            $data['letter']     = $letter;
+            $data['groupno']    = $groupno;
+            if($id){
+                $check1 = $db->where(array('department'=>$department,'id'=>array('neq',$id)))->find();
+                $check2 = $db->where(array('letter'=>$letter,'id'=>array('neq',$id)))->find();
+                if($groupno) $check3 = $db->where(array('groupno'=>$groupno,'id'=>array('neq',$id)))->find();
+                if($check1) $this->audit_return('部门名称不能重复');
+                if($check2) $this->audit_return('部门字母不能重复');
+                if($groupno && $check3) $this->audit_return('团号编码不能重复');
+
+                $res    = $db->where(array('id'=>$id))->save($data);
+            }else{
+                $check1 = $db->where(array('department'=>$department))->find();
+                $check2 = $db->where(array('letter'=>$letter))->find();
+                if($groupno) $check3 = $db->where(array('groupno'=>$groupno))->find();
+                if($check1) $this->audit_return('部门名称不能重复');
+                if($check2) $this->audit_return('部门字母不能重复');
+                if($groupno && $check3) $this->audit_return('团号编码不能重复');
+                $res    = $db->add($data);
+                if(!$res) $this->audit_return('保存数据失败');
+            }
+            $this->audit_return('保存数据成功');
+        }else{
+            $id = I('id');
+            if(!empty($id)){
+                $this->row     = $db->find($id);
+            }
+            $this->display('department_add');
+        }
+    }
+
+    private function audit_return($msg){
+        $this->msg = $msg; 
+        $this->display('Index:public_audit');
+        die;
+    }
+
+    public function del_department(){
+        $db = M('salary_department');
+        $id = I('id');
+        if(!$id) $this->error('参数错误');
+        $res = $db->where(array('id'=>$id))->delete();
+        if($res){
+            $this->success('删除成功');
+        } else{
+            $this->error('删除失败');
+        }
+    }
+
 }

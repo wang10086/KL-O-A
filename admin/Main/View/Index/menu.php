@@ -685,8 +685,8 @@
                             </a>
                             <ul class="treeview-menu">
 
-                                <if condition="rolemenu(array('Rbac/role','Rbac/index'))">
-                                    <li class="treeview {:on('Rbac/role')} {:on('Rbac/addrole')} {:on('Rbac/priv')} {:on('Rbac/index')} {:on('Rbac/adduser')} {:on('Rbac/password')} {:on('Rbac/post')} {:on('Rbac/addpost')} {:on('Rbac/kpi_users')}">
+                                <if condition="rolemenu(array('Rbac/role','Rbac/index','Rbac/department','Rbac/add_department','Rbac/del_department'))">
+                                    <li class="treeview {:on('Rbac/role')} {:on('Rbac/addrole')} {:on('Rbac/priv')} {:on('Rbac/index')} {:on('Rbac/adduser')} {:on('Rbac/password')} {:on('Rbac/post')} {:on('Rbac/addpost')} {:on('Rbac/kpi_users')} {:on('Rbac/department')} {:on('Rbac/add_department')} {:on('Rbac/del_department')} ">
 
                                         <a href="{:U('Rbac/index')}">
                                             <i class="fa fa-user"></i>
@@ -703,6 +703,10 @@
 
                                             <if condition="rolemenu(array('Rbac/post'))">
                                                 <li class="{:on('Rbac/post')} {:on('Rbac/addpost')}"><a href="{:U('Rbac/post')}"><i class="fa fa-angle-right"></i> 岗位管理</a></li>
+                                            </if>
+
+                                            <if condition="rolemenu(array('Rbac/department','Rbac/add_department','Rbac/del_department'))">
+                                                <li class="{:on('Rbac/department')} {:on('Rbac/add_department')} {:on('Rbac/del_department')}"><a href="{:U('Rbac/department')}"><i class="fa fa-angle-right"></i> 部门管理</a></li>
                                             </if>
 
                                             <if condition="rolemenu(array('Rbac/kpi_users'))">

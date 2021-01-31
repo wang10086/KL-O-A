@@ -1767,37 +1767,22 @@ class AjaxController extends BasepubController {
     public function check_group_id(){
         $group_id                   = I('group_id');
         $id                         = I('id');
+        if(strlen($group_id) <= 10) die(return_msg('-1','团号格式填写有误'));
         if (!$id){
             $res                    = M('op_team_confirm')->where(array('group_id'=>$group_id))->find();
             if ($res){
-                $num                = '-1';
-                $msg                = '该团号已存在';
-            }else{
-                $num                = 1;
-                $msg                = 'ok';
+                die(return_msg('-1','该团号已存在'));
             }
         }else{
             $info                   = M('op_team_confirm')->where(array('id'=>$id))->find();
-            if ($group_id == $info['group_id']){
-                $num                = 1;
-                $msg                = 'ok';
-            }else{
+            if ($group_id != $info['group_id']){
                 $res                = M('op_team_confirm')->where(array('group_id'=>$group_id))->find();
                 if ($res){
-                    $num            = '-1';
-                    $msg            = '该团号已存在';
-                }else{
-                    $num            = 1;
-                    $msg            = 'ok';
+                    die(return_msg('-1','该团号已存在'));
                 }
             }
         }
-
-
-        $data                       = array();
-        $data['num']                = $num;
-        $data['msg']                = $msg;
-        $this->ajaxReturn($data);
+        die(return_msg('1','ok'));
     }
 
     //检查每种项目类型最低毛利率

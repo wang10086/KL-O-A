@@ -2961,10 +2961,6 @@ class OpController extends BaseController
 
             $this->op       = $op;
             $this->kinds    = M('project_kind')->getField('id,name', true);
-            //$this->guide_kind = M('guidekind')->getField('id,name', true);
-            //获取职能类型
-            //$priceKind = M()->table('__GUIDE_PRICEKIND__ as gpk')->field('gpk.id,gpk.name')->join('left join __OP__ as op on gpk.pk_id = op.kind')->where(array("op.op_id" => $opid))->select();
-            //$this->price_kind = $priceKind;
             $this->fields   = C('GUI_FIELDS');
             $jiesuan        = M('op_settlement')->where(array('op_id' => $opid, 'audit_status' => 1))->find(); //结算审批通过
             $this->jiesuan  = $jiesuan;
@@ -3006,7 +3002,7 @@ class OpController extends BaseController
             $this->plan_lists = M('op_work_plan_lists')->where(array('plan_id' => $work_plan['id']))->select();
 
             $this->user_info = M()->table('__OP__ as o')
-                ->field('a.*,d.department,o.create_user_name')
+                ->field('a.*,d.department,d.groupno,o.create_user_name')
                 ->join('__ACCOUNT__ as a on a.id = o.create_user')
                 ->join('__SALARY_DEPARTMENT__ as d on d.id = a.departmentid')
                 ->where(array('o.op_id' => $opid))
@@ -3045,11 +3041,9 @@ class OpController extends BaseController
             $this->detail = $detail_list;
             $apply_to = C('APPLY_TO');
             $op['apply_to'] = $apply_to[$op['apply_to']];
-            $departments = M('salary_department')->getField('id,department', true);
             $kinds = M('project_kind')->getField('id,name', true);
             $this->list = $op;
             $this->audit_status = get_submit_audit_status();
-            $this->departments = $departments;
             $this->kinds = $kinds;
             $this->teacher_level = C('TEACHER_LEVEL'); //教师级别
             $this->expert_level = C('EXPERT_LEVEL'); //专家级别

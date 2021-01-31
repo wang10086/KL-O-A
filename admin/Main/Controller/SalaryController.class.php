@@ -359,7 +359,7 @@ class SalaryController extends BaseController {
     /**
      * salary_add_department 添加部门
      */
-    public function salary_add_department(){
+   /*  public function salary_add_department(){
         if(isset($_POST['dosubmint'])){
             $where['department']    = trim($_POST['department']);//部门名称
             $add['letter']          = trim($_POST['letter']);//大写字母
@@ -393,7 +393,7 @@ class SalaryController extends BaseController {
             $this->lists            = $db->select();
             $this->display();
         }
-    }
+    } */
 
     /**
      * record_list 数据操作记录

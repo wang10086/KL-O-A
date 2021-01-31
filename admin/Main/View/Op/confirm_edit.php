@@ -13,7 +13,8 @@
     <div style="width:100%; float:left;">
         <div class="form-group col-md-12">
             <label>项目团号：</label>
-            <input type="text" name="info[group_id]"  class="form-control" onblur="check_group_id()" value="<?php if($confirm['group_id']){ echo $confirm['group_id'];}else{ echo $op['group_id'];} ?>" required />
+            <!-- <input type="text" name="info[group_id]"  class="form-control" onblur="check_group_id()" value="<?php if($confirm['group_id']){ echo $confirm['group_id'];}else{ echo $op['group_id'];} ?>" required /> -->
+            <input type="text" name="info[group_id]"  class="form-control" onblur="check_group_id()" value="<?php if($op['group_id']){ echo $op['group_id']; }else{ echo $user_info['groupno'].date('Y');} ?>" required />
         </div>
 
         <div class="form-group col-md-4">
@@ -180,8 +181,8 @@
                 dataType: 'json',
                 data : {group_id:group_id,id:id},
                 success:function (data) {
-                    if (data.num == '-1'){
-                        art_show_msg(data.msg);
+                    if (data.status == '-1'){
+                        art_show_msg(data.info);
                     }
                     return false;
                 },
