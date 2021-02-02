@@ -2112,38 +2112,20 @@ class AjaxController extends BasepubController {
         $department_id                      = I('department_id');
         $lists                              = get_dijie_department_data();
         $data                               = array();
-        switch ($department_id){
-            case in_array($department_id,array(2,6,12,13,14,16,5)): //业务部门id 2=>市场部 6=>京区业务中心, 12=>南京; 13=>武汉; 14=> 沈阳; 16=>长春;
+        //switch ($department_id){
+            //case in_array($department_id,array(2,6,12,13,14,16,5)): //业务部门id 2=>市场部 6=>京区业务中心, 12=>南京; 13=>武汉; 14=> 沈阳; 16=>长春;
                 foreach ($lists as $v){
                     if ($v['id'] == $department_id){
                         $data['line_blame_uid'] = $v['line_blame_uid'];
                         $data['line_blame_name']= $v['line_blame_name'];
                     }
                 }
-                break;
-            /* case 5: //5=>计调部
-                switch ($kind){
-                    case 54: //54=>研学旅行
-                        $data['line_blame_uid'] = 39;
-                        $data['line_blame_name']= '孟华';
-                        break;
-                    case 67: //67=>实验室建设
-                        $data['line_blame_uid'] = 232;
-                        $data['line_blame_name']= '梅轶宁';
-                        break;
-                    case in_array($kind,array(61,90)): //90=>背景提升及科研实习, 61=>小课题
-                        $data['line_blame_uid'] = 202;
-                        $data['line_blame_name']= '于洵';
-                        break;
-                    default:
-                        $data['line_blame_uid'] = 12;
-                        $data['line_blame_name']= '秦鸣';
-                }
-                break; */
-            default:
+                /* break;
+            
+                default:
                 $data['line_blame_uid'] = 0;
-                $data['line_blame_name']= '';
-        }
+                $data['line_blame_name']= ''; 
+        }*/
         //return $data;
         $this->ajaxReturn($data);
     }

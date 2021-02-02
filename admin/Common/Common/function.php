@@ -6247,8 +6247,9 @@ function diffBetweenTwoDays ($time1 = 0, $time2 = 0){
 //获取内部地接信息
 function get_dijie_department_data(){
     //业务部门id 2=>市场部 5=>计调部 6=>京区业务中心; 7=>京外业务中心; 12=>南京; 13=>武汉; 14=> 沈阳; 15=>常规旅游; 16=>长春;
-     $department_ids        = array(2,5,6,12,13,14,16);
-     $data                  = M('salary_department')->where(array('id'=>array('in',$department_ids)))->select();
+     //$department_ids        = array(2,5,6,12,13,14,16);
+     //$data                  = M('salary_department')->where(array('id'=>array('in',$department_ids)))->select();
+     $data                  = M('salary_department')->select();
      return $data;
 }
 
