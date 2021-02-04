@@ -134,7 +134,7 @@
                                                 <div class="callout callout-danger content" id="noSubmitDiv" style="display: none">
                                                     <h4>提示：如果无法提交需求,请按要求及时完善客户信息！</h4>
                                                 </div>
-                                            <button type="button" onclick="check_dijie_province_data()" class="btn btn-info btn-sm" id="base_btn">保存</button>
+                                            <button type="button" onclick="save_form('myForm')" class="btn btn-info btn-sm" id="base_btn">保存</button>
                                         </div>
                                     </form>
                                 </div>
@@ -208,7 +208,7 @@
         })
 
         // 判断填写数据是否正确
-        function check_dijie_province_data() {
+        /* function check_dijie_province_data() {
             let kind                = $('#kind').val();
             let province            = $('#province').val();
             let dijie_department_id = $('select[name="info[dijie_department_id]"]').val(); //地接部门ID
@@ -233,7 +233,7 @@
                     console.log('error');
                 }
             })
-        }
+        } */
 
         //获取线控负责人
         function get_line_blame_data() {

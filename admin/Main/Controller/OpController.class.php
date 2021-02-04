@@ -792,14 +792,14 @@ class OpController extends BaseController
                     $this->error('数据错误');
                 }
                 if (!$info['line_blame_uid'] || !$info['line_blame_name']) $this->error('线控负责人信息错误');
-                $res = $db->where(array('op_id' => $opid))->save($info);
+                $db->where(array('op_id' => $opid))->save($info);
 
                 $record = array();
                 $record['op_id'] = $opid;
                 $record['optype'] = 1;
                 $record['explain'] = '编辑产品方案需求基本信息';
                 op_record($record);
-                $res ? $this->success('保存成功', U('Op/plans_follow', array('opid' => $opid, 'fa' => $fa))) : $this->error('数据保存失败');
+                $this->success('保存成功', U('Op/plans_follow', array('opid' => $opid, 'fa' => $fa)));
             }
 
             //保存价格
